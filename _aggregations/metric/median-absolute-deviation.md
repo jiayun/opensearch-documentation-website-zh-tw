@@ -10,9 +10,9 @@ redirect_from:
 
 # 中位數絕對偏差彙總
 
-`median_absolute_deviation` 彙總是一種單值指標彙總。中位數絕對偏差是一種變異性指標，用於衡量與中位數的離散程度。
+`median_absolute_deviation` 彙總是一種單一數值指標彙總。中位數絕對偏差是一種變異性指標，用來衡量資料偏離中位數的離散程度。
 
-中位數絕對偏差比標準差較少受到離群值的影響，因為標準差依賴於平方誤差項；因此，中位數絕對偏差可用於描述非常態分佈的資料。
+標準差依賴誤差平方項，而中位數絕對偏差比標準差更不容易受到離群值影響，適合用來描述非常態分布的資料。
 
 中位數絕對偏差的計算方式如下：
 
@@ -21,21 +21,21 @@ median_absolute_deviation = median( | x<sub>i</sub> - median(x<sub>i</sub>) | )
 ```
 
 
-由於記憶體限制，OpenSearch 會估算 `median_absolute_deviation` 而非直接計算。此估算過程在計算上成本較高。您可以調整估算準確度與效能之間的權衡。如需更多資訊，請參閱 [調整估算準確度](https://github.com/opensearch-project/documentation-website/pull/9453/files#adjusting-estimation-accuracy)。
+由於記憶體限制，OpenSearch 會估計 `median_absolute_deviation`，而非直接計算。此估計的運算成本很高。您可以調整估計準確度與效能之間的取捨。如需更多資訊，請參閱[調整估計準確度](https://github.com/opensearch-project/documentation-website/pull/9453/files#adjusting-estimation-accuracy)。
 
 ## 參數
 
-`median_absolute_deviation` 彙總使用以下參數。
+`median_absolute_deviation` 彙總採用下列參數。
 
-| 參數 | 必要/選用 | 資料類型 | 說明 |
-| :-- | :-- | :-- | :-- |
-| `field` | 必要 | String | 要計算中位數絕對偏差的數值欄位名稱。 |
-| `missing` | 選用 | Numeric | 指派給欄位遺漏實例的值。如果未提供，則在估算中會省略具有遺漏值的文件。 |
-| `compression` | 選用 | Numeric | 用於 [調整估算準確度與效能之間平衡](#adjusting-estimation-accuracy) 的參數。`compression` 的值必須大於 `0`。預設值為 `1000`。 |
+| 參數 | 必要/選用 | 資料類型      | 說明 |
+| :--       | :--               | :--            | :--         |
+| `field`   | 必要          | 字串         | 要計算中位數絕對偏差的數值欄位名稱。 |
+| `missing` | 選用          | 數值        | 欄位值缺失時要使用的值。若未提供，估計時會略過缺少該欄位值的文件。 |
+| `compression` | 選用          | 數值        | 用來[調整估計準確度與效能之間平衡](#adjusting-estimation-accuracy)的參數。`compression` 的值必須大於 `0`。預設值為 `1000`。 |
 
 ## 範例
 
-以下範例計算 `opensearch_dashboards_sample_data_flights` 資料集中 `DistanceMiles` 欄位的中位數絕對偏差：
+下列範例會計算 `opensearch_dashboards_sample_data_flights` 資料集中 `DistanceMiles` 欄位的中位數絕對偏差：
 
 ```json
 GET opensearch_dashboards_sample_data_flights/_search
@@ -52,9 +52,9 @@ GET opensearch_dashboards_sample_data_flights/_search
 ```
 {% include copy-curl.html %}
 
-#### 範例回應
+## 範例回應
 
-如以下範例回應所示，該彙總在 `median_absolute_deviation_DistanceMiles` 變數中回傳中位數絕對偏差的估計值：
+如下列範例回應所示，該彙總會在 `median_absolute_deviation_DistanceMiles` 變數中傳回中位數絕對偏差的估計值：
 
 ```json
 {
@@ -82,15 +82,15 @@ GET opensearch_dashboards_sample_data_flights/_search
 }
 ```
 
-## 遺漏值
+## 缺少值
 
-OpenSearch 在計算 `median_absolute_deviation` 時會忽略遺漏值和 null 值。
+OpenSearch 在計算 `median_absolute_deviation` 時會忽略缺少值和 null 值。
 
-您可以為彙總欄位的遺漏實例指派一個值。如需更多資訊，請參閱 [遺漏值彙總]({{site.url}}{{site.baseurl}}/aggregations/bucket/missing/)。
+您可以為缺少彙總欄位值的文件指定一個值。如需更多資訊，請參閱[缺少值彙總]({{site.url}}{{site.baseurl}}/aggregations/bucket/missing/)。
 
-## 調整估算準確度
+## 調整估計準確度
 
-中位數絕對偏差是使用 [t-digest](https://github.com/tdunning/t-digest/tree/main) 資料結構計算的，該結構使用 `compression` 參數來平衡效能與估算準確度。較低的 `compression` 值可提高效能，但可能會降低估算準確度，如下方請求所示：
+中位數絕對偏差是使用 [t-digest](https://github.com/tdunning/t-digest/tree/main) 資料結構計算，該結構採用 `compression` 參數來平衡效能與估計準確度。較低的 `compression` 值可提升效能，但可能降低估計準確度，如下列請求所示：
 
 ```json
 GET opensearch_dashboards_sample_data_flights/_search
@@ -108,11 +108,11 @@ GET opensearch_dashboards_sample_data_flights/_search
 ```
 {% include copy-curl.html %}
 
-估算誤差取決於資料集，但通常低於 5%，即使 `compression` 值低至 `100` 也是如此。（此處使用較低的範例值 `10` 是為了說明權衡效果，並不建議使用。）
+估計誤差取決於資料集，但通常低於 5%，即使 `compression` 值低至 `100` 亦然。（此處使用偏低的範例值 `10` 是為了說明取捨效果，並不建議使用。）
 
-請注意以下回應中減少的計算時間（`took` 時間）以及估算參數值準確度的輕微下降。
+請注意下列回應中減少的運算時間（`took` 時間），以及估計參數值略微降低的準確度。
 
-作為參考，OpenSearch 對於 `DistanceMiles` 中位數絕對偏差的最佳估計值（將 `compression` 設定為極高值）為 `1831.076904296875`：
+供參考，OpenSearch 對 `DistanceMiles` 中位數絕對偏差的最佳估計值（將 `compression` 任意設高）為 `1831.076904296875`：
 
 
 ```json

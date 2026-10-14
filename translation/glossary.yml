@@ -31,6 +31,7 @@ keep_in_english:
   - API, field, parameter, setting, plugin, processor and index names written in code
 
 terms:
+  - {en: Helm chart, zh: Helm 套件（chart）, note: "chart 是 Kubernetes 應用程式的封裝，不是圖表。可保留 Helm chart；首次出現附中文說明。識別字與路徑保留原文。"}
   - {en: index (noun), zh: 索引}
   - {en: index (verb), zh: 編製索引, note: 例如「將文件編製索引」；亦可用「索引」}
   - {en: document, zh: 文件}

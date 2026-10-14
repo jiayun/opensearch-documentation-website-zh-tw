@@ -14,7 +14,7 @@ redirect_from:
 **於 1.0 版導入**
 {: .label .label-purple }
 
-快照 API 可讓您管理快照與快照儲存庫。
+快照 API 可讓您管理快照與快照儲存庫。如需註冊儲存庫以及建立與還原快照的資訊，請參閱[快照]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/snapshots/index/)。
 
 ## 快照 API 操作
 

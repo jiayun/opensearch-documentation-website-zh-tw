@@ -1,5 +1,5 @@
 {
- "baseline_commit": "ea8f887557c3a673bbb1200837e750ca0d02de7a",
+ "baseline_commit": "716c4c1d6ef0c9744fd99ef50e83b13e559a6d31",
  "pages": {
   "404.md": {
    "attempts": 1,
@@ -187,7 +187,7 @@
    "updated_at": "2026-10-07T15:29:50+00:00"
   },
   "_aggregations/bucket/auto-interval-date-histogram.md": {
-   "attempts": 1,
+   "attempts": 2,
    "last_error": null,
    "original_front_matter": {
     "parent": "Bucket aggregations",
@@ -195,33 +195,42 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-07T15:31:15+00:00",
-    "family": "agy",
+    "at": "2026-10-14T13:44:42+00:00",
+    "family": "codex:gpt-6-sol",
     "issues": [],
-    "model": "gemini-3.1-pro-high",
-    "prompt_version": "17cb1d26e03713b2",
-    "provider": "agy",
-    "target_sha256": "ced20f099ef55f722eb471b323fc2bac62a3e131626e649a9ddee0f989eb3bec"
+    "model": "gpt-6-sol",
+    "prompt_version": "8a4a71603c110e60",
+    "provider": "codex-review",
+    "target_sha256": "f48bda910d0c21ba4d120e2c7e8b39935720e6851df5c4e87d1a9dcb6fddc777"
    },
-   "source_sha256": "61262e1fe89e553b2f9364d271744ddd6b951ad26ba112f0a67c99fc2fb8d9f0",
+   "source_sha256": "3ef98e7a4614862d617b056ff4a5e39fdd9390c313ff767c7106481d74a52826",
    "status": "reviewed",
-   "target_sha256": "ced20f099ef55f722eb471b323fc2bac62a3e131626e649a9ddee0f989eb3bec",
-   "translated_source_sha256": "61262e1fe89e553b2f9364d271744ddd6b951ad26ba112f0a67c99fc2fb8d9f0",
+   "target_sha256": "f48bda910d0c21ba4d120e2c7e8b39935720e6851df5c4e87d1a9dcb6fddc777",
+   "translated_source_sha256": "3ef98e7a4614862d617b056ff4a5e39fdd9390c313ff767c7106481d74a52826",
    "translator": {
-    "at": "2026-10-07T15:30:17+00:00",
-    "prompt_version": "17cb1d26e03713b2",
+    "at": "2026-10-14T13:43:27+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
      {
       "chunks": [
        0
       ],
+      "family": "ollama",
+      "model": "glm-5.3-flash:cloud",
+      "provider": "ollama-cloud-glm"
+     },
+     {
       "family": "claude",
       "model": "claude-opus-5-5",
-      "provider": "claude"
+      "provider": "claude",
+      "repairs": [
+       "section.002",
+       "section.003"
+      ]
      }
     ]
    },
-   "updated_at": "2026-10-07T15:31:15+00:00"
+   "updated_at": "2026-10-14T13:44:42+00:00"
   },
   "_aggregations/bucket/children.md": {
    "attempts": 1,
@@ -300,7 +309,7 @@
    "updated_at": "2026-10-07T15:34:50+00:00"
   },
   "_aggregations/bucket/date-histogram.md": {
-   "attempts": 1,
+   "attempts": 2,
    "last_error": null,
    "original_front_matter": {
     "parent": "Bucket aggregations",
@@ -308,36 +317,54 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-07T15:33:51+00:00",
-    "family": "agy",
+    "at": "2026-10-14T13:46:04+00:00",
+    "family": "codex:gpt-6-sol",
     "issues": [],
-    "model": "gemini-3.1-pro-high",
-    "prompt_version": "17cb1d26e03713b2",
-    "provider": "agy",
-    "target_sha256": "0e4cabe9d49d3f4a03f7b5786f99507a94ca6d46409aeb6b00f2856ade9a5787"
+    "model": "gpt-6-sol",
+    "prompt_version": "8a4a71603c110e60",
+    "provider": "codex-review",
+    "target_sha256": "74b0aebd69f5ed16e5ccf6562dbce78e9558bf18c07fe8128fbcb8fa9e248234"
    },
-   "source_sha256": "a05d5356648bf6c258514fb921c6d321c6a80b57fc57ae4be824e0de3b908e0b",
+   "source_sha256": "d8b872526bc86481f6c91f3a4cc4ceefee32bc27778c4259a214c3bb550b9945",
    "status": "reviewed",
-   "target_sha256": "0e4cabe9d49d3f4a03f7b5786f99507a94ca6d46409aeb6b00f2856ade9a5787",
-   "translated_source_sha256": "a05d5356648bf6c258514fb921c6d321c6a80b57fc57ae4be824e0de3b908e0b",
+   "target_sha256": "74b0aebd69f5ed16e5ccf6562dbce78e9558bf18c07fe8128fbcb8fa9e248234",
+   "translated_source_sha256": "d8b872526bc86481f6c91f3a4cc4ceefee32bc27778c4259a214c3bb550b9945",
    "translator": {
-    "at": "2026-10-07T15:33:11+00:00",
-    "prompt_version": "17cb1d26e03713b2",
+    "at": "2026-10-14T13:45:32+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
      {
       "chunks": [
-       0
+       2
       ],
+      "family": "codex:gpt-6.1-sol",
+      "model": "gpt-6.1-sol",
+      "provider": "codex"
+     },
+     {
+      "chunks": [
+       0,
+       1
+      ],
+      "family": "ollama",
+      "model": "deepseek-v4.1-flash:cloud",
+      "provider": "ollama-cloud"
+     },
+     {
       "family": "claude",
       "model": "claude-opus-5-5",
-      "provider": "claude"
+      "provider": "claude",
+      "repairs": [
+       "section.004",
+       "section.006"
+      ]
      }
     ]
    },
-   "updated_at": "2026-10-07T15:33:51+00:00"
+   "updated_at": "2026-10-14T13:46:04+00:00"
   },
   "_aggregations/bucket/date-range.md": {
-   "attempts": 1,
+   "attempts": 2,
    "last_error": null,
    "original_front_matter": {
     "parent": "Bucket aggregations",
@@ -345,36 +372,44 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-07T15:34:41+00:00",
-    "family": "agy",
+    "at": "2026-10-14T13:46:42+00:00",
+    "family": "codex:gpt-6-sol",
     "issues": [],
-    "model": "gemini-3.1-pro-high",
-    "prompt_version": "17cb1d26e03713b2",
-    "provider": "agy",
-    "target_sha256": "d5472c5d861e41e0d4abcf94c5de891e9acfe6730743bfc3daa2d0e51fc95e2c"
+    "model": "gpt-6-sol",
+    "prompt_version": "8a4a71603c110e60",
+    "provider": "codex-review",
+    "target_sha256": "a311a88e30770458402fc0d7409e645aa640aa82f94f8417458d5401f28669a0"
    },
-   "source_sha256": "672d6ecb00bde2878dc404d36f2b7a51c22c795d3a989f07327f59cc5a080028",
+   "source_sha256": "8123d7e86900c56a2c29cfcb50b0517187e360d5474ce65108fbd442c56d7159",
    "status": "reviewed",
-   "target_sha256": "d5472c5d861e41e0d4abcf94c5de891e9acfe6730743bfc3daa2d0e51fc95e2c",
-   "translated_source_sha256": "672d6ecb00bde2878dc404d36f2b7a51c22c795d3a989f07327f59cc5a080028",
+   "target_sha256": "a311a88e30770458402fc0d7409e645aa640aa82f94f8417458d5401f28669a0",
+   "translated_source_sha256": "8123d7e86900c56a2c29cfcb50b0517187e360d5474ce65108fbd442c56d7159",
    "translator": {
-    "at": "2026-10-07T15:34:11+00:00",
-    "prompt_version": "17cb1d26e03713b2",
+    "at": "2026-10-14T13:45:57+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
      {
       "chunks": [
        0
       ],
+      "family": "ollama",
+      "model": "glm-5.3-flash:cloud",
+      "provider": "ollama-cloud-glm"
+     },
+     {
       "family": "claude",
       "model": "claude-opus-5-5",
-      "provider": "claude"
+      "provider": "claude",
+      "repairs": [
+       "section.002"
+      ]
      }
     ]
    },
-   "updated_at": "2026-10-07T15:34:41+00:00"
+   "updated_at": "2026-10-14T13:46:42+00:00"
   },
   "_aggregations/bucket/diversified-sampler.md": {
-   "attempts": 1,
+   "attempts": 3,
    "last_error": null,
    "original_front_matter": {
     "parent": "Bucket aggregations",
@@ -382,33 +417,53 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-07T15:35:32+00:00",
-    "family": "agy",
+    "at": "2026-10-14T13:47:33+00:00",
+    "family": "codex:gpt-6-sol",
     "issues": [],
-    "model": "gemini-3.1-pro-high",
-    "prompt_version": "17cb1d26e03713b2",
-    "provider": "agy",
-    "target_sha256": "07c2a569d945b2eb10912ce10f8634fb0ba98632a277ed9a58c4c55b31e56fb7"
+    "model": "gpt-6-sol",
+    "prompt_version": "8a4a71603c110e60",
+    "provider": "codex-review",
+    "target_sha256": "6f8354491618a599fe71214741b224498106a99cb76c8623e6d68e266b7d9e01"
    },
-   "source_sha256": "28f88bd23f01a65a0b06c564fa3fc505f1732f4fb9f13150e098e6791f6cfc5b",
+   "source_sha256": "ed2c79c5fa05054932b07c3b39177a8438e1fabaa7ea3aa50f3e5c2875e11ba7",
    "status": "reviewed",
-   "target_sha256": "07c2a569d945b2eb10912ce10f8634fb0ba98632a277ed9a58c4c55b31e56fb7",
-   "translated_source_sha256": "28f88bd23f01a65a0b06c564fa3fc505f1732f4fb9f13150e098e6791f6cfc5b",
+   "target_sha256": "6f8354491618a599fe71214741b224498106a99cb76c8623e6d68e266b7d9e01",
+   "translated_source_sha256": "ed2c79c5fa05054932b07c3b39177a8438e1fabaa7ea3aa50f3e5c2875e11ba7",
    "translator": {
-    "at": "2026-10-07T15:34:59+00:00",
-    "prompt_version": "17cb1d26e03713b2",
+    "at": "2026-10-14T13:46:42+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
      {
       "chunks": [
        0
       ],
+      "family": "ollama",
+      "model": "deepseek-v4.1-flash:cloud",
+      "provider": "ollama-cloud"
+     },
+     {
       "family": "claude",
       "model": "claude-opus-5-5",
-      "provider": "claude"
+      "provider": "claude",
+      "repairs": [
+       "section.002",
+       "section.006",
+       "section.003"
+      ]
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.004",
+       "section.005",
+       "section.007"
+      ]
      }
     ]
    },
-   "updated_at": "2026-10-07T15:35:32+00:00"
+   "updated_at": "2026-10-14T13:47:33+00:00"
   },
   "_aggregations/bucket/filter.md": {
    "attempts": 1,
@@ -781,7 +836,7 @@
    "updated_at": "2026-10-07T19:53:55+00:00"
   },
   "_aggregations/bucket/missing.md": {
-   "attempts": 1,
+   "attempts": 3,
    "last_error": null,
    "original_front_matter": {
     "parent": "Bucket aggregations",
@@ -789,33 +844,51 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-07T19:54:14+00:00",
-    "family": "agy",
+    "at": "2026-10-14T13:48:07+00:00",
+    "family": "codex:gpt-6-sol",
     "issues": [],
-    "model": "gemini-3.1-pro-high",
-    "prompt_version": "cd85573eb34b49f2",
-    "provider": "agy",
-    "target_sha256": "957f4e49f6773a78df21585ab51c56d6a2edf8c8a4f3ebb60808391277a89232"
+    "model": "gpt-6-sol",
+    "prompt_version": "8a4a71603c110e60",
+    "provider": "codex-review",
+    "target_sha256": "312aac2d889b72206c981de52696b670a605588ed324f593769ff1f836fd6c2c"
    },
-   "source_sha256": "db37cca3eca425824747c71a96cfebf2ed09d856aa8cbe9996fd77f89c9da955",
+   "source_sha256": "1fda86042c34d2b1aefccd82deaf1d8bd58c98ab7c414eda9568dab407aa7448",
    "status": "reviewed",
-   "target_sha256": "957f4e49f6773a78df21585ab51c56d6a2edf8c8a4f3ebb60808391277a89232",
-   "translated_source_sha256": "db37cca3eca425824747c71a96cfebf2ed09d856aa8cbe9996fd77f89c9da955",
+   "target_sha256": "312aac2d889b72206c981de52696b670a605588ed324f593769ff1f836fd6c2c",
+   "translated_source_sha256": "1fda86042c34d2b1aefccd82deaf1d8bd58c98ab7c414eda9568dab407aa7448",
    "translator": {
-    "at": "2026-10-07T19:54:05+00:00",
-    "prompt_version": "cd85573eb34b49f2",
+    "at": "2026-10-14T13:47:27+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
      {
       "chunks": [
        0
       ],
+      "family": "ollama",
+      "model": "glm-5.3-flash:cloud",
+      "provider": "ollama-cloud-glm"
+     },
+     {
       "family": "claude",
       "model": "claude-opus-5-5",
-      "provider": "claude"
+      "provider": "claude",
+      "repairs": [
+       "section.001",
+       "section.002",
+       "section.005"
+      ]
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "front_matter"
+      ]
      }
     ]
    },
-   "updated_at": "2026-10-07T19:54:14+00:00"
+   "updated_at": "2026-10-14T13:48:07+00:00"
   },
   "_aggregations/bucket/multi-terms.md": {
    "attempts": 1,
@@ -1071,7 +1144,7 @@
    "updated_at": "2026-10-08T05:15:50+00:00"
   },
   "_aggregations/bucket/sampler.md": {
-   "attempts": 1,
+   "attempts": 3,
    "last_error": null,
    "original_front_matter": {
     "parent": "Bucket aggregations",
@@ -1079,33 +1152,49 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-07T19:58:44+00:00",
-    "family": "agy",
+    "at": "2026-10-14T13:49:31+00:00",
+    "family": "codex:gpt-6-sol",
     "issues": [],
-    "model": "gemini-3.1-pro-high",
-    "prompt_version": "cd85573eb34b49f2",
-    "provider": "agy",
-    "target_sha256": "c8c578310d149558a4151499c12a093c86c77cee30d2df6bfe8a3668872c04d6"
+    "model": "gpt-6-sol",
+    "prompt_version": "8a4a71603c110e60",
+    "provider": "codex-review",
+    "target_sha256": "b7b5b6704463eec2bb90791e78e4e233f75ed17ca9cb0f775bd01f37f7d36602"
    },
-   "source_sha256": "6e689a5b16f5d69bfa8f59443d4529edc391caf219b0f4221842533cb047083c",
+   "source_sha256": "5097f2c7ccafe70e660260f40ce754dcc7b5cfb3ae457e0b8c3f00def22ae1d0",
    "status": "reviewed",
-   "target_sha256": "c8c578310d149558a4151499c12a093c86c77cee30d2df6bfe8a3668872c04d6",
-   "translated_source_sha256": "6e689a5b16f5d69bfa8f59443d4529edc391caf219b0f4221842533cb047083c",
+   "target_sha256": "b7b5b6704463eec2bb90791e78e4e233f75ed17ca9cb0f775bd01f37f7d36602",
+   "translated_source_sha256": "5097f2c7ccafe70e660260f40ce754dcc7b5cfb3ae457e0b8c3f00def22ae1d0",
    "translator": {
-    "at": "2026-10-07T19:58:12+00:00",
-    "prompt_version": "cd85573eb34b49f2",
+    "at": "2026-10-14T13:48:01+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
      {
       "chunks": [
        0
       ],
       "family": "ollama",
-      "model": "gemma4:cloud",
+      "model": "deepseek-v4.1-flash:cloud",
       "provider": "ollama-cloud"
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.002"
+      ]
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.001"
+      ]
      }
     ]
    },
-   "updated_at": "2026-10-07T19:58:44+00:00"
+   "updated_at": "2026-10-14T13:49:31+00:00"
   },
   "_aggregations/bucket/significant-terms.md": {
    "attempts": 2,
@@ -1116,36 +1205,78 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-07T20:01:28+00:00",
-    "family": "agy",
-    "issues": [],
-    "model": "gemini-3.1-pro-high",
-    "prompt_version": "cd85573eb34b49f2",
-    "provider": "agy",
-    "target_sha256": "3010b43a9b70dbfda90ce15ca567481952079c0fc4c140c2eb22db53872f5b6f"
+    "at": "2026-10-14T13:53:21+00:00",
+    "family": "codex:gpt-6-sol",
+    "issues": [
+     {
+      "id": "section.018",
+      "problem": "內文使用英文「Percentage」，與已翻譯的標題不一致。",
+      "severity": "minor",
+      "suggestion": "將「Percentage 依 `doc_count`/`bg_count` 的比例」改為「百分比啟發式方法依 `doc_count`/`bg_count` 的比例」。"
+     }
+    ],
+    "model": "gpt-6-sol",
+    "prompt_version": "8a4a71603c110e60",
+    "provider": "codex-review",
+    "target_sha256": "500924ab23666e4cabc7275f938fcaf0750ebe76bb6da9209f901f28fd2f9aa0"
    },
-   "source_sha256": "db390c7421f1fc8050cda7c8a4422c28bbe0b23b4b334b4515e61462e3ec7dfa",
+   "source_sha256": "a0e5761f3c9bf6935ece0d5bc99d6ec2bfb7ebeb5c5183114ac53597af451e74",
    "status": "reviewed",
-   "target_sha256": "3010b43a9b70dbfda90ce15ca567481952079c0fc4c140c2eb22db53872f5b6f",
-   "translated_source_sha256": "db390c7421f1fc8050cda7c8a4422c28bbe0b23b4b334b4515e61462e3ec7dfa",
+   "target_sha256": "500924ab23666e4cabc7275f938fcaf0750ebe76bb6da9209f901f28fd2f9aa0",
+   "translated_source_sha256": "a0e5761f3c9bf6935ece0d5bc99d6ec2bfb7ebeb5c5183114ac53597af451e74",
    "translator": {
-    "at": "2026-10-07T20:00:45+00:00",
-    "prompt_version": "cd85573eb34b49f2",
+    "at": "2026-10-14T13:50:31+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
      {
       "chunks": [
        0
       ],
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude"
+     },
+     {
+      "chunks": [
+       2
+      ],
       "family": "ollama",
-      "model": "gemma4:cloud",
+      "model": "deepseek-v4.1-flash:cloud",
       "provider": "ollama-cloud"
+     },
+     {
+      "chunks": [
+       1,
+       3
+      ],
+      "family": "ollama",
+      "model": "glm-5.3-flash:cloud",
+      "provider": "ollama-cloud-glm"
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.006",
+       "section.007",
+       "section.009",
+       "section.018",
+       "section.019",
+       "section.021",
+       "section.022",
+       "section.023",
+       "section.024",
+       "section.025",
+       "section.026"
+      ]
      }
     ]
    },
-   "updated_at": "2026-10-07T20:01:28+00:00"
+   "updated_at": "2026-10-14T13:53:21+00:00"
   },
   "_aggregations/bucket/significant-text.md": {
-   "attempts": 2,
+   "attempts": 3,
    "last_error": null,
    "original_front_matter": {
     "parent": "Bucket aggregations",
@@ -1153,46 +1284,92 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-07T20:03:26+00:00",
-    "family": "agy",
+    "at": "2026-10-14T13:53:52+00:00",
+    "family": "codex:gpt-6-sol",
     "issues": [
      {
-      "id": "section.004",
-      "problem": "將「lines」譯為「行數」略有語意偏差，此處的「lines」指的是劇本中的「行」或「台詞」，而非指數量。",
+      "id": "section.008",
+      "problem": "將技術語境中的「significant terms」譯為「重要詞彙」，與全文的「顯著詞彙」用語不一致。",
       "severity": "minor",
-      "suggestion": "建議將「與來自 \"Henry IV\" 的行數」改為「與來自 \"Henry IV\" 的行」或「與來自 \"Henry IV\" 的台詞」。"
+      "suggestion": "回應包含來自標題與內容的顯著詞彙。"
      },
      {
-      "id": null,
-      "problem": "在 section.002 與 section.005 的參數表格中，「資料類型」欄位的值（如 String、Integer、Object、Boolean、Array）保留了英文。雖然作為技術文件中的型別名稱保留英文是常見作法，但根據詞彙表，這些詞彙有對應的繁體中文翻譯。",
+      "id": "section.009",
+      "problem": "「most significant」譯為「最重要」，未延續顯著性評分的用語。",
       "severity": "minor",
-      "suggestion": "建議統一依據詞彙表進行翻譯，將 String 譯為「字串」，Integer 譯為「整數」，Object 譯為「物件」，Boolean 譯為「布林值」，Array 譯為「陣列」。"
+      "suggestion": "低頻詞彙在所有結果合併後可能反而是最顯著的。"
+     },
+     {
+      "id": "section.010",
+      "problem": "末句的「重要詞彙」與全文的「顯著詞彙」用語不一致。",
+      "severity": "minor",
+      "suggestion": "否則，顯著詞彙可能會在個別分片上被篩除。"
+     },
+     {
+      "id": "section.012",
+      "problem": "「significant terms」譯為「重要詞彙」，與全文用語不一致。",
+      "severity": "minor",
+      "suggestion": "包含初始結果中顯著詞彙的 `include` 子句"
      }
     ],
-    "model": "gemini-3.1-pro-high",
-    "prompt_version": "cd85573eb34b49f2",
-    "provider": "agy",
-    "target_sha256": "35c47b7f24c020c569fdd0abbf4c62556900168f2f7ba7cea4dcc2c4e93f8ea9"
+    "model": "gpt-6-sol",
+    "prompt_version": "8a4a71603c110e60",
+    "provider": "codex-review",
+    "target_sha256": "2e65d4cecf4814910caf3dc7e258afd31672deda26bf5362441aad9132fb3a8d"
    },
-   "source_sha256": "8591f6f4ba3840e61656393a00d1f88e29ad5ad695bd5085b2beae013e3487cf",
+   "source_sha256": "c627fa5fe65910713f692e53f051fa85ba072cc0adf45303bee58303a0b025b1",
    "status": "reviewed",
-   "target_sha256": "35c47b7f24c020c569fdd0abbf4c62556900168f2f7ba7cea4dcc2c4e93f8ea9",
-   "translated_source_sha256": "8591f6f4ba3840e61656393a00d1f88e29ad5ad695bd5085b2beae013e3487cf",
+   "target_sha256": "2e65d4cecf4814910caf3dc7e258afd31672deda26bf5362441aad9132fb3a8d",
+   "translated_source_sha256": "c627fa5fe65910713f692e53f051fa85ba072cc0adf45303bee58303a0b025b1",
    "translator": {
-    "at": "2026-10-07T20:02:13+00:00",
-    "prompt_version": "cd85573eb34b49f2",
+    "at": "2026-10-14T13:53:08+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
+     {
+      "chunks": [
+       1
+      ],
+      "family": "codex:gpt-6.1-sol",
+      "model": "gpt-6.1-sol",
+      "provider": "codex"
+     },
      {
       "chunks": [
        0
       ],
       "family": "ollama",
-      "model": "gemma4:cloud",
+      "model": "deepseek-v4.1-flash:cloud",
       "provider": "ollama-cloud"
+     },
+     {
+      "chunks": [
+       2
+      ],
+      "family": "ollama",
+      "model": "glm-5.3-flash:cloud",
+      "provider": "ollama-cloud-glm"
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.008",
+       "section.010",
+       "section.012"
+      ]
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.011"
+      ]
      }
     ]
    },
-   "updated_at": "2026-10-07T20:03:26+00:00"
+   "updated_at": "2026-10-14T13:53:52+00:00"
   },
   "_aggregations/bucket/terms.md": {
    "attempts": 2,
@@ -1203,25 +1380,25 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-08T02:41:36+00:00",
-    "family": "agy",
+    "at": "2026-10-14T13:52:25+00:00",
+    "family": "codex:gpt-6-sol",
     "issues": [],
-    "model": "gemini-3.1-pro-high",
-    "prompt_version": "969e9ac2fc469d77",
-    "provider": "agy",
-    "target_sha256": "ee9c4fd36c185f0a0839b07fd8c715bd71f50c03a793e3f638eacaf513cac32c"
+    "model": "gpt-6-sol",
+    "prompt_version": "8a4a71603c110e60",
+    "provider": "codex-review",
+    "target_sha256": "b18eca39eb86433370a30db52d6a4d729c8cdd4f296c746556db73bfa2740b7b"
    },
-   "source_sha256": "49945f47d6673a02cafab978765873b653abba0e41328c3b567713cd8cdec8cb",
+   "source_sha256": "4097c853f22f04b016aa93ca95706100b63e1f7382d7e87a99f6e688f4cbb729",
    "status": "reviewed",
-   "target_sha256": "ee9c4fd36c185f0a0839b07fd8c715bd71f50c03a793e3f638eacaf513cac32c",
-   "translated_source_sha256": "49945f47d6673a02cafab978765873b653abba0e41328c3b567713cd8cdec8cb",
+   "target_sha256": "b18eca39eb86433370a30db52d6a4d729c8cdd4f296c746556db73bfa2740b7b",
+   "translated_source_sha256": "4097c853f22f04b016aa93ca95706100b63e1f7382d7e87a99f6e688f4cbb729",
    "translator": {
-    "at": "2026-10-08T02:40:34+00:00",
-    "prompt_version": "969e9ac2fc469d77",
+    "at": "2026-10-14T13:51:09+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
      {
       "chunks": [
-       1
+       3
       ],
       "family": "claude",
       "model": "claude-opus-5-5",
@@ -1232,13 +1409,33 @@
        0,
        2
       ],
-      "family": "codex:gpt-6.1-sol",
-      "model": "gpt-6.1-sol",
-      "provider": "codex"
+      "family": "ollama",
+      "model": "deepseek-v4.1-flash:cloud",
+      "provider": "ollama-cloud"
+     },
+     {
+      "chunks": [
+       1
+      ],
+      "family": "ollama",
+      "model": "glm-5.3-flash:cloud",
+      "provider": "ollama-cloud-glm"
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.002",
+       "section.005",
+       "section.009",
+       "section.012",
+       "section.013"
+      ]
      }
     ]
    },
-   "updated_at": "2026-10-08T02:41:36+00:00"
+   "updated_at": "2026-10-14T13:52:25+00:00"
   },
   "_aggregations/bucket/variable-width-histogram.md": {
    "attempts": 2,
@@ -1648,7 +1845,7 @@
    "updated_at": "2026-10-07T20:14:34+00:00"
   },
   "_aggregations/metric/median-absolute-deviation.md": {
-   "attempts": 2,
+   "attempts": 3,
    "last_error": null,
    "original_front_matter": {
     "parent": "Metric aggregations",
@@ -1656,33 +1853,50 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-07T20:16:10+00:00",
-    "family": "agy",
+    "at": "2026-10-14T13:53:10+00:00",
+    "family": "codex:gpt-6-sol",
     "issues": [],
-    "model": "gemini-3.1-pro-high",
-    "prompt_version": "cd85573eb34b49f2",
-    "provider": "agy",
-    "target_sha256": "39e33dcaddd186832158b3ab23b20ed4b85522062090216a5b0007ed1fc06a50"
+    "model": "gpt-6-sol",
+    "prompt_version": "8a4a71603c110e60",
+    "provider": "codex-review",
+    "target_sha256": "be2eef2d8739fc6ef69a444928104887d2a519340f122371797b6f3a110469f4"
    },
-   "source_sha256": "61632a52dd7fc652b98a7dda36fcb21e648ba5a4c6122e8665fa4202620d6204",
+   "source_sha256": "fe0678b409f6a455393aff1b21ed13b13e6b9899b1ca22c5468f5ebb944fa857",
    "status": "reviewed",
-   "target_sha256": "39e33dcaddd186832158b3ab23b20ed4b85522062090216a5b0007ed1fc06a50",
-   "translated_source_sha256": "61632a52dd7fc652b98a7dda36fcb21e648ba5a4c6122e8665fa4202620d6204",
+   "target_sha256": "be2eef2d8739fc6ef69a444928104887d2a519340f122371797b6f3a110469f4",
+   "translated_source_sha256": "fe0678b409f6a455393aff1b21ed13b13e6b9899b1ca22c5468f5ebb944fa857",
    "translator": {
-    "at": "2026-10-07T20:15:47+00:00",
-    "prompt_version": "cd85573eb34b49f2",
+    "at": "2026-10-14T13:51:26+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
      {
       "chunks": [
        0
       ],
       "family": "ollama",
-      "model": "gemma4:cloud",
+      "model": "deepseek-v4.1-flash:cloud",
       "provider": "ollama-cloud"
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.001"
+      ]
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.002",
+       "section.005"
+      ]
      }
     ]
    },
-   "updated_at": "2026-10-07T20:16:10+00:00"
+   "updated_at": "2026-10-14T13:53:10+00:00"
   },
   "_aggregations/metric/minimum.md": {
    "attempts": 2,
@@ -1759,7 +1973,7 @@
    "updated_at": "2026-10-08T02:43:16+00:00"
   },
   "_aggregations/metric/percentile.md": {
-   "attempts": 2,
+   "attempts": 3,
    "last_error": null,
    "original_front_matter": {
     "parent": "Metric aggregations",
@@ -1767,36 +1981,61 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-07T20:21:03+00:00",
-    "family": "agy",
+    "at": "2026-10-14T13:56:07+00:00",
+    "family": "codex:gpt-6-sol",
     "issues": [],
-    "model": "gemini-3.1-pro-high",
-    "prompt_version": "cd85573eb34b49f2",
-    "provider": "agy",
-    "target_sha256": "7e19a5d3bf0cfb108c261ccc35b8b29d3638ca0e2715448488b68449c1719fe4"
+    "model": "gpt-6-sol",
+    "prompt_version": "8a4a71603c110e60",
+    "provider": "codex-review",
+    "target_sha256": "14616899cce75efa15349dedc5601809fe664ec412fdf067912396cb289bd599"
    },
-   "source_sha256": "c80de5492543902a97a4b4c61a6dd5548bfc172fee9a6be238107bbe8a997400",
+   "source_sha256": "c51009f3a3a0b05368b7569d541f08640e62382581be36b381bf55636700f5f6",
    "status": "reviewed",
-   "target_sha256": "7e19a5d3bf0cfb108c261ccc35b8b29d3638ca0e2715448488b68449c1719fe4",
-   "translated_source_sha256": "c80de5492543902a97a4b4c61a6dd5548bfc172fee9a6be238107bbe8a997400",
+   "target_sha256": "14616899cce75efa15349dedc5601809fe664ec412fdf067912396cb289bd599",
+   "translated_source_sha256": "c51009f3a3a0b05368b7569d541f08640e62382581be36b381bf55636700f5f6",
    "translator": {
-    "at": "2026-10-07T20:20:21+00:00",
-    "prompt_version": "cd85573eb34b49f2",
+    "at": "2026-10-14T13:54:22+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
+     {
+      "chunks": [
+       1
+      ],
+      "family": "ollama",
+      "model": "deepseek-v4.1-flash:cloud",
+      "provider": "ollama-cloud"
+     },
      {
       "chunks": [
        0
       ],
       "family": "ollama",
-      "model": "gemma4:cloud",
-      "provider": "ollama-cloud"
+      "model": "glm-5.3-flash:cloud",
+      "provider": "ollama-cloud-glm"
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.002"
+      ]
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.007",
+       "section.010"
+      ]
      }
     ]
    },
-   "updated_at": "2026-10-07T20:21:03+00:00"
+   "updated_at": "2026-10-14T13:56:07+00:00"
   },
   "_aggregations/metric/scripted-metric.md": {
-   "attempts": 1,
+   "attempts": 2,
    "last_error": null,
    "original_front_matter": {
     "parent": "Metric aggregations",
@@ -1804,34 +2043,57 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-08T02:43:45+00:00",
-    "family": "agy",
+    "at": "2026-10-14T13:57:30+00:00",
+    "family": "codex:gpt-6-sol",
     "issues": [],
-    "model": "gemini-3.1-pro-high",
-    "prompt_version": "969e9ac2fc469d77",
-    "provider": "agy",
-    "target_sha256": "6426dc7f16c07905f9bfedbc180ca17c19ce9add8e4fd429d18b3d9a28bdc7b5"
+    "model": "gpt-6-sol",
+    "prompt_version": "8a4a71603c110e60",
+    "provider": "codex-review",
+    "target_sha256": "57a606bf53820eb8c68a1d056c15751655b4a4f0c54432d85a86ff6c1b9503da"
    },
-   "source_sha256": "42eea82c6dc3ff569ee4a3ad5a961c7116946142f295aa43930c193bc2a3d109",
+   "source_sha256": "956b6a5c358d8f5fbd4492e42e0b7946a7eb4479ae0f6ca21655a0888bc83021",
    "status": "reviewed",
-   "target_sha256": "6426dc7f16c07905f9bfedbc180ca17c19ce9add8e4fd429d18b3d9a28bdc7b5",
-   "translated_source_sha256": "42eea82c6dc3ff569ee4a3ad5a961c7116946142f295aa43930c193bc2a3d109",
+   "target_sha256": "57a606bf53820eb8c68a1d056c15751655b4a4f0c54432d85a86ff6c1b9503da",
+   "translated_source_sha256": "956b6a5c358d8f5fbd4492e42e0b7946a7eb4479ae0f6ca21655a0888bc83021",
    "translator": {
-    "at": "2026-10-08T00:09:05+00:00",
-    "prompt_version": "cd85573eb34b49f2",
+    "at": "2026-10-14T13:56:52+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
      {
       "chunks": [
-       0,
-       1
+       2
       ],
       "family": "claude",
       "model": "claude-opus-5-5",
       "provider": "claude"
+     },
+     {
+      "chunks": [
+       0
+      ],
+      "family": "codex:gpt-6.1-sol",
+      "model": "gpt-6.1-sol",
+      "provider": "codex"
+     },
+     {
+      "chunks": [
+       1
+      ],
+      "family": "ollama",
+      "model": "deepseek-v4.1-flash:cloud",
+      "provider": "ollama-cloud"
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.009"
+      ]
      }
     ]
    },
-   "updated_at": "2026-10-08T02:43:45+00:00"
+   "updated_at": "2026-10-14T13:57:30+00:00"
   },
   "_aggregations/metric/stats.md": {
    "attempts": 1,
@@ -2189,7 +2451,7 @@
    "updated_at": "2026-10-08T02:45:22+00:00"
   },
   "_aggregations/pipeline/cumulative-sum.md": {
-   "attempts": 1,
+   "attempts": 2,
    "last_error": null,
    "original_front_matter": {
     "parent": "Pipeline aggregations",
@@ -2197,33 +2459,41 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-08T02:45:44+00:00",
-    "family": "agy",
+    "at": "2026-10-14T13:56:24+00:00",
+    "family": "codex:gpt-6-sol",
     "issues": [],
-    "model": "gemini-3.1-pro-high",
-    "prompt_version": "969e9ac2fc469d77",
-    "provider": "agy",
-    "target_sha256": "111bfe47eeb7bf5671bda84b74eb22b28c7de0a7380a455ddf3563ff2eced9e2"
+    "model": "gpt-6-sol",
+    "prompt_version": "8a4a71603c110e60",
+    "provider": "codex-review",
+    "target_sha256": "d3c1919b0114c9ba19bb130eb74d4ba0a57c242ff219d8e37baef2b12b7894f9"
    },
-   "source_sha256": "30e045562677c637e920080216e5da1fe4c63522af1149477c31ac22121b76c6",
+   "source_sha256": "6853d67498c2114a4e2f380a46e47b8bc8aefcfc10a8f5e3f3f1befcee123c05",
    "status": "reviewed",
-   "target_sha256": "111bfe47eeb7bf5671bda84b74eb22b28c7de0a7380a455ddf3563ff2eced9e2",
-   "translated_source_sha256": "30e045562677c637e920080216e5da1fe4c63522af1149477c31ac22121b76c6",
+   "target_sha256": "d3c1919b0114c9ba19bb130eb74d4ba0a57c242ff219d8e37baef2b12b7894f9",
+   "translated_source_sha256": "6853d67498c2114a4e2f380a46e47b8bc8aefcfc10a8f5e3f3f1befcee123c05",
    "translator": {
-    "at": "2026-10-08T00:11:05+00:00",
-    "prompt_version": "cd85573eb34b49f2",
+    "at": "2026-10-14T13:55:37+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
      {
       "chunks": [
        0
       ],
+      "family": "ollama",
+      "model": "glm-5.3-flash:cloud",
+      "provider": "ollama-cloud-glm"
+     },
+     {
       "family": "claude",
       "model": "claude-opus-5-5",
-      "provider": "claude"
+      "provider": "claude",
+      "repairs": [
+       "section.002"
+      ]
      }
     ]
    },
-   "updated_at": "2026-10-08T02:45:44+00:00"
+   "updated_at": "2026-10-14T13:56:24+00:00"
   },
   "_aggregations/pipeline/derivative.md": {
    "attempts": 1,
@@ -14853,44 +15123,53 @@
    "updated_at": "2026-10-08T07:06:05+00:00"
   },
   "_api-reference/snapshots/cleanup-snapshot-repository.md": {
-   "attempts": 1,
+   "attempts": 2,
    "last_error": null,
    "original_front_matter": {
     "parent": "Snapshot APIs",
-    "title": "Cleanup snapshot repository"
+    "title": "Clean up snapshot repository"
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-08T07:07:13+00:00",
+    "at": "2026-10-14T13:55:50+00:00",
     "family": "codex:gpt-6-sol",
     "issues": [],
     "model": "gpt-6-sol",
-    "prompt_version": "969e9ac2fc469d77",
+    "prompt_version": "8a4a71603c110e60",
     "provider": "codex-review",
-    "target_sha256": "58fd31fd4170405bd4cffd0853d5ac8d068dc4e8fa3f13f20b389be615f9340a"
+    "target_sha256": "2b55a476c02b8e0c8f3ec8f94c1f9466c6be8de2652c929debc85ab46a71fe63"
    },
-   "source_sha256": "16fa7af3e16e27d7e7e9dd16e6cda51111d8311f00613de4cb17f98fab6c2d17",
+   "source_sha256": "b07aba5e2721830672228419ef3b340da7bbaed5466b60c2cbf424151aebc512",
    "status": "reviewed",
-   "target_sha256": "58fd31fd4170405bd4cffd0853d5ac8d068dc4e8fa3f13f20b389be615f9340a",
-   "translated_source_sha256": "16fa7af3e16e27d7e7e9dd16e6cda51111d8311f00613de4cb17f98fab6c2d17",
+   "target_sha256": "2b55a476c02b8e0c8f3ec8f94c1f9466c6be8de2652c929debc85ab46a71fe63",
+   "translated_source_sha256": "b07aba5e2721830672228419ef3b340da7bbaed5466b60c2cbf424151aebc512",
    "translator": {
-    "at": "2026-10-08T07:05:45+00:00",
-    "prompt_version": "969e9ac2fc469d77",
+    "at": "2026-10-14T13:54:12+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
      {
       "chunks": [
        0
       ],
-      "family": "codex:gpt-6.1-sol",
-      "model": "gpt-6.1-sol",
-      "provider": "codex"
+      "family": "ollama",
+      "model": "deepseek-v4.1-flash:cloud",
+      "provider": "ollama-cloud"
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.003",
+       "section.007"
+      ]
      }
     ]
    },
-   "updated_at": "2026-10-08T07:07:13+00:00"
+   "updated_at": "2026-10-14T13:55:50+00:00"
   },
   "_api-reference/snapshots/clone-snapshot.md": {
-   "attempts": 1,
+   "attempts": 2,
    "last_error": null,
    "original_front_matter": {
     "parent": "Snapshot APIs",
@@ -14898,21 +15177,21 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-08T14:37:11+00:00",
-    "family": "agy",
+    "at": "2026-10-14T13:57:40+00:00",
+    "family": "codex:gpt-6-sol",
     "issues": [],
-    "model": "gemini-3.1-pro-high",
-    "prompt_version": "c8e9a147bd4887b1",
-    "provider": "agy",
-    "target_sha256": "d6cb5a7233ee8be3920bf49a5ea20b074b307426f67c1eabc27aed9db1490a2b"
+    "model": "gpt-6-sol",
+    "prompt_version": "8a4a71603c110e60",
+    "provider": "codex-review",
+    "target_sha256": "7d54eea64acdb2d2f77644362f8f5edf46f800dda045b58648582ad71d89ee99"
    },
-   "source_sha256": "a273bc902357a762e27cd24431100c470731adda0ebec88b4561e3da52627db8",
+   "source_sha256": "7737cbd9a7fc76098e84267b35fd798899fa4cf7164d1074cf139ee9c8f9ad1a",
    "status": "reviewed",
-   "target_sha256": "d6cb5a7233ee8be3920bf49a5ea20b074b307426f67c1eabc27aed9db1490a2b",
-   "translated_source_sha256": "a273bc902357a762e27cd24431100c470731adda0ebec88b4561e3da52627db8",
+   "target_sha256": "7d54eea64acdb2d2f77644362f8f5edf46f800dda045b58648582ad71d89ee99",
+   "translated_source_sha256": "7737cbd9a7fc76098e84267b35fd798899fa4cf7164d1074cf139ee9c8f9ad1a",
    "translator": {
-    "at": "2026-10-08T14:36:48+00:00",
-    "prompt_version": "c8e9a147bd4887b1",
+    "at": "2026-10-14T13:57:08+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
      {
       "chunks": [
@@ -14921,56 +15200,95 @@
       "family": "ollama",
       "model": "glm-5.3-flash:cloud",
       "provider": "ollama-cloud-glm"
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "front_matter",
+       "section.001",
+       "section.003",
+       "section.004"
+      ]
      }
     ]
    },
-   "updated_at": "2026-10-08T14:37:11+00:00"
+   "updated_at": "2026-10-14T13:57:40+00:00"
   },
   "_api-reference/snapshots/create-repository.md": {
-   "attempts": 1,
+   "attempts": 3,
    "last_error": null,
    "original_front_matter": {
     "parent": "Snapshot APIs",
-    "title": "Register snapshot repository"
+    "title": "Create or update snapshot repository"
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-08T07:12:34+00:00",
+    "at": "2026-10-14T14:00:07+00:00",
     "family": "codex:gpt-6-sol",
     "issues": [],
     "model": "gpt-6-sol",
-    "prompt_version": "969e9ac2fc469d77",
+    "prompt_version": "8a4a71603c110e60",
     "provider": "codex-review",
-    "target_sha256": "b67cb40ba9167c854c6f7d1ae1415aae0d6d1c9ebd998cba6cf66e3c90a6869c"
+    "target_sha256": "8634d6b9ffcdb0a7c0613f153fc11a987eff502147fd2c05d0a28aa8f7e4ebee"
    },
-   "source_sha256": "a1b743c50db7294267745758ca8bc8597a7273ff9dd35b57dd0930612f8c641d",
+   "source_sha256": "4ce22a0101af01077bd3638fe4b8bd7a2edebe6080605510bb08509bd82b0ac9",
    "status": "reviewed",
-   "target_sha256": "b67cb40ba9167c854c6f7d1ae1415aae0d6d1c9ebd998cba6cf66e3c90a6869c",
-   "translated_source_sha256": "a1b743c50db7294267745758ca8bc8597a7273ff9dd35b57dd0930612f8c641d",
+   "target_sha256": "8634d6b9ffcdb0a7c0613f153fc11a987eff502147fd2c05d0a28aa8f7e4ebee",
+   "translated_source_sha256": "4ce22a0101af01077bd3638fe4b8bd7a2edebe6080605510bb08509bd82b0ac9",
    "translator": {
-    "at": "2026-10-08T07:10:34+00:00",
-    "prompt_version": "969e9ac2fc469d77",
+    "at": "2026-10-14T13:59:16+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
      {
       "chunks": [
-       2
-      ],
-      "family": "claude",
-      "model": "claude-opus-5-5",
-      "provider": "claude"
-     },
-     {
-      "chunks": [
-       0,
-       1
+       3
       ],
       "family": "codex:gpt-6.1-sol",
       "model": "gpt-6.1-sol",
       "provider": "codex"
+     },
+     {
+      "chunks": [
+       0,
+       2
+      ],
+      "family": "ollama",
+      "model": "deepseek-v4.1-flash:cloud",
+      "provider": "ollama-cloud"
+     },
+     {
+      "chunks": [
+       1
+      ],
+      "family": "ollama",
+      "model": "glm-5.3-flash:cloud",
+      "provider": "ollama-cloud-glm"
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.003",
+       "section.004",
+       "section.005"
+      ]
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.001",
+       "section.004",
+       "section.015"
+      ]
      }
     ]
    },
-   "updated_at": "2026-10-08T07:12:34+00:00"
+   "updated_at": "2026-10-14T14:00:07+00:00"
   },
   "_api-reference/snapshots/create-snapshot.md": {
    "attempts": 2,
@@ -14981,36 +15299,50 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-08T14:38:58+00:00",
-    "family": "agy",
+    "at": "2026-10-14T13:58:10+00:00",
+    "family": "codex:gpt-6-sol",
     "issues": [],
-    "model": "gemini-3.1-pro-high",
-    "prompt_version": "c8e9a147bd4887b1",
-    "provider": "agy",
-    "target_sha256": "3bca1d82e6be57929f8e094a0998cc1fb8fa26f17ae43b546694aa3902be4078"
+    "model": "gpt-6-sol",
+    "prompt_version": "8a4a71603c110e60",
+    "provider": "codex-review",
+    "target_sha256": "69eaabf0d90ee531d1c4986bda7b5b72645c877ed00343dd56f1ca82b7747f6c"
    },
-   "source_sha256": "dedffb82926475b720a4fda65f91d4f4397437d582a0a067a1aed416727a97a4",
+   "source_sha256": "95524d820db63b76a736dfd6d4e9d91d50c6e8aa1bfe16382e19b77e3eca094e",
    "status": "reviewed",
-   "target_sha256": "3bca1d82e6be57929f8e094a0998cc1fb8fa26f17ae43b546694aa3902be4078",
-   "translated_source_sha256": "dedffb82926475b720a4fda65f91d4f4397437d582a0a067a1aed416727a97a4",
+   "target_sha256": "69eaabf0d90ee531d1c4986bda7b5b72645c877ed00343dd56f1ca82b7747f6c",
+   "translated_source_sha256": "95524d820db63b76a736dfd6d4e9d91d50c6e8aa1bfe16382e19b77e3eca094e",
    "translator": {
-    "at": "2026-10-08T14:38:27+00:00",
-    "prompt_version": "c8e9a147bd4887b1",
+    "at": "2026-10-14T13:57:24+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
      {
       "chunks": [
        0
       ],
       "family": "ollama",
-      "model": "deepseek-v4.1-flash:cloud",
-      "provider": "ollama-cloud"
+      "model": "glm-5.3-flash:cloud",
+      "provider": "ollama-cloud-glm"
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.003",
+       "section.004",
+       "section.005",
+       "section.009",
+       "section.011",
+       "section.012",
+       "section.013"
+      ]
      }
     ]
    },
-   "updated_at": "2026-10-08T14:38:58+00:00"
+   "updated_at": "2026-10-14T13:58:10+00:00"
   },
   "_api-reference/snapshots/delete-snapshot-repository.md": {
-   "attempts": 2,
+   "attempts": 1,
    "last_error": null,
    "original_front_matter": {
     "parent": "Snapshot APIs",
@@ -15018,21 +15350,21 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-08T14:40:02+00:00",
+    "at": "2026-10-14T13:58:22+00:00",
     "family": "codex:gpt-6-sol",
     "issues": [],
     "model": "gpt-6-sol",
-    "prompt_version": "c8e9a147bd4887b1",
+    "prompt_version": "8a4a71603c110e60",
     "provider": "codex-review",
-    "target_sha256": "8c79fe684cd7b8bc8b8bec891fb014b1a87d42a7c709ef365474bfaea373b6eb"
+    "target_sha256": "f70ca225f5d15a608fd731cb5394aeb102e5dfc0035484dbb0b16b8e8903c385"
    },
-   "source_sha256": "8c4236a7ffd4a74b2ca575449fdea07d2cafe7ebf31af8c809a94ce431242e8a",
+   "source_sha256": "08d9e78ee28c87c3568919bc879a2c629953a60d2f823d9f7de142bea83519f2",
    "status": "reviewed",
-   "target_sha256": "8c79fe684cd7b8bc8b8bec891fb014b1a87d42a7c709ef365474bfaea373b6eb",
-   "translated_source_sha256": "8c4236a7ffd4a74b2ca575449fdea07d2cafe7ebf31af8c809a94ce431242e8a",
+   "target_sha256": "f70ca225f5d15a608fd731cb5394aeb102e5dfc0035484dbb0b16b8e8903c385",
+   "translated_source_sha256": "08d9e78ee28c87c3568919bc879a2c629953a60d2f823d9f7de142bea83519f2",
    "translator": {
-    "at": "2026-10-08T14:39:48+00:00",
-    "prompt_version": "c8e9a147bd4887b1",
+    "at": "2026-10-14T13:57:33+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
      {
       "chunks": [
@@ -15044,7 +15376,7 @@
      }
     ]
    },
-   "updated_at": "2026-10-08T14:40:02+00:00"
+   "updated_at": "2026-10-14T13:58:22+00:00"
   },
   "_api-reference/snapshots/delete-snapshot.md": {
    "attempts": 2,
@@ -15055,21 +15387,21 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-08T14:41:39+00:00",
-    "family": "agy",
+    "at": "2026-10-14T13:58:32+00:00",
+    "family": "codex:gpt-6-sol",
     "issues": [],
-    "model": "gemini-3.1-pro-high",
-    "prompt_version": "c8e9a147bd4887b1",
-    "provider": "agy",
-    "target_sha256": "ef4d3d3de3dc6284db54078f5484c75d1622d1450ba87660f611c3826be9d18b"
+    "model": "gpt-6-sol",
+    "prompt_version": "8a4a71603c110e60",
+    "provider": "codex-review",
+    "target_sha256": "f55247144901a4c414cad5868d5fc3ab67badb0cf2153582a11d339e1b5493c7"
    },
-   "source_sha256": "62f98b08c6260c838c808631c2c9782773daa3427e7590fe36d6f74de6e52466",
+   "source_sha256": "bde8d94af1dd1b55937f450b4c48a8cabd5be3a501f5481a69836226d305127a",
    "status": "reviewed",
-   "target_sha256": "ef4d3d3de3dc6284db54078f5484c75d1622d1450ba87660f611c3826be9d18b",
-   "translated_source_sha256": "62f98b08c6260c838c808631c2c9782773daa3427e7590fe36d6f74de6e52466",
+   "target_sha256": "f55247144901a4c414cad5868d5fc3ab67badb0cf2153582a11d339e1b5493c7",
+   "translated_source_sha256": "bde8d94af1dd1b55937f450b4c48a8cabd5be3a501f5481a69836226d305127a",
    "translator": {
-    "at": "2026-10-08T14:40:54+00:00",
-    "prompt_version": "c8e9a147bd4887b1",
+    "at": "2026-10-14T13:57:58+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
      {
       "chunks": [
@@ -15078,13 +15410,21 @@
       "family": "ollama",
       "model": "glm-5.3-flash:cloud",
       "provider": "ollama-cloud-glm"
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.003"
+      ]
      }
     ]
    },
-   "updated_at": "2026-10-08T14:41:39+00:00"
+   "updated_at": "2026-10-14T13:58:32+00:00"
   },
   "_api-reference/snapshots/get-snapshot-repository.md": {
-   "attempts": 1,
+   "attempts": 2,
    "last_error": null,
    "original_front_matter": {
     "parent": "Snapshot APIs",
@@ -15092,21 +15432,69 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-08T07:18:08+00:00",
+    "at": "2026-10-14T14:00:19+00:00",
     "family": "codex:gpt-6-sol",
     "issues": [],
     "model": "gpt-6-sol",
-    "prompt_version": "969e9ac2fc469d77",
+    "prompt_version": "8a4a71603c110e60",
     "provider": "codex-review",
-    "target_sha256": "783b8a3e16b42f85c861f842cab717cfe7bd5ed49270a96f80e9fecbeafc79c2"
+    "target_sha256": "04ece55deeb092714c162f029d727882223ffc3030fe098d0da750750cfb22e1"
    },
-   "source_sha256": "42ae2c84c113faf7b3d4aef8016f1cc8a0a58aabca45e38680a253aca4b1c652",
+   "source_sha256": "9caac95fff6ed4c0a49be80f94615da0903b7ddeceff2c02303d8240b9dd8f29",
    "status": "reviewed",
-   "target_sha256": "783b8a3e16b42f85c861f842cab717cfe7bd5ed49270a96f80e9fecbeafc79c2",
-   "translated_source_sha256": "42ae2c84c113faf7b3d4aef8016f1cc8a0a58aabca45e38680a253aca4b1c652",
+   "target_sha256": "04ece55deeb092714c162f029d727882223ffc3030fe098d0da750750cfb22e1",
+   "translated_source_sha256": "9caac95fff6ed4c0a49be80f94615da0903b7ddeceff2c02303d8240b9dd8f29",
    "translator": {
-    "at": "2026-10-08T07:17:08+00:00",
-    "prompt_version": "969e9ac2fc469d77",
+    "at": "2026-10-14T13:59:34+00:00",
+    "prompt_version": "8a4a71603c110e60",
+    "providers": [
+     {
+      "chunks": [
+       0
+      ],
+      "family": "ollama",
+      "model": "deepseek-v4.1-flash:cloud",
+      "provider": "ollama-cloud"
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.001",
+       "section.003",
+       "section.004",
+       "section.007"
+      ]
+     }
+    ]
+   },
+   "updated_at": "2026-10-14T14:00:19+00:00"
+  },
+  "_api-reference/snapshots/get-snapshot-status.md": {
+   "attempts": 2,
+   "last_error": null,
+   "original_front_matter": {
+    "parent": "Snapshot APIs",
+    "title": "Get snapshot status"
+   },
+   "reviewer": {
+    "approved": true,
+    "at": "2026-10-14T14:00:47+00:00",
+    "family": "codex:gpt-6-sol",
+    "issues": [],
+    "model": "gpt-6-sol",
+    "prompt_version": "8a4a71603c110e60",
+    "provider": "codex-review",
+    "target_sha256": "5bf2829dffc74d5288a886cfa1b8227e8c0aa6ff67fd495bc9fd58818b6131e1"
+   },
+   "source_sha256": "1c53f58a3eca3374281e7f83789e4fa95617303588e85237050ed24d3c9317d1",
+   "status": "reviewed",
+   "target_sha256": "5bf2829dffc74d5288a886cfa1b8227e8c0aa6ff67fd495bc9fd58818b6131e1",
+   "translated_source_sha256": "1c53f58a3eca3374281e7f83789e4fa95617303588e85237050ed24d3c9317d1",
+   "translator": {
+    "at": "2026-10-14T14:00:02+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
      {
       "chunks": [
@@ -15115,165 +15503,10 @@
       "family": "claude",
       "model": "claude-opus-5-5",
       "provider": "claude"
-     }
-    ]
-   },
-   "updated_at": "2026-10-08T07:18:08+00:00"
-  },
-  "_api-reference/snapshots/get-snapshot-status.md": {
-   "attempts": 1,
-   "last_error": null,
-   "original_front_matter": {
-    "parent": "Snapshot APIs",
-    "title": "Get snapshot status"
-   },
-   "reviewer": {
-    "approved": true,
-    "at": "2026-10-08T14:49:15+00:00",
-    "family": "agy",
-    "issues": [],
-    "model": "gemini-3.1-pro-high",
-    "prompt_version": "c8e9a147bd4887b1",
-    "provider": "agy",
-    "target_sha256": "58bb7ff3cbd23c68130ef28144928f33ceea9322d35f5af89ba146636e063a7d"
-   },
-   "source_sha256": "05ccba989af2aba35d0cd3eb93ed5cd21616a82336163da8c26696c50781b787",
-   "status": "reviewed",
-   "target_sha256": "58bb7ff3cbd23c68130ef28144928f33ceea9322d35f5af89ba146636e063a7d",
-   "translated_source_sha256": "05ccba989af2aba35d0cd3eb93ed5cd21616a82336163da8c26696c50781b787",
-   "translator": {
-    "at": "2026-10-08T14:48:31+00:00",
-    "prompt_version": "c8e9a147bd4887b1",
-    "providers": [
-     {
-      "chunks": [
-       0
-      ],
-      "family": "ollama",
-      "model": "deepseek-v4.1-flash:cloud",
-      "provider": "ollama-cloud"
      },
      {
       "chunks": [
        2
-      ],
-      "family": "ollama",
-      "model": "glm-5.3-flash:cloud",
-      "provider": "ollama-cloud-glm"
-     }
-    ]
-   },
-   "updated_at": "2026-10-08T14:49:15+00:00"
-  },
-  "_api-reference/snapshots/get-snapshot.md": {
-   "attempts": 1,
-   "last_error": null,
-   "original_front_matter": {
-    "parent": "Snapshot APIs",
-    "title": "Get snapshot"
-   },
-   "reviewer": {
-    "approved": true,
-    "at": "2026-10-08T07:21:33+00:00",
-    "family": "codex:gpt-6-sol",
-    "issues": [],
-    "model": "gpt-6-sol",
-    "prompt_version": "969e9ac2fc469d77",
-    "provider": "codex-review",
-    "target_sha256": "de931b1fdd9cd020a7b1c8a304bfa027bbf0b777f09d20b7e982b53d76d5a958"
-   },
-   "source_sha256": "363a2e1a27d69b2e1ff15c69c7848b029c8e23ef56d370710e556f7ca7f90f32",
-   "status": "reviewed",
-   "target_sha256": "de931b1fdd9cd020a7b1c8a304bfa027bbf0b777f09d20b7e982b53d76d5a958",
-   "translated_source_sha256": "363a2e1a27d69b2e1ff15c69c7848b029c8e23ef56d370710e556f7ca7f90f32",
-   "translator": {
-    "at": "2026-10-08T07:21:01+00:00",
-    "prompt_version": "969e9ac2fc469d77",
-    "providers": [
-     {
-      "chunks": [
-       0
-      ],
-      "family": "codex:gpt-6.1-sol",
-      "model": "gpt-6.1-sol",
-      "provider": "codex"
-     }
-    ]
-   },
-   "updated_at": "2026-10-08T07:21:33+00:00"
-  },
-  "_api-reference/snapshots/index.md": {
-   "attempts": 1,
-   "last_error": null,
-   "original_front_matter": {
-    "title": "Snapshot APIs"
-   },
-   "reviewer": {
-    "approved": true,
-    "at": "2026-10-08T07:22:53+00:00",
-    "family": "codex:gpt-6-sol",
-    "issues": [],
-    "model": "gpt-6-sol",
-    "prompt_version": "969e9ac2fc469d77",
-    "provider": "codex-review",
-    "target_sha256": "c97e55dbf0967ac1d9c01972fef5d7a776fd36291cc70f273a8e5865d24281e9"
-   },
-   "source_sha256": "9399fdb66f57775a7a607a55e50fb1baa7fc7b1e473955e48dbc7e2d8656bf89",
-   "status": "reviewed",
-   "target_sha256": "c97e55dbf0967ac1d9c01972fef5d7a776fd36291cc70f273a8e5865d24281e9",
-   "translated_source_sha256": "9399fdb66f57775a7a607a55e50fb1baa7fc7b1e473955e48dbc7e2d8656bf89",
-   "translator": {
-    "at": "2026-10-08T07:21:39+00:00",
-    "prompt_version": "969e9ac2fc469d77",
-    "providers": [
-     {
-      "chunks": [
-       0
-      ],
-      "family": "ollama",
-      "model": "glm-5.3-flash:cloud",
-      "provider": "ollama-cloud-glm"
-     }
-    ]
-   },
-   "updated_at": "2026-10-08T07:22:53+00:00"
-  },
-  "_api-reference/snapshots/restore-snapshot.md": {
-   "attempts": 3,
-   "last_error": null,
-   "original_front_matter": {
-    "parent": "Snapshot APIs",
-    "title": "Restore snapshot"
-   },
-   "reviewer": {
-    "approved": true,
-    "at": "2026-10-08T16:14:25+00:00",
-    "family": "codex:gpt-6-sol",
-    "issues": [],
-    "model": "gpt-6-sol",
-    "prompt_version": "0343516bacbffe7a",
-    "provider": "codex-review",
-    "target_sha256": "82aace6e36a3c5f05ebe1f4318f5768e31a5969114db0203d413d46325903b25"
-   },
-   "source_sha256": "546562ff04cba5dab3501f88ede0665981b1e6eacf0c620a6959e29dae8262e8",
-   "status": "reviewed",
-   "target_sha256": "82aace6e36a3c5f05ebe1f4318f5768e31a5969114db0203d413d46325903b25",
-   "translated_source_sha256": "546562ff04cba5dab3501f88ede0665981b1e6eacf0c620a6959e29dae8262e8",
-   "translator": {
-    "at": "2026-10-08T16:13:44+00:00",
-    "prompt_version": "0343516bacbffe7a",
-    "providers": [
-     {
-      "chunks": [
-       0
-      ],
-      "family": "codex:gpt-6.1-sol",
-      "model": "gpt-6.1-sol",
-      "provider": "codex"
-     },
-     {
-      "chunks": [
-       1
       ],
       "family": "ollama",
       "model": "deepseek-v4.1-flash:cloud",
@@ -15284,7 +15517,167 @@
       "model": "claude-opus-5-5",
       "provider": "claude",
       "repairs": [
-       "section.011",
+       "section.003",
+       "section.007",
+       "section.010",
+       "section.011"
+      ]
+     }
+    ]
+   },
+   "updated_at": "2026-10-14T14:00:47+00:00"
+  },
+  "_api-reference/snapshots/get-snapshot.md": {
+   "attempts": 2,
+   "last_error": null,
+   "original_front_matter": {
+    "parent": "Snapshot APIs",
+    "title": "Get snapshot"
+   },
+   "reviewer": {
+    "approved": true,
+    "at": "2026-10-14T13:59:51+00:00",
+    "family": "codex:gpt-6-sol",
+    "issues": [],
+    "model": "gpt-6-sol",
+    "prompt_version": "8a4a71603c110e60",
+    "provider": "codex-review",
+    "target_sha256": "f8988bdad60c55c5ea6e34097c4eb8367a79f688fbf4098f5a77d78a4e474366"
+   },
+   "source_sha256": "afc13627c9365554d3d15000ef2078c591e16b046f5db6b73aeb0d877edb724c",
+   "status": "reviewed",
+   "target_sha256": "f8988bdad60c55c5ea6e34097c4eb8367a79f688fbf4098f5a77d78a4e474366",
+   "translated_source_sha256": "afc13627c9365554d3d15000ef2078c591e16b046f5db6b73aeb0d877edb724c",
+   "translator": {
+    "at": "2026-10-14T13:59:05+00:00",
+    "prompt_version": "8a4a71603c110e60",
+    "providers": [
+     {
+      "chunks": [
+       0
+      ],
+      "family": "ollama",
+      "model": "glm-5.3-flash:cloud",
+      "provider": "ollama-cloud-glm"
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.003",
+       "section.004",
+       "section.007"
+      ]
+     }
+    ]
+   },
+   "updated_at": "2026-10-14T13:59:51+00:00"
+  },
+  "_api-reference/snapshots/index.md": {
+   "attempts": 2,
+   "last_error": null,
+   "original_front_matter": {
+    "title": "Snapshot APIs"
+   },
+   "reviewer": {
+    "approved": true,
+    "at": "2026-10-14T14:01:48+00:00",
+    "family": "codex:gpt-6-sol",
+    "issues": [],
+    "model": "gpt-6-sol",
+    "prompt_version": "8a4a71603c110e60",
+    "provider": "codex-review",
+    "target_sha256": "80b25c1c229ebb30b52fc727c2316168769543cca133f99959dbeba3a0a994cd"
+   },
+   "source_sha256": "afe8861b6c16f6f55865ecc79a8b070133040406384feac348d08551a3fbe68c",
+   "status": "reviewed",
+   "target_sha256": "80b25c1c229ebb30b52fc727c2316168769543cca133f99959dbeba3a0a994cd",
+   "translated_source_sha256": "afe8861b6c16f6f55865ecc79a8b070133040406384feac348d08551a3fbe68c",
+   "translator": {
+    "at": "2026-10-14T14:00:41+00:00",
+    "prompt_version": "8a4a71603c110e60",
+    "providers": [
+     {
+      "chunks": [
+       0
+      ],
+      "family": "ollama",
+      "model": "glm-5.3-flash:cloud",
+      "provider": "ollama-cloud-glm"
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.001",
+       "section.003",
+       "section.004"
+      ]
+     }
+    ]
+   },
+   "updated_at": "2026-10-14T14:01:48+00:00"
+  },
+  "_api-reference/snapshots/restore-snapshot.md": {
+   "attempts": 0,
+   "last_error": null,
+   "original_front_matter": {
+    "parent": "Snapshot APIs",
+    "title": "Restore snapshot"
+   },
+   "reviewer": {
+    "approved": true,
+    "at": "2026-10-14T14:11:32+00:00",
+    "family": "codex:gpt-6-sol",
+    "issues": [],
+    "model": "gpt-6-sol",
+    "prompt_version": "02fda88b4e44fe8a",
+    "provider": "codex-review",
+    "target_sha256": "8d152476de29d599f85bcbc89da7ec41a6af5e5791af837f64eb189c55985196"
+   },
+   "source_sha256": "19e92f65dfa76b50845959e38c9829730991c9d547bdddc7b3e566c873c5a3f3",
+   "status": "reviewed",
+   "target_sha256": "8d152476de29d599f85bcbc89da7ec41a6af5e5791af837f64eb189c55985196",
+   "translated_source_sha256": "19e92f65dfa76b50845959e38c9829730991c9d547bdddc7b3e566c873c5a3f3",
+   "translator": {
+    "at": "2026-10-14T14:04:37+00:00",
+    "prompt_version": "8a4a71603c110e60",
+    "providers": [
+     {
+      "chunks": [
+       2
+      ],
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude"
+     },
+     {
+      "chunks": [
+       1
+      ],
+      "family": "codex:gpt-6.1-sol",
+      "model": "gpt-6.1-sol",
+      "provider": "codex"
+     },
+     {
+      "chunks": [
+       0
+      ],
+      "family": "ollama",
+      "model": "deepseek-v4.1-flash:cloud",
+      "provider": "ollama-cloud"
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.001",
+       "section.003",
+       "section.004",
+       "section.005",
        "section.009"
       ]
      },
@@ -15293,12 +15686,14 @@
       "model": "claude-opus-5-5",
       "provider": "claude",
       "repairs": [
-       "section.005"
+       "section.005",
+       "section.009",
+       "section.012"
       ]
      }
     ]
    },
-   "updated_at": "2026-10-08T16:14:25+00:00"
+   "updated_at": "2026-10-14T14:11:32+00:00"
   },
   "_api-reference/snapshots/verify-snapshot-repository.md": {
    "attempts": 2,
@@ -15309,33 +15704,43 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-08T07:23:28+00:00",
+    "at": "2026-10-14T14:02:53+00:00",
     "family": "codex:gpt-6-sol",
     "issues": [],
     "model": "gpt-6-sol",
-    "prompt_version": "969e9ac2fc469d77",
+    "prompt_version": "8a4a71603c110e60",
     "provider": "codex-review",
-    "target_sha256": "ecac408128bc24639e0a1893c2cf0b00c33aa2f1baa7b479fbd970fcf4f683d1"
+    "target_sha256": "06df4b0138f244c70efbe9d347245f376c839e903ff6a3d1e53f7e7416782c21"
    },
-   "source_sha256": "74f49a43c50f98fbca8a747110ede49fe3c2b5acea6ca7f424b7c450e20af588",
+   "source_sha256": "489863efcf558a66f461bc9fc19532f9136c49c8feed816cb28b1646e6781d18",
    "status": "reviewed",
-   "target_sha256": "ecac408128bc24639e0a1893c2cf0b00c33aa2f1baa7b479fbd970fcf4f683d1",
-   "translated_source_sha256": "74f49a43c50f98fbca8a747110ede49fe3c2b5acea6ca7f424b7c450e20af588",
+   "target_sha256": "06df4b0138f244c70efbe9d347245f376c839e903ff6a3d1e53f7e7416782c21",
+   "translated_source_sha256": "489863efcf558a66f461bc9fc19532f9136c49c8feed816cb28b1646e6781d18",
    "translator": {
-    "at": "2026-10-08T07:22:27+00:00",
-    "prompt_version": "969e9ac2fc469d77",
+    "at": "2026-10-14T14:01:47+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
      {
       "chunks": [
        0
       ],
-      "family": "codex:gpt-6.1-sol",
-      "model": "gpt-6.1-sol",
-      "provider": "codex"
+      "family": "ollama",
+      "model": "glm-5.3-flash:cloud",
+      "provider": "ollama-cloud-glm"
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.001",
+       "section.003",
+       "section.007"
+      ]
      }
     ]
    },
-   "updated_at": "2026-10-08T07:23:28+00:00"
+   "updated_at": "2026-10-14T14:02:53+00:00"
   },
   "_api-reference/tasks/cancel-tasks.md": {
    "attempts": 3,
@@ -30525,52 +30930,54 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-08T17:21:21+00:00",
+    "at": "2026-10-14T14:03:28+00:00",
     "family": "codex:gpt-6-sol",
     "issues": [],
     "model": "gpt-6-sol",
-    "prompt_version": "0343516bacbffe7a",
+    "prompt_version": "8a4a71603c110e60",
     "provider": "codex-review",
-    "target_sha256": "2f9f5418c2f868735d5c50b254ee54a3d09d0a9e1d2428b58b2f00fd69f8887d"
+    "target_sha256": "165f1170fa18d371615dfcc9bd74d5245e04a3be1079c024a3693c03faa47f69"
    },
-   "source_sha256": "2b82db9644214a4d0b4bdf41dff75cb9391ef543fe01f5e423aba8ff63084a88",
+   "source_sha256": "d331088f2b7f072772c1feb1eebb61eba1ec26dcfed13d84d4d27c5fffeb84f9",
    "status": "reviewed",
-   "target_sha256": "2f9f5418c2f868735d5c50b254ee54a3d09d0a9e1d2428b58b2f00fd69f8887d",
-   "translated_source_sha256": "2b82db9644214a4d0b4bdf41dff75cb9391ef543fe01f5e423aba8ff63084a88",
+   "target_sha256": "165f1170fa18d371615dfcc9bd74d5245e04a3be1079c024a3693c03faa47f69",
+   "translated_source_sha256": "d331088f2b7f072772c1feb1eebb61eba1ec26dcfed13d84d4d27c5fffeb84f9",
    "translator": {
-    "at": "2026-10-08T17:20:37+00:00",
-    "prompt_version": "0343516bacbffe7a",
+    "at": "2026-10-14T14:02:30+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
      {
       "chunks": [
-       1
-      ],
-      "family": "codex:gpt-6.1-sol",
-      "model": "gpt-6.1-sol",
-      "provider": "codex"
-     },
-     {
-      "chunks": [
-       0
+       0,
+       2
       ],
       "family": "ollama",
       "model": "deepseek-v4.1-flash:cloud",
       "provider": "ollama-cloud"
      },
      {
+      "chunks": [
+       1
+      ],
+      "family": "ollama",
+      "model": "glm-5.3-flash:cloud",
+      "provider": "ollama-cloud-glm"
+     },
+     {
       "family": "claude",
       "model": "claude-opus-5-5",
       "provider": "claude",
       "repairs": [
-       "section.001",
        "section.005",
-       "section.006",
-       "section.007"
+       "section.009",
+       "section.010",
+       "section.012",
+       "section.013"
       ]
      }
     ]
    },
-   "updated_at": "2026-10-08T17:21:21+00:00"
+   "updated_at": "2026-10-14T14:03:28+00:00"
   },
   "_im-plugin/index-alias.md": {
    "attempts": 2,
@@ -31835,21 +32242,21 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-08T17:49:03+00:00",
+    "at": "2026-10-14T14:03:02+00:00",
     "family": "codex:gpt-6-sol",
     "issues": [],
     "model": "gpt-6-sol",
-    "prompt_version": "0343516bacbffe7a",
+    "prompt_version": "8a4a71603c110e60",
     "provider": "codex-review",
-    "target_sha256": "5537a2f72accba763e06d9edf264b0069151e19fa1005275abd6d355da89aa60"
+    "target_sha256": "5241b48ee7aafa8a47da48d7d9fc3a254631cb238233051245ba72fb91b58807"
    },
-   "source_sha256": "4cabbb602b87b922345da6b33fd2a2ec15826a9fa549d750674b766d2bc2fdbd",
+   "source_sha256": "f78989084758b27a7d87b8ee5323c7f848deb110a0adf6c86746aea705b53bae",
    "status": "reviewed",
-   "target_sha256": "5537a2f72accba763e06d9edf264b0069151e19fa1005275abd6d355da89aa60",
-   "translated_source_sha256": "4cabbb602b87b922345da6b33fd2a2ec15826a9fa549d750674b766d2bc2fdbd",
+   "target_sha256": "5241b48ee7aafa8a47da48d7d9fc3a254631cb238233051245ba72fb91b58807",
+   "translated_source_sha256": "f78989084758b27a7d87b8ee5323c7f848deb110a0adf6c86746aea705b53bae",
    "translator": {
-    "at": "2026-10-08T17:46:15+00:00",
-    "prompt_version": "0343516bacbffe7a",
+    "at": "2026-10-14T14:02:25+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
      {
       "chunks": [
@@ -31860,16 +32267,16 @@
       "provider": "ollama-cloud-glm"
      },
      {
-      "family": "codex:gpt-6.1-sol",
-      "model": "gpt-6.1-sol",
-      "provider": "codex",
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
       "repairs": [
        "section.001"
       ]
      }
     ]
    },
-   "updated_at": "2026-10-08T17:49:03+00:00"
+   "updated_at": "2026-10-14T14:03:02+00:00"
   },
   "_im-plugin/notifications-settings.md": {
    "attempts": 2,
@@ -32408,42 +32815,41 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-08T17:58:03+00:00",
+    "at": "2026-10-14T14:05:32+00:00",
     "family": "codex:gpt-6-sol",
     "issues": [],
     "model": "gpt-6-sol",
-    "prompt_version": "0343516bacbffe7a",
+    "prompt_version": "8a4a71603c110e60",
     "provider": "codex-review",
-    "target_sha256": "44af577533aaa658229c7643b919ccd7fd4b2e7c59c18c1e42f0f2f863f66c98"
+    "target_sha256": "571bbdf9ccef94f218cf32fe809a82270a50f652eab4ac5010fee7afe1931dcd"
    },
-   "source_sha256": "5b0a8680298b2028c8a6af463ed05f0b8fa37e06a2fcd8f8103fb80d8566be50",
+   "source_sha256": "956feeab5095d4c0589d15fdcb16291f01ecff8e1fdd6821520de491e298f49c",
    "status": "reviewed",
-   "target_sha256": "44af577533aaa658229c7643b919ccd7fd4b2e7c59c18c1e42f0f2f863f66c98",
-   "translated_source_sha256": "5b0a8680298b2028c8a6af463ed05f0b8fa37e06a2fcd8f8103fb80d8566be50",
+   "target_sha256": "571bbdf9ccef94f218cf32fe809a82270a50f652eab4ac5010fee7afe1931dcd",
+   "translated_source_sha256": "956feeab5095d4c0589d15fdcb16291f01ecff8e1fdd6821520de491e298f49c",
    "translator": {
-    "at": "2026-10-08T17:57:12+00:00",
-    "prompt_version": "0343516bacbffe7a",
+    "at": "2026-10-14T14:03:51+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
      {
       "chunks": [
        0
       ],
       "family": "ollama",
-      "model": "glm-5.3-flash:cloud",
-      "provider": "ollama-cloud-glm"
+      "model": "deepseek-v4.1-flash:cloud",
+      "provider": "ollama-cloud"
      },
      {
-      "family": "codex:gpt-6.1-sol",
-      "model": "gpt-6.1-sol",
-      "provider": "codex",
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
       "repairs": [
-       "section.003",
-       "section.005"
+       "section.003"
       ]
      }
     ]
    },
-   "updated_at": "2026-10-08T17:58:03+00:00"
+   "updated_at": "2026-10-14T14:05:32+00:00"
   },
   "_ingest-pipelines/pipeline-failures.md": {
    "attempts": 1,
@@ -35479,7 +35885,7 @@
    "updated_at": "2026-10-07T16:55:31+00:00"
   },
   "_install-and-configure/install-dashboards/debian.md": {
-   "attempts": 2,
+   "attempts": 0,
    "last_error": null,
    "original_front_matter": {
     "parent": "Installing OpenSearch Dashboards",
@@ -35487,34 +35893,61 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-07T16:59:04+00:00",
-    "family": "agy",
-    "issues": [],
-    "model": "gemini-3.1-pro-high",
-    "prompt_version": "17cb1d26e03713b2",
-    "provider": "agy",
-    "target_sha256": "5966c47fd2224bdf6667192a5da6ef27e336a5092752f973d96ddd9e49455c4d"
+    "at": "2026-10-14T13:37:30+00:00",
+    "family": "codex:gpt-6-sol",
+    "issues": [
+     {
+      "id": "section.012",
+      "problem": "「啟用 `opensearch-dashboards.service` 至 `systemd`」介系詞用法不自然，但意思明確。",
+      "severity": "minor",
+      "suggestion": "若要在套件升級後自動重新啟動 OpenSearch Dashboards，請透過 `systemd` 啟用 `opensearch-dashboards.service`："
+     }
+    ],
+    "model": "gpt-6-sol",
+    "prompt_version": "8a4a71603c110e60",
+    "provider": "codex-review",
+    "target_sha256": "774b577223002944df88e82a8dba8c24e33a9fb89df377f8972dcbc3b642537d"
    },
-   "source_sha256": "55ae4a5494f335dcea2edec9f5033ca11950ad75d0ba6a997a272e44bde8e430",
+   "source_sha256": "8901cc747e052b88d4127316ca476220e06841e6a0c5e386fbaebab33bc92f69",
    "status": "reviewed",
-   "target_sha256": "5966c47fd2224bdf6667192a5da6ef27e336a5092752f973d96ddd9e49455c4d",
-   "translated_source_sha256": "55ae4a5494f335dcea2edec9f5033ca11950ad75d0ba6a997a272e44bde8e430",
+   "target_sha256": "774b577223002944df88e82a8dba8c24e33a9fb89df377f8972dcbc3b642537d",
+   "translated_source_sha256": "8901cc747e052b88d4127316ca476220e06841e6a0c5e386fbaebab33bc92f69",
    "translator": {
-    "at": "2026-10-07T16:57:44+00:00",
-    "prompt_version": "17cb1d26e03713b2",
+    "at": "2026-10-14T13:34:59+00:00",
+    "prompt_version": "d0921d61bacd7305",
     "providers": [
      {
       "chunks": [
-       0,
+       0
+      ],
+      "family": "ollama",
+      "model": "deepseek-v4.1-flash:cloud",
+      "provider": "ollama-cloud"
+     },
+     {
+      "chunks": [
        1
       ],
       "family": "ollama",
-      "model": "gemma4:cloud",
-      "provider": "ollama-cloud"
+      "model": "glm-5.3-flash:cloud",
+      "provider": "ollama-cloud-glm"
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.000",
+       "section.003",
+       "section.007",
+       "section.008",
+       "section.009",
+       "section.013"
+      ]
      }
     ]
    },
-   "updated_at": "2026-10-07T16:59:04+00:00"
+   "updated_at": "2026-10-14T13:37:30+00:00"
   },
   "_install-and-configure/install-dashboards/docker.md": {
    "attempts": 1,
@@ -35554,7 +35987,7 @@
    "updated_at": "2026-10-07T16:59:40+00:00"
   },
   "_install-and-configure/install-dashboards/helm.md": {
-   "attempts": 0,
+   "attempts": 3,
    "last_error": null,
    "original_front_matter": {
     "parent": "Installing OpenSearch Dashboards",
@@ -35562,33 +35995,51 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-08T02:34:43+00:00",
-    "family": "agy",
+    "at": "2026-10-14T13:36:40+00:00",
+    "family": "codex:gpt-6-sol",
     "issues": [],
-    "model": "gemini-3.1-pro-high",
-    "prompt_version": "969e9ac2fc469d77",
-    "provider": "agy",
-    "target_sha256": "14fb63b1eacf99f994f8dfe22427ce9c1e78c4244e72e0c1b23454157ed0032b"
+    "model": "gpt-6-sol",
+    "prompt_version": "d0921d61bacd7305",
+    "provider": "codex-review",
+    "target_sha256": "603ce86f3811b81717e6f5e34a3db23a7966431e665269d3a8dfa62a62aafd4d"
    },
-   "source_sha256": "3354ce707c585c7027fe14daedc9122feeba8e8e7dd61432e72ff573e29c889b",
+   "source_sha256": "f68096ed2440f0e9b8f3a465619c6270c97ede0649dc51a27836dd1c7f59061e",
    "status": "reviewed",
-   "target_sha256": "14fb63b1eacf99f994f8dfe22427ce9c1e78c4244e72e0c1b23454157ed0032b",
-   "translated_source_sha256": "3354ce707c585c7027fe14daedc9122feeba8e8e7dd61432e72ff573e29c889b",
+   "target_sha256": "603ce86f3811b81717e6f5e34a3db23a7966431e665269d3a8dfa62a62aafd4d",
+   "translated_source_sha256": "f68096ed2440f0e9b8f3a465619c6270c97ede0649dc51a27836dd1c7f59061e",
    "translator": {
-    "at": "2026-10-07T16:59:50+00:00",
-    "prompt_version": "17cb1d26e03713b2",
+    "at": "2026-10-14T13:35:41+00:00",
+    "prompt_version": "d0921d61bacd7305",
     "providers": [
      {
       "chunks": [
        0
       ],
       "family": "ollama",
-      "model": "gemma4:cloud",
+      "model": "deepseek-v4.1-flash:cloud",
       "provider": "ollama-cloud"
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.001"
+      ]
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.001",
+       "section.002",
+       "section.003"
+      ]
      }
     ]
    },
-   "updated_at": "2026-10-08T02:34:43+00:00"
+   "updated_at": "2026-10-14T13:36:40+00:00"
   },
   "_install-and-configure/install-dashboards/index.md": {
    "attempts": 1,
@@ -35627,43 +36078,51 @@
    "updated_at": "2026-10-07T17:01:32+00:00"
   },
   "_install-and-configure/install-dashboards/plugins.md": {
-   "attempts": 1,
+   "attempts": 2,
    "last_error": null,
    "original_front_matter": {
     "title": "Managing OpenSearch Dashboards plugins"
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-07T17:01:17+00:00",
-    "family": "agy",
+    "at": "2026-10-14T13:35:02+00:00",
+    "family": "codex:gpt-6-sol",
     "issues": [],
-    "model": "gemini-3.1-pro-high",
-    "prompt_version": "17cb1d26e03713b2",
-    "provider": "agy",
-    "target_sha256": "de10cd30993a0a50334fa24e7d027c723b7962c017c7dfc519f84d7d1f552602"
+    "model": "gpt-6-sol",
+    "prompt_version": "d0921d61bacd7305",
+    "provider": "codex-review",
+    "target_sha256": "01f52a6dfef38ceb6121798256c774bffea4264c9bb6995523942a1fafc4f3c1"
    },
-   "source_sha256": "b37e4363ff3c5aa11c1f2dea1d1d0e7ebfe5d53d685eab30de10a79e7128a85b",
+   "source_sha256": "8c6ad929a945a3fc27ea54aaf926a6778d033b1cdae851b7281cf7410c251c6b",
    "status": "reviewed",
-   "target_sha256": "de10cd30993a0a50334fa24e7d027c723b7962c017c7dfc519f84d7d1f552602",
-   "translated_source_sha256": "b37e4363ff3c5aa11c1f2dea1d1d0e7ebfe5d53d685eab30de10a79e7128a85b",
+   "target_sha256": "01f52a6dfef38ceb6121798256c774bffea4264c9bb6995523942a1fafc4f3c1",
+   "translated_source_sha256": "8c6ad929a945a3fc27ea54aaf926a6778d033b1cdae851b7281cf7410c251c6b",
    "translator": {
-    "at": "2026-10-07T17:00:49+00:00",
-    "prompt_version": "17cb1d26e03713b2",
+    "at": "2026-10-14T13:33:45+00:00",
+    "prompt_version": "d0921d61bacd7305",
     "providers": [
      {
       "chunks": [
        0
       ],
       "family": "ollama",
-      "model": "gemma4:cloud",
-      "provider": "ollama-cloud"
+      "model": "glm-5.3-flash:cloud",
+      "provider": "ollama-cloud-glm"
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.008"
+      ]
      }
     ]
    },
-   "updated_at": "2026-10-07T17:01:17+00:00"
+   "updated_at": "2026-10-14T13:35:02+00:00"
   },
   "_install-and-configure/install-dashboards/rpm.md": {
-   "attempts": 3,
+   "attempts": 0,
    "last_error": null,
    "original_front_matter": {
     "parent": "Installing OpenSearch Dashboards",
@@ -35671,21 +36130,140 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-08T02:36:51+00:00",
-    "family": "agy",
+    "at": "2026-10-14T13:37:16+00:00",
+    "family": "codex:gpt-6-sol",
     "issues": [],
-    "model": "gemini-3.1-pro-high",
-    "prompt_version": "969e9ac2fc469d77",
-    "provider": "agy",
-    "target_sha256": "aa853102add6e9436f6303597421b4b707d1a307d083a84d60768f2bfef08546"
+    "model": "gpt-6-sol",
+    "prompt_version": "8a4a71603c110e60",
+    "provider": "codex-review",
+    "target_sha256": "57c40694844d47b2d52e146df7d760dddfe12816829d27b7c5170755efe53d7a"
    },
-   "source_sha256": "f61b183426b3626cb66c2116958ceb5e7e8345b63d94b39d833b1e5b4e4f2ef9",
+   "source_sha256": "4a1f32d0eb0a69fffe61af6af487b62f7531f78ee3cec5b282e95487880627ef",
    "status": "reviewed",
-   "target_sha256": "aa853102add6e9436f6303597421b4b707d1a307d083a84d60768f2bfef08546",
-   "translated_source_sha256": "f61b183426b3626cb66c2116958ceb5e7e8345b63d94b39d833b1e5b4e4f2ef9",
+   "target_sha256": "57c40694844d47b2d52e146df7d760dddfe12816829d27b7c5170755efe53d7a",
+   "translated_source_sha256": "4a1f32d0eb0a69fffe61af6af487b62f7531f78ee3cec5b282e95487880627ef",
    "translator": {
-    "at": "2026-10-08T02:36:27+00:00",
-    "prompt_version": "969e9ac2fc469d77",
+    "at": "2026-10-14T13:35:07+00:00",
+    "prompt_version": "d0921d61bacd7305",
+    "providers": [
+     {
+      "chunks": [
+       0
+      ],
+      "family": "ollama",
+      "model": "deepseek-v4.1-flash:cloud",
+      "provider": "ollama-cloud"
+     }
+    ]
+   },
+   "updated_at": "2026-10-14T13:37:16+00:00"
+  },
+  "_install-and-configure/install-dashboards/tar.md": {
+   "attempts": 2,
+   "last_error": null,
+   "original_front_matter": {
+    "parent": "Installing OpenSearch Dashboards",
+    "title": "Tarball"
+   },
+   "reviewer": {
+    "approved": true,
+    "at": "2026-10-14T13:38:09+00:00",
+    "family": "codex:gpt-6-sol",
+    "issues": [],
+    "model": "gpt-6-sol",
+    "prompt_version": "8a4a71603c110e60",
+    "provider": "codex-review",
+    "target_sha256": "361c83e195d4f1090acc6d0e9859b6340fa8796b0c82c6fee102a8ff3aead9e3"
+   },
+   "source_sha256": "56650d3b5170a60d360e437c8ed4e3395497e21391187fcf43f93db9a1518122",
+   "status": "reviewed",
+   "target_sha256": "361c83e195d4f1090acc6d0e9859b6340fa8796b0c82c6fee102a8ff3aead9e3",
+   "translated_source_sha256": "56650d3b5170a60d360e437c8ed4e3395497e21391187fcf43f93db9a1518122",
+   "translator": {
+    "at": "2026-10-14T13:37:48+00:00",
+    "prompt_version": "8a4a71603c110e60",
+    "providers": [
+     {
+      "chunks": [
+       0
+      ],
+      "family": "ollama",
+      "model": "glm-5.3-flash:cloud",
+      "provider": "ollama-cloud-glm"
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "front_matter"
+      ]
+     }
+    ]
+   },
+   "updated_at": "2026-10-14T13:38:09+00:00"
+  },
+  "_install-and-configure/install-dashboards/tls.md": {
+   "attempts": 1,
+   "last_error": null,
+   "original_front_matter": {
+    "parent": "Installing OpenSearch Dashboards",
+    "title": "Configuring TLS"
+   },
+   "reviewer": {
+    "approved": true,
+    "at": "2026-10-14T13:37:21+00:00",
+    "family": "claude",
+    "issues": [],
+    "model": "default",
+    "prompt_version": "8a4a71603c110e60",
+    "provider": "claude",
+    "target_sha256": "bcb50655b61c363490a2f711116ae2bd6254e6dbcc17925079212476fb9a3ccb"
+   },
+   "source_sha256": "5d8fb4b5cf940b50d70c9566802e38561d4ae0124af774bf295ff46e0d81750a",
+   "status": "reviewed",
+   "target_sha256": "bcb50655b61c363490a2f711116ae2bd6254e6dbcc17925079212476fb9a3ccb",
+   "translated_source_sha256": "5d8fb4b5cf940b50d70c9566802e38561d4ae0124af774bf295ff46e0d81750a",
+   "translator": {
+    "at": "2026-10-14T13:37:08+00:00",
+    "prompt_version": "8a4a71603c110e60",
+    "providers": [
+     {
+      "chunks": [
+       0
+      ],
+      "family": "ollama",
+      "model": "deepseek-v4.1-flash:cloud",
+      "provider": "ollama-cloud"
+     }
+    ]
+   },
+   "updated_at": "2026-10-14T13:37:21+00:00"
+  },
+  "_install-and-configure/install-dashboards/windows.md": {
+   "attempts": 1,
+   "last_error": null,
+   "original_front_matter": {
+    "parent": "Installing OpenSearch Dashboards",
+    "title": "Windows"
+   },
+   "reviewer": {
+    "approved": true,
+    "at": "2026-10-14T13:37:56+00:00",
+    "family": "codex:gpt-6-sol",
+    "issues": [],
+    "model": "gpt-6-sol",
+    "prompt_version": "8a4a71603c110e60",
+    "provider": "codex-review",
+    "target_sha256": "1d647e4ac1e9f8e7f614b23bb2406d5dd43b8144bd9b540366e0d4168ac0fa1b"
+   },
+   "source_sha256": "6f9e786dea7598e535f732aa2681e234f485d2d9003d2bd93f6365aa4d98e3af",
+   "status": "reviewed",
+   "target_sha256": "1d647e4ac1e9f8e7f614b23bb2406d5dd43b8144bd9b540366e0d4168ac0fa1b",
+   "translated_source_sha256": "6f9e786dea7598e535f732aa2681e234f485d2d9003d2bd93f6365aa4d98e3af",
+   "translator": {
+    "at": "2026-10-14T13:37:23+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
      {
       "chunks": [
@@ -35697,121 +36275,10 @@
      }
     ]
    },
-   "updated_at": "2026-10-08T02:36:51+00:00"
-  },
-  "_install-and-configure/install-dashboards/tar.md": {
-   "attempts": 1,
-   "last_error": null,
-   "original_front_matter": {
-    "parent": "Installing OpenSearch Dashboards",
-    "title": "Tarball"
-   },
-   "reviewer": {
-    "approved": true,
-    "at": "2026-10-07T17:01:54+00:00",
-    "family": "agy",
-    "issues": [],
-    "model": "gemini-3.1-pro-high",
-    "prompt_version": "17cb1d26e03713b2",
-    "provider": "agy",
-    "target_sha256": "3fe83a5f909f9c2de0e2d767277ccb0ce4a308c4b9e22c87ec6505eaa12e9480"
-   },
-   "source_sha256": "b1e00e05ecc806580e1a6f62f219374a56185a716b62061d98c4f52d59ec7fc3",
-   "status": "reviewed",
-   "target_sha256": "3fe83a5f909f9c2de0e2d767277ccb0ce4a308c4b9e22c87ec6505eaa12e9480",
-   "translated_source_sha256": "b1e00e05ecc806580e1a6f62f219374a56185a716b62061d98c4f52d59ec7fc3",
-   "translator": {
-    "at": "2026-10-07T17:01:36+00:00",
-    "prompt_version": "17cb1d26e03713b2",
-    "providers": [
-     {
-      "chunks": [
-       0
-      ],
-      "family": "ollama",
-      "model": "gemma4:cloud",
-      "provider": "ollama-cloud"
-     }
-    ]
-   },
-   "updated_at": "2026-10-07T17:01:54+00:00"
-  },
-  "_install-and-configure/install-dashboards/tls.md": {
-   "attempts": 2,
-   "last_error": null,
-   "original_front_matter": {
-    "parent": "Installing OpenSearch Dashboards",
-    "title": "Configuring TLS"
-   },
-   "reviewer": {
-    "approved": true,
-    "at": "2026-10-07T17:04:18+00:00",
-    "family": "agy",
-    "issues": [],
-    "model": "gemini-3.1-pro-high",
-    "prompt_version": "17cb1d26e03713b2",
-    "provider": "agy",
-    "target_sha256": "3cd2d1fefb820cb6bd428c0e705d4718c7670be9f6575e473475daadfaa6aaec"
-   },
-   "source_sha256": "54f4d0cc2aff24ac8192519b49514d0e528e266700fd83869396339515696cec",
-   "status": "reviewed",
-   "target_sha256": "3cd2d1fefb820cb6bd428c0e705d4718c7670be9f6575e473475daadfaa6aaec",
-   "translated_source_sha256": "54f4d0cc2aff24ac8192519b49514d0e528e266700fd83869396339515696cec",
-   "translator": {
-    "at": "2026-10-07T17:03:37+00:00",
-    "prompt_version": "17cb1d26e03713b2",
-    "providers": [
-     {
-      "chunks": [
-       0
-      ],
-      "family": "ollama",
-      "model": "gemma4:cloud",
-      "provider": "ollama-cloud"
-     }
-    ]
-   },
-   "updated_at": "2026-10-07T17:04:18+00:00"
-  },
-  "_install-and-configure/install-dashboards/windows.md": {
-   "attempts": 1,
-   "last_error": null,
-   "original_front_matter": {
-    "parent": "Installing OpenSearch Dashboards",
-    "title": "Windows"
-   },
-   "reviewer": {
-    "approved": true,
-    "at": "2026-10-07T17:05:01+00:00",
-    "family": "agy",
-    "issues": [],
-    "model": "gemini-3.1-pro-high",
-    "prompt_version": "17cb1d26e03713b2",
-    "provider": "agy",
-    "target_sha256": "9f218298c4e3953f17e976279eebdcdf4b0b85ee6f8fed28f4210e07fea532ca"
-   },
-   "source_sha256": "1ac0fc20bfc942354365da072090ff37cb706415bc621fc845bef7860e1930e9",
-   "status": "reviewed",
-   "target_sha256": "9f218298c4e3953f17e976279eebdcdf4b0b85ee6f8fed28f4210e07fea532ca",
-   "translated_source_sha256": "1ac0fc20bfc942354365da072090ff37cb706415bc621fc845bef7860e1930e9",
-   "translator": {
-    "at": "2026-10-07T17:04:27+00:00",
-    "prompt_version": "17cb1d26e03713b2",
-    "providers": [
-     {
-      "chunks": [
-       0
-      ],
-      "family": "ollama",
-      "model": "gemma4:cloud",
-      "provider": "ollama-cloud"
-     }
-    ]
-   },
-   "updated_at": "2026-10-07T17:05:01+00:00"
+   "updated_at": "2026-10-14T13:37:56+00:00"
   },
   "_install-and-configure/install-opensearch/ansible.md": {
-   "attempts": 2,
+   "attempts": 1,
    "last_error": null,
    "original_front_matter": {
     "parent": "Installing OpenSearch",
@@ -35819,40 +36286,46 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-07T17:06:28+00:00",
-    "family": "agy",
+    "at": "2026-10-14T13:37:37+00:00",
+    "family": "claude",
     "issues": [
      {
-      "id": "section.003",
-      "problem": "根據術語表，「configuration」應譯為「組態」。標題譯為「組態設定」略顯冗餘，建議直接改為「組態」。",
+      "id": "front_matter",
+      "problem": "The title is identical to the English source. The body consistently keeps 'Ansible playbook' as a technical term, so this is acceptable. A short Chinese descriptive title would read more naturally.",
       "severity": "minor",
-      "suggestion": "## 組態\n\n1. 複製 OpenSearch [`ansible-playbook`](https://github.com/opensearch-project/ansible-playbook) 儲存庫：\n\n   ```bash\n   git clone https://github.com/opensearch-project/ansible-playbook\n   ```\n   {% include copy.html %}\n\n2. 在 `inventories/opensearch/hosts` 檔案中設定節點屬性：\n\n   ```bash\n   ansible_host=<Public IP address> ansible_user=root ip=<Private IP address / 0.0.0.0>\n   ```\n   {% include copy.html %}\n\n   其中：\n\n   - `ansible_host` 是您希望 Ansible playbook 安裝 OpenSearch 與 OpenSearch Dashboards 的目標節點 IP 位址。\n   - `ip` 是您希望 OpenSearch 與 OpenSearch Dashboards 綁定的 IP 位址。您可以指定目標節點的私有 IP、localhost 或 0.0.0.0。\n\n3. 您可以在 `inventories/opensearch/group_vars/all/all.yml` 檔案中修改預設的組態值。例如，您可以增加 Java 記憶體堆積大小：\n\n   ```bash\n   xms_value: 8\n   xmx_value: 8\n   ```\n   {% include copy.html %}\n\n請確保您具有直接透過 SSH 存取目標節點 root 使用者的權限。\n{: .note }\n\n"
+      "suggestion": "{\n \"fm.title\": \"Ansible playbook\"\n}（可保留；或改為「使用 Ansible playbook 安裝」）"
+     },
+     {
+      "id": "section.005",
+      "problem": "「準備正式環境的叢集」 reads slightly awkwardly. It is still unambiguous.",
+      "severity": "minor",
+      "suggestion": "- [為正式環境準備叢集]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/#preparing-a-cluster-for-production)\n- [為正式環境準備 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#preparing-opensearch-dashboards-for-production)"
      }
     ],
-    "model": "gemini-3.1-pro-high",
-    "prompt_version": "17cb1d26e03713b2",
-    "provider": "agy",
-    "target_sha256": "08e0e68453888a1a14277b8e8057e3c62969664d4c5e74e9339d0458da0147b8"
+    "model": "default",
+    "prompt_version": "8a4a71603c110e60",
+    "provider": "claude",
+    "target_sha256": "d53b823c52b77bd74c59bca670e046f02c8bc7da886dbc29a990262af5650315"
    },
-   "source_sha256": "76c0a3683474f91752fb47ec6d73e6758590a47608654ab2005a407016e4410a",
+   "source_sha256": "1bebbad67446a8285ef50ae7b3db908d10644879e2a4f6f6e2b83650be89ac45",
    "status": "reviewed",
-   "target_sha256": "08e0e68453888a1a14277b8e8057e3c62969664d4c5e74e9339d0458da0147b8",
-   "translated_source_sha256": "76c0a3683474f91752fb47ec6d73e6758590a47608654ab2005a407016e4410a",
+   "target_sha256": "d53b823c52b77bd74c59bca670e046f02c8bc7da886dbc29a990262af5650315",
+   "translated_source_sha256": "1bebbad67446a8285ef50ae7b3db908d10644879e2a4f6f6e2b83650be89ac45",
    "translator": {
-    "at": "2026-10-07T17:05:30+00:00",
-    "prompt_version": "17cb1d26e03713b2",
+    "at": "2026-10-14T13:37:24+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
      {
       "chunks": [
        0
       ],
       "family": "ollama",
-      "model": "gemma4:cloud",
+      "model": "deepseek-v4.1-flash:cloud",
       "provider": "ollama-cloud"
      }
     ]
    },
-   "updated_at": "2026-10-07T17:06:28+00:00"
+   "updated_at": "2026-10-14T13:37:37+00:00"
   },
   "_install-and-configure/install-opensearch/debian.md": {
    "attempts": 2,
@@ -35863,57 +36336,77 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-08T20:04:42+00:00",
-    "family": "agy",
+    "at": "2026-10-14T13:42:10+00:00",
+    "family": "codex:gpt-6-sol",
     "issues": [],
-    "model": "gemini-3.1-pro-high",
-    "prompt_version": "0343516bacbffe7a",
-    "provider": "agy",
-    "target_sha256": "ba7e645052578e266452d290c20dfdfea1c431b17cc06c105a4a23ca423cc251"
+    "model": "gpt-6-sol",
+    "prompt_version": "8a4a71603c110e60",
+    "provider": "codex-review",
+    "target_sha256": "a04e7254028a6b1bb0857b9c56706b5298da4e28edd9bb0dcb4868f1da265092"
    },
-   "source_sha256": "c41b87ba1ae58b6035051efae75b70186185156ecc93959c2779a034d169019e",
+   "source_sha256": "96134d2ecf6da9d10f1cb4754242bccd0442d5c1f2f81ab4705f512c377b12d0",
    "status": "reviewed",
-   "target_sha256": "ba7e645052578e266452d290c20dfdfea1c431b17cc06c105a4a23ca423cc251",
-   "translated_source_sha256": "c41b87ba1ae58b6035051efae75b70186185156ecc93959c2779a034d169019e",
+   "target_sha256": "a04e7254028a6b1bb0857b9c56706b5298da4e28edd9bb0dcb4868f1da265092",
+   "translated_source_sha256": "96134d2ecf6da9d10f1cb4754242bccd0442d5c1f2f81ab4705f512c377b12d0",
    "translator": {
-    "at": "2026-10-08T20:04:09+00:00",
-    "prompt_version": "0343516bacbffe7a",
+    "at": "2026-10-14T13:41:13+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
      {
       "chunks": [
-       0,
-       1,
-       2,
-       3
+       0
       ],
       "family": "claude",
       "model": "claude-opus-5-5",
       "provider": "claude"
      },
      {
-      "family": "claude",
-      "model": "claude-opus-5-5",
-      "provider": "claude",
-      "repairs": [
-       "section.006",
-       "section.007"
-      ]
+      "chunks": [
+       1
+      ],
+      "family": "codex:gpt-6.1-sol",
+      "model": "gpt-6.1-sol",
+      "provider": "codex"
+     },
+     {
+      "chunks": [
+       2
+      ],
+      "family": "ollama",
+      "model": "deepseek-v4.1-flash:cloud",
+      "provider": "ollama-cloud"
+     },
+     {
+      "chunks": [
+       3
+      ],
+      "family": "ollama",
+      "model": "glm-5.3-flash:cloud",
+      "provider": "ollama-cloud-glm"
      },
      {
       "family": "claude",
       "model": "claude-opus-5-5",
       "provider": "claude",
       "repairs": [
-       "section.000",
-       "section.001"
+       "section.001",
+       "section.003",
+       "section.004",
+       "section.005",
+       "section.006",
+       "section.007",
+       "section.009",
+       "section.010",
+       "section.013",
+       "section.016"
       ]
      }
     ]
    },
-   "updated_at": "2026-10-08T20:04:42+00:00"
+   "updated_at": "2026-10-14T13:42:10+00:00"
   },
   "_install-and-configure/install-opensearch/docker.md": {
-   "attempts": 1,
+   "attempts": 2,
    "last_error": null,
    "original_front_matter": {
     "parent": "Installing OpenSearch",
@@ -35921,40 +36414,72 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-07T19:33:29+00:00",
-    "family": "agy",
-    "issues": [],
-    "model": "gemini-3.1-pro-high",
-    "prompt_version": "cd85573eb34b49f2",
-    "provider": "agy",
-    "target_sha256": "4014e06224908664191124503fcb6b25a8e621b368d6df07058c54216a86a998"
+    "at": "2026-10-14T13:42:36+00:00",
+    "family": "codex:gpt-6-sol",
+    "issues": [
+     {
+      "id": "section.002",
+      "problem": "「可用的主機記憶體」未準確表達 Docker Desktop 的記憶體使用量設定。",
+      "severity": "minor",
+      "suggestion": "Docker Desktop 使用者應開啟 Docker Desktop，選取 **Settings** → **Resources**，並將主機記憶體使用量設定為至少 4 GB。"
+     },
+     {
+      "id": "section.010",
+      "problem": "「可從公開網際網路存取的的主機」多了一個「的」。",
+      "severity": "minor",
+      "suggestion": "可從公開網際網路存取的主機"
+     }
+    ],
+    "model": "gpt-6-sol",
+    "prompt_version": "8a4a71603c110e60",
+    "provider": "codex-review",
+    "target_sha256": "75c53d71e10c128f55017aeb65dd44dcb9d48ee42be30ba12f3a36b2536fcac0"
    },
-   "source_sha256": "ccca09051915dfbdb559638f9367a741efb2ccbd672a189612de1e31907ccdbc",
+   "source_sha256": "3fb41f4e2dbf5c128a318a55166c8d10f1865b71b28ce3bc91786c2ef263a892",
    "status": "reviewed",
-   "target_sha256": "4014e06224908664191124503fcb6b25a8e621b368d6df07058c54216a86a998",
-   "translated_source_sha256": "ccca09051915dfbdb559638f9367a741efb2ccbd672a189612de1e31907ccdbc",
+   "target_sha256": "75c53d71e10c128f55017aeb65dd44dcb9d48ee42be30ba12f3a36b2536fcac0",
+   "translated_source_sha256": "3fb41f4e2dbf5c128a318a55166c8d10f1865b71b28ce3bc91786c2ef263a892",
    "translator": {
-    "at": "2026-10-07T19:31:57+00:00",
-    "prompt_version": "cd85573eb34b49f2",
+    "at": "2026-10-14T13:41:04+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
      {
       "chunks": [
-       0,
        1,
-       2,
-       3,
        4
       ],
+      "family": "ollama",
+      "model": "deepseek-v4.1-flash:cloud",
+      "provider": "ollama-cloud"
+     },
+     {
+      "chunks": [
+       0,
+       2,
+       3
+      ],
+      "family": "ollama",
+      "model": "glm-5.3-flash:cloud",
+      "provider": "ollama-cloud-glm"
+     },
+     {
       "family": "claude",
       "model": "claude-opus-5-5",
-      "provider": "claude"
+      "provider": "claude",
+      "repairs": [
+       "section.001",
+       "section.002",
+       "section.003",
+       "section.004",
+       "section.006"
+      ]
      }
     ]
    },
-   "updated_at": "2026-10-07T19:33:29+00:00"
+   "updated_at": "2026-10-14T13:42:36+00:00"
   },
   "_install-and-configure/install-opensearch/helm.md": {
-   "attempts": 3,
+   "attempts": 2,
    "last_error": null,
    "original_front_matter": {
     "parent": "Installing OpenSearch",
@@ -35962,33 +36487,42 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-07T17:12:52+00:00",
-    "family": "agy",
+    "at": "2026-10-14T13:39:43+00:00",
+    "family": "codex:gpt-6-sol",
     "issues": [],
-    "model": "gemini-3.1-pro-high",
-    "prompt_version": "17cb1d26e03713b2",
-    "provider": "agy",
-    "target_sha256": "ebc9a764022fb2e598c9452119f34f3c2659771b7268db86f1602359f36fc669"
+    "model": "gpt-6-sol",
+    "prompt_version": "8a4a71603c110e60",
+    "provider": "codex-review",
+    "target_sha256": "cd744d1dc8c7629fe3e7d03fc81efdde79546e7f63154e488c758706df5764fe"
    },
-   "source_sha256": "2f2f610352178dc46273b845b28c9a5b2a3c48f6e15c080ba6d6ce35bfd2a7fd",
+   "source_sha256": "828fa87329cab5bd1786f5ba0be3f33477b79c47043ad133bee90af597f0acb0",
    "status": "reviewed",
-   "target_sha256": "ebc9a764022fb2e598c9452119f34f3c2659771b7268db86f1602359f36fc669",
-   "translated_source_sha256": "2f2f610352178dc46273b845b28c9a5b2a3c48f6e15c080ba6d6ce35bfd2a7fd",
+   "target_sha256": "cd744d1dc8c7629fe3e7d03fc81efdde79546e7f63154e488c758706df5764fe",
+   "translated_source_sha256": "828fa87329cab5bd1786f5ba0be3f33477b79c47043ad133bee90af597f0acb0",
    "translator": {
-    "at": "2026-10-07T17:12:11+00:00",
-    "prompt_version": "17cb1d26e03713b2",
+    "at": "2026-10-14T13:38:36+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
      {
       "chunks": [
        0
       ],
       "family": "ollama",
-      "model": "gemma4:cloud",
+      "model": "deepseek-v4.1-flash:cloud",
       "provider": "ollama-cloud"
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.001",
+       "section.002"
+      ]
      }
     ]
    },
-   "updated_at": "2026-10-07T17:12:52+00:00"
+   "updated_at": "2026-10-14T13:39:43+00:00"
   },
   "_install-and-configure/install-opensearch/index.md": {
    "attempts": 3,
@@ -36343,7 +36877,7 @@
    "updated_at": "2026-10-07T19:44:42+00:00"
   },
   "_install-and-configure/install-opensearch/rpm.md": {
-   "attempts": 1,
+   "attempts": 3,
    "last_error": null,
    "original_front_matter": {
     "parent": "Installing OpenSearch",
@@ -36351,39 +36885,70 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-07T19:46:36+00:00",
-    "family": "agy",
+    "at": "2026-10-14T13:42:24+00:00",
+    "family": "codex:gpt-6-sol",
     "issues": [],
-    "model": "gemini-3.1-pro-high",
-    "prompt_version": "cd85573eb34b49f2",
-    "provider": "agy",
-    "target_sha256": "b1d0a2c28148c52a35665be81871802a06030e3d4e8c9b9b4e19b37397c351ec"
+    "model": "gpt-6-sol",
+    "prompt_version": "8a4a71603c110e60",
+    "provider": "codex-review",
+    "target_sha256": "2c1ecfc7082161763d70366ec88e03f9b64ae4c8809422fb4f800dfb2b38dc6b"
    },
-   "source_sha256": "848dd40edc658a0621a1e5d35b8d3f1041fd39e419fccbc829a331b410676cd8",
+   "source_sha256": "054fe585eaf5e5b1d9f538cfa2af77e988f264b025c328463ceb48ffa4c83e3a",
    "status": "reviewed",
-   "target_sha256": "b1d0a2c28148c52a35665be81871802a06030e3d4e8c9b9b4e19b37397c351ec",
-   "translated_source_sha256": "848dd40edc658a0621a1e5d35b8d3f1041fd39e419fccbc829a331b410676cd8",
+   "target_sha256": "2c1ecfc7082161763d70366ec88e03f9b64ae4c8809422fb4f800dfb2b38dc6b",
+   "translated_source_sha256": "054fe585eaf5e5b1d9f538cfa2af77e988f264b025c328463ceb48ffa4c83e3a",
    "translator": {
-    "at": "2026-10-07T19:45:36+00:00",
-    "prompt_version": "cd85573eb34b49f2",
+    "at": "2026-10-14T13:41:43+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
      {
       "chunks": [
-       0,
-       1,
-       2,
-       3
+       2
       ],
       "family": "claude",
       "model": "claude-opus-5-5",
       "provider": "claude"
+     },
+     {
+      "chunks": [
+       1
+      ],
+      "family": "ollama",
+      "model": "deepseek-v4.1-flash:cloud",
+      "provider": "ollama-cloud"
+     },
+     {
+      "chunks": [
+       0,
+       3
+      ],
+      "family": "ollama",
+      "model": "glm-5.3-flash:cloud",
+      "provider": "ollama-cloud-glm"
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.012",
+       "section.015"
+      ]
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.009"
+      ]
      }
     ]
    },
-   "updated_at": "2026-10-07T19:46:36+00:00"
+   "updated_at": "2026-10-14T13:42:24+00:00"
   },
   "_install-and-configure/install-opensearch/tar.md": {
-   "attempts": 2,
+   "attempts": 3,
    "last_error": null,
    "original_front_matter": {
     "parent": "Installing OpenSearch",
@@ -36391,36 +36956,69 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-07T19:50:28+00:00",
-    "family": "agy",
+    "at": "2026-10-14T13:46:14+00:00",
+    "family": "codex:gpt-6-sol",
     "issues": [],
-    "model": "gemini-3.1-pro-high",
-    "prompt_version": "cd85573eb34b49f2",
-    "provider": "agy",
-    "target_sha256": "86d0618789ee33ff3bc25d759f91aac88c6c82f12f9dd0e4ae08c53f4d6d2dbf"
+    "model": "gpt-6-sol",
+    "prompt_version": "8a4a71603c110e60",
+    "provider": "codex-review",
+    "target_sha256": "5a6ebb3c2f279a3c9770b9dae788ce03ea6a889e3f5fcf15ac386de616e53ee2"
    },
-   "source_sha256": "031f4da59505ab0b06614d09066d16833c63a790b76ee54aa86e93a46e9ff16e",
+   "source_sha256": "b0a86224c5503de8fabba6c255f2aa154f3a4ac1d8b4fe61b334c6bee251aa8d",
    "status": "reviewed",
-   "target_sha256": "86d0618789ee33ff3bc25d759f91aac88c6c82f12f9dd0e4ae08c53f4d6d2dbf",
-   "translated_source_sha256": "031f4da59505ab0b06614d09066d16833c63a790b76ee54aa86e93a46e9ff16e",
+   "target_sha256": "5a6ebb3c2f279a3c9770b9dae788ce03ea6a889e3f5fcf15ac386de616e53ee2",
+   "translated_source_sha256": "b0a86224c5503de8fabba6c255f2aa154f3a4ac1d8b4fe61b334c6bee251aa8d",
    "translator": {
-    "at": "2026-10-07T19:49:21+00:00",
-    "prompt_version": "cd85573eb34b49f2",
+    "at": "2026-10-14T13:44:36+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
      {
       "chunks": [
+       1
+      ],
+      "family": "codex:gpt-6.1-sol",
+      "model": "gpt-6.1-sol",
+      "provider": "codex"
+     },
+     {
+      "chunks": [
        0,
-       1,
-       2,
        3
       ],
+      "family": "ollama",
+      "model": "deepseek-v4.1-flash:cloud",
+      "provider": "ollama-cloud"
+     },
+     {
+      "chunks": [
+       2,
+       4
+      ],
+      "family": "ollama",
+      "model": "glm-5.3-flash:cloud",
+      "provider": "ollama-cloud-glm"
+     },
+     {
       "family": "claude",
       "model": "claude-opus-5-5",
-      "provider": "claude"
+      "provider": "claude",
+      "repairs": [
+       "section.006",
+       "section.007",
+       "section.008"
+      ]
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "front_matter"
+      ]
      }
     ]
    },
-   "updated_at": "2026-10-07T19:50:28+00:00"
+   "updated_at": "2026-10-14T13:46:14+00:00"
   },
   "_install-and-configure/install-opensearch/windows.md": {
    "attempts": 2,
@@ -36431,42 +37029,59 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-07T19:53:08+00:00",
-    "family": "agy",
-    "issues": [
-     {
-      "id": "section.006",
-      "problem": "「Command Prompt」在先前的段落中被翻譯為「命令提示字元」，此處未翻譯導致術語不一致。",
-      "severity": "minor",
-      "suggestion": "### 選項 2：在停用安全性的情況下測試您的 OpenSearch 設定\n\n1. 開啟 `opensearch-{{site.opensearch_version}}\\config` 資料夾。\n1. 使用文字編輯器開啟 `opensearch.yml` 檔案。\n1. 新增以下這一行以停用 Security 外掛程式：\n   ```yaml\n   plugins.security.disabled: true\n   ```\n   {% include copy.html %}\n\n1. 儲存變更並關閉檔案。\n1. 前往 OpenSearch 安裝的最上層目錄，並開啟 `opensearch-{{site.opensearch_version}}` 資料夾。\n1. 按兩下 `opensearch-windows-install.bat` 檔案以執行預設設定。這會開啟一個正在執行 OpenSearch 執行個體的命令提示字元。\n1. 開啟新的命令提示字元，並向伺服器傳送請求，以確認 OpenSearch 正在執行。由於 Security 外掛程式已停用，您將使用 `HTTP` 而非 `HTTPS` 傳送命令。\n   - 向連接埠 9200 傳送請求：\n      ```bat\n      curl.exe -X GET http://localhost:9200\n      ```\n      {% include copy.html %}\n\n      您應該會收到類似以下的回應：\n      ```bat\n      {\n         \"name\" : \"hostname-here\",\n         \"cluster_name\" : \"opensearch\",\n         \"cluster_uuid\" : \"7Nqtr0LrQTOveFcBb7Kufw\",\n         \"version\" : {\n            \"distribution\" : \"opensearch\",\n            \"number\" : \"2.4.0\",\n            \"build_type\" : \"zip\",\n            \"build_hash\" : \"77ef9e304dd6ee95a600720a387a9735bbcf7bc9\","
-     }
-    ],
-    "model": "gemini-3.1-pro-high",
-    "prompt_version": "cd85573eb34b49f2",
-    "provider": "agy",
-    "target_sha256": "a66eb00a5b1c205a43e84f2fa93e6b8cd0ab37c850fe0e7591717874aabb5dbc"
+    "at": "2026-10-14T13:44:56+00:00",
+    "family": "codex:gpt-6-sol",
+    "issues": [],
+    "model": "gpt-6-sol",
+    "prompt_version": "8a4a71603c110e60",
+    "provider": "codex-review",
+    "target_sha256": "aacf45fdc7fe31e9281ffba1a09072d1eb490ce1079a93e97d236945075b5927"
    },
-   "source_sha256": "4cc29ef7ba54863282c51df9bc9cce03fddf0ded76f889642879e2542e35c2ff",
+   "source_sha256": "b1201656a029fc529209a75d71304cf78296c0775233d7e5e12be088099878cb",
    "status": "reviewed",
-   "target_sha256": "a66eb00a5b1c205a43e84f2fa93e6b8cd0ab37c850fe0e7591717874aabb5dbc",
-   "translated_source_sha256": "4cc29ef7ba54863282c51df9bc9cce03fddf0ded76f889642879e2542e35c2ff",
+   "target_sha256": "aacf45fdc7fe31e9281ffba1a09072d1eb490ce1079a93e97d236945075b5927",
+   "translated_source_sha256": "b1201656a029fc529209a75d71304cf78296c0775233d7e5e12be088099878cb",
    "translator": {
-    "at": "2026-10-07T19:51:36+00:00",
-    "prompt_version": "cd85573eb34b49f2",
+    "at": "2026-10-14T13:43:53+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
      {
       "chunks": [
-       0,
-       1,
-       2
+       1
       ],
       "family": "claude",
       "model": "claude-opus-5-5",
       "provider": "claude"
+     },
+     {
+      "chunks": [
+       0
+      ],
+      "family": "ollama",
+      "model": "deepseek-v4.1-flash:cloud",
+      "provider": "ollama-cloud"
+     },
+     {
+      "chunks": [
+       2
+      ],
+      "family": "ollama",
+      "model": "glm-5.3-flash:cloud",
+      "provider": "ollama-cloud-glm"
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.007",
+       "section.008",
+       "section.009"
+      ]
      }
     ]
    },
-   "updated_at": "2026-10-07T19:53:08+00:00"
+   "updated_at": "2026-10-14T13:44:56+00:00"
   },
   "_install-and-configure/os-comp.md": {
    "attempts": 0,
@@ -36542,29 +37157,104 @@
    },
    "updated_at": "2026-10-07T19:53:23+00:00"
   },
+  "_mappings/dynamic-templates.md": {
+   "attempts": 2,
+   "last_error": null,
+   "original_front_matter": {
+    "title": "Dynamic templates"
+   },
+   "reviewer": {
+    "approved": true,
+    "at": "2026-10-14T13:35:58+00:00",
+    "family": "codex:gpt-6-sol",
+    "issues": [
+     {
+      "id": "section.007",
+      "problem": "標題中的 integer 是資料類型名稱，缺少程式碼格式。",
+      "severity": "minor",
+      "suggestion": "### 範例：將整數對應為 `integer`"
+     },
+     {
+      "id": "section.010",
+      "problem": "「規則運算式」與前文使用的「正規表示式」不一致。",
+      "severity": "minor",
+      "suggestion": "將本節的「規則運算式」統一改為「正規表示式」。"
+     },
+     {
+      "id": "section.012",
+      "problem": "「分葉欄位」不夠自然；「兩行地址」也不如「兩個地址欄位」貼合範例。",
+      "severity": "minor",
+      "suggestion": "改為「葉節點欄位」及「現在您可以透過單一查詢搜尋這兩個地址欄位」。"
+     }
+    ],
+    "model": "gpt-6-sol",
+    "prompt_version": "d0921d61bacd7305",
+    "provider": "codex-review",
+    "target_sha256": "16217a09f5b4b37e662c7ee0d8aad97b4d5bc6ce543c2c15cbd69e71a01e226e"
+   },
+   "source_sha256": "d9d0bcff58f8e1d392dbbcd7b63e37d25a55bf074b2df90d3a8c2292b5577742",
+   "status": "reviewed",
+   "target_sha256": "16217a09f5b4b37e662c7ee0d8aad97b4d5bc6ce543c2c15cbd69e71a01e226e",
+   "translated_source_sha256": "d9d0bcff58f8e1d392dbbcd7b63e37d25a55bf074b2df90d3a8c2292b5577742",
+   "translator": {
+    "at": "2026-10-14T13:34:53+00:00",
+    "prompt_version": "d0921d61bacd7305",
+    "providers": [
+     {
+      "chunks": [
+       2
+      ],
+      "family": "ollama",
+      "model": "deepseek-v4.1-flash:cloud",
+      "provider": "ollama-cloud"
+     },
+     {
+      "chunks": [
+       0,
+       1
+      ],
+      "family": "ollama",
+      "model": "glm-5.3-flash:cloud",
+      "provider": "ollama-cloud-glm"
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.003",
+       "section.006",
+       "section.017",
+       "section.018"
+      ]
+     }
+    ]
+   },
+   "updated_at": "2026-10-14T13:35:58+00:00"
+  },
   "_mappings/index.md": {
-   "attempts": 3,
+   "attempts": 2,
    "last_error": null,
    "original_front_matter": {
     "title": "Mappings"
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-08T18:33:08+00:00",
+    "at": "2026-10-14T14:06:22+00:00",
     "family": "codex:gpt-6-sol",
     "issues": [],
     "model": "gpt-6-sol",
-    "prompt_version": "0343516bacbffe7a",
+    "prompt_version": "8a4a71603c110e60",
     "provider": "codex-review",
-    "target_sha256": "34d580a6d0785216901542588965b6114197bb249459eb4da09e27519e95b7e6"
+    "target_sha256": "0bfcc3918770f6f4a25a55ecf1318c1aa02191278e5225ea526117d5d7497b3b"
    },
-   "source_sha256": "b3ef65c2efb479d0acb4025e8eb8a67665ffe2d59a6a24200e8a68b9f1167096",
+   "source_sha256": "db92907564ab3536be7b3477f3aad5984aa05b70bbd079a2397f457df2bb95a3",
    "status": "reviewed",
-   "target_sha256": "34d580a6d0785216901542588965b6114197bb249459eb4da09e27519e95b7e6",
-   "translated_source_sha256": "b3ef65c2efb479d0acb4025e8eb8a67665ffe2d59a6a24200e8a68b9f1167096",
+   "target_sha256": "0bfcc3918770f6f4a25a55ecf1318c1aa02191278e5225ea526117d5d7497b3b",
+   "translated_source_sha256": "db92907564ab3536be7b3477f3aad5984aa05b70bbd079a2397f457df2bb95a3",
    "translator": {
-    "at": "2026-10-08T18:32:18+00:00",
-    "prompt_version": "0343516bacbffe7a",
+    "at": "2026-10-14T14:04:37+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
      {
       "chunks": [
@@ -36576,36 +37266,26 @@
      },
      {
       "chunks": [
-       0,
-       2
+       0
       ],
       "family": "ollama",
       "model": "glm-5.3-flash:cloud",
       "provider": "ollama-cloud-glm"
      },
      {
-      "family": "codex:gpt-6.1-sol",
-      "model": "gpt-6.1-sol",
-      "provider": "codex",
-      "repairs": [
-       "section.009",
-       "section.017",
-       "section.018",
-       "section.019"
-      ]
-     },
-     {
-      "family": "codex:gpt-6.1-sol",
-      "model": "gpt-6.1-sol",
-      "provider": "codex",
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
       "repairs": [
        "section.007",
-       "section.009"
+       "section.016",
+       "section.017",
+       "section.018"
       ]
      }
     ]
    },
-   "updated_at": "2026-10-08T18:33:08+00:00"
+   "updated_at": "2026-10-14T14:06:22+00:00"
   },
   "_mappings/mapping-explosion.md": {
    "attempts": 2,
@@ -39313,32 +39993,32 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-08T19:13:11+00:00",
+    "at": "2026-10-14T14:07:30+00:00",
     "family": "codex:gpt-6-sol",
-    "issues": [
-     {
-      "id": "section.003",
-      "problem": "中文敘述中的括號使用半形字元，不符合 zh-TW 標點規範。",
-      "severity": "minor",
-      "suggestion": "改為「`in_memory`（針對最低延遲進行最佳化）或 `on_disk`（針對最低成本進行最佳化）」。"
-     }
-    ],
+    "issues": [],
     "model": "gpt-6-sol",
-    "prompt_version": "0343516bacbffe7a",
+    "prompt_version": "8a4a71603c110e60",
     "provider": "codex-review",
-    "target_sha256": "d76d6715b1721a8593873073f2fcefc26e2cf56f2f0b16158bdb63782f4a1828"
+    "target_sha256": "1bb4b63bfd63fe3ac37b8ab794d21cc392dac2272adfc6c25ca3ba9049c8f62f"
    },
-   "source_sha256": "2fb0e3f533f6987515b2b823dbac84e5643c8506e3ed780fe90a6b2fb793060b",
+   "source_sha256": "62f4056d5783abef7bd4a7b8030fc8aca4b78f60dd0de6a56b9eb085e9e9c787",
    "status": "reviewed",
-   "target_sha256": "d76d6715b1721a8593873073f2fcefc26e2cf56f2f0b16158bdb63782f4a1828",
-   "translated_source_sha256": "2fb0e3f533f6987515b2b823dbac84e5643c8506e3ed780fe90a6b2fb793060b",
+   "target_sha256": "1bb4b63bfd63fe3ac37b8ab794d21cc392dac2272adfc6c25ca3ba9049c8f62f",
+   "translated_source_sha256": "62f4056d5783abef7bd4a7b8030fc8aca4b78f60dd0de6a56b9eb085e9e9c787",
    "translator": {
-    "at": "2026-10-08T19:11:23+00:00",
-    "prompt_version": "0343516bacbffe7a",
+    "at": "2026-10-14T14:06:44+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
      {
       "chunks": [
-       0,
+       0
+      ],
+      "family": "codex:gpt-6.1-sol",
+      "model": "gpt-6.1-sol",
+      "provider": "codex"
+     },
+     {
+      "chunks": [
        2
       ],
       "family": "ollama",
@@ -39354,17 +40034,16 @@
       "provider": "ollama-cloud-glm"
      },
      {
-      "family": "codex:gpt-6.1-sol",
-      "model": "gpt-6.1-sol",
-      "provider": "codex",
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
       "repairs": [
-       "section.006",
        "section.011"
       ]
      }
     ]
    },
-   "updated_at": "2026-10-08T19:13:11+00:00"
+   "updated_at": "2026-10-14T14:07:30+00:00"
   },
   "_mappings/supported-field-types/match-only-text.md": {
    "attempts": 2,
@@ -54501,7 +55180,7 @@
    "updated_at": "2026-10-08T22:09:17+00:00"
   },
   "_query-dsl/compound/bool.md": {
-   "attempts": 2,
+   "attempts": 3,
    "last_error": null,
    "original_front_matter": {
     "parent": "Compound queries",
@@ -54509,22 +55188,30 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-08T22:13:12+00:00",
+    "at": "2026-10-14T14:08:44+00:00",
     "family": "codex:gpt-6-sol",
     "issues": [],
     "model": "gpt-6-sol",
-    "prompt_version": "0343516bacbffe7a",
+    "prompt_version": "8a4a71603c110e60",
     "provider": "codex-review",
-    "target_sha256": "aef7a2f728f5bb3d1d38aea8326d41b16acb90192231097f42cfcda771c6fa41"
+    "target_sha256": "3bd2b4af9b62840e8ed31a43b230dca4698be815d5626ae35617a42cd2e199de"
    },
-   "source_sha256": "fa61cdfec88fc9c35d50b9779dab00fe39ad1fc3671b3dc8daac622ba2c3e16f",
+   "source_sha256": "ae36bc613db0f390b0464b7c9221e37251fc085dffccb67502b9f3ac66e4174d",
    "status": "reviewed",
-   "target_sha256": "aef7a2f728f5bb3d1d38aea8326d41b16acb90192231097f42cfcda771c6fa41",
-   "translated_source_sha256": "fa61cdfec88fc9c35d50b9779dab00fe39ad1fc3671b3dc8daac622ba2c3e16f",
+   "target_sha256": "3bd2b4af9b62840e8ed31a43b230dca4698be815d5626ae35617a42cd2e199de",
+   "translated_source_sha256": "ae36bc613db0f390b0464b7c9221e37251fc085dffccb67502b9f3ac66e4174d",
    "translator": {
-    "at": "2026-10-08T22:12:00+00:00",
-    "prompt_version": "0343516bacbffe7a",
+    "at": "2026-10-14T14:07:10+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
+     {
+      "chunks": [
+       1
+      ],
+      "family": "ollama",
+      "model": "deepseek-v4.1-flash:cloud",
+      "provider": "ollama-cloud"
+     },
      {
       "chunks": [
        0
@@ -54534,17 +55221,26 @@
       "provider": "ollama-cloud-glm"
      },
      {
-      "family": "codex:gpt-6.1-sol",
-      "model": "gpt-6.1-sol",
-      "provider": "codex",
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.003"
+      ]
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
       "repairs": [
        "front_matter",
-       "section.001"
+       "section.001",
+       "section.002"
       ]
      }
     ]
    },
-   "updated_at": "2026-10-08T22:13:12+00:00"
+   "updated_at": "2026-10-14T14:08:44+00:00"
   },
   "_query-dsl/compound/boosting.md": {
    "attempts": 2,
@@ -55132,7 +55828,7 @@
    "updated_at": "2026-10-09T01:24:15+00:00"
   },
   "_query-dsl/full-text/match.md": {
-   "attempts": 1,
+   "attempts": 2,
    "last_error": null,
    "original_front_matter": {
     "parent": "Full-text queries",
@@ -55140,70 +55836,25 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-07T15:17:03+00:00",
-    "family": "agy",
-    "issues": [],
-    "model": "gemini-3.1-pro-high",
-    "prompt_version": "17cb1d26e03713b2",
-    "provider": "agy",
-    "target_sha256": "df45b657ebb51303555242794ad0a9c88cdbaf47e988d00000f39793dafa0ee4"
-   },
-   "source_sha256": "1a15f4c8a2501375a1a708f1bd357d7c470a4e6b1cdc6e09ac2ce69fee21a37a",
-   "status": "reviewed",
-   "target_sha256": "df45b657ebb51303555242794ad0a9c88cdbaf47e988d00000f39793dafa0ee4",
-   "translated_source_sha256": "1a15f4c8a2501375a1a708f1bd357d7c470a4e6b1cdc6e09ac2ce69fee21a37a",
-   "translator": {
-    "at": "2026-10-07T15:15:48+00:00",
-    "prompt_version": "17cb1d26e03713b2",
-    "providers": [
-     {
-      "chunks": [
-       0,
-       1
-      ],
-      "family": "claude",
-      "model": "default",
-      "provider": "claude"
-     }
-    ]
-   },
-   "updated_at": "2026-10-07T15:17:03+00:00"
-  },
-  "_query-dsl/full-text/multi-match.md": {
-   "attempts": 1,
-   "last_error": null,
-   "original_front_matter": {
-    "parent": "Full-text queries",
-    "title": "Multi-match"
-   },
-   "reviewer": {
-    "approved": true,
-    "at": "2026-10-09T08:58:15+00:00",
+    "at": "2026-10-14T14:09:09+00:00",
     "family": "codex:gpt-6-sol",
-    "issues": [
-     {
-      "id": "section.012",
-      "problem": "「term 查詢」中的查詢類型名稱缺少程式碼格式。",
-      "severity": "minor",
-      "suggestion": "改為「用於建構 `term` 查詢的詞彙」。"
-     }
-    ],
+    "issues": [],
     "model": "gpt-6-sol",
-    "prompt_version": "d0921d61bacd7305",
+    "prompt_version": "8a4a71603c110e60",
     "provider": "codex-review",
-    "target_sha256": "65cb2aff67914c9aa4efe21725d7345d8588bd19f7c938531de006fdb3d2ebb4"
+    "target_sha256": "d44f32e4839eb67b6abf9327f11fe3a2f4ef8760b0f87623cefbd653c00319c3"
    },
-   "source_sha256": "725eac02cc6e8905c592ff32ac4045f42fead4be440a58a409144bf07d933ed1",
+   "source_sha256": "c6403d0ad899ab979ceaed0b3d71f9497bd71bfde95b2c58a04cfa9eea0020c8",
    "status": "reviewed",
-   "target_sha256": "65cb2aff67914c9aa4efe21725d7345d8588bd19f7c938531de006fdb3d2ebb4",
-   "translated_source_sha256": "725eac02cc6e8905c592ff32ac4045f42fead4be440a58a409144bf07d933ed1",
+   "target_sha256": "d44f32e4839eb67b6abf9327f11fe3a2f4ef8760b0f87623cefbd653c00319c3",
+   "translated_source_sha256": "c6403d0ad899ab979ceaed0b3d71f9497bd71bfde95b2c58a04cfa9eea0020c8",
    "translator": {
-    "at": "2026-10-09T08:57:38+00:00",
-    "prompt_version": "d0921d61bacd7305",
+    "at": "2026-10-14T14:07:41+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
      {
       "chunks": [
-       1
+       0
       ],
       "family": "claude",
       "model": "claude-opus-5-5",
@@ -55211,7 +55862,52 @@
      },
      {
       "chunks": [
-       2
+       1
+      ],
+      "family": "ollama",
+      "model": "deepseek-v4.1-flash:cloud",
+      "provider": "ollama-cloud"
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.012"
+      ]
+     }
+    ]
+   },
+   "updated_at": "2026-10-14T14:09:09+00:00"
+  },
+  "_query-dsl/full-text/multi-match.md": {
+   "attempts": 0,
+   "last_error": null,
+   "original_front_matter": {
+    "parent": "Full-text queries",
+    "title": "Multi-match"
+   },
+   "reviewer": {
+    "approved": true,
+    "at": "2026-10-14T14:11:50+00:00",
+    "family": "codex:gpt-6-sol",
+    "issues": [],
+    "model": "gpt-6-sol",
+    "prompt_version": "02fda88b4e44fe8a",
+    "provider": "codex-review",
+    "target_sha256": "999f81201e4743d43563f7727d15b8a69d2c5ce5c6990c41ea1067e14b018c0c"
+   },
+   "source_sha256": "ef00ff6884a804017d79a296b5871bf152d4b544d478d98abe7a24010fd0e831",
+   "status": "reviewed",
+   "target_sha256": "999f81201e4743d43563f7727d15b8a69d2c5ce5c6990c41ea1067e14b018c0c",
+   "translated_source_sha256": "ef00ff6884a804017d79a296b5871bf152d4b544d478d98abe7a24010fd0e831",
+   "translator": {
+    "at": "2026-10-14T14:10:27+00:00",
+    "prompt_version": "8a4a71603c110e60",
+    "providers": [
+     {
+      "chunks": [
+       1
       ],
       "family": "codex:gpt-6.1-sol",
       "model": "gpt-6.1-sol",
@@ -55219,8 +55915,8 @@
      },
      {
       "chunks": [
-       3,
-       4
+       0,
+       3
       ],
       "family": "ollama",
       "model": "deepseek-v4.1-flash:cloud",
@@ -55228,7 +55924,8 @@
      },
      {
       "chunks": [
-       0
+       2,
+       4
       ],
       "family": "ollama",
       "model": "glm-5.3-flash:cloud",
@@ -55239,34 +55936,16 @@
       "model": "claude-opus-5-5",
       "provider": "claude",
       "repairs": [
-       "front_matter",
-       "section.003",
-       "section.004",
        "section.008",
+       "section.010",
+       "section.011",
        "section.012",
        "section.013"
-      ]
-     },
-     {
-      "family": "claude",
-      "model": "claude-opus-5-5",
-      "provider": "claude",
-      "repairs": [
-       "section.010",
-       "section.012"
-      ]
-     },
-     {
-      "family": "claude",
-      "model": "claude-opus-5-5",
-      "provider": "claude",
-      "repairs": [
-       "section.001"
       ]
      }
     ]
    },
-   "updated_at": "2026-10-09T08:58:15+00:00"
+   "updated_at": "2026-10-14T14:11:50+00:00"
   },
   "_query-dsl/full-text/query-string.md": {
    "attempts": 3,
@@ -56126,29 +56805,37 @@
    "updated_at": "2026-10-08T22:44:54+00:00"
   },
   "_query-dsl/query-filter-context.md": {
-   "attempts": 2,
+   "attempts": 3,
    "last_error": null,
    "original_front_matter": {
     "title": "Query and filter context"
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-08T22:47:59+00:00",
+    "at": "2026-10-14T14:09:53+00:00",
     "family": "codex:gpt-6-sol",
     "issues": [],
     "model": "gpt-6-sol",
-    "prompt_version": "0343516bacbffe7a",
+    "prompt_version": "8a4a71603c110e60",
     "provider": "codex-review",
-    "target_sha256": "400c63b3720432c8377dd5aa64786bfe002dc7b99f2c2e7bbc5e1ce0c7d49a81"
+    "target_sha256": "0a934fc439c1701af77cf58c1a4c5de859f110a04a1857fa4f19193a50d7ad8c"
    },
-   "source_sha256": "e55681d7e04e338cc38572f8cb3fcd4c3f87d932baae0af0f57e80cd0f5e81e9",
+   "source_sha256": "9469d643a86977cee3c7aa62754193b9c2094a036219b0e80880168eddbc0630",
    "status": "reviewed",
-   "target_sha256": "400c63b3720432c8377dd5aa64786bfe002dc7b99f2c2e7bbc5e1ce0c7d49a81",
-   "translated_source_sha256": "e55681d7e04e338cc38572f8cb3fcd4c3f87d932baae0af0f57e80cd0f5e81e9",
+   "target_sha256": "0a934fc439c1701af77cf58c1a4c5de859f110a04a1857fa4f19193a50d7ad8c",
+   "translated_source_sha256": "9469d643a86977cee3c7aa62754193b9c2094a036219b0e80880168eddbc0630",
    "translator": {
-    "at": "2026-10-08T22:46:39+00:00",
-    "prompt_version": "0343516bacbffe7a",
+    "at": "2026-10-14T14:09:38+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
+     {
+      "chunks": [
+       1
+      ],
+      "family": "ollama",
+      "model": "deepseek-v4.1-flash:cloud",
+      "provider": "ollama-cloud"
+     },
      {
       "chunks": [
        0
@@ -56158,18 +56845,26 @@
       "provider": "ollama-cloud-glm"
      },
      {
-      "family": "codex:gpt-6.1-sol",
-      "model": "gpt-6.1-sol",
-      "provider": "codex",
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.006",
+       "section.007"
+      ]
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
       "repairs": [
        "section.004",
-       "section.005",
-       "section.006"
+       "section.005"
       ]
      }
     ]
    },
-   "updated_at": "2026-10-08T22:47:59+00:00"
+   "updated_at": "2026-10-14T14:09:53+00:00"
   },
   "_query-dsl/regex-syntax.md": {
    "attempts": 2,
@@ -59623,7 +60318,7 @@
    "updated_at": "2026-10-08T23:45:28+00:00"
   },
   "_search-plugins/filter-search.md": {
-   "attempts": 1,
+   "attempts": 0,
    "last_error": null,
    "original_front_matter": {
     "parent": "Customizing search results",
@@ -59631,33 +60326,41 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-08T23:45:01+00:00",
+    "at": "2026-10-14T14:10:42+00:00",
     "family": "codex:gpt-6-sol",
     "issues": [],
     "model": "gpt-6-sol",
-    "prompt_version": "0343516bacbffe7a",
+    "prompt_version": "02fda88b4e44fe8a",
     "provider": "codex-review",
-    "target_sha256": "4b0b5e44cc4ccbc614af9d8684f9a1ff0a07512f373c48a600f19357da556e3a"
+    "target_sha256": "099b429bea3f45b0e840c32cb662743d36d32bcff6b359e6e38ec80b4d95c2b1"
    },
-   "source_sha256": "ec4fc8577b7a774b35789af8e027524da2f68ebb6e2dd8910abd0843ec62bf30",
+   "source_sha256": "df255ad257d9d1fba29a1eae6971fc4dc79647e955b3942f3cbca00748c518f8",
    "status": "reviewed",
-   "target_sha256": "4b0b5e44cc4ccbc614af9d8684f9a1ff0a07512f373c48a600f19357da556e3a",
-   "translated_source_sha256": "ec4fc8577b7a774b35789af8e027524da2f68ebb6e2dd8910abd0843ec62bf30",
+   "target_sha256": "099b429bea3f45b0e840c32cb662743d36d32bcff6b359e6e38ec80b4d95c2b1",
+   "translated_source_sha256": "df255ad257d9d1fba29a1eae6971fc4dc79647e955b3942f3cbca00748c518f8",
    "translator": {
-    "at": "2026-10-08T23:44:23+00:00",
-    "prompt_version": "0343516bacbffe7a",
+    "at": "2026-10-14T14:09:51+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
      {
       "chunks": [
        0
       ],
-      "family": "ollama",
-      "model": "deepseek-v4.1-flash:cloud",
-      "provider": "ollama-cloud"
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude"
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.003"
+      ]
      }
     ]
    },
-   "updated_at": "2026-10-08T23:45:01+00:00"
+   "updated_at": "2026-10-14T14:10:42+00:00"
   },
   "_search-plugins/improving-search-performance.md": {
    "attempts": 2,
@@ -73449,7 +74152,7 @@
    "updated_at": "2026-10-09T03:00:00+00:00"
   },
   "_sql-and-ppl/ppl/commands/lookup.md": {
-   "attempts": 1,
+   "attempts": 0,
    "last_error": null,
    "original_front_matter": {
     "grand_parent": "PPL",
@@ -73458,40 +74161,51 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-09T02:58:38+00:00",
+    "at": "2026-10-14T14:10:55+00:00",
     "family": "codex:gpt-6-sol",
-    "issues": [
-     {
-      "id": "section.001",
-      "problem": "將「lookup index」和「lookup condition」譯為「查詢索引」與「查詢條件」，容易與一般查詢混淆；「查詢索引」也出現在 section.003 與 section.006。",
-      "severity": "minor",
-      "suggestion": "將「lookup index」統一譯為「查找索引」，「lookup condition」譯為「比對條件」。"
-     }
-    ],
+    "issues": [],
     "model": "gpt-6-sol",
-    "prompt_version": "0343516bacbffe7a",
+    "prompt_version": "02fda88b4e44fe8a",
     "provider": "codex-review",
-    "target_sha256": "3de7f20217f9f0029eaea1ac602e38317cb00f34c25d8f0c4588fb492c685476"
+    "target_sha256": "f86dba455e7def9315b5ef40ccdd9d829c516485887df8b5cc47f31c0147d66f"
    },
-   "source_sha256": "f601439b6ee7220e2574094bdf2850e1f40850c4a9baa13f78798aad998b1c65",
+   "source_sha256": "8299586a2314354ba922864ce74c97262970ff84be58895c4950ed9710d54250",
    "status": "reviewed",
-   "target_sha256": "3de7f20217f9f0029eaea1ac602e38317cb00f34c25d8f0c4588fb492c685476",
-   "translated_source_sha256": "f601439b6ee7220e2574094bdf2850e1f40850c4a9baa13f78798aad998b1c65",
+   "target_sha256": "f86dba455e7def9315b5ef40ccdd9d829c516485887df8b5cc47f31c0147d66f",
+   "translated_source_sha256": "8299586a2314354ba922864ce74c97262970ff84be58895c4950ed9710d54250",
    "translator": {
-    "at": "2026-10-09T02:57:47+00:00",
-    "prompt_version": "0343516bacbffe7a",
+    "at": "2026-10-14T14:10:01+00:00",
+    "prompt_version": "8a4a71603c110e60",
     "providers": [
      {
       "chunks": [
        0
       ],
       "family": "ollama",
+      "model": "deepseek-v4.1-flash:cloud",
+      "provider": "ollama-cloud"
+     },
+     {
+      "chunks": [
+       1
+      ],
+      "family": "ollama",
       "model": "glm-5.3-flash:cloud",
       "provider": "ollama-cloud-glm"
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.009",
+       "section.010",
+       "section.011"
+      ]
      }
     ]
    },
-   "updated_at": "2026-10-09T02:58:38+00:00"
+   "updated_at": "2026-10-14T14:10:55+00:00"
   },
   "_sql-and-ppl/ppl/commands/ml.md": {
    "attempts": 1,
@@ -78044,26 +78758,27 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-09T04:18:38+00:00",
+    "at": "2026-10-14T14:15:40+00:00",
     "family": "codex:gpt-6-sol",
     "issues": [],
     "model": "gpt-6-sol",
-    "prompt_version": "0343516bacbffe7a",
+    "prompt_version": "02fda88b4e44fe8a",
     "provider": "codex-review",
-    "target_sha256": "f1daf4b7cfd5db900abc0d71cab104917801a25cee0cd84ad0b5cf86d157974a"
+    "target_sha256": "851fc5bd2d921d13bce83286c811ac915cc0d0cfa31aaec54be954a5d2900db5"
    },
-   "source_sha256": "3050a372d4f8ab8386b41d575102099acd8f12e2a79afd9c3e9b199f8743fb14",
+   "source_sha256": "d70ba03648473419683ad7219fb59dd29009b1522830fd7b711075a6d22c7e80",
    "status": "reviewed",
-   "target_sha256": "f1daf4b7cfd5db900abc0d71cab104917801a25cee0cd84ad0b5cf86d157974a",
-   "translated_source_sha256": "3050a372d4f8ab8386b41d575102099acd8f12e2a79afd9c3e9b199f8743fb14",
+   "target_sha256": "851fc5bd2d921d13bce83286c811ac915cc0d0cfa31aaec54be954a5d2900db5",
+   "translated_source_sha256": "d70ba03648473419683ad7219fb59dd29009b1522830fd7b711075a6d22c7e80",
    "translator": {
-    "at": "2026-10-09T04:17:30+00:00",
-    "prompt_version": "0343516bacbffe7a",
+    "at": "2026-10-14T14:15:01+00:00",
+    "prompt_version": "02fda88b4e44fe8a",
     "providers": [
      {
       "chunks": [
-       0,
-       2
+       1,
+       2,
+       4
       ],
       "family": "ollama",
       "model": "deepseek-v4.1-flash:cloud",
@@ -78071,7 +78786,7 @@
      },
      {
       "chunks": [
-       1,
+       0,
        3
       ],
       "family": "ollama",
@@ -78079,32 +78794,35 @@
       "provider": "ollama-cloud-glm"
      },
      {
-      "family": "codex:gpt-6.1-sol",
-      "model": "gpt-6.1-sol",
-      "provider": "codex",
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
       "repairs": [
        "section.004",
        "section.005",
-       "section.007",
+       "section.008",
        "section.014",
        "section.017",
-       "section.020",
+       "section.019",
        "section.021",
-       "section.022"
+       "section.024",
+       "section.027",
+       "section.028",
+       "section.029",
+       "section.030"
       ]
      },
      {
-      "family": "codex:gpt-6.1-sol",
-      "model": "gpt-6.1-sol",
-      "provider": "codex",
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
       "repairs": [
-       "section.001",
-       "section.007"
+       "section.008"
       ]
      }
     ]
    },
-   "updated_at": "2026-10-09T04:18:38+00:00"
+   "updated_at": "2026-10-14T14:15:40+00:00"
   },
   "_tuning-your-cluster/availability-and-recovery/stats-api.md": {
    "attempts": 2,
@@ -82201,7 +82919,7 @@
    "updated_at": "2026-10-09T05:15:12+00:00"
   },
   "_vector-search/ai-search/conversational-search.md": {
-   "attempts": 1,
+   "attempts": 2,
    "last_error": null,
    "original_front_matter": {
     "parent": "AI search",
@@ -82209,29 +82927,29 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-09T06:25:02+00:00",
-    "family": "agy",
+    "at": "2026-10-14T14:13:35+00:00",
+    "family": "codex:gpt-6-sol",
     "issues": [],
-    "model": "gemini-3.1-pro-high",
-    "prompt_version": "0343516bacbffe7a",
-    "provider": "agy",
-    "target_sha256": "fe4fc5c437f4187c657bd4c88572bc30fc74cda558bb2c8fd263ca5084a4ac95"
+    "model": "gpt-6-sol",
+    "prompt_version": "02fda88b4e44fe8a",
+    "provider": "codex-review",
+    "target_sha256": "aeda45657f484f72668cca0098307f2dfa85e485c4e0565015d721a790ac882f"
    },
-   "source_sha256": "52e928b645a2931adaea9a611bc87ca63752ff306ae818e785800a504721d768",
+   "source_sha256": "2ef3fd231abec8c92983a670ae5c686e8d6555da54dd4141851d1f3a4616caf6",
    "status": "reviewed",
-   "target_sha256": "fe4fc5c437f4187c657bd4c88572bc30fc74cda558bb2c8fd263ca5084a4ac95",
-   "translated_source_sha256": "52e928b645a2931adaea9a611bc87ca63752ff306ae818e785800a504721d768",
+   "target_sha256": "aeda45657f484f72668cca0098307f2dfa85e485c4e0565015d721a790ac882f",
+   "translated_source_sha256": "2ef3fd231abec8c92983a670ae5c686e8d6555da54dd4141851d1f3a4616caf6",
    "translator": {
-    "at": "2026-10-09T06:24:29+00:00",
-    "prompt_version": "0343516bacbffe7a",
+    "at": "2026-10-14T14:13:11+00:00",
+    "prompt_version": "02fda88b4e44fe8a",
     "providers": [
      {
       "chunks": [
        1
       ],
-      "family": "ollama",
-      "model": "deepseek-v4.1-flash:cloud",
-      "provider": "ollama-cloud"
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude"
      },
      {
       "chunks": [
@@ -82241,10 +82959,19 @@
       "family": "ollama",
       "model": "glm-5.3-flash:cloud",
       "provider": "ollama-cloud-glm"
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.002",
+       "section.014"
+      ]
      }
     ]
    },
-   "updated_at": "2026-10-09T06:25:02+00:00"
+   "updated_at": "2026-10-14T14:13:35+00:00"
   },
   "_vector-search/ai-search/hybrid-search/aggregations.md": {
    "attempts": 1,

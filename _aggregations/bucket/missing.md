@@ -1,7 +1,7 @@
 ---
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Missing
+title: "缺失彙總"
 parent: Bucket aggregations
 nav_order: 120
 redirect_from:
@@ -10,7 +10,7 @@ redirect_from:
 
 # Missing 彙總
 
-`missing` 彙總會建立單一桶 (bucket)，其中包含指定欄位沒有值的所有文件。若欄位完全不存在，或包含已設定的 `NULL` 值，該文件即視為缺少該欄位。此彙總通常會與其他桶彙總搭配使用，以納入因缺少必要欄位而無法歸入任何其他桶的文件。
+`missing` 彙總會建立一個單一桶 (bucket)，其中包含指定欄位沒有值的所有文件。如果欄位不存在、為 `null` 或空陣列，則該文件視為缺失。如果欄位對應定義了 [`null_value`]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/null-value/)，明確的 `null` 值會以該值編製索引，因此不會被視為缺失。此彙總通常與其他桶彙總搭配使用，以涵蓋因缺少必要欄位而無法歸入任何其他桶的文件。
 
 ## 參數
 
@@ -18,14 +18,30 @@ redirect_from:
 
 | 參數 | 必要/選用 | 資料類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `field` | 必要 | 字串 | 要檢查缺少值的欄位。 |
+| `field` | 必要 | 字串 | 要檢查是否有缺失值的欄位。 |
+
+如果指定的欄位未在索引中建立對應，則每份文件都會被計為缺失，且不會回傳錯誤。因此，拼錯的欄位名稱會產生一個包含所有文件的桶。如果 `doc_count` 等於文件總數，請確認欄位名稱。
+{: .note}
 
 ## 範例
 
-下列範例使用 `products` 索引（建立於[加權平均範例]({{site.url}}{{site.baseurl}}/aggregations/metric/weighted-avg/#example)中），其中包含一份沒有 `rating` 欄位的文件。此彙總會計算有多少產品缺少評分，並包含 `terms` 子彙總以找出這些產品：
+下列請求將三個產品編製索引到 `product_ratings` 索引中。產品 C 沒有 `rating` 欄位：
 
 ```json
-GET /products/_search
+POST product_ratings/_bulk?refresh
+{ "index": { "_id": "1" } }
+{ "name": "Product A", "rating": 4.5, "num_reviews": 100 }
+{ "index": { "_id": "2" } }
+{ "name": "Product B", "rating": 3.8, "num_reviews": 50 }
+{ "index": { "_id": "3" } }
+{ "name": "Product C" }
+```
+{% include copy-curl.html %}
+
+下列彙總會計算有多少產品缺少評分，並包含一個 `terms` 子彙總來識別它們：
+
+```json
+GET /product_ratings/_search
 {
   "size": 0,
   "aggs": {
@@ -46,29 +62,13 @@ GET /products/_search
 ```
 {% include copy-curl.html %}
 
-## 範例回應
+## 回應範例
 
-回應顯示有一項產品 (Product C) 缺少 `rating` 欄位：
+回應顯示有一個產品（產品 C）缺少 `rating` 欄位：
 
 ```json
 {
-  "took": 9,
-  "timed_out": false,
-  "terminated_early": true,
-  "_shards": {
-    "total": 1,
-    "successful": 1,
-    "skipped": 0,
-    "failed": 0
-  },
-  "hits": {
-    "total": {
-      "value": 4,
-      "relation": "eq"
-    },
-    "max_score": null,
-    "hits": []
-  },
+  ...
   "aggregations": {
     "without_rating": {
       "doc_count": 1,
@@ -89,7 +89,7 @@ GET /products/_search
 
 ## 回應本文欄位
 
-下表列出回應本文欄位。
+下表列出回應本文的欄位。
 
 | 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |

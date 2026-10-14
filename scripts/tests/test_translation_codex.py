@@ -81,6 +81,22 @@ class CodexTests(unittest.TestCase):
         self.assertNotEqual(translator.model, reviewer.model)
         self.assertNotEqual(translator.family, reviewer.family)
 
+    def test_available_claude_shares_reviews_after_agy_fails(self):
+        providers = {
+            n: FakeProvider(n, n, lambda p, count: '{}')
+            for n in ['agy', 'agy-sonnet', 'codex-review', 'claude']
+        }
+        pool = ProviderPool(providers, balance_calls=True)
+        pool.disable('agy', ProviderError(QUOTA, 'quota'))
+        pool.disable('agy-sonnet', ProviderError(QUOTA, 'quota'))
+        chain = ['agy-sonnet', 'codex-review', 'agy', 'claude']
+        replies = [pool.call(chain, 's', 'p', 'review').provider for _ in range(4)]
+        self.assertEqual(replies.count('claude'), 2)
+        self.assertEqual(replies.count('codex-review'), 2)
+        # A Claude-authored draft's caller excludes the Claude family.
+        reply = pool.call(['agy', 'codex-review'], 's', 'p', 'review')
+        self.assertEqual(reply.provider, 'codex-review')
+
     def test_workers_stop_before_reserved_weekly_usage(self):
         from translation_pipeline.codex_budget import assess_budget
         for used, allowed in [(10, True), (74, True), (75, False), (80, False), (100, False)]:

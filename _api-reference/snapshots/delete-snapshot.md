@@ -3,30 +3,26 @@
 layout: default
 title: "刪除快照"
 parent: Snapshot APIs
-nav_order: 7
+nav_order: 70
 ---
 
-# 刪除快照 API
+# Delete Snapshot API
 **於 1.0 版導入**
 {: .label .label-purple }
 
-從儲存庫刪除快照。
+從儲存庫刪除快照。若要檢視您的儲存庫清單，請使用 [CAT Repositories API]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-repositories/)。若要檢視您的快照清單，請使用 [CAT Snapshots API]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-snapshots/)。
 
-刪除正在進行中的快照會停止快照作業，並刪除已部分建立的快照。
+刪除正在進行中的快照會停止快照作業，並刪除部分建立的快照。
 
-* 若要進一步了解快照，請參閱 [快照]({{site.url}}{{site.baseurl}}/opensearch/snapshots/index/)。
-
-* 若要檢視儲存庫清單，請參閱 [cat repositories]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-repositories/)。
-
-* 若要檢視快照清單，請參閱 [cat snapshots]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-snapshots/)。
-
-## 路徑與 HTTP 方法
+## 端點
 
 ```json
 DELETE _snapshot/{repository}/{snapshot}
 ```
 
 ## 路徑參數
+
+下表列出可用的路徑參數。
 
 參數 | 資料類型 | 說明
 :--- | :--- | :---
@@ -35,7 +31,7 @@ DELETE _snapshot/{repository}/{snapshot}
 
 ## 範例請求
 
-下列請求從 `my-opensearch-repo` 儲存庫刪除名為 `my-first-snapshot` 的快照：
+下列請求會從 `my-opensearch-repo` 儲存庫刪除名為 `my-first-snapshot` 的快照：
 
 <!-- spec_insert_start
 component: example_code
@@ -70,9 +66,9 @@ response = client.snapshot.delete(
 }
 ```
 
-若要驗證快照是否已刪除，請使用 [Get snapshot]({{site.url}}{{site.baseurl}}/api-reference/snapshots/get-snapshot/) API，並將快照名稱作為 `snapshot` 路徑參數傳入。
+若要確認快照已刪除，請使用 [Get snapshot]({{site.url}}{{site.baseurl}}/api-reference/snapshots/get-snapshot/) API，並將快照名稱作為 `snapshot` 路徑參數傳入。
 {: .note}
 
 ## 必要權限
 
-如果您使用 Security 外掛程式，請確保您具備適當的權限：`cluster:admin/snapshot/delete`。
+如果您使用 Security 外掛程式，請確認您具備適當的權限：`cluster:admin/snapshot/delete`。

@@ -663,6 +663,11 @@ class ProviderPool:
         if purpose == "review" and prompt_chars > 45000 and "agy-opus" in available:
             return ["agy-opus"] + [n for n in chain if n != "agy-opus"]
         choices = [n for n in weights.get(purpose, []) if n in available]
+        # When the usual agy reviewers are unavailable, avoid queueing every
+        # Cloud draft behind the serialized Codex worker. The caller already
+        # excludes the draft's model family from the reviewer chain.
+        if purpose == "review" and set(choices) == {"codex-review"} and "claude" in available:
+            choices.append("claude")
         if not choices:
             return chain
         with self._lock:

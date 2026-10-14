@@ -10,37 +10,48 @@ redirect_from:
 
 # Sampler 彙總
 
-`sampler` 彙總將子彙總的處理範圍限制在每個分片中得分最高的文件。這將焦點縮小到最相關的匹配項，而不是處理整個結果集，從而減少計算時間，並透過排除長尾中的低相關性文件來提高彙總結果的品質。
+`sampler` 彙總會將子彙總的處理限制在每個分片上分數最高的文件。這會將焦點縮小到最相關的相符項目，而非處理整個結果集，因此可減少運算時間，並藉由排除長尾中相關性較低的文件，提升彙總結果的品質。
 
-抽樣對於像 `significant_terms` 這樣的子彙總特別有用。如果沒有 sampler，完整的結果集將包含大量邊緣相關的文件，這些文件的通用詞元在數量上佔主導地位，掩蓋了在最高分匹配項中發現的真正具特徵的詞元。
+取樣在搭配 `significant_terms` 等子彙總時特別有價值。若沒有 sampler，完整結果集會包含一長串僅略微相關的文件，其通用詞彙在數量上占據主導地位，因而掩蓋了在分數最高之相符項目中真正獨特的詞彙。
 
-關於防止單一欄位值主導樣本的多元化抽樣，請參閱 [`diversified_sampler` 彙總]({{site.url}}{{site.baseurl}}/aggregations/bucket/diversified-sampler/)。
+如需可避免任何單一欄位值主導樣本的基於多樣性的取樣，請參閱 [`diversified_sampler` 彙總]({{site.url}}{{site.baseurl}}/aggregations/bucket/diversified-sampler/)。
 
 ## 參數
 
-`sampler` 彙總使用以下參數。
+`sampler` 彙總採用下列參數。
 
-| 參數 | 必要/選用 | 資料類型 | 描述 |
+| 參數 | 必要/選用 | 資料類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `shard_size` | 選用 | 整數 | 從每個分片中收集的最高分文件的最大數量。預設值為 `100`。 |
+| `shard_size` | 選用 | 整數 | 從每個分片收集之分數最高文件的最大數量。預設為 `100`。 |
 
-## 範例
+`sampler` 彙總可巢狀置於 `terms` 彙總之下。如果 `terms` 彙總使用 `breadth_first` 收集模式，OpenSearch 會重播延後文件的相關性分數，因此樣本仍以分數最高的文件為依據。
+{: .note}
 
-以下範例將樣本限制在每個分片 200 個最高分文件，然後執行 `terms` 子彙總，以找出該樣本中產品類別的分布情況：
+## 範例：取樣分數最高的文件
+
+下列範例使用包含莎士比亞全集的 `shakespeare` 索引，其中每份文件是劇本的一行。`text_entry` 欄位包含該行的文字，而 `play_name` 欄位是 `keyword` 欄位。
+
+查詢 `king falstaff` 會符合 1,545 行。其中大多數只包含常見詞彙 `king`，但同時包含較罕見詞彙 `falstaff` 的行會獲得最高分數。下列請求會取樣每個分片上分數最高的 100 行，並執行 `significant_terms` 子彙總，以找出與樣本最相關的劇本：
 
 ```json
-GET /opensearch_dashboards_sample_data_ecommerce/_search
+GET /shakespeare/_search
 {
   "size": 0,
+  "query": {
+    "match": {
+      "text_entry": "king falstaff"
+    }
+  },
   "aggs": {
     "sample": {
       "sampler": {
-        "shard_size": 200
+        "shard_size": 100
       },
       "aggs": {
-        "top_categories": {
-          "terms": {
-            "field": "category.keyword"
+        "plays": {
+          "significant_terms": {
+            "field": "play_name",
+            "size": 3
           }
         }
       }
@@ -50,41 +61,35 @@ GET /opensearch_dashboards_sample_data_ecommerce/_search
 ```
 {% include copy-curl.html %}
 
-回應顯示樣本包含 200 個文件，且 `terms` 子彙總僅對這 200 個文件進行操作，而非全部 4,675 個文件：
+樣本包含 100 行，最顯著的劇本是 *The Merry Wives of Windsor* 和 *Henry IV*，也就是 Falstaff 出現的劇本：
 
 ```json
 {
   ...
   "aggregations": {
     "sample": {
-      "doc_count": 200,
-      "top_categories": {
-        "doc_count_error_upper_bound": 0,
-        "sum_other_doc_count": 0,
+      "doc_count": 100,
+      "plays": {
+        "doc_count": 100,
+        "bg_count": 111396,
         "buckets": [
           {
-            "key": "Men's Clothing",
-            "doc_count": 82
+            "key": "Merry Wives of Windsor",
+            "doc_count": 41,
+            "score": 6.2045063935005285,
+            "bg_count": 2831
           },
           {
-            "key": "Women's Clothing",
-            "doc_count": 82
+            "key": "Henry IV",
+            "doc_count": 31,
+            "score": 3.0301421528861154,
+            "bg_count": 3205
           },
           {
-            "key": "Women's Shoes",
-            "doc_count": 49
-          },
-          {
-            "key": "Women's Accessories",
-            "doc_count": 40
-          },
-          {
-            "key": "Men's Shoes",
-            "doc_count": 37
-          },
-          {
-            "key": "Men's Accessories",
-            "doc_count": 25
+            "key": "Hamlet",
+            "doc_count": 6,
+            "score": 0.03449236569274269,
+            "bg_count": 4244
           }
         ]
       }
@@ -93,14 +98,69 @@ GET /opensearch_dashboards_sample_data_ecommerce/_search
 }
 ```
 
+## 範例：在沒有 sampler 的情況下執行彙總
+
+下列請求會對所有 1,545 行相符項目執行相同的 `significant_terms` 彙總，而不使用 sampler：
+
+```json
+GET /shakespeare/_search
+{
+  "size": 0,
+  "query": {
+    "match": {
+      "text_entry": "king falstaff"
+    }
+  },
+  "aggs": {
+    "plays": {
+      "significant_terms": {
+        "field": "play_name",
+        "size": 3
+      }
+    }
+  }
+}
+```
+{% include copy-curl.html %}
+
+由於僅包含 `king` 的長尾行數多於 Falstaff 的行數，最顯著的劇本是關於國王的歷史劇，例如 *Henry VI, Part 3* 和 *Richard II*。此彙總也會處理所有 1,545 份相符文件，而非 100 份：
+
+```json
+{
+  ...
+  "aggregations": {
+    "plays": {
+      "doc_count": 1545,
+      "bg_count": 111396,
+      "buckets": [
+        {
+          "key": "Henry VI Part 3",
+          "doc_count": 168,
+          "score": 0.31100010146873747,
+          "bg_count": 3138
+        },
+        {
+          "key": "Richard II",
+          "doc_count": 143,
+          "score": 0.23236659237692917,
+          "bg_count": 2937
+        },
+        {
+          "key": "Henry VI Part 2",
+          "doc_count": 125,
+          "score": 0.13780305490414782,
+          "bg_count": 3334
+        }
+      ]
+    }
+  }
+}
+```
+
 ## 回應本文欄位
 
-下表列出了回應本文的欄位。
+下表列出回應本文欄位。
 
-| 欄位 | 資料類型 | 描述 |
+| 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `doc_count` | 整數 | 所有分片中樣本文件的總數。 |
-
-## 限制
-
-`sampler` 彙總不能巢狀於使用 `breadth_first` 收集模式的 `terms` 彙總之下，因為廣度優先收集會捨棄 sampler 所需的相關性分數。
+| `doc_count` | 整數 | 所有分片樣本中的文件總數。 |

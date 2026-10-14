@@ -6,7 +6,7 @@ import os
 from pathlib import Path
 
 SCHEMA_VERSION = 1
-BASELINE_COMMIT = "ea8f887557c3a673bbb1200837e750ca0d02de7a"
+BASELINE_COMMIT = "716c4c1d6ef0c9744fd99ef50e83b13e559a6d31"
 TARGET_LANGUAGE = "zh-TW"
 
 # Root-level pages rendered by Jekyll in addition to the output collections.

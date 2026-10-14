@@ -29,7 +29,7 @@ from .protect import TOKEN_RE, Protector, normalize_block_tokens, placeholder_pr
 from .segment import heading_levels, table_rows
 from .terms import TermRules, check_prose, errors
 
-PROMPT_TEMPLATE_VERSION = "2026-10-09.2"
+PROMPT_TEMPLATE_VERSION = "2026-10-14.2"
 
 TRANSLATOR_SYSTEM = (
     "You are a professional technical translator localizing the OpenSearch documentation "
@@ -84,6 +84,15 @@ Reject (approved=false) when there is any major issue:
 - copyright, SPDX, license or permission notices that were translated, altered or removed.
 Original English legal notices are intentional and are not untranslated prose; code,
 identifiers and glossary keep-in-English names are not either.
+Liquid comment blocks ({% comment %} ... {% endcomment %}), HTML comments,
+Liquid tags and code are protected verbatim, including their English comments.
+They are not visible explanatory prose; never request translation inside them.
+Ordinary Markdown prose inside Liquid capture blocks still requires translation.
+The website automatically assigns every translated heading the original English
+heading ID during the Jekyll build. Source fragment links such as #example-requests
+therefore remain valid even when the Markdown heading text is Chinese. Do not
+request explicit anchor attributes or translated fragment destinations merely
+because a heading was translated. Heading count, order and levels must match.
 Each item's protected_legal_notices lists exact source lines which the publication's
 license checker requires to remain in English. This includes the map tile attribution
 "Tiles are generated per ... Copyright and License for OpenStreetMap". Do not request

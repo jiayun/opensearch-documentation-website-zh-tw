@@ -3,14 +3,14 @@
 layout: default
 title: "清理快照儲存庫"
 parent: Snapshot APIs
-nav_order: 11
+nav_order: 45
 ---
 
-# Cleanup Snapshot Repository API
+# 清理快照儲存庫 API
 **於 1.0 版推出**
 {: .label .label-purple }
 
-Cleanup Snapshot Repository API 會清除快照儲存庫中不再被任何現有快照參照的資料。
+清理快照儲存庫 API 會清除快照儲存庫中已不再被任何現有快照參照的資料。
 
 ## 端點
 
@@ -20,6 +20,8 @@ POST /_snapshot/{repository}/_cleanup
 
 
 ## 路徑參數
+
+下表列出可用的路徑參數。
 
 | 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
@@ -31,12 +33,12 @@ POST /_snapshot/{repository}/_cleanup
 
 | 參數 |  資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `cluster_manager_timeout` | 時間 | 等待叢集管理員節點回應的時間。先前稱為 `master_timeout`。選用。預設為 30 秒。 |
-| `timeout` | 時間 | 等待操作完成的時間。選用。|
+| `cluster_manager_timeout` | Time | 等待叢集管理員節點回應的時間長度。舊稱為 `master_timeout`。選用。預設為 30 秒。 |
+| `timeout` | Time | 等待操作完成的時間長度。選用。|
 
-## 請求範例
+## 範例請求
 
-下列請求會移除儲存庫 `my_backup` 中所有過時的資料：
+下列請求會從儲存庫 `my_backup` 移除所有過期資料：
 
 <!-- spec_insert_start
 component: example_code
@@ -61,7 +63,7 @@ response = client.snapshot.cleanup_repository(
 <!-- spec_insert_end -->
 
 
-## 回應範例
+## 範例回應
 
 ```json
 {
@@ -74,8 +76,10 @@ response = client.snapshot.cleanup_repository(
 
 ## 回應本文欄位
 
+下表列出所有回應本文欄位。
+
 | 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
 | `deleted_bytes` | 整數 | 刪除資料後，快照中釋出的位元組數。 |
-| `deleted_blobs` | 整數 | 此請求從儲存庫清除的二進位大型物件（BLOB）數量。 |
+| `deleted_blobs` | 整數 | 此請求從儲存庫清除的二進位大型物件 (BLOB) 數量。 |
 

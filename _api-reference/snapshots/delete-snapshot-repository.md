@@ -3,18 +3,14 @@
 layout: default
 title: "刪除快照儲存庫"
 parent: Snapshot APIs
-nav_order: 3
+nav_order: 30
 ---
 
-# 刪除快照儲存庫組態 API
-**引進於 1.0 版**
+# 刪除快照儲存庫 API
+**於 1.0 版推出**
 {: .label .label-purple }
 
-刪除快照儲存庫組態。  
- 
-OpenSearch 中的儲存庫只是一種組態，將儲存庫名稱對應到某個類型（檔案系統或 s3 儲存庫），並依類型包含其他資訊。該組態由檔案系統位置或 s3 儲存貯體支援。當您呼叫此 API 時，並不會刪除實體的檔案系統或 s3 儲存貯體本身，只會刪除組態。
-
-若要進一步了解儲存庫，請參閱[註冊或更新快照儲存庫]({{site.url}}{{site.baseurl}}/api-reference/snapshots/create-repository/)。
+從叢集刪除快照儲存庫的註冊。儲存位置及其中的快照不會被刪除。若要再次使用這些快照，請使用[建立或更新快照儲存庫 API]({{site.url}}{{site.baseurl}}/api-reference/snapshots/create-repository/) 重新註冊儲存庫。
 
 ## 端點
 
@@ -24,9 +20,11 @@ DELETE _snapshot/{repository}
 
 ## 路徑參數
 
+下表列出可用的路徑參數。
+
 參數 | 資料類型 | 說明
 :--- | :--- | :---
-`repository` | 字串 | 要刪除的儲存庫。 |
+`repository` | 字串 | 要刪除的儲存庫。
 
 ## 範例請求
 
@@ -64,7 +62,7 @@ response = client.snapshot.delete_repository(
 }
 ````
 
-若要驗證儲存庫是否已刪除，請使用[取得快照儲存庫]({{site.url}}{{site.baseurl}}/api-reference/snapshots/get-snapshot-repository/) API，並將儲存庫名稱作為 `repository` 路徑參數傳入。
+若要確認儲存庫已刪除，請使用[取得快照儲存庫]({{site.url}}{{site.baseurl}}/api-reference/snapshots/get-snapshot-repository/) API，並將儲存庫名稱傳入 `repository` 路徑參數。
 {: .note}
 
 ## 必要權限

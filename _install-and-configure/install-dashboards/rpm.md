@@ -16,9 +16,9 @@ The following liquid syntax declares a variable, major_version_mask, which is tr
 
 # 使用 RPM 安裝 OpenSearch Dashboards
 
-OpenSearch Dashboards 是 OpenSearch 資料的預設視覺化工具。它同時也是許多 OpenSearch 外掛程式的使用者介面，包括安全性、警示、Index State Management、SQL 等。
+OpenSearch Dashboards 是 OpenSearch 中資料的預設視覺化工具。它同時也是許多 OpenSearch 外掛程式的使用者介面，包括安全性、警示、Index State Management、SQL 等。
 
-## 必要條件
+## 先決條件
 
 安裝 OpenSearch。如需更多資訊，請參閱[使用 RPM 安裝 OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/rpm/)。
 
@@ -61,11 +61,12 @@ OpenSearch Dashboards 是 OpenSearch 資料的預設視覺化工具。它同時�
     ```
     {% include copy.html %}
 
-    對於 OpenSearch Dashboards 3.7 及更新版本的新安裝，您可以使用下列環境變數來控制 Security Dashboards 外掛程式的行為：
+    若為 OpenSearch Dashboards 3.7 及更新版本的全新安裝，您可以在安裝命令前加上 `env` 關鍵字並搭配 `DISABLE_SECURITY_DASHBOARDS_PLUGIN=true` 環境變數，以停用 Security Dashboards 外掛程式：
     ```bash
-    DISABLE_SECURITY_DASHBOARDS_PLUGIN=true
+    sudo env DISABLE_SECURITY_DASHBOARDS_PLUGIN=true rpm -ivh opensearch-dashboards-{{site.opensearch_dashboards_version}}-linux-x64.rpm
     ```
     {% include copy.html %}
+
 1. 安裝成功後，將 OpenSearch Dashboards 啟用為服務：
     ```bash
     sudo systemctl enable opensearch-dashboards
@@ -78,17 +79,17 @@ OpenSearch Dashboards 是 OpenSearch 資料的預設視覺化工具。它同時�
     ```
     {% include copy.html %}
 
-1. 驗證 OpenSearch Dashboards 是否已正確啟動：
+1. 確認 OpenSearch Dashboards 已正確啟動：
     ```bash
     sudo systemctl status opensearch-dashboards
     ```
     {% include copy.html %}
 
-1. 在網頁瀏覽器中前往 `http://localhost:5601`，並以 `admin` 使用者身分，使用您安裝 OpenSearch 時設定的自訂管理員密碼登入。如果 OpenSearch Dashboards 執行於遠端主機，請將 `localhost` 取代為該主機的 IP 位址或 DNS 名稱。如需更多資訊，請參閱[存取 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#accessing-opensearch-dashboards)。
+1. 在網頁瀏覽器中，前往 `http://localhost:5601`，並使用您在安裝 OpenSearch 時設定的自訂管理員密碼，以 `admin` 使用者身分登入。如果 OpenSearch Dashboards 執行於遠端主機，請將 `localhost` 替換為該主機的 IP 位址或 DNS 名稱。如需更多資訊，請參閱[存取 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#accessing-opensearch-dashboards)。
 
 ## 從本機 YUM 儲存庫安裝 OpenSearch Dashboards
 
-YUM 是 Red Hat 系作業系統的主要套件管理工具，可讓您從 YUM 儲存庫下載並安裝 RPM 套件。
+YUM 是以 Red Hat 為基礎之作業系統的主要套件管理工具，可讓您從 YUM 儲存庫程式庫下載並安裝 RPM 套件。
 
 1. 為 OpenSearch Dashboards 建立本機儲存庫檔案：
    ```bash
@@ -96,26 +97,26 @@ YUM 是 Red Hat 系作業系統的主要套件管理工具，可讓您從 YUM �
    ```
    {% include copy.html %}
 
-1. 驗證儲存庫是否已成功建立：
+1. 確認儲存庫已成功建立：
     ```bash
     sudo yum repolist
     ```
     {% include copy.html %}
 
-1. 清除 YUM 快取，以確保安裝順利進行：
+1. 清除您的 YUM 快取，以確保安裝順利：
    ```bash
    sudo yum clean all
    ```
    {% include copy.html %}
 
-1. 下載儲存庫檔案後，列出所有可用的 OpenSearch-Dashboards 版本：
+1. 下載儲存庫檔案後，列出 OpenSearch-Dashboards 所有可用的版本：
    ```bash
    sudo yum list opensearch-dashboards --showduplicates
    ```
    {% include copy.html %}
 
 1. 選擇您要安裝的 OpenSearch Dashboards 版本：
-   - 若無特別指定，將會安裝 OpenSearch 的最高次要版本：
+   - 除非另有指示，否則會安裝 OpenSearch 最高的次要版本：
    ```bash
    sudo yum install opensearch-dashboards
    ```
@@ -127,24 +128,23 @@ YUM 是 Red Hat 系作業系統的主要套件管理工具，可讓您從 YUM �
    ```
    {% include copy.html %}
 
-1. 安裝過程中，安裝程式會顯示 GPG 金鑰指紋。請確認資訊與下列內容相符：
-   ```bash
+1. YUM 第一次下載儲存庫中繼資料時 (例如當您列出可用版本時)，以及安裝期間，YUM 會提示您匯入 GPG 金鑰並顯示金鑰指紋。請確認資訊與下列內容相符：
+   ```text
    Fingerprint: A8B2 D9E0 4CD5 1FEF 6AA2 DB53 BA81 D999 8119 1457
    ```
-   {% include copy.html %}
 
-    - 若正確，請輸入 `yes` 或 `y`。OpenSearch 安裝將會繼續進行。
+    - 如果正確，請輸入 `yes` 或 `y`。OpenSearch 安裝會繼續進行。
 1. 啟動 OpenSearch Dashboards：
     ```bash
     sudo systemctl start opensearch-dashboards
     ```
     {% include copy.html %}
 
-1. 在網頁瀏覽器中前往 `http://localhost:5601`，並以 `admin` 使用者身分，使用您安裝 OpenSearch 時設定的自訂管理員密碼登入。如果 OpenSearch Dashboards 執行於遠端主機，請將 `localhost` 取代為該主機的 IP 位址或 DNS 名稱。如需更多資訊，請參閱[存取 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#accessing-opensearch-dashboards)。
+1. 在網頁瀏覽器中，前往 `http://localhost:5601`，並使用您在安裝 OpenSearch 時設定的自訂管理員密碼，以 `admin` 使用者身分登入。如果 OpenSearch Dashboards 執行於遠端主機，請將 `localhost` 替換為該主機的 IP 位址或 DNS 名稱。如需更多資訊，請參閱[存取 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#accessing-opensearch-dashboards)。
 
 ## 升級至較新版本
 
-使用 RPM 或 YUM 安裝的 OpenSearch Dashboards 執行個體可以輕鬆升級至較新版本。我們建議使用 YUM，但您也可以選擇 RPM。
+使用 RPM 或 YUM 安裝的 OpenSearch Dashboards 執行個體可輕鬆升級至較新版本。我們建議使用 YUM，但您也可以選擇 RPM。
 
 
 ### 使用 RPM 手動升級
@@ -154,7 +154,7 @@ YUM 是 Red Hat 系作業系統的主要套件管理工具，可讓您從 YUM �
 瀏覽至包含發行版的目錄，並執行下列命令：
 
 ```bash
-rpm -Uvh opensearch-dashboards-{{site.opensearch_dashboards_version}}-linux-x64.rpm
+sudo rpm -Uvh opensearch-dashboards-{{site.opensearch_dashboards_version}}-linux-x64.rpm
 ```
 {% include copy.html %}
 
@@ -167,7 +167,7 @@ sudo yum update opensearch-dashboards
 ```
 {% include copy.html %}
 
-您也可以提供版本號，升級至特定的 OpenSearch Dashboards 版本：
+您也可以提供版本號碼，以升級至特定的 OpenSearch Dashboards 版本：
  
  ```bash
  sudo yum update opensearch-dashboards-<version-number>
@@ -176,8 +176,13 @@ sudo yum update opensearch-dashboards
 
 ### 套件升級後自動重新啟動服務
 
-OpenSearch Dashboards RPM 套件不支援在套件升級後自動重新啟動服務。
+OpenSearch Dashboards RPM 套件不支援在套件升級後自動重新啟動服務。升級會停止 OpenSearch Dashboards，因此請在升級完成後啟動服務：
+
+```bash
+sudo systemctl start opensearch-dashboards
+```
+{% include copy.html %}
 
 ## 相關文件
 
-- [為正式環境準備 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#preparing-opensearch-dashboards-for-production)
+- [準備 OpenSearch Dashboards 以供正式環境使用]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#preparing-opensearch-dashboards-for-production)

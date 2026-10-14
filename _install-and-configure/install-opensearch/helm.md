@@ -10,36 +10,31 @@ redirect_from:
 
 # 使用 Helm 安裝 OpenSearch
 
-Helm 是一個套件管理員，讓您可以輕鬆地在 Kubernetes 叢集中安裝和管理 OpenSearch。您可以在 YAML 檔案中定義 OpenSearch 組態，並使用 Helm 以版本控制且可重複的方式部署您的應用程式。
+Helm 是一種套件管理工具，可讓您輕鬆地在 Kubernetes 叢集中安裝及管理 OpenSearch。您可以在 YAML 檔案中定義 OpenSearch 組態，並使用 Helm 以版本控制且可重現的方式部署應用程式。
 
-[Helm chart](https://github.com/opensearch-project/helm-charts) 包含下表所述的資源。
+[Helm 套件（chart）](https://github.com/opensearch-project/helm-charts)包含下表所述的資源。
 
 資源 | 說明
 :--- | :---
-`Chart.yaml` | 關於 chart 的資訊。
-`values.yaml` | chart 的預設組態值。
-`templates` | 與 values 結合以產生 Kubernetes 資訊清單檔案的範本。
+`Chart.yaml` |  chart 的相關資訊。
+`values.yaml` |  chart 的預設組態值。
+`templates` |  與值結合以產生 Kubernetes 資訊清單（manifest）檔案的範本。
 
-預設 Helm chart 中的規範支援許多標準使用案例和設定。您可以修改預設 chart 以設定您所需的規範，並設定傳輸層安全性 (TLS) 和角色型存取控制 (RBAC)。
+預設 Helm chart 中的規格支援許多標準使用案例與設定。您可以修改預設 chart，以設定您想要的規格，並設定傳輸層安全性 (TLS) 與角色型存取控制 (RBAC)。
 
-關於預設組態、設定安全性的步驟以及可設定參數的資訊，請參閱
+如需預設組態、設定安全性的步驟及可設定的參數等資訊，請參閱
 [`README`](https://github.com/opensearch-project/helm-charts/blob/main/README.md)。
 
-此處的說明假設您已擁有預先安裝 Helm 的 Kubernetes 叢集。有關設定 Kubernetes 叢集的步驟，請參閱 [Kubernetes 說明文件](https://kubernetes.io/docs/setup/)；有關安裝 Helm 的步驟，請參閱 [Helm 說明文件](https://helm.sh/docs/intro/install/)。
+此處的指示假設您已有一個預先安裝 Helm 的 Kubernetes 叢集。如需設定 Kubernetes 叢集的步驟，請參閱 [Kubernetes 文件](https://kubernetes.io/docs/setup/)；如需安裝 Helm，請參閱 [Helm 文件](https://helm.sh/docs/intro/install/)。
 {: .note }
 
-## 前置條件
+## 先決條件
 
-預設 Helm chart 會部署一個三節點叢集。我們建議您為此部署準備至少 8 GiB 的記憶體。如果您可用的記憶體少於 4 GiB，部署可能會失敗。
+預設 Helm chart 會部署三個節點的叢集。我們建議您為此部署準備至少 8 GiB 的記憶體。舉例來說，如果您的可用記憶體少於 4 GiB，部署預期會失敗。
 
-對於 OpenSearch 2.12 或更高版本，您必須提供 `OPENSEARCH_INITIAL_ADMIN_PASSWORD` 才能啟動叢集。請在 `extraEnvs` 下的 `values.yaml` 中自訂管理員密碼，並遵循 [管理員密碼要求]({{site.url}}{{site.baseurl}}/security/configuration/demo-configuration/#admin-password-requirements)，如下例所示：
+OpenSearch 要求每個 Kubernetes 節點上的 `vm.max_map_count` 核心設定至少為 `262144`。如果該值較低，OpenSearch pod 將無法通過啟動檢查，並進入 `CrashLoopBackOff` 狀態。下列步驟中的 `values.yaml` 檔案會將 `sysctlInit.enabled` 設為 `true`，這會執行具特殊權限的 init 容器，在節點上設定 `vm.max_map_count`。如果您的節點已設定完成，或您的叢集不允許具特殊權限的容器，請移除此設定，改為在節點上設定 `vm.max_map_count`。如需詳細資訊，請參閱[重要設定]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/#important-settings)。
 
-```yaml
-extraEnvs:
-  - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
-    value: <custom-admin-password>
-```
-{% include copy.html %}
+若使用 OpenSearch 2.12 或更新版本，您必須提供 `OPENSEARCH_INITIAL_ADMIN_PASSWORD` 才能啟動叢集。請依照[管理員密碼需求]({{site.url}}{{site.baseurl}}/security/configuration/demo-configuration/#admin-password-requirements)，在 `values.yaml` 的 `extraEnvs` 下設定管理員密碼。
 
 ## 使用 Helm 安裝 OpenSearch
 
@@ -50,29 +45,30 @@ extraEnvs:
    ```
    {% include copy.html %}
 
-1. 從 chart 儲存庫更新本機的可用 charts：
+1. 從 chart 儲存庫更新本機可用的 chart：
 
    ```bash
    helm repo update
    ```
    {% include copy.html %}
 
-1. 搜尋與 OpenSearch 相關的 Helm charts：
+1. 若要搜尋 OpenSearch 相關的 Helm chart：
 
    ```bash
    helm search repo opensearch
    ```
    {% include copy.html %}
 
-   回應中會提供可用的 charts：
+   回應中會提供可用的 chart：
 
    ```bash
-   NAME                            	CHART VERSION	APP VERSION	DESCRIPTION                           
-   opensearch/opensearch                  	3.1.0        	3.1.0      	A Helm chart for OpenSearch                      
-   opensearch/opensearch-dashboards       	3.1.0        	3.1.0      	A Helm chart for OpenSearch Dashboards
+   NAME                            	CHART VERSION	APP VERSION	DESCRIPTION
+   opensearch/opensearch           	{{site.opensearch_version}}        	{{site.opensearch_version}}      	A Helm chart for OpenSearch
+   opensearch/opensearch-dashboards	{{site.opensearch_dashboards_version}}        	{{site.opensearch_dashboards_version}}      	A Helm chart for OpenSearch Dashboards
+   opensearch/data-prepper         	0.3.1        	2.8.0      	A Helm chart for Data Prepper
    ```
 
-1. 建立一個精簡的 `values.yaml` 檔案：
+1. 建立最小的 `values.yaml` 檔案，並將 `<custom-admin-password>` 取代為您的管理員密碼：
 
    ```yaml
    config:
@@ -81,7 +77,9 @@ extraEnvs:
        network.host: 0.0.0.0
    extraEnvs:
      - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
-       value: <strong_password>
+       value: <custom-admin-password>
+   sysctlInit:
+     enabled: true
    ```
    {% include copy.html %}
 
@@ -92,23 +90,37 @@ extraEnvs:
    ```
    {% include copy.html %}
 
-您也可以手動建立 `opensearch-<VERSION>.tgz` 檔案：
+   輸出會顯示已部署的發行版本：
 
-1. 複製 [`helm-charts` repo](https://github.com/opensearch-project/helm-charts/tree/main)：
+   ```yaml
+   NAME: my-deployment
+   LAST DEPLOYED: Fri Oct  2 02:28:00 2026
+   NAMESPACE: default
+   STATUS: deployed
+   REVISION: 1
+   TEST SUITE: None
+   NOTES:
+   Watch all cluster members come up.
+     $ kubectl get pods --namespace=default -l app.kubernetes.io/component=opensearch-cluster-master -w
+   ```
+
+您也可以手動建置 `opensearch-<VERSION>.tgz` 檔案：
+
+1. 複製 [`helm-charts` 儲存庫](https://github.com/opensearch-project/helm-charts/tree/main)：
 
    ```bash
    git clone https://github.com/opensearch-project/helm-charts.git
    ```
    {% include copy.html %}
 
-1. 進入 `opensearch` 目錄：
+1. 瀏覽至 `opensearch` 目錄：
 
    ```bash
    cd helm-charts/charts/opensearch
    ```
    {% include copy.html %}
 
-1. 將 Helm chart 打包：
+1. 封裝 Helm chart：
 
    ```bash
    helm package .
@@ -122,76 +134,63 @@ extraEnvs:
    ```
    {% include copy.html %}
 
-   輸出結果會顯示從安裝中建立的規範。
+   Helm 會產生發行版本名稱，例如 `opensearch-{{ site.opensearch_version | split: "." | first }}-1790908448`。解除安裝發行版本時，請使用此名稱而非 `my-deployment`。
 
+## 驗證部署
 
-#### 範例輸出
-
-  ```yaml
-  NAME: opensearch-3-1754992026
-  LAST DEPLOYED: Tue Aug 12 10:47:06 2025
-  NAMESPACE: default
-  STATUS: deployed
-  REVISION: 1
-  TEST SUITE: None
-  NOTES:
-  Watch all cluster members come up.
-  $ kubectl get pods --namespace=default -l app.kubernetes.io/component=opensearch-cluster-master -w
-  ```
-
-若要確認您的 OpenSearch pod 已啟動並正常執行，請執行下列指令：
+若要確認您的 OpenSearch pod 已啟動並正在執行，請執行下列命令：
 
 ```bash
-$ kubectl get pods --namespace=default -w
+kubectl get pods --namespace=default -w
 ```
 {% include copy.html %}
 
-等待所有 pod 在 `READY` 欄位顯示 `1/1` 且在 `STATUS` 欄位顯示 `Running`：
+請等待所有 pod 在 `READY` 欄中顯示 `1/1`，並在 `STATUS` 欄中顯示 `Running`，這大約需要 1 分鐘：
 
 ```bash
-NAME                                                  READY   STATUS    RESTARTS   AGE
-opensearch-cluster-master-0                           1/1     Running   0          3m56s
-opensearch-cluster-master-1                           1/1     Running   0          3m56s
-opensearch-cluster-master-2                           1/1     Running   0          3m56s
+NAME                          READY   STATUS    RESTARTS   AGE
+opensearch-cluster-master-0   1/1     Running   0          41s
+opensearch-cluster-master-1   1/1     Running   0          41s
+opensearch-cluster-master-2   1/1     Running   0          41s
 ```
 
-一旦所有 pod 準備就緒，您就可以驗證 OpenSearch 是否正在執行。請使用下列其中一種方法。
+所有 pod 就緒後，您即可驗證 OpenSearch 是否正在執行。請使用下列其中一種方法。
 
-### 從本機進行連接埠轉送
+### 從本機連接埠轉送
 
-若要從本機存取 OpenSearch，請從 OpenSearch 服務設定連接埠轉送：
-
-```bash
-$ kubectl port-forward svc/opensearch-cluster-master 9200:9200
-```
-{% include copy.html %}
-
-保持此指令執行，並開啟另一個終端機工作階段。然後發送請求以驗證 OpenSearch 是否正在執行：
+若要從本機存取 OpenSearch，請設定從 OpenSearch 服務進行連接埠轉送：
 
 ```bash
-$ curl -XGET https://localhost:9200 -u 'admin:<custom-admin-password>' --insecure
+kubectl port-forward svc/opensearch-cluster-master 9200:9200
 ```
 {% include copy.html %}
 
-### 使用 exec 進入 pod
+請讓此命令保持執行，並開啟另一個終端機工作階段。接著傳送請求以驗證 OpenSearch 是否正在執行：
+
+```bash
+curl -XGET https://localhost:9200 -u 'admin:<custom-admin-password>' --insecure
+```
+{% include copy.html %}
+
+### 在 pod 中執行
 
 或者，您可以直接存取 OpenSearch shell：
 
 ```bash
-$ kubectl exec -it opensearch-cluster-master-0 -- /bin/bash
+kubectl exec -it opensearch-cluster-master-0 -- /bin/bash
 ```
 {% include copy.html %}
 
-然後從 pod 內部發送請求：
+接著從 pod 內傳送請求：
 
 ```bash
-$ curl -XGET https://localhost:9200 -u 'admin:<custom-admin-password>' --insecure
+curl -XGET https://localhost:9200 -u 'admin:<custom-admin-password>' --insecure
 ```
 {% include copy.html %}
 
-### 預期回應
+### 預期的回應
 
-以下是回應範例：
+以下是範例回應：
 
 ```json
 {
@@ -213,43 +212,50 @@ $ curl -XGET https://localhost:9200 -u 'admin:<custom-admin-password>' --insecur
 }
 ```
 
-如果您收到 `OpenSearch Security not initialized` 錯誤，表示叢集仍在啟動中。請等待幾分鐘，直到所有節點完全初始化並形成叢集，然後再次嘗試請求。
+如果您收到 `OpenSearch Security not initialized` 錯誤，表示叢集仍在啟動中。請等待幾分鐘，讓所有節點完全初始化並形成叢集，然後再試一次請求。
 {: .note }
 
 ## 使用 Helm 解除安裝
 
-若要識別您想要刪除的 OpenSearch 部署：
+若要識別您想刪除的 OpenSearch 部署，請執行下列命令：
 
 ```bash
-$ helm list
+helm list
 ```
 {% include copy.html %}
 
 回應會列出目前的 Helm 部署：
 
 ```bash
-NAME                   	NAMESPACE	REVISION	UPDATED                            	STATUS  	CHART           	APP VERSION
-opensearch-3-1754992026	default  	1       	2025-08-12 10:47:06.02703 +0100 IST	deployed	opensearch-3.1.0	3.1.0      
+NAME         	NAMESPACE	REVISION	UPDATED                                	STATUS  	CHART           	APP VERSION
+my-deployment	default  	1       	2026-10-02 02:28:00.553978943 +0000 UTC	deployed	opensearch-{{site.opensearch_version}}	{{site.opensearch_version}}
 ```
 
-若要刪除或解除安裝部署，請執行下列指令：
+若要解除安裝部署，請執行下列命令：
 
 ```bash
-helm delete opensearch-3-1754992026
+helm uninstall my-deployment
 ```
 {% include copy.html %}
 
-有關安裝 OpenSearch Dashboards 的說明，請參閱 [使用 Helm 安裝 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/helm/)。
+解除安裝發行版本並不會刪除儲存 OpenSearch 資料的持久性磁碟區宣告 (PVC)。如果您重新安裝發行版本，OpenSearch 會重複使用現有資料，包括原始的管理員密碼。若要刪除資料，請刪除 PVC：
+
+```bash
+kubectl delete pvc -l app.kubernetes.io/instance=my-deployment
+```
+{% include copy.html %}
+
+如需安裝 OpenSearch Dashboards 的指示，請參閱[使用 Helm 安裝 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/helm/)。
 
 ## 常見問題
 
-如果您的 pod 無法啟動，請查看這些常見問題及建議解決方案。
+如果您的 pod 無法啟動，請檢閱這些常見問題與建議的解決方案。
 
-對於任何安裝方法都可能發生的問題（例如對 HTTPS 端點發送 HTTP 請求或管理員密碼被拒絕），請參閱 [常見問題]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/#common-issues)。
+如需任何安裝方法都可能發生的問題，例如對 HTTPS 端點發出 HTTP 請求或管理員密碼遭拒，請參閱[常見問題]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/#common-issues)。
 
-### `values.yaml` 中的管理員密碼沒有效果
+### `values.yaml` 中的管理員密碼沒有作用
 
-如果 `values.yaml` 包含多個 `extraEnvs` 鍵，Helm 僅會使用最後一個。第二個 `extraEnvs` 鍵會在不提示的情況下替換設定 `OPENSEARCH_INITIAL_ADMIN_PASSWORD` 的清單，因此 `helm install` 或 `helm upgrade` 會成功，但 pod 會重複重新啟動。請在單個 `extraEnvs` 清單中定義所有環境變數：
+如果 `values.yaml` 包含多個 `extraEnvs` 索引鍵，Helm 只會使用最後一個。第二個 `extraEnvs` 索引鍵會無聲地取代設定 `OPENSEARCH_INITIAL_ADMIN_PASSWORD` 的清單，因此 `helm install` 或 `helm upgrade` 會成功，但 pod 會反覆重新啟動。請在單一 `extraEnvs` 清單中定義所有環境變數：
 
 ```yaml
 extraEnvs:
@@ -258,7 +264,8 @@ extraEnvs:
   - name: <another-variable>
     value: <value>
 ```
+{% include copy.html %}
 
 ## 相關文件
 
-- [為生產環境準備叢集]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/#preparing-a-cluster-for-production)
+- [準備正式作業環境的叢集]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/#preparing-a-cluster-for-production)

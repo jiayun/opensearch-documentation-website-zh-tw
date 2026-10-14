@@ -3,10 +3,10 @@
 layout: default
 title: "複製快照"
 parent: Snapshot APIs
-nav_order: 10
+nav_order: 100
 ---
 
-# Clone Snapshot API
+# 複製快照 API
 **於 1.0 版導入**
 {: .label .label-purple }
 
@@ -33,9 +33,9 @@ component: path_parameters
 
 | 參數 | 必要 | 資料類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `repository` | **必要** | String | 將包含快照複本的儲存庫名稱。 |
-| `snapshot` | **必要** | String | 原始快照的名稱。 |
-| `target_snapshot` | **必要** | String | 複製後快照的名稱。 |
+| `repository` | **必要** | 字串 | 將包含快照複本的儲存庫名稱。 |
+| `snapshot` | **必要** | 字串 | 原始快照的名稱。 |
+| `target_snapshot` | **必要** | 字串 | 複製後快照的名稱。 |
 
 <!-- spec_insert_end -->
 
@@ -51,14 +51,14 @@ include_deprecated: false
 
 | 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `cluster_manager_timeout` | String | 等待叢集管理員節點回應的時間。如需支援的時間單位詳細資訊，請參閱 [Common parameters]({{site.url}}{{site.baseurl}}/api-reference/units/#time-units)。 |
+| `cluster_manager_timeout` | 字串 | 等待叢集管理員節點回應的時間長度。如需支援的時間單位詳細資訊，請參閱[常用參數]({{site.url}}{{site.baseurl}}/api-reference/units/#time-units)。 |
 
 <!-- spec_insert_end -->
 
 
 ## 範例請求
 
-下列請求會將快照儲存庫 `my-opensearch-repo` 中名為 `my_snapshot` 的快照內的索引 `index_a` 與 `index_b`，複製到同一儲存庫中名為 `my_new_snapshot` 的新快照：
+下列請求會將位於快照儲存庫 `my-opensearch-repo` 中的快照 `my_snapshot` 內的索引 `index_a` 與 `index_b`，複製到同一儲存庫中名為 `my_new_snapshot` 的新快照：
 
 <!-- spec_insert_start
 component: example_code

@@ -3,18 +3,18 @@
 layout: default
 title: "取得快照儲存庫"
 parent: Snapshot APIs
-nav_order: 2
+nav_order: 20
 ---
 
-# 取得快照儲存庫 API
-**1.0 版推出**
+# Get Snapshot Repository API
+**於 1.0 版推出**
 {: .label .label-purple }
 
 擷取快照儲存庫的相關資訊。
 
-若要進一步了解儲存庫，請參閱[註冊儲存庫]({{site.url}}{{site.baseurl}}/opensearch/snapshots/snapshot-restore#register-repository)。
+如要進一步了解儲存庫，請參閱[註冊儲存庫]({{site.url}}{{site.baseurl}}/opensearch/snapshots/snapshot-restore#register-repository)。
 
-您也可以在建立快照期間及之後取得快照的詳細資訊。請參閱[取得快照狀態]({{site.url}}{{site.baseurl}}/api-reference/snapshots/get-snapshot-status/)。
+您也可以在建立快照期間及建立完成後取得快照的詳細資料。請參閱[取得快照狀態]({{site.url}}{{site.baseurl}}/api-reference/snapshots/get-snapshot-status/)。
 {: .note}
 
 ## 端點
@@ -25,11 +25,15 @@ GET /_snapshot/{repository}
 
 ## 路徑參數
 
+下表列出可用的路徑參數。所有路徑參數皆為選用。
+
 | 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `repository` | 字串 | 要擷取的快照儲存庫名稱清單，以逗號分隔。支援萬用字元（`*`）運算式，包括將萬用字元與以 `-` 開頭的排除模式結合使用。 |
+| `repository` | 字串 | 以逗號分隔的快照儲存庫名稱清單，用於指定要擷取的儲存庫。支援萬用字元 (`*`) 運算式，包括將萬用字元與以 `-` 開頭的排除模式結合使用。 |
 
 ## 查詢參數
+
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
 | 參數 | 資料類型 | 說明 | 
 :--- | :--- | :---
@@ -80,12 +84,14 @@ response = client.snapshot.get_repository(
 
 ## 回應本文欄位
 
+下表列出所有回應本文欄位。
+
 | 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- | 
-| `type` | 字串 | 桶 (bucket) 類型：`fs`（檔案系統）或 `s3`（S3 桶） |
+| `type` | 字串 | 桶類型：`fs` (檔案系統) 或 `s3` (s3 桶) |
 | `bucket` | 字串 | S3 桶名稱。 |
-| `base_path` | 字串 | 桶內用於儲存快照的資料夾。 |
+| `base_path` | 字串 | 桶內儲存快照的資料夾。 |
 
 ## 必要權限
 
-如果您使用 Security 外掛程式，請確認您擁有適當的權限：`cluster:admin/repository/get`。
+如果您使用 Security 外掛程式，請確認您具有適當的權限：`cluster:admin/repository/get`。

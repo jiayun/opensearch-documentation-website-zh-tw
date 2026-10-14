@@ -3,11 +3,11 @@
 layout: default
 title: "取得快照"
 parent: Snapshot APIs
-nav_order: 6
+nav_order: 60
 ---
 
 # Get Snapshot API
-**於 1.0 版推出**
+**於 1.0 版導入**
 {: .label .label-purple }
 
 擷取快照的相關資訊。
@@ -20,6 +20,8 @@ GET _snapshot/{repository}/{snapshot}/
 
 ## 路徑參數
 
+下表列出可用的路徑參數。
+
 | 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
 | `repository` | 字串 | 包含要擷取之快照的儲存庫。 |
@@ -27,14 +29,16 @@ GET _snapshot/{repository}/{snapshot}/
 
 ## 查詢參數
 
+下表列出可用的查詢參數。所有查詢參數皆為選用。
+
 | 參數 | 資料類型 | 說明 | 
 :--- | :--- | :---
-| `verbose` | 布林值 | 當值為 `true` 時，傳回每個快照的其他資訊，例如建立快照的 OpenSearch 版本、快照的開始與結束時間，以及快照包含的分片數量。當值為 `false` 時，僅傳回快照名稱及其包含的索引。當快照位於雲端儲存庫，而每次讀取 blob 都涉及成本或效能考量時，此參數相當實用。選用。預設為 `true`。|
-| `ignore_unavailable` | 布林值 | 如何處理無法使用的快照（已損毀或因其他原因暫時無法傳回）。若值為 `true` 且快照無法使用，請求不會傳回該快照。若值為 `false` 且快照無法使用，請求會傳回錯誤。選用。預設為 `false`。|
+| `verbose` | 布林值 | 當為 `true` 時，傳回每個快照的其他資訊，例如建立快照的 OpenSearch 版本、快照的開始與結束時間，以及快照中包含的分片數量。當為 `false` 時，僅傳回快照名稱及其包含的索引。當快照屬於雲端儲存庫，而每次讀取 blob 都會產生成本或效能考量時，此選項非常實用。選用。預設為 `true`。|
+| `ignore_unavailable` | 布林值 | 如何處理無法使用的快照（損毀或其他原因而暫時無法傳回）。若為 `true` 且快照無法使用，請求不會傳回該快照。若為 `false` 且快照無法使用，請求會傳回錯誤。選用。預設為 `false`。|
 
-## 請求範例
+## 範例請求
 
-下列請求會擷取位於 `my-opensearch-repo` 儲存庫中的 `my-first-snapshot` 的相關資訊：
+下列請求會擷取位於 `my-opensearch-repo` 儲存庫中的 `my-first-snapshot` 資訊：
 
 <!-- spec_insert_start
 component: example_code
@@ -59,7 +63,7 @@ response = client.snapshot.get(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## 回應範例
+## 範例回應
 
 成功時，回應會傳回快照資訊：
 
@@ -98,26 +102,29 @@ response = client.snapshot.get(
   ]
 }
 ````
+
 ## 回應本文欄位
+
+下表列出所有回應本文欄位。
 
 | 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- | 
 | `snapshot` | 字串 | 快照名稱。 |
-| `uuid` | 字串 | 快照的通用唯一識別碼（UUID）。 |
+| `uuid` | 字串 | 快照的通用唯一識別碼 (UUID)。 |
 | `version_id` | 整數 | 建立快照的 OpenSearch 版本之建置 ID。 |
 | `version` | 浮點數 | 建立快照的 OpenSearch 版本。 |
 | `indices` | 陣列 | 快照中的索引。 |
 | `data_streams` | 陣列 | 快照中的資料串流。 |
-| `include_global_state` | 布林值 | 快照是否包含目前的叢集狀態。 |
-| `start_time` | 字串 | 快照建立程序開始的日期／時間。 |
-| `start_time_in_millis` | 長整數 | 快照建立程序開始的時間（以毫秒為單位）。 |
-| `end_time` | 字串 | 快照建立程序結束的日期／時間。 |
-| `end_time_in_millis` | 長整數 | 快照建立程序結束的時間（以毫秒為單位）。 |
-| `duration_in_millis` | 長整數 | 快照建立程序持續的總時間（以毫秒為單位）。 |
-| `failures` | 陣列 | 快照建立期間發生的失敗（若有）。 |
+| `include_global_state` | 布林值 | 快照中是否包含目前的叢集狀態。 |
+| `start_time` | 字串 | 快照建立程序開始的日期/時間。 |
+| `start_time_in_millis` | 長整數 | 快照建立程序開始的時間（毫秒）。 |
+| `end_time` | 字串 | 快照建立程序結束的日期/時間。 |
+| `end_time_in_millis` | 長整數 | 快照建立程序結束的時間（毫秒）。 |
+| `duration_in_millis` | 長整數 | 快照建立程序持續的總時間（毫秒）。 |
+| `failures` | 陣列 | 快照建立期間發生的失敗（若有的話）。 |
 | `shards` | 物件 | 建立的分片總數，以及成功與失敗的分片數量。 |
 | `state` | 字串 | 快照狀態。可能的值：`IN_PROGRESS`、`SUCCESS`、`FAILED`、`PARTIAL`。 |
 
 ## 必要權限
 
-如果您使用 Security 外掛程式，請確認您具有適當的權限：`cluster:admin/snapshot/get`。
+若您使用 Security 外掛程式，請確認您具備適當的權限：`cluster:admin/snapshot/get`。

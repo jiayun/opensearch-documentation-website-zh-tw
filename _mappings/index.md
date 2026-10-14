@@ -16,11 +16,11 @@ redirect_from:
 
 # 對應
 
-對應會告訴 OpenSearch 如何儲存您的文件及其欄位並編製索引。您可以為每個欄位指定資料類型（例如，將 `year` 指定為 `date`），讓儲存與查詢更有效率。
+對應 (mapping) 告訴 OpenSearch 如何儲存您的文件及其欄位，並為其編製索引。您可以為每個欄位指定資料類型 (例如將 `year` 指定為 `date`)，讓儲存與查詢更有效率。
 
-雖然[動態對應](#dynamic-mapping)會自動新增資料與欄位，但仍建議使用明確對應。明確對應可讓您預先定義確切的結構與資料類型，有助於維持資料一致性並最佳化效能，尤其是在處理大型資料集或大量編製索引作業時。
+雖然[動態對應](#dynamic-mapping)會自動新增資料與欄位，但仍建議使用明確對應。明確對應讓您能預先定義確切的結構與資料類型。這有助於維持資料一致性並最佳化效能，尤其是在大型資料集或高量編製索引作業時。
 
-例如，使用明確對應時，您可以確保 `year` 被視為文字，而 `age` 被視為整數，而不是兩者都被動態對應解讀為整數。
+例如，透過明確對應，您可以確保 `year` 被視為文字，而 `age` 被視為整數，而不是兩者都被動態對應解讀為整數。
 
 ## 對應結構與概念
 
@@ -28,7 +28,7 @@ redirect_from:
 
 ### 對應結構與範例
 
-OpenSearch 對應遵循階層式 JSON 結構。下列範例示範如何使用 `text` 與 `date` 欄位及其對應參數。此外，其中還包含一個具有自身屬性的巢狀 `director` 物件：
+OpenSearch 對應採用階層式 JSON 結構。下列範例示範使用 `text` 與 `date` 欄位及其對應參數。此外，它還包含一個具有自身屬性的巢狀 `director` 物件：
 
 ```json
 PUT /movies
@@ -59,15 +59,15 @@ PUT /movies
 
 ### 關鍵術語
 
-- **對應**：索引的整體結構描述定義。
-- **屬性**：對應中所有欄位定義的容器。
-- **欄位**：個別的資料元素（例如 `title` 或 `year`）。
-- **欄位類型**：定義欄位資料如何儲存與編製索引（例如 `text`、`integer`、`date`）。如需更多資訊，請參閱[支援的欄位類型]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/)。
-- **對應參數**：修改欄位行為的組態選項（例如 `analyzer`、`coerce`、`format`）。如需更多資訊，請參閱[對應參數]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/)。
+- **對應 (Mappings)**：索引的整體結構描述定義。
+- **屬性 (Properties)**：對應中所有欄位定義的容器。
+- **欄位 (Field)**：個別的資料元素 (例如 `title` 或 `year`)。
+- **欄位類型 (Field type)**：定義欄位資料如何儲存與編製索引 (例如 `text`、`integer`、`date`)。如需更多資訊，請參閱[支援的欄位類型]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/)。
+- **對應參數 (Mapping parameters)**：修改欄位行為的組態選項 (例如 `analyzer`、`coerce`、`format`)。如需更多資訊，請參閱[對應參數]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/)。
 
 ## 明確對應
 
-如果您確切知道需要使用哪些欄位資料類型，就可以在建立索引時於請求本文中指定，如下列範例請求所示：
+如果您確切知道需要使用哪些欄位資料類型，就可以在建立索引時於請求本文中指定它們，如下列範例請求所示：
 
 ```json
 PUT sample-index1
@@ -86,7 +86,7 @@ PUT sample-index1
 您無法變更現有欄位的對應；只能修改該欄位的對應參數。
 {: .note}
 
-若要為現有的索引或資料串流新增對應，您可以向 `_mapping` 端點傳送請求，並使用 `PUT` 或 `POST` HTTP 方法，如下列範例請求所示：
+若要為現有索引或資料串流新增對應，您可以使用 `PUT` 或 `POST` HTTP 方法向 `_mapping` 端點傳送請求，如下列範例請求所示：
 
 ```json
 POST sample-index1/_mapping
@@ -104,7 +104,7 @@ POST sample-index1/_mapping
 
 ## 動態對應
 
-當您將文件編製索引時，OpenSearch 可以使用動態對應自動偵測並新增欄位。此行為與明確對應不同，後者需要您預先定義欄位類型。
+當您為文件編製索引時，OpenSearch 可以使用動態對應自動偵測並新增欄位。此行為與明確對應不同，後者需要您預先定義欄位類型。
 
 ### 動態對應規則
 
@@ -112,65 +112,27 @@ POST sample-index1/_mapping
 
 JSON 資料類型 | OpenSearch 欄位類型 | 說明
 :--- | :--- | :---
-`null` | 不會新增欄位 | `null` 欄位無法編製索引或搜尋。當欄位設定為 null 時，OpenSearch 的行為如同該欄位沒有值。
+`null` | 不會新增欄位 | `null` 欄位無法編製索引或搜尋。當欄位被設為 null 時，OpenSearch 的行為如同該欄位沒有值。
 `true` 或 `false` | [`boolean`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/boolean/) 欄位 | OpenSearch 接受 `true` 與 `false` 作為布林值。空字串等於 `false`。
 雙精度浮點數（例如 `1.5`） | [`float`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/numeric/) 欄位 | 單精度 32 位元 IEEE 754 浮點數，僅限有限值。JSON 浮點數會對應至此類型。
 長整數（例如 `1`）| [`long`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/numeric/) 欄位 | 帶正負號的 64 位元數字。JSON 整數會對應至此類型。
-物件（`{}`） | [`object`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/object/) 欄位 | 物件是標準 JSON 物件，可以擁有自己的欄位與對應。例如，`movies` 物件可以擁有 `title`、`year` 與 `director` 等其他屬性。
-陣列（`[]`）| 取決於陣列中第一個非 null 值 | OpenSearch 沒有特定的陣列資料類型。陣列是以與欄位關聯的一組相同資料類型的值（例如整數或字串）來表示。編製索引時，您可以為一個欄位傳遞多個值，OpenSearch 會將其視為陣列。空陣列是有效的，會被辨識為零個元素的陣列欄位---而不是沒有值的欄位。
-字串（`""`） | 帶有 [`keyword`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/keyword/) 子欄位的 [`text`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/text/) 欄位、[`date`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/date/) 欄位，或數值欄位 | 字元組成的字串序列。預設情況下，字串會對應為帶有 `keyword` 子欄位的 `text` 欄位。不過，如果字串符合日期格式（且已啟用日期偵測），則會變成 `date` 欄位。如果已啟用數值偵測且字串代表數字，則會變成適當的數值欄位類型。
+物件 (`{}`) | [`object`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/object/) 欄位 | 物件是標準 JSON 物件，可以擁有自己的欄位與對應。例如，`movies` 物件可以擁有 `title`、`year` 與 `director` 等額外屬性。
+陣列 (`[]`)| 取決於陣列中第一個非 null 值 | OpenSearch 沒有專屬的陣列資料類型。陣列是以與某個欄位相關聯、屬於相同資料類型 (例如整數或字串) 的一組值來表示。編製索引時，您可以為一個欄位傳遞多個值，OpenSearch 會將其視為陣列。空陣列是有效的，並會被識別為零個元素的陣列欄位---而不是沒有值的欄位。
+字串 (`""`) | 帶有 [`keyword`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/keyword/) 子欄位的 [`text`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/text/) 欄位、[`date`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/date/) 欄位，或數值欄位 | 字元組成的字串序列。預設情況下，字串會對應為帶有 `keyword` 子欄位的 `text` 欄位。不過，如果字串符合日期格式 (且已啟用日期偵測)，它會變成 `date` 欄位。如果已啟用數值偵測且字串代表數字，它會變成適當的數值欄位類型。
 
-這些是唯一會自動偵測的欄位類型。所有其他欄位類型都必須明確對應。
+這些是唯一會被自動偵測的欄位類型。所有其他欄位類型都必須明確對應。
 
 ### 動態範本
 
-動態範本用於根據資料類型、欄位名稱或欄位路徑，為動態新增的欄位定義自訂對應。它們可讓您為資料定義彈性的結構描述，自動適應輸入資料結構或格式的變化。
-
-您可以使用下列語法來定義動態對應範本：
-
-```json
-PUT index
-{
-  "mappings": {
-    "dynamic_templates": [
-        {
-          "fields": {
-            "mapping": {
-              "type": "short"
-            },
-            "match_mapping_type": "string",
-            "path_match": "status*"
-          }
-        }
-    ]
-  }
-}
-```
-{% include copy-curl.html %}
-
-此對應組態會將任何名稱以 `status` 開頭的欄位（例如 `status_code`）動態對應至 `short` 資料類型（前提是編製索引時提供的初始值為字串）。
-
-### 動態對應參數
-
-`dynamic_templates` 支援下列參數，用於比對條件與對應規則。預設值為 `null`。
-
-參數 | 說明 |
-----------|-------------|
-`match_mapping_type` | 指定觸發對應的 JSON 資料類型（例如字串、長整數、雙精度浮點數、物件、二進位資料、布林值、日期）。
-`match` | 用於比對欄位名稱並套用對應的正規表示式。
-`unmatch` | 用於從對應中排除欄位名稱的正規表示式。
-`match_pattern` | 決定模式比對行為，可為 `regex` 或 `simple`。預設為 `simple`。
-`path_match` | 可讓您使用正規表示式比對巢狀欄位路徑。
-`path_unmatch` | 使用正規表示式從對應中排除巢狀欄位路徑。
-`mapping` | 要套用的對應組態。
+動態範本 (dynamic template) 為 OpenSearch 動態新增的欄位定義自訂對應。範本會依偵測到的資料類型、名稱或路徑選取欄位，並套用您指定的對應。如需更多資訊，請參閱[動態範本]({{site.url}}{{site.baseurl}}/mappings/dynamic-templates/)。
 
 ### 動態對應設定
 
-OpenSearch 提供數個設定，用來控制動態對應在處理新欄位時的行為。
+OpenSearch 提供多種設定，用於控制在處理新欄位時動態對應的行為。
 
 #### 日期偵測
 
-根據預設，OpenSearch 會自動偵測日期格式的字串並建立 `date` 欄位。當 `date_detection` 啟用時 (預設)，新的字串欄位會依據 `dynamic_date_formats` 中指定的日期模式進行檢查。若找到相符項目，便會建立具有對應格式的新 `date` 欄位。
+預設情況下，OpenSearch 會自動偵測日期格式的字串並建立 `date` 欄位。當 `date_detection` 已啟用 (預設) 時，新的字串欄位會依據 `dynamic_date_formats` 中指定的日期模式進行檢查。如果找到符合的項目，就會以對應的格式建立新的 `date` 欄位。
 
 `dynamic_date_formats` 的預設值為：
 ```
@@ -187,7 +149,7 @@ PUT sample-index/_doc/1
 ```
 {% include copy-curl.html %}
 
-您可以將 `date_detection` 設為 `false`，以停用自動日期偵測：
+您可以將 `date_detection` 設定為 `false` 來停用自動日期偵測：
 
 ```json
 PUT sample-index
@@ -199,9 +161,9 @@ PUT sample-index
 ```
 {% include copy-curl.html %}
 
-停用日期偵測後，日期格式的字串會改為對應為 `text` 欄位。
+停用日期偵測後，日期格式的字串將改為對應為 `text` 欄位。
 
-您可以指定自己的 `dynamic_date_formats`，自訂用於偵測的日期模式：
+您可以指定自己的 `dynamic_date_formats` 來自訂偵測所使用的日期模式：
 
 ```json
 PUT sample-index
@@ -215,9 +177,9 @@ PUT sample-index
 
 #### 數值偵測
 
-雖然 JSON 支援原生數值資料類型，但有些應用程式可能會以字串形式傳送數字。當 `numeric_detection` 啟用時，OpenSearch 可以自動偵測數值字串，並將其對應為數值欄位。
+雖然 JSON 支援原生數值資料類型，但某些應用程式可能會將數字以字串形式傳送。啟用 `numeric_detection` 時，OpenSearch 可以自動偵測數值字串，並將其對應為數值欄位。
 
-數值偵測預設為停用。建議的做法是針對數值欄位使用明確對應。
+數值偵測預設為停用。建議的做法是針對數值欄位使用明確的對應。
 {: .note}
 
 若要啟用數值偵測，請傳送下列請求：
@@ -272,7 +234,7 @@ GET _mapping/field/{fields}
 GET /{index}/_mapping/field/{fields}
 ```
 
-`<index>` 與 `<fields>` 都可指定為單一值或以逗號分隔的清單。例如，下列請求會擷取 `sample-index1` 中 `year` 與 `age` 欄位的對應：
+`<index>` 與 `<fields>` 皆可指定為單一值或以逗號分隔的清單。例如，下列請求會擷取 `sample-index1` 中 `year` 與 `age` 欄位的對應：
 
 ```json
 GET sample-index1/_mapping/field/year,age
@@ -414,21 +376,21 @@ PUT movies1
 ```
 {% include copy-curl.html %}
 
-此動態範本可確保您文件中的任何字串欄位都會同時編製為全文 `text` 類型與 `keyword` 類型的索引。
+此動態範本可確保您文件中的任何字串欄位都會同時以全文 `text` 類型與 `keyword` 類型編製索引。
 
 ## 對應參數
 
-對應參數用於設定索引欄位的行為。如需所有可用對應參數的詳細資訊，請參閱 [對應參數]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/)。
+對應參數用於設定索引欄位的行為。如需所有可用對應參數的詳細資訊，請參閱[對應參數]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/)。
 
 ## 中繼資料欄位
 
-OpenSearch 會自動為每份文件管理數個中繼資料欄位，例如 `_source`、`_id` 與 `_index`。如需所有可用中繼資料欄位及其組態選項的資訊，請參閱 [中繼資料欄位]({{site.url}}{{site.baseurl}}/mappings/metadata-fields/)。
+OpenSearch 會自動為每份文件管理數個中繼資料欄位，例如 `_source`、`_id` 與 `_index`。如需所有可用中繼資料欄位及其組態選項的資訊，請參閱[中繼資料欄位]({{site.url}}{{site.baseurl}}/mappings/metadata-fields/)。
 
 ## 對應限制設定
 
-OpenSearch 提供多項設定，以防止對應爆炸並控制對應的成長。這些設定有助於維持叢集效能，並避免因建立過多欄位而造成的記憶體問題。
+OpenSearch 提供數項設定，可防止對應爆炸並控制對應成長。這些設定有助於維持叢集效能，並防止因建立過多欄位而造成的記憶體問題。
 
-如需所有對應限制設定的詳細資訊（包括預設值與有效範圍），請參閱 [對應限制設定]({{site.url}}{{site.baseurl}}/mappings/mapping-explosion/#mapping-limit-settings)。
+如需所有對應限制設定的詳細資訊，包括其預設值與有效範圍，請參閱[對應限制設定]({{site.url}}{{site.baseurl}}/mappings/mapping-explosion/#mapping-limit-settings)。
 
 
 ## 相關文件

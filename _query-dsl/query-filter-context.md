@@ -1,16 +1,16 @@
 ---
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: "查詢與篩選情境"
+title: "查詢與篩選上下文"
 nav_order: 5
 redirect_from:
   - /opensearch/query-dsl/query-filter-context/
   - /query-dsl/query-dsl/query-filter-context/
 ---
 
-# 查詢與篩選情境
+# 查詢與篩選上下文
 
-查詢由查詢子句組成，這些子句可以在[_篩選情境_](#filter-context)或[_查詢情境_](#query-context)中執行。篩選情境中的查詢子句會問「文件_是否_符合該查詢子句？」並回傳符合的文件。查詢情境中的查詢子句會問「文件符合該查詢子句的程度_如何_？」，回傳符合的文件，並以[_相關性分數_](#relevance-score)的形式提供每份文件的相關性。
+查詢由查詢子句組成，這些子句可以在[_篩選上下文_](#filter-context)或[_查詢上下文_](#query-context)中執行。篩選上下文中的查詢子句提出的問題是「文件_是否_符合該查詢子句？」，並傳回符合的文件。查詢上下文中的查詢子句提出的問題是「文件_有多符合_該查詢子句？」，除了傳回符合的文件之外，還會以[_相關性分數_](#relevance-score)的形式提供每份文件的相關性。
 
 ## 相關性分數
 
@@ -33,14 +33,14 @@ _相關性分數_衡量文件與查詢的符合程度。它是一個正浮點數
 ]
 ```
 
-分數越高表示文件越相關。雖然不同的查詢類型計算相關性分數的方式不同，但所有查詢類型都會考量查詢子句是在篩選情境還是查詢情境中執行。
+分數越高，表示文件的相關性越高。雖然不同的查詢類型計算相關性分數的方式不同，但所有查詢類型都會考量查詢子句是在篩選上下文還是查詢上下文中執行。
 
-請將會影響相關性分數的查詢子句放在查詢情境中，並將所有其他查詢子句放在篩選情境中。
+若要影響相關性分數，請將查詢子句放在查詢上下文中，其餘所有查詢子句則放在篩選上下文中。
 {: .tip}
 
 ## 範例資料
 
-本頁的範例使用一個部落格文章索引。若要試用這些範例，請建立索引：
+本頁的範例使用一個部落格文章索引。若要試用這些範例，請先建立索引：
 
 ```json
 PUT blog-posts
@@ -74,16 +74,16 @@ POST blog-posts/_bulk?refresh=true
 ```
 {% include copy-curl.html %}
 
-## 篩選情境
+## 篩選上下文
 
-篩選情境中的查詢子句會問「文件_是否_符合該查詢子句？」，這是一個二元答案。例如，您可以使用篩選情境來回答關於部落格文章的下列問題：
+篩選上下文中的查詢子句提出的問題是「文件_是否_符合該查詢子句？」，其答案只有是或否兩種。例如，您可以使用篩選上下文來回答關於部落格文章的下列問題：
 
 - 文章的 `status` 是否設定為 `published`？
 - 文章的 `publish_date` 是否在 2025 年？
 
-使用篩選情境時，OpenSearch 會回傳符合的文件，而不計算相關性分數。因此，對於具有精確值的欄位，您應該使用篩選情境。
+使用篩選上下文時，OpenSearch 會傳回符合的文件，而不計算相關性分數。因此，對於具有精確值的欄位，您應該使用篩選上下文。
 
-若要在篩選情境中執行查詢子句，請將它傳遞給 `filter` 參數。例如，下列布林查詢會搜尋 2025 年發布的文章：
+若要在篩選上下文中執行查詢子句，請將它傳遞給 `filter` 參數。例如，下列布林查詢會搜尋 2025 年發布的文章：
 
 ```json
 GET blog-posts/_search
@@ -103,10 +103,10 @@ GET blog-posts/_search
 回應包含 2025 年發布的三篇文章。每份文件的 `_score` 都是 `0.0`，因為篩選子句不會計算相關性：
 
 <details markdown="block">
-<summary>
+  <summary>
     回應
-</summary>
-{: .text-delta}
+  </summary>
+  {: .text-delta}
 
 ```json
 {
@@ -164,15 +164,15 @@ GET blog-posts/_search
 ```
 </details>
 
-為了提升效能，OpenSearch 會快取經常使用的篩選器。
+為了提升效能，OpenSearch 會快取經常使用的篩選條件。
 
-## 查詢情境
+## 查詢上下文
 
-查詢情境中的查詢子句會問「文件符合該查詢子句的程度_如何_？」，這沒有二元答案。查詢情境適合全文搜尋，此時您不僅想取得符合的文件，還想判斷每份文件的相關性。例如，您可以使用查詢情境來尋找關於向量搜尋的部落格文章。
+查詢上下文中的查詢子句提出的問題是「文件_有多符合_該查詢子句？」，其答案並非只有是或否。查詢上下文適合全文搜尋，在這種情況下，您不僅想取得符合的文件，還想判斷每份文件的相關性。例如，您可以使用查詢上下文來尋找關於向量搜尋的部落格文章。
 
-使用查詢情境時，每份符合的文件都會在 `_score` 欄位中包含相關性分數，您可以用它依相關性對文件[排序]({{site.url}}{{site.baseurl}}/opensearch/search/sort/)。
+使用查詢上下文時，每份符合的文件都會在 `_score` 欄位中包含相關性分數，您可以用它依相關性對文件進行[排序]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/sort/)。
 
-若要在查詢情境中執行查詢子句，請將它傳遞給 `query` 參數。例如，下列查詢會搜尋內容符合 `vector search` 這些字詞的文章：
+若要在查詢上下文中執行查詢子句，請將它傳遞給 `query` 參數。例如，下列查詢會搜尋內容符合 `vector search` 這些字詞的文章：
 
 ```json
 GET blog-posts/_search
@@ -186,13 +186,13 @@ GET blog-posts/_search
 ```
 {% include copy-curl.html %}
 
-回應包含全部五篇文章，因為每篇至少包含其中一個字詞。文章依相關性分數排序。文件 4 的分數最高，因為它包含 `search` 三次；文件 3 的分數最低，因為它只包含 `search`：
+回應包含全部五篇文章，因為每篇文章至少包含其中一個字詞。文章會依相關性分數排序。文件 4 的分數最高，因為它包含 `search` 三次；文件 3 的分數最低，因為它只包含 `search`：
 
 <details markdown="block">
-<summary>
+  <summary>
     回應
-</summary>
-{: .text-delta}
+  </summary>
+  {: .text-delta}
 
 ```json
 {
@@ -272,14 +272,14 @@ GET blog-posts/_search
 ```
 </details>
 
-相關性分數是具有 24 位元有效位數精確度的單精度浮點數。如果分數計算超出有效位數精確度，可能會發生精確度損失。
+相關性分數是具有 24 位元有效位數精確度的單精確度浮點數。若分數計算超出有效位數的精確度，可能會發生精確度損失。
 {: .note}
 
-## 結合查詢與篩選情境
+## 結合查詢與篩選上下文
 
-單一布林查詢可以同時包含兩種情境中的子句。`must` 和 `should` 參數中的子句在查詢情境中執行，並計入 `_score`。`filter` 和 `must_not` 參數中的子句在篩選情境中執行，僅用於納入或排除文件。如需更多資訊，請參閱 [布林查詢]({{site.url}}{{site.baseurl}}/query-dsl/compound/bool/)。
+單一布林查詢可以同時包含兩種上下文的子句。`must` 與 `should` 參數中的子句會在查詢上下文中執行，並影響 `_score`。`filter` 與 `must_not` 參數中的子句會在篩選上下文中執行，只會納入或排除文件。如需更多資訊，請參閱[布林查詢]({{site.url}}{{site.baseurl}}/query-dsl/compound/bool/)。
 
-下列查詢結合了前面兩個範例。`must` 參數中的 `match` 子句計算相關性分數，而 `filter` 參數中的 `term` 和 `range` 子句將結果限制為 2025 年發布的文章：
+下列查詢結合了前兩個範例。`must` 參數中的 `match` 子句會計算相關性分數，而 `filter` 參數中的 `term` 與 `range` 子句會將結果限制為 2025 年發布的文章：
 
 ```json
 GET blog-posts/_search
@@ -299,13 +299,13 @@ GET blog-posts/_search
 ```
 {% include copy-curl.html %}
 
-回應包含與篩選情境範例相同的三份文件，並依相關性排序。文件 4 被排除，因為它是草稿；文件 5 被排除，因為它發布於 2024 年。每份文件的 `_score` 與查詢情境範例中相同，因為篩選子句不會影響分數：
+回應包含與篩選上下文範例相同的三份文件，並依相關性排序。文件 4 因為是草稿而被排除，文件 5 則因為是在 2024 年發布而被排除。每份文件的 `_score` 都與查詢上下文範例中的相同，因為篩選子句不會影響分數：
 
 <details markdown="block">
-<summary>
+  <summary>
     回應
-</summary>
-{: .text-delta}
+  </summary>
+  {: .text-delta}
 
 ```json
 {
@@ -362,3 +362,11 @@ GET blog-posts/_search
 }
 ```
 </details>
+
+## 相關文件
+
+- [布林查詢]({{site.url}}{{site.baseurl}}/query-dsl/compound/bool/)
+- [常數分數查詢]({{site.url}}{{site.baseurl}}/query-dsl/compound/constant-score/)
+- [詞彙層級查詢]({{site.url}}{{site.baseurl}}/query-dsl/term/index/)
+- [全文查詢]({{site.url}}{{site.baseurl}}/query-dsl/full-text/index/)
+- [排序結果]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/sort/)

@@ -9,23 +9,23 @@ nav_order: 60
 
 # 累計總和彙總
 
-`cumulative_sum` 彙總是一種父彙總，用於計算前一個彙總各個桶 (bucket) 的累計總和。
+`cumulative_sum` 彙總是一種父彙總，會計算前一個彙總各個桶的累計總和。
 
-累計總和是指定序列的部分和所組成的序列。例如，序列 `{a,b,c,…}` 的累計總和為 `a`、`a+b`、`a+b+c`，依此類推。您可以使用累計總和將欄位隨時間的變化率視覺化。
+累計總和是指定序列的部分總和所組成的序列。例如，序列 `{a,b,c,…}` 的累計總和為 `a`、`a+b`、`a+b+c`，依此類推。您可以使用累計總和來視覺化欄位隨時間變化的速率。
 
 ## 參數
 
 `cumulative_sum` 彙總接受下列參數。
 
-| 參數             | 必要/選用 | 資料類型       | 說明 |
+| 參數                  | 必要/選用          | 資料類型         | 說明 |
 | :--                   | :--               |  :--            | :--         |
-| `buckets_path`        | 必要          | 字串          | 要彙總之彙總桶的路徑。請參閱[桶路徑]({{site.url}}{{site.baseurl}}/aggregations/pipeline/index#buckets-path)。 |
-| `format`              | 選用          | 字串          | [DecimalFormat](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/DecimalFormat.html) 格式字串。在彙總的 `value_as_string` 屬性中傳回格式化後的輸出。 |
+| `buckets_path`        | 必要              | 字串            | 要彙總的彙總桶路徑。請參閱[桶路徑]({{site.url}}{{site.baseurl}}/aggregations/pipeline/index#buckets-path)。 |
+| `format`              | 選用              | 字串            | [DecimalFormat](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/DecimalFormat.html) 格式化字串。會在彙總的 `value_as_string` 屬性中傳回格式化後的輸出。 |
 
 
 ## 範例
 
-下列範例從 OpenSearch Dashboards 電子商務範例資料建立間隔為一個月的日期直方圖。`sum` 子彙總會計算每個月所有位元組的總和。最後，`cumulative_sum` 彙總會計算每個月份桶的累計位元組數：
+下列範例以 OpenSearch Dashboards 電子商務範例資料建立一個間隔為一個月的日期長條圖。`sum` 子彙總會計算每個月的位元組總和。最後，`cumulative_sum` 彙總會計算每個月桶的累計位元組數：
 
 ```json
 GET opensearch_dashboards_sample_data_logs/_search
@@ -55,7 +55,7 @@ GET opensearch_dashboards_sample_data_logs/_search
 ```
 {% include copy-curl.html %}
 
-#### 範例回應
+## 回應範例
 
 ```json
 {
