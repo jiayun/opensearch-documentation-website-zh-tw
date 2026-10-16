@@ -17,14 +17,25 @@ class AgyModelsTests(unittest.TestCase):
         self.assertEqual(opus.family, 'claude')
         self.assertNotEqual(AgyProvider().family, 'claude')
         self.assertNotEqual(AgyProvider('gpt-oss-120b-medium').family, 'claude')
+        self.assertEqual(AgyProvider().family,
+                         AgyProvider('gemini-3.8-flash-low', name='agy-flash').family)
         self.assertIn('claude-sonnet-5-5-medium', sonnet.argv('prompt'))
 
-    def test_gemini_quota_does_not_disable_claude_gpt_bucket(self):
+    def test_argon_weekly_quota_does_not_disable_other_buckets(self):
         pool = self.pool()
-        pool.disable('agy', ProviderError(QUOTA, 'Individual quota reached. Resets in 2h.'))
-        self.assertEqual(set(pool.disabled), {'agy', 'agy-flash'})
-        self.assertIn('agy-sonnet', pool.available(list(config.AGY_MODELS)))
-        self.assertEqual(set(pool.disabled_until.values()), {8260})
+        pool.disable('agy', ProviderError(QUOTA, 'Individual quota reached. Resets in 162h50m38s.'))
+        self.assertEqual(set(pool.disabled), {'agy'})
+        self.assertEqual(pool.available(['agy-flash', 'agy-sonnet', 'agy-opus', 'agy-gpt', 'claude']),
+                         ['agy-flash', 'agy-sonnet', 'agy-opus', 'agy-gpt', 'claude'])
+        self.assertEqual(pool.disabled_until['agy'], 587298)
+
+    def test_other_gemini_quota_does_not_disable_argon_or_claude_gpt(self):
+        pool = self.pool()
+        pool.disable('agy-flash', ProviderError(QUOTA, 'Individual quota reached. Resets in 2h.'))
+        self.assertEqual(set(pool.disabled), {'agy-flash'})
+        self.assertEqual(pool.available(['agy', 'agy-sonnet', 'agy-opus', 'agy-gpt', 'claude']),
+                         ['agy', 'agy-sonnet', 'agy-opus', 'agy-gpt', 'claude'])
+        self.assertEqual(pool.disabled_until['agy-flash'], 8260)
 
     def test_claude_gpt_quota_does_not_disable_gemini_or_direct_claude(self):
         pool = self.pool()

@@ -98,8 +98,10 @@ OLLAMA_CLOUD_THINKING = {
 }
 OLLAMA_LOCAL_MODEL = "gemma4:12b-mlx"
 AGY_MODEL = "gemini-4-argon-high"
+# Argon has its own weekly quota; other Gemini models share separate weekly
+# and five-hour quotas. Quota buckets do not change model-family independence.
 AGY_MODELS = {
-    "agy": (AGY_MODEL, "gemini"),
+    "agy": (AGY_MODEL, "gemini-argon"),
     "agy-flash": ("gemini-3.8-flash-low", "gemini"),
     "agy-sonnet": ("claude-sonnet-5-5-medium", "claude-gpt"),
     "agy-opus": ("claude-opus-5-5-medium", "claude-gpt"),

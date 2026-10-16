@@ -317,10 +317,10 @@ agy 的模型與配額分開管理，使用 `agy models` 查到的識別字，�
 | `agy-sonnet` | `claude-sonnet-5-5-medium` | Claude／GPT | 一般校對優先 |
 | `agy-opus` | `claude-opus-5-5-medium` | Claude／GPT | 超過 45,000 字元的校對提示優先 |
 | `agy-gpt` | `gpt-oss-120b-medium` | Claude／GPT | 翻譯備援，尚未列入正式校對來源 |
-| `agy` | `gemini-4-argon-high` | Gemini | 主動分攤獨立校對 |
-| `agy-flash` | `gemini-3.8-flash-low` | Gemini | 翻譯後備 |
+| `agy` | `gemini-4-argon-high` | Gemini 4 Argon（僅週配額） | 主動分攤獨立校對 |
+| `agy-flash` | `gemini-3.8-flash-low` | 其他 Gemini（週／五小時配額） | 翻譯後備 |
 
-每個群組內的模型共享停用與 CLI 回報的重置時間，另一組仍可用；不把 agy 的 Claude／GPT 配額與獨立 Claude CLI 公司帳號配額混在一起。校對獨立性則看模型家族：agy Claude 與獨立 Claude CLI 都屬於 `claude`，不得互相校對同一譯文。數字百分比不由本程式估算，實際配額不足以服務回覆判定。
+三個群組各自管理：Gemini 4 Argon 僅有週配額；其他 Gemini 模型及 Claude／GPT 各有週配額與五小時配額。每個群組內的模型共享停用與 CLI 回報的重置時間，其他組仍可用；不把 agy 的 Claude／GPT 配額與獨立 Claude CLI 公司帳號配額混在一起。校對獨立性則看模型家族：Argon 與其他 Gemini 屬於同一家族，agy Claude 與獨立 Claude CLI 都屬於 `claude`，不得互相校對同一譯文。數字百分比不由本程式估算，實際配額不足以服務回覆判定。
 
 一般校對的輪替為 Gemini Argon、Gemini Argon、Sonnet、Codex；跳過冷卻中或與譯文同家族的來源。Gemini 群組可用時會實際分到工作，不必等 Codex 不可用才接手；Claude／GPT 群組冷卻時，Gemini Argon 約承擔三分之二的一般校對呼叫。
 
