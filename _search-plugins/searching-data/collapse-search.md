@@ -10,9 +10,12 @@ redirect_from:
 
 # 收合搜尋結果
 
-`collapse` 參數會依特定欄位值將搜尋結果分組。這只會傳回每個群組中最頂端的文件，藉由移除重複項目來協助減少冗餘。
+`collapse` 參數會依特定欄位值將搜尋結果分組。這只會傳回各組中最頂端的文件，藉由移除重複項目來協助減少冗餘。
 
-`collapse` 參數要求被收合的欄位必須是 `keyword` 或 `numeric` 類型。
+`collapse` 參數要求要收合的欄位必須是 `keyword` 或 `numeric` 類型、已啟用 [doc values]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/doc-values/)，且每份文件只包含單一值。若任何相符文件在該欄位包含多個值，OpenSearch 會拒絕收合搜尋。
+
+您無法在 [scroll]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/paginate/#scroll-search) 搜尋中使用 `collapse`，也無法將其與 [`rescore`]({{site.url}}{{site.baseurl}}/query-dsl/rescore/) 一起使用。OpenSearch 會拒絕這些請求。若要分頁瀏覽收合後的結果，請使用 [`search_after`](#collapse-with-search_after)。
+{: .note}
 
 ---
 
@@ -163,11 +166,11 @@ GET /bakery-items/_search
 
 ---
 
-## 搭配 search_after 收合
+## 搭配 search_after 使用摺疊
 
-您可以使用 `search_after` 參數，為收合後的搜尋結果分頁。收合的欄位與排序欄位必須相同，且只能指定一個排序欄位。
+`from` 和 `size` 參數會套用至摺疊後的群組，因此您可以使用這兩個參數逐頁瀏覽群組。例如，將 `from` 設為 `1`、`size` 設為 `2` 時，搜尋會略過第一個群組，並傳回第二個和第三個群組。您也可以使用 `search_after` 參數對摺疊後的搜尋結果進行分頁。摺疊欄位與排序欄位必須相同，且只能指定一個排序欄位。
 
-下列範例說明如何搭配 `search_after` 使用 `collapse`：
+以下範例說明如何搭配 `search_after` 使用 `collapse`：
 
 ```json
 GET /bakery-items/_search
@@ -190,11 +193,11 @@ GET /bakery-items/_search
 ```
 {% include copy-curl.html %}
 
-## 展開收合後的結果
+## 展開收合結果
 
-您可以使用 `inner_hits` 屬性展開每個收合後的最頂端命中。
+您可以使用 `inner_hits` 屬性展開每個收合後的最高評分結果。關於您可以在 `inner_hits` 中指定的所有選項，請參閱 [內部命中]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/inner-hits/)。
 
-下列範例請求會套用 `inner_hits`，為每種蛋糕分別擷取價格最低的項目和最新的項目：
+下列範例請求套用 `inner_hits`，為每種蛋糕類型擷取價格最低且最新的品項：
 
 ```json
 GET /bakery-items/_search
@@ -224,9 +227,9 @@ GET /bakery-items/_search
 
 ```
 
-### 為每個收合後的命中取得多個內部命中
+### 每個收合結果的多個內部命中
 
-若要為每個收合後的結果取得多組內部命中，您可以為每個群組設定不同的準則。例如，讓我們為每個烘焙項目要求三個最新的項目：
+若要為每個收合的結果取得多組內部命中，您可以為每個群組設定不同的條件。例如，假設要為每個烘焙品項要求三個最新的項目：
 
 ```json
 GET /bakery-items/_search
@@ -255,6 +258,149 @@ GET /bakery-items/_search
 }
 ```
 
-此查詢會搜尋 `cakes` 類別中的文件，並依 `item_name` 欄位將搜尋結果分組。針對每個 `item_name`，它會擷取三個價格最低的項目，以及三個最新的項目，並依 `baked_date` 遞減排序。
+此查詢會搜尋 `cakes` 類別中的文件，並依 `item_name` 欄位將搜尋結果分組。對於每個 `item_name`，它會擷取價格最低的三個項目以及最新的三個項目，並依 `baked_date` 遞減排序。
 
-您可以為回應中每個收合後命中對應的每個內部命中請求，傳送額外的查詢來展開群組。如果群組或內部命中請求太多，這可能會大幅拖慢處理程序。您可以使用 `max_concurrent_group_searches` 請求參數，控制此階段允許的最大並行搜尋數。預設值取決於資料節點數目，以及預設搜尋執行緒集區大小。
+您可以針對回應中每個收合命中對應的每個內部命中請求，傳送額外的查詢來展開這些群組。如果群組或內部命中請求太多，這可能會大幅拖慢處理速度。您可以使用 `max_concurrent_group_searches` 請求參數來控制此階段允許的最大並行搜尋數。預設值取決於資料節點數量和預設搜尋執行緒集區大小。
+
+### 第二層摺疊
+
+您也可以在 `inner_hits` 中指定 `collapse` 物件，對每個群組的內部命中結果進行摺疊。這會傳回兩個欄位各種組合中的最上層文件。為了示範，請在 `bakery-items` 索引中加入兩種餅乾：
+
+```json
+POST /bakery-items/_bulk?refresh=true
+{ "index": {} }
+{ "item": "Oatmeal Cookie", "category": "cookies", "price": 3, "baked_date": "2023-07-03T00:00:00Z" }
+{ "index": {} }
+{ "item": "Oatmeal Cookie", "category": "cookies", "price": 4, "baked_date": "2023-07-05T00:00:00Z" }
+{ "index": {} }
+{ "item": "Sugar Cookie", "category": "cookies", "price": 2, "baked_date": "2023-07-05T00:00:00Z" }
+```
+{% include copy-curl.html %}
+
+下列請求會依 `category` 摺疊結果，並在每個類別內依 `item` 摺疊內部命中結果。因此，每個類別都會包含其中每個項目最便宜的文件：
+
+```json
+GET /bakery-items/_search
+{
+  "_source": ["item", "price"],
+  "sort": ["price"],
+  "collapse": {
+    "field": "category",
+    "inner_hits": {
+      "name": "cheapest_per_item",
+      "size": 3,
+      "_source": ["item", "price"],
+      "sort": ["price"],
+      "collapse": {
+        "field": "item"
+      }
+    }
+  }
+}
+```
+{% include copy-curl.html %}
+
+在回應中，`cookies` 群組包含每種餅乾各一份文件，`cakes` 群組包含每種蛋糕各一份文件。較貴的 `Oatmeal Cookie` 與 `Chocolate Cake` 文件則被省略：
+
+```json
+{
+  ...
+  "hits": {
+    ...
+    "hits": [
+      {
+        ...
+        "_source": {
+          "item": "Sugar Cookie",
+          "price": 2
+        },
+        "fields": {
+          "category": [
+            "cookies"
+          ]
+        },
+        "inner_hits": {
+          "cheapest_per_item": {
+            "hits": {
+              ...
+              "hits": [
+                {
+                  ...
+                  "_source": {
+                    "item": "Sugar Cookie",
+                    "price": 2
+                  },
+                  "fields": {
+                    "item": [
+                      "Sugar Cookie"
+                    ]
+                  }
+                },
+                {
+                  ...
+                  "_source": {
+                    "item": "Oatmeal Cookie",
+                    "price": 3
+                  },
+                  "fields": {
+                    "item": [
+                      "Oatmeal Cookie"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        ...
+        "_source": {
+          "item": "Vanilla Cake",
+          "price": 12
+        },
+        "fields": {
+          "category": [
+            "cakes"
+          ]
+        },
+        "inner_hits": {
+          "cheapest_per_item": {
+            "hits": {
+              ...
+              "hits": [
+                {
+                  ...
+                  "_source": {
+                    "item": "Vanilla Cake",
+                    "price": 12
+                  },
+                  "fields": {
+                    "item": [
+                      "Vanilla Cake"
+                    ]
+                  }
+                },
+                {
+                  ...
+                  "_source": {
+                    "item": "Chocolate Cake",
+                    "price": 15
+                  },
+                  "fields": {
+                    "item": [
+                      "Chocolate Cake"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    ]
+  }
+}
+```
+
+第二層的 `collapse` 物件不能包含 `inner_hits`，因此您無法在超過兩個層級上摺疊結果。

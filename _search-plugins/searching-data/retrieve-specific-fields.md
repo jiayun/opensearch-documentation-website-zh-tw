@@ -165,7 +165,10 @@ GET /my_index/_search
 
 ## 使用 doc value 欄位搜尋
 
-若要從索引擷取特定欄位，您也可以使用 `docvalue_fields` 參數。此參數的運作方式與 `fields` 參數略有不同。它從 doc values 而非 `_source` 欄位擷取資訊，對於未經分析的欄位（例如 keyword、date 與數值欄位）而言更有效率。Doc values 採用針對高效排序與彙總最佳化的欄式儲存格式。它以易於讀取的方式將值儲存在磁碟上。當您使用 `docvalue_fields` 時，OpenSearch 會直接從這個最佳化的儲存格式讀取值。它適合用來擷取主要用於排序、彙總以及指令碼中的欄位值。
+若要從索引擷取特定欄位，您也可以使用 `docvalue_fields` 參數。此參數的運作方式與 `fields` 參數略有不同。它會從 doc values 擷取資訊，而非從 `_source` 欄位擷取，對於未經分析的欄位（例如 keyword、date 和 numeric 欄位）而言更有效率。Doc values 採用欄式儲存格式，針對高效率的排序與彙總進行最佳化。它會以易於讀取的方式將值儲存在磁碟上。當您使用 `docvalue_fields` 時，OpenSearch 會直接從這個最佳化的儲存格式讀取值。這對於擷取主要用於排序、彙總及指令碼的欄位值很有用。
+
+由於 `text` 欄位沒有 doc values，除非為該欄位啟用 [field data]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/field-data/)，否則 OpenSearch 會拒絕對 `text` 欄位提出的 `docvalue_fields` 請求。若已啟用 field data，OpenSearch 會將該欄位的詞元載入堆積記憶體中的 field data 快取以傳回它們，這會增加記憶體用量。傳回的值是分析後的詞元，例如 `["great", "tent"]`，而非原始文字。若要傳回 `text` 欄位的原始文字，請使用 `fields` 參數或 `_source`。
+{: .warning}
 
 下列範例示範如何使用 `docvalue_fields` 參數。
 
@@ -187,7 +190,7 @@ GET /my_index/_search
     ```
     {% include copy-curl.html %}
 
-2. 將下列文件編製索引到新建立的索引中：
+2. 將下列文件編製索引到新建立的索引：
 
     ```json
     POST /my_index/_doc/1
@@ -211,7 +214,7 @@ GET /my_index/_search
     ```
     {% include copy-curl.html %}
 
-3. 使用 `docvalue_fields` 僅擷取 `author` 與 `publication_date` 欄位：
+3. 使用 `docvalue_fields` 僅擷取 `author` 和 `publication_date` 欄位：
 
     ```json
     POST /my_index/_search
@@ -225,7 +228,7 @@ GET /my_index/_search
     ```
     {% include copy-curl.html %}
 
-回應包含 `author` 與 `publication_date` 欄位：
+回應包含 `author` 和 `publication_date` 欄位：
 
 ```json
 {
@@ -258,6 +261,85 @@ GET /my_index/_search
   }
 }
 ```
+### 在 doc value 欄位中使用萬用字元與自訂格式
+
+`docvalue_fields` 參數接受萬用字元模式，例如 `*_date`，可比對多個欄位。若要格式化傳回的值，請指定一個包含 `field` 與 `format` 的物件。對於 `date` 欄位，格式為[日期格式]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/date/#formats)。對於數值欄位，格式為 [Java `DecimalFormat`](https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html) 模式，例如 `#.00`。
+
+例如，建立一個索引，其中包含一筆具有兩個日期欄位與一個數值總計的訂單：
+
+```json
+PUT /orders-dv
+{
+  "mappings": {
+    "properties": {
+      "order_date": { "type": "date" },
+      "ship_date": { "type": "date" },
+      "total": { "type": "double" }
+    }
+  }
+}
+```
+{% include copy-curl.html %}
+
+```json
+PUT /orders-dv/_doc/1?refresh=true
+{
+  "order_date": "2026-10-01T09:30:00Z",
+  "ship_date": "2026-10-03",
+  "total": 42.5
+}
+```
+{% include copy-curl.html %}
+
+下列請求會傳回格式化為 `yyyy-MM-dd` 的兩個日期欄位，以及保留兩位小數的總計：
+
+```json
+GET /orders-dv/_search
+{
+  "_source": false,
+  "docvalue_fields": [
+    {
+      "field": "*_date",
+      "format": "yyyy-MM-dd"
+    },
+    {
+      "field": "total",
+      "format": "#.00"
+    }
+  ]
+}
+```
+{% include copy-curl.html %}
+
+回應包含格式化後的值：
+
+```json
+{
+  ...
+  "hits": {
+    ...
+    "hits": [
+      {
+        "_index": "orders-dv",
+        "_id": "1",
+        "_score": 1,
+        "fields": {
+          "order_date": [
+            "2026-10-01"
+          ],
+          "total": [
+            "42.50"
+          ],
+          "ship_date": [
+            "2026-10-03"
+          ]
+        }
+      }
+    ]
+  }
+}
+```
+
 <!-- vale off -->
 ### 使用 docvalue_fields 擷取向量欄位
 <!-- vale on -->
@@ -554,11 +636,11 @@ POST /my_vector_index/_search
 }
 ```
 
-## 使用已儲存欄位搜尋
+## 使用儲存欄位搜尋
 
-根據預設，OpenSearch 會將整份文件儲存在 `_source` 欄位中，並用它來在搜尋結果中傳回文件內容。不過，您可能也想個別儲存特定欄位，以提升擷取效率。您可以使用 `stored_fields`，將特定文件欄位與 `_source` 欄位分開個別儲存及擷取。
+根據預設，OpenSearch 會將整份文件儲存在 `_source` 欄位中，並使用該欄位在搜尋結果中傳回文件內容。不過，您可能也會想個別儲存特定欄位，以提升擷取效率。您可以使用 `stored_fields`，將特定文件欄位與 `_source` 欄位分開個別儲存及擷取。
 
-與 `_source` 不同，`stored_fields` 必須在您想個別儲存的欄位對應中明確定義。如果您經常只需要擷取一小部分的欄位，並想避免擷取整個 `_source` 欄位，這個做法就很實用。下列範例示範如何使用 `stored_fields` 參數。
+與 `_source` 不同，`stored_fields` 必須在您想個別儲存之欄位的對應中明確定義。如果您經常只需要擷取一小部分的欄位，並想避免擷取整個 `_source` 欄位，這個做法就很有用。下列範例示範如何使用 `stored_fields` 參數。
 
 1. 使用下列對應建立索引：
 
@@ -659,7 +741,15 @@ POST /my_vector_index/_search
 }
 ```
 
-將 `stored_fields` 設為 `_none_`，即可完全停用 `stored_fields` 參數。
+請注意 `stored_fields` 參數的下列行為：
+
+- 若要傳回所有儲存的欄位，請將 `stored_fields` 設為 `"*"`。
+- 若只要傳回命中中繼資料，例如 `_index` 和 `_id`，而不傳回 `_source` 或任何儲存的欄位，請將 `stored_fields` 設為空陣列（`[]`）。
+- 如果您要求的欄位並未儲存，OpenSearch 會將其從回應中省略，而不會產生錯誤。
+- 儲存的欄位值會以陣列形式傳回。中繼資料欄位（例如 `_routing`）則會以單一值形式傳回。
+- 您只能要求葉節點欄位，例如 `address.city`。OpenSearch 會拒絕指定物件欄位（例如 `address`）的請求。
+
+若要完全停用儲存欄位，請將 `stored_fields` 設為 `_none_`。此時每個命中都不會包含任何儲存欄位、不會包含 `_source`，也不會包含 `_id`。OpenSearch 會拒絕同時將 `stored_fields` 設為 `_none_` 並要求 `_source` 的請求。
 {: .note}
 ### 使用巢狀物件搜尋已儲存欄位
 
@@ -998,12 +1088,12 @@ GET /products/_search
 
 ## 使用指令碼欄位
 
-`script_fields` 參數可讓您在搜尋結果中包含自訂欄位，其值是使用指令碼計算而得。這對於根據文件資料動態計算數值非常有用。您也可以使用類似的方式擷取 `derived fields`。如需更多資訊，請參閱[擷取欄位]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/derived/#retrieving-fields)。
+`script_fields` 參數可讓您在搜尋結果中包含自訂欄位，其值透過指令碼計算得出。這對於根據文件資料動態計算數值非常有用。您也可以使用類似的方式擷取 `derived fields`。如需更多資訊，請參閱[擷取欄位]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/derived/#retrieving-fields)。
 
 假設您有一個產品索引，其中每個產品文件都包含 `price` 和 `discount_percentage` 欄位。您可以使用 `script_fields` 參數，在搜尋結果中包含一個顯示每項產品折扣價格的自訂欄位。以下範例示範如何使用 `script_fields` 參數：
 
 
-1. 將資料編製索引：
+1. 為資料編製索引：
 
     ```json
     PUT /products/_doc/123
@@ -1018,7 +1108,7 @@ GET /products/_search
     ```
     {% include copy-curl.html %}
 
-2. 使用 `script_fields` 參數，在搜尋結果中包含名為 `discounted_price` 的自訂欄位。此欄位將使用指令碼根據 `price` 和 `discount_percentage` 欄位計算而得：
+2. 使用 `script_fields` 參數，在搜尋結果中包含名為 `discounted_price` 的自訂欄位。此欄位將透過指令碼根據 `price` 和 `discount_percentage` 欄位計算得出：
 
     ```json
     GET /products/_search
@@ -1041,7 +1131,7 @@ GET /products/_search
     ```
     {% include copy-curl.html %}
 
-您應該會收到下列回應：
+您應該會收到以下回應：
 
 ```json
 {
@@ -1068,5 +1158,35 @@ GET /products/_search
       }
     ]
   }
+}
+```
+
+指令碼可以透過兩種方式存取欄位值：
+
+- `doc['<field>'].value` 從 doc values 讀取值。這種方式速度很快，但僅適用於具有 doc values 的欄位，例如 `keyword`、數值和 `date` 欄位，或已啟用 field data 的 `text` 欄位。
+- `params['_source']['<field>']` 從文件 `_source` 讀取值。這種方式適用於任何欄位，包括 `text` 欄位，但速度較慢，因為 OpenSearch 必須載入並剖析每個文件的來源。
+
+例如，前述範例中的 `name` 欄位對應為 `text`，因此 `doc['name']` 無法使用。以下請求使用 `params['_source']` 計算產品名稱的長度：
+
+```json
+GET /products/_search
+{
+  "_source": false,
+  "script_fields": {
+    "name_length": {
+      "script": {
+        "source": "params['_source']['name'].length()"
+      }
+    }
+  }
+}
+```
+{% include copy-curl.html %}
+
+回應包含 `Smartphone` 的長度：
+
+```json
+"fields": {
+  "name_length": [10]
 }
 ```

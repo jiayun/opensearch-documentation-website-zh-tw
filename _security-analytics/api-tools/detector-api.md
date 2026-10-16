@@ -28,7 +28,7 @@ POST _plugins/_security_analytics/detectors
 `enabled` | 布林值 | 將偵測器設為啟用 (true) 或停用 (false)。建立新偵測器時預設為 `true`。必要。
 `name` | 字串 | 偵測器的名稱。名稱只能由大小寫字母、數字 0--9、連字號、空格與底線組成。請使用 5--50 個字元。必要。
 `detector_type` | 字串 | 定義偵測器的記錄檔類型。選項包括 `linux`、`network`、`windows`、`ad_ldap`、`apache_access`、`cloudtrail`、`dns` 與 `s3`。必要。
-`schedule` | 物件 | 決定偵測器執行頻率的排程。關於在 API 中指定固定間隔的資訊，請參閱 [Cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/#cron-expressions)。
+`schedule` | 物件 | 決定偵測器執行頻率的排程。關於在 API 中指定固定間隔的資訊，請參閱 [Cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/cron-expressions/)。
 `schedule.period` | 物件 | 排程頻率的詳細資訊。
 `schedule.period.interval` | 整數 | 偵測器的執行間隔。
 `schedule.period.unit` | 字串 | 間隔的時間單位。

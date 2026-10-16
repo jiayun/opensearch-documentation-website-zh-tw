@@ -1,7 +1,7 @@
 ---
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Search as you type
+title: "輸入時搜尋"
 nav_order: 53
 has_children: false
 parent: Autocomplete field types
@@ -201,15 +201,15 @@ GET books/_search
 
 下表列出 search-as-you-type 欄位類型接受的參數。所有參數皆為選用。
 
-Parameter | Description 
+參數 | 說明 
 :--- | :---
-`analyzer` | 用於此欄位的分析器。預設會在編製索引時與搜尋時使用。若要在搜尋時覆寫，請設定 `search_analyzer` 參數。預設為 `standard` 分析器，該分析器使用基於文法的斷詞，並以 [Unicode Text Segmentation](https://unicode.org/reports/tr29/) 演算法為基礎。設定根欄位與子欄位。
-`index` | 指定此欄位是否可搜尋的布林值。預設為 `true`。設定根欄位與子欄位。
-`index_options` | 指定要在索引中儲存哪些資訊以供搜尋與突顯。有效值：`docs`（僅文件編號）、`freqs`（文件編號與詞元頻率）、`positions`（文件編號、詞元頻率與詞元位置）、`offsets`（文件編號、詞元頻率、詞元位置，以及起始與結束字元位移）。預設為 `positions`。設定根欄位與子欄位。
-`max_shingle_size` | 指定 n-gram 最大長度的整數。有效值範圍為 [2, 4]。建立的 n-gram 範圍為 [2, `max_shingle_size`]。預設為 3，會建立 2-gram 與 3-gram。較大的 `max_shingle_size` 值對更具體的查詢效果較佳，但會導致索引大小增加。
-`norms` | 指定計算相關性分數時是否使用欄位長度的布林值。設定根欄位與 n-gram 子欄位（預設為 `false`）。不設定前綴子欄位（在前綴子欄位中，`norms` 為 `false`）。
-`search_analyzer` | 搜尋時使用的分析器。預設為 `analyzer` 參數中指定的分析器。設定根欄位與子欄位。
-`search_quote_analyzer` | 搜尋時用於片語的分析器。預設為 `analyzer` 參數中指定的分析器。設定根欄位與子欄位。
-`similarity` | 用於計算相關性分數的排名演算法。預設為 `BM25`。設定根欄位與子欄位。
-`store` | 指定是否儲存欄位值，以及是否能從 `_source` 欄位另外擷取的布林值。預設為 `false`。僅設定根欄位。
-[`term_vector`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/text#term-vector-parameter) | 指定是否儲存此欄位之詞元向量的布林值。預設為 `no`。設定根欄位與 n-gram 子欄位。不設定前綴子欄位。 
+`analyzer` | 此欄位要使用的分析器。預設會在編製索引時和搜尋時使用。若要在搜尋時覆寫，請設定 `search_analyzer` 參數。預設為 `standard` 分析器，此分析器使用以文法為基礎的斷詞，並以 [Unicode 文字分段](https://unicode.org/reports/tr29/)演算法為基礎。設定根欄位及子欄位。如需詳細資訊，請參閱[分析器]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/analyzer/)。
+`index` | 布林值，指定欄位是否應可供搜尋。預設為 `true`。設定根欄位及子欄位。如需詳細資訊，請參閱[索引]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/index-parameter/)。
+`index_options` | 指定要儲存在索引中以供搜尋及醒目提示的資訊。有效值：`docs`（僅文件編號）、`freqs`（文件編號及詞彙頻率）、`positions`（文件編號、詞彙頻率及詞彙位置）、`offsets`（文件編號、詞彙頻率、詞彙位置，以及起始與結束字元位移）。預設為 `positions`。設定根欄位及子欄位。如需詳細資訊，請參閱[索引選項]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/index-options/)。
+`max_shingle_size` | 整數，指定 n-gram 的最大大小。有效值範圍為 [2, 4]。要建立的 n-gram 範圍為 [2, `max_shingle_size`]。預設為 3，會建立 2-gram 和 3-gram。較大的 `max_shingle_size` 值較適合較特定的查詢，但會使索引大小變大。 
+`norms` | 布林值，指定在計算相關性分數時是否應使用欄位長度。設定根欄位及 n-gram 子欄位（預設為 `false`）。不會設定前綴子欄位（在前綴子欄位中，`norms` 為 `false`）。如需詳細資訊，請參閱[Norms]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/norms/)。
+`search_analyzer` | 搜尋時要使用的分析器。預設為 `analyzer` 參數中指定的分析器。設定根欄位及子欄位。如需詳細資訊，請參閱[搜尋分析器]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/search-analyzer/)。
+`search_quote_analyzer` | 搜尋片語時要使用的分析器。預設為 `analyzer` 參數中指定的分析器。設定根欄位及子欄位。
+`similarity` | 用於計算相關性分數的排名演算法。預設為 `BM25`。設定根欄位及子欄位。如需詳細資訊，請參閱[相似度]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/similarity/)。
+`store` | 布林值，指定是否應儲存欄位值，並可與 `_source` 欄位分開擷取。預設為 `false`。僅設定根欄位。如需詳細資訊，請參閱[儲存]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/store/)。
+[`term_vector`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/text#term-vector-parameter) | 布林值，指定是否應儲存此欄位的詞彙向量。預設為 `no`。設定根欄位及 n-gram 子欄位。不會設定前綴子欄位。 

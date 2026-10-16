@@ -13,7 +13,7 @@ redirect_from:
 我們可以使用 [OpenSearch output plugin](https://github.com/opensearch-project/logstash-output-opensearch) 將 Logstash 事件傳送至 OpenSearch 叢集，同樣地，也可以使用 [OpenSearch input plugin](https://github.com/opensearch-project/logstash-input-opensearch) 對 OpenSearch 叢集執行讀取操作，並將資料載入 Logstash。
 
 OpenSearch input plugin 會讀取在 OpenSearch 叢集上執行的搜尋查詢結果，並將其載入 Logstash。這讓您可以重新播放測試記錄檔、重新編製索引，並根據載入的資料執行其他操作。您可以使用
-[cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/#cron-expressions) 排定資料匯入操作定期執行，也可以只執行一次查詢，手動將資料載入 Logstash。
+[cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/cron-expressions/) 排定資料匯入操作定期執行，也可以只執行一次查詢，手動將資料載入 Logstash。
 
 
 

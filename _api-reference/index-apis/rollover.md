@@ -1,7 +1,7 @@
 ---
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: "滾動更新索引"
+title: "輪替索引"
 parent: Index operations
 grand_parent: Index APIs
 nav_order: 70
@@ -20,29 +20,29 @@ POST /{rollover-target}/_rollover/
 POST /{rollover-target}/_rollover/{target-index}
 ```
 
-## 滾動更新類型
+## 輪替類型
 
-您可以滾動更新資料串流、只有一個索引的索引別名，或具有寫入索引的索引別名。
+您可以輪替資料串流、只有一個索引的索引別名，或具有寫入索引的索引別名。
 
 ### 資料串流
 
-當您對資料串流執行滾動更新操作時，API 會為該串流產生新的寫入索引。同時，該串流先前的寫入索引會轉換為一般的支援索引 (backing index)。此外，滾動更新程序會遞增資料串流的世代計數。資料串流的滾動更新不支援在請求本文中指定索引設定。
+當您對資料串流執行輪替操作時，API 會為該串流產生新的寫入索引。同時，該串流先前的寫入索引會轉換為一般的後端索引（backing index）。此外，輪替程序會遞增資料串流的世代計數。資料串流的輪替不支援在請求本文中指定索引設定。
 
 ### 只有一個索引的索引別名
 
-當您對關聯單一索引的索引別名啟動滾動更新時，API 會產生新的索引，並解除原始索引與該別名的關聯。
+當您對關聯單一索引的索引別名啟動輪替時，API 會產生新的索引，並解除原始索引與該別名的關聯。
 
 ### 具有寫入索引的索引別名
 
-當索引別名參照多個索引時，必須將其中一個索引指定為寫入索引。在滾動更新期間，API 會建立新的寫入索引，並將其 `is_write_index` 屬性設為 `true`，同時將先前寫入索引的 `is_write_index property` 設為 `false.` 以更新該索引。
+當索引別名參照多個索引時，必須將其中一個索引指定為寫入索引。在輪替期間，API 會建立新的寫入索引，並將其 `is_write_index` 屬性設為 `true`，同時將先前寫入索引的 `is_write_index property` 設為 `false.` 以更新該索引。
 
 ## 遞增別名的索引名稱
 
-在索引別名滾動更新過程中，如果您未指定自訂名稱，且目前索引的名稱以連字號加上數字結尾 (例如 `my-index-000001` 或 `my-index-3`)，則滾動更新操作會自動遞增該數字作為新索引的名稱。例如，滾動更新 `my-index-000001` 會產生 `my-index-000002`。數字部分一律會以前置零補齊，以確保長度固定為六個字元。
+在索引別名輪替過程中，如果您未指定自訂名稱，且目前索引的名稱以連字號加上數字結尾（例如 `my-index-000001` 或 `my-index-3`），則輪替操作會自動遞增該數字作為新索引的名稱。例如，輪替 `my-index-000001` 會產生 `my-index-000002`。數字部分一律會以前置零補齊，以確保長度固定為六個字元。
 
-## 在索引滾動更新中使用日期運算
+## 在索引輪替中使用日期數學
 
-為時間序列資料使用索引別名時，您可以在索引名稱中使用[日期運算]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/date/)來追蹤滾動更新日期。例如，您可以建立指向 `my-index-{now/d}-000001` 的別名。如果您在 2029 年 6 月 11 日建立別名，則索引名稱會是 `my-index-2029.06.11-000001`。若在 2029 年 6 月 12 日進行滾動更新，新索引的名稱會是 `my-index-2029.06.12-000002`。如需實際範例，請參閱[滾動更新具有寫入索引的索引別名](#rolling-over-an-index-alias-with-a-write-index)。
+當您使用索引別名來處理時間序列資料時，可以在索引名稱中使用[日期數學]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/date/)來追蹤輪替日期。例如，您可以建立一個指向 `my-index-{now/d}-000001` 的別名。如果您在 2029 年 6 月 11 日建立別名，則索引名稱會是 `my-index-2029.06.11-000001`。若在 2029 年 6 月 12 日進行輪替，新索引將命名為 `my-index-2029.06.12-000002`。實際範例請參閱[使用寫入索引輪替索引別名](#rolling-over-an-index-alias-with-a-write-index)。如需完整的日期數學索引名稱語法，以及必須在請求 URL 中編碼的字元，請參閱[索引名稱中的日期數學]({{site.url}}{{site.baseurl}}/api-reference/index-name-syntax/#date-math-in-index-names)。
 
 ## 路徑參數
 
@@ -50,18 +50,19 @@ POST /{rollover-target}/_rollover/{target-index}
 
 參數 | 資料類型 | 說明 
 :--- | :--- | :--- 
-`rollover-target` | 字串 | 要滾動更新的資料串流或索引別名名稱。必要。 |
-`target-index` | 字串 | 要建立的索引名稱。支援日期運算。資料串流不支援此參數。如果別名目前寫入索引的名稱不是以 `-` 加上數字結尾 (例如 `my-index-000001` 或 `my-index-2`)，則此參數為必要。 
+`rollover-target` | 字串 | 要輪替的資料串流或索引別名名稱。必要。 |
+`target-index` | 字串 | 要建立的索引名稱。支援日期運算。資料串流不支援此參數。如果別名目前寫入索引的名稱不是以 `-` 加上數字結尾（例如 `my-index-000001` 或 `my-index-2`），則此參數為必要。 
 
 ## 查詢參數
 
-下表列出可用的查詢參數。
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
 參數 | 資料類型 | 說明 
 :--- | :--- | :--- 
-`cluster_manager_timeout` | 時間 | 等待連線至叢集管理員節點的時間長度。預設為 `30s`。
-`timeout` | 時間 | 等待回應的時間長度。預設為 `30s`。
-`wait_for_active_shards` | 字串 | OpenSearch 處理請求前必須可用的作用中分片數量。預設為 `1` (僅主要分片)。您也可以設為 `all` 或正整數。大於 `1` 的值需要副本。例如，如果您指定的值為 `3`，則索引必須有兩個副本分散在另外兩個節點上，操作才會成功。
+`cluster_manager_timeout` | 時間 | 等待連線至叢集管理員節點的時間量。預設為 `30s`。
+`dry_run` | 布林值 | 若為 `true`，OpenSearch 會檢查目前索引是否符合輪替條件，並傳回將建立的索引名稱，但不會執行輪替。預設為 `false`。
+`timeout` | 時間 | 等待回應的時間量。預設為 `30s`。
+`wait_for_active_shards` | 字串 | OpenSearch 處理請求前必須可用的作用中分片數量。預設為 `1`（僅主要分片）。您也可以設為 `all` 或正整數。大於 `1` 的值需要副本。例如，若您指定值為 `3`，則該索引必須有兩個副本分散於另外兩個節點上，操作才能成功。
 
 ## 請求本文欄位
 
@@ -87,15 +88,15 @@ POST /{rollover-target}/_rollover/{target-index}
 
 ### `conditions`
 
-`conditions` 參數是選用物件，用於定義觸發滾動更新的條件。提供此參數時，OpenSearch 只會在目前索引符合一個或多個指定條件時進行滾動更新。若省略此參數，則滾動更新會無條件執行，不需任何先決條件。
+`conditions` 參數是選用物件，用於定義觸發輪替的條件。提供此參數時，OpenSearch 只會在目前索引符合一個或多個指定條件時進行輪替。若省略此參數，則輪替會無條件執行，不需任何先決條件。
 
 物件本文支援下列參數。
 
 參數 | 資料類型 | 說明 
 :--- | :--- | :--- 
-`max_age` | 時間單位 | 自索引建立起經過的時間達到上限後觸發滾動更新。經過時間一律從索引建立時間開始計算，即使索引起始日期已設定為自訂日期 (例如使用 `index.lifecycle.parse_origination_date` 或 `index.lifecycle.origination_date` 設定時) 也是如此。選用。 |
-`max_docs` | 整數 | 達到指定的文件數量上限後觸發滾動更新，不包含上次重新整理後新增的文件及副本分片中的文件。選用。 
-`max_size` | 位元組單位  | 當索引達到指定大小時觸發滾動更新，大小以所有主要分片的總大小計算，不計入副本。使用 `_cat indices` API 並查看 `pri.store.size` 值，即可得知目前的索引大小。選用。
+`max_age` | 時間單位 | 自索引建立起經過的時間達到上限後觸發輪替。經過時間一律從索引建立時間開始計算，即使索引起始日期已設定為自訂日期（例如使用 `index.lifecycle.parse_origination_date` 或 `index.lifecycle.origination_date` 設定時）也是如此。選用。 |
+`max_docs` | 整數 | 達到指定的文件數量上限後觸發輪替，不包含上次重新整理後新增的文件及副本分片中的文件。選用。 
+`max_size` | 位元組單位  | 當索引達到指定大小時觸發輪替，大小以所有主要分片的總大小計算，不計入副本。使用 `_cat indices` API 並查看 `pri.store.size` 值，即可得知目前的索引大小。選用。
 
 ### `settings`
 
@@ -103,15 +104,15 @@ POST /{rollover-target}/_rollover/{target-index}
 
 ## 範例請求
 
-下列範例說明如何使用 Rollover Index API。當符合一個或多個指定條件時，就會進行滾動更新：
+下列範例說明如何使用 Rollover Index API。當符合一個或多個指定條件時，就會進行輪替：
 
 - 索引建立已滿 5 天或以上。
 - 索引包含 500 份或以上的文件。
 - 索引大小為 100 GB 或以上。
 
-### 滾動更新資料串流
+### 輪替資料串流
 
-如果目前的寫入索引符合任一指定條件，下列請求會滾動更新資料串流：
+如果目前的寫入索引符合任一指定條件，下列請求會輪替資料串流：
 
 <!-- spec_insert_start
 component: example_code
@@ -157,7 +158,7 @@ response = client.indices.rollover(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### 滾動更新具有寫入索引的索引別名
+### 輪替具有寫入索引的索引別名
 
 下列請求會建立日期時間索引，並將其設為 `my-alias` 的寫入索引。索引名稱必須經過 URL 編碼：`%3Cmy-index-%7Bnow%2Fd%7D-000001%3E` 是 `<my-index-{now/d}-000001>` 的編碼形式，而 `{now/d}` 會解析為目前日期：
 
@@ -173,7 +174,7 @@ PUT %3Cmy-index-%7Bnow%2Fd%7D-000001%3E
 ```
 {% include copy-curl.html %}
 
-下一個請求會使用別名執行滾動更新：
+下一個請求會使用別名執行輪替：
 
 <!-- spec_insert_start
 component: example_code
@@ -219,9 +220,9 @@ response = client.indices.rollover(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### 在滾動更新期間指定設定
+### 在輪替期間指定設定
 
-在大多數情況下，您可以使用索引範本自動設定在滾動更新操作期間建立的索引。不過，滾動更新索引別名時，您可以傳送下列請求，使用 Rollover Index API 加入額外的索引設定，或覆寫範本中定義的設定：
+在大多數情況下，您可以使用索引範本自動設定在輪替操作期間建立的索引。不過，輪替索引別名時，您可以傳送下列請求，使用 Rollover Index API 加入額外的索引設定，或覆寫範本中定義的設定：
 
 <!-- spec_insert_start
 component: example_code

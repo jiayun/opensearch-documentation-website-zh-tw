@@ -11,10 +11,12 @@ redirect_from:
 ---
 
 # CAT Count API
-**1.0 版引入**
+**於 1.0 版推出**
 {: .label .label-purple }
 
-CAT count 作業會列出叢集中的文件數量。
+CAT count 操作會列出叢集中的文件數量。
+
+此計數只包含有效的文件。您已刪除的文件不會計入，即使這些文件尚未透過分段合併從磁碟中移除也是如此。若要查看每個索引中已刪除文件的數量，請使用 [CAT Indices API]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-indices/)。
 
 
 <!-- spec_insert_start
@@ -41,11 +43,11 @@ include_deprecated: false
 
 | 參數 | 資料類型 | 說明 | 預設 |
 | :--- | :--- | :--- | :--- |
-| `format` | String | `Accept` 標頭的簡短版本，例如 `json` 或 `yaml`。 | N/A |
-| `h` | List | 以逗號分隔的欄位名稱清單，用於指定要顯示的欄位。 | N/A |
-| `help` | Boolean | 傳回說明資訊。 | `false` |
-| `s` | List | 以逗號分隔的欄位名稱或欄位別名清單，用於排序。 | N/A |
-| `v` | Boolean | 啟用詳細模式，顯示欄位標題。 | `false` |
+| `format` | 字串 | `Accept` 標頭的簡短版本，例如 `json` 或 `yaml`。 | N/A |
+| `h` | 清單 | 以逗號分隔的欄位名稱清單，用於指定要顯示的欄位。 | N/A |
+| `help` | 布林值 | 傳回說明資訊。 | `false` |
+| `s` | 清單 | 以逗號分隔的欄位名稱或欄位別名清單，用於排序。 | N/A |
+| `v` | 布林值 | 啟用詳細模式，顯示欄位標題。 | `false` |
 
 <!-- spec_insert_end -->
 

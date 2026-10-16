@@ -52,7 +52,7 @@ xy shape 可以以下列格式編製索引：
 
 下表說明可能的 xy shape 類型，以及它們與 GeoJSON 和 WKT 類型的關係。
 
-OpenSearch type | GeoJSON type | WKT type | Description 
+OpenSearch 類型 | GeoJSON 類型 | WKT 類型 | 說明 
 :--- | :--- | :--- | :--- 
 [`point`](#point) | Point | POINT | 由 x 與 y 座標指定的地理點。 
 [`linestring`](#linestring) | LineString | LINESTRING | 由兩個或多個點指定的線。可以是直線，或由相連線段組成的路徑。
@@ -63,7 +63,7 @@ OpenSearch type | GeoJSON type | WKT type | Description
 [`geometrycollection`](#geometry-collection) | GeometryCollection | GEOMETRYCOLLECTION | 可能屬於不同類型的 xy shape 集合。
 [`envelope`](#envelope) | N/A | BBOX | 由左上與右下頂點指定的邊界矩形。
 
-## Point
+## 點（Point）
 
 點由一組座標指定。
 
@@ -90,7 +90,7 @@ PUT testindex/_doc/1
 ```
 {% include copy-curl.html %}
 
-## Linestring
+## 線字串（Linestring）
 
 線字串是由兩個或多個點指定的線。若這些點共線，線字串就是一條直線；否則，線字串代表由線段組成的路徑。
 
@@ -117,7 +117,7 @@ PUT testindex/_doc/2
 ```
 {% include copy-curl.html %}
 
-## Polygon
+## 多邊形（Polygon）
 
 多邊形是以座標形式的頂點清單指定。多邊形必須封閉，也就是最後一點必須與第一點相同。在下列範例中，使用四個點建立一個三角形。
 
@@ -226,7 +226,7 @@ PUT testindex/_doc/3
 ```
 {% include copy-curl.html %}
 
-## Multipoint
+## 多點（Multipoint）
 
 多點是一組互不相連但彼此相關的離散點陣列。
 
@@ -256,7 +256,7 @@ PUT testindex/_doc/6
 ```
 {% include copy-curl.html %}
 
-## Multilinestring
+## 多線字串（Multilinestring）
 
 多線字串是線字串的陣列。
 
@@ -286,7 +286,7 @@ PUT testindex/_doc/2
 ```
 {% include copy-curl.html %}
 
-## Multipolygon
+## 多多邊形（Multipolygon）
 
 多多邊形是多邊形的陣列。在此範例中，第一個多邊形包含一個洞，第二個則沒有。
 
@@ -331,7 +331,7 @@ PUT testindex/_doc/4
 ```
 {% include copy-curl.html %}
 
-## Geometry collection
+## 幾何集合（Geometry collection）
 
 幾何集合是可能屬於不同類型的 xy shape 集合。
 
@@ -367,7 +367,7 @@ PUT testindex/_doc/7
 ```
 {% include copy-curl.html %}
 
-## Envelope
+## 封套（Envelope）
 
 封套是由左上與右下頂點指定的邊界矩形。GeoJSON 格式為 `[[minX, maxY], [maxX, minY]]`。
 
@@ -398,12 +398,12 @@ PUT testindex/_doc/8
 
 ## 參數
 
-下表列出 xy shape 欄位類型接受的參數。所有參數皆為選用。
+下表列出 xy shape 欄位類型可接受的參數。所有參數皆為選用。
 
-Parameter | Description 
+參數 | 說明 
 :--- | :--- 
-`coerce` | 一個布林值，指定是否自動封閉未封閉的線性環。預設為 `false`。
-`doc_values` | 一個布林值，指定該欄位是否應儲存在磁碟上，以便用於彙總、排序或指令碼。預設為 `false`。
-`ignore_malformed` | 一個布林值，指定是否忽略格式錯誤的 GeoJSON 或 WKT xy shape 而不擲回例外狀況。預設為 `false`（當 xy shape 格式錯誤時擲回例外狀況）。
-`ignore_z_value` | 專用於具有三個座標的點。若 `ignore_z_value` 為 `true`，第三個座標不會編製索引，但仍會儲存在 `_source` 欄位中。若 `ignore_z_value` 為 `false`，則會擲回例外狀況。預設為 `true`。
-`orientation` | 指定 xy shape 座標清單中頂點的走訪順序。`orientation` 接受下列值：<br> 1. RIGHT：逆時針。使用下列其中一個字串（大寫或小寫）指定 RIGHT 方向：`right`、`counterclockwise`、`ccw`。<br> 2. LEFT：順時針。使用下列其中一個字串（大寫或小寫）指定 LEFT 方向：`left`、`clockwise`、`cw`。 個別文件可以覆寫此值。<br> 預設為 `RIGHT`。
+`coerce` | 布林值，指定是否自動閉合未閉合的線性環。預設為 `false`。如需更多資訊，請參閱 [Coerce]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/coerce/)。
+`doc_values` | 布林值，指定是否應將欄位儲存在磁碟上，以便用於彙總、排序或指令碼。預設為 `false`。如需更多資訊，請參閱 [Doc values]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/doc-values/)。
+`ignore_malformed` | 布林值，指定是否忽略格式錯誤的 GeoJSON 或 WKT xy shape，而不擲回例外。預設為 `false`（當 xy shape 格式錯誤時擲回例外）。如需更多資訊，請參閱 [Ignore malformed]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/ignore-malformed/)。
+`ignore_z_value` | 專用於具有三個座標的點。若 `ignore_z_value` 為 `true`，則不會將第三個座標編製索引，但仍會儲存在 `_source` 欄位中。若 `ignore_z_value` 為 `false`，則會擲回例外。預設為 `true`。
+`orientation` | 指定 xy shape 座標清單中頂點的走訪順序。`orientation` 接受下列值：<br> 1. RIGHT：逆時針。使用下列其中一個字串（大寫或小寫）指定 RIGHT 方向：`right`、`counterclockwise`、`ccw`。<br> 2. LEFT：順時針。使用下列其中一個字串（大寫或小寫）指定 LEFT 方向：`left`、`clockwise`、`cw`。此值可由個別文件覆寫。<br> 預設為 `RIGHT`。

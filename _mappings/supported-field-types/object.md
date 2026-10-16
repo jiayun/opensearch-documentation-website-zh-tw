@@ -77,9 +77,9 @@ GET testindex1/_search
 
 參數 | 說明 
 :--- | :--- 
-[`dynamic`](#the-dynamic-parameter) | 指定是否可以動態地將新欄位新增至物件。有效值為 `true`、`false`、`strict`、`strict_allow_templates` 和 `false_allow_templates`。預設值為 `true`。
-`enabled` | 一個布林值，指定是否應解析物件的 JSON 內容。若 `enabled` 設定為 `false`，物件的內容不會被編製索引，也無法搜尋，但仍可從 `_source` 欄位擷取。預設值為 `true`。
-`properties` | 此物件的欄位，可以是任何支援的類型。若 `dynamic` 設定為 `true`，則可以動態地將新屬性新增至此物件。
+[`dynamic`](#the-dynamic-parameter) | 指定是否可以動態新增欄位至物件。有效值為 `true`、`false`、`strict`、`strict_allow_templates` 和 `false_allow_templates`。預設為 `true`。
+`enabled` | 布林值，指定是否應剖析物件的 JSON 內容。如果將 `enabled` 設為 `false`，則不會為物件的內容編製索引，也無法搜尋這些內容，但仍可從 `_source` 欄位擷取這些內容。預設為 `true`。如需詳細資訊，請參閱[啟用]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/enabled/)。
+`properties` | 此物件的欄位，可以是任何支援的類型。如果將 `dynamic` 設為 `true`，即可動態新增屬性至此物件。如需詳細資訊，請參閱[屬性]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/properties/)。
 
 ### `dynamic` 參數
 

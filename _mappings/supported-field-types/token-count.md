@@ -113,14 +113,14 @@ GET testindex/_search
 
 ## 參數
 
-下表列出 token count 欄位類型接受的參數。`analyzer` 參數為必要；其餘參數皆為選用。
+下表列出 token count 欄位類型接受的參數。`analyzer` 參數為必要；其他所有參數皆為選用。
 
-參數 | 說明 
+Parameter | Description 
 :--- | :--- 
-`analyzer` | 此欄位要使用的分析器。若要達到最佳效能，請指定不含詞元篩選器的分析器。必要。可動態更新。
-`boost` | 指定此欄位對相關性分數權重的浮點數值。高於 1.0 的值會提高此欄位的相關性；介於 0.0 與 1.0 之間的值會降低此欄位的相關性。預設為 1.0。可動態更新。
-`doc_values` | 指定是否應將此欄位儲存在磁碟上，以便用於彙總、排序或指令碼的布林值。預設為 `true`。
-`enable_position_increments` | 指定是否應計算位置增量的布林值。若要避免移除停用詞，請將此欄位設為 `false`。預設為 `true`。
-`index` | 指定此欄位是否應可被搜尋的布林值。預設為 `true`。
-[`null_value`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/index#null-value) | 用來取代 `null` 的值。必須與該欄位為相同類型。若未指定此參數，當欄位值為 `null` 時，該欄位會被視為遺失。預設為 `null`。
-`store` | 指定是否應儲存欄位值，並可與 `_source` 欄位分開擷取的布林值。預設為 `false`。 
+`analyzer` | 此欄位要使用的分析器。為獲得最佳效能，請指定不含詞元篩選器的分析器。必要。可動態更新。如需更多資訊，請參閱 [Analyzer]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/analyzer/)。
+`boost` | 一個浮點數值，指定此欄位對相關性分數的權重。高於 1.0 的值會提高該欄位的相關性；介於 0.0 與 1.0 之間的值會降低該欄位的相關性。預設為 1.0。可動態更新。如需更多資訊，請參閱 [Boost]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/boost/)。
+`doc_values` | 一個布林值，指定是否應將欄位儲存在磁碟上，以便用於彙總、排序或指令碼。預設為 `true`。如需更多資訊，請參閱 [Doc values]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/doc-values/)。
+`enable_position_increments` | 一個布林值，指定是否應計算位置增量。為避免移除停用詞，請將此欄位設為 `false`。預設為 `true`。
+`index` | 一個布林值，指定欄位是否應可被搜尋。預設為 `true`。如需更多資訊，請參閱 [Index]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/index-parameter/)。
+[`null_value`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/index#null-value) | 用來取代 `null` 的值。必須與欄位屬於相同類型。若未指定此參數，當欄位值為 `null` 時，該欄位會被視為遺失。預設為 `null`。
+`store` | 一個布林值，指定是否應儲存欄位值，並可從 `_source` 欄位個別擷取。預設為 `false`。如需更多資訊，請參閱 [Store]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/store/)。

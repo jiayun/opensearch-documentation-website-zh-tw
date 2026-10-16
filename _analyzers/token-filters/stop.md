@@ -18,10 +18,10 @@ nav_order: 410
 
 參數 | 必要/選用 | 資料類型 | 說明
 :--- | :--- | :--- | :--- 
-`stopwords` | 選用 | 字串 | 指定自訂的停用詞陣列，或[特定語言的預先定義停用詞集](#predefined-stopword-sets-by-language)。預設為 `_english_`。
+`stopwords` | 選用 | 字串 | 指定自訂的停用詞陣列，或[某種語言的預先定義停用詞集合](#predefined-stopword-sets-by-language)。預設為 `_english_`。
 `stopwords_path` | 選用 | 字串 | 指定包含自訂停用詞之檔案的檔案路徑（絕對路徑或相對於 config 目錄的路徑）。
-`ignore_case` | 選用 | 布林值 | 若為 `true`，則比對停用詞時不區分大小寫。預設為 `false`。
-`remove_trailing` | 選用 | 布林值 | 若為 `true`，則會在分析期間移除結尾的停用詞。預設為 `true`。
+`ignore_case` | 選用 | 布林值 | 若為 `true`，停用詞的比對將不分大小寫。預設為 `false`。
+`remove_trailing` | 選用 | 布林值 | 若為 `true`，輸入結尾的停用詞會像其他停用詞一樣被移除。若為 `false`，當最後一個詞元是停用詞且其後沒有空格或其他分隔符時，該詞元會被保留，而所有其他停用詞仍會被移除。在[自動完成建議器]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/autocomplete/#completion-suggester)的分析器中使用此篩選器時，請設為 `false`。如需更多資訊，請參閱[搭配自動完成建議器使用 stop 篩選器](#using-the-stop-filter-with-completion-suggesters)。預設為 `true`。
 
 ## 範例
 
@@ -110,6 +110,10 @@ GET /my-stopword-index/_analyze
   ]
 }
 ```
+
+## 將停用詞篩選器與自動完成建議器搭配使用
+
+當使用者輸入搜尋查詢時，最後一個字詞通常不完整，且可能符合停用詞。例如，當使用者輸入 `red on` 時，`on` 可能是 `onion` 的開頭。若 `completion` 欄位的分析器移除了 `on`，OpenSearch 會搜尋前置字串 `red`，並建議 `red cabbage`、`red onion` 和 `red pepper`。若您將 `remove_trailing` 設為 `false`，`stop` 篩選器會保留最後的 `on`，因此相同的前置字串只會建議 `red onion`。在使用者於 `on` 之後輸入空格後，篩選器會將 `on` 視為完整字詞並將其移除。
 
 ## 依語言區分的預先定義停用詞集
 

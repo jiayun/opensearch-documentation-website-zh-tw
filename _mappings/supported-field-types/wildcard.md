@@ -55,13 +55,13 @@ PUT logs
 
 | 參數 | 說明 | 預設值 | 可動態更新 |
 | :--- | :--- | :--- | :--- |
-| `copy_to` | 一或多個其他欄位的名稱，在編製索引時會將此欄位的值複製到這些欄位。 | 無 | 是 |
-| `doc_values` | 布林值，指定是否應將欄位儲存在磁碟上，以便用於彙總、排序或指令碼。 | `true` | 否 |
-| `fields` | 一或多個子欄位，使用不同的欄位類型為相同的值編製索引。使用子欄位可支援 `wildcard` 類型不支援的操作，例如在 `keyword` 子欄位上進行範圍查詢。 | 無 | 是 |
-| `ignore_above` | 整數值，指定最大字串長度。較長的字串既不會編製索引，也不會寫入 doc values，因此不會符合任何查詢，也不會出現在彙總中。該值仍保留在 `_source` 中。 | `2147483647` | 是 |
-| `meta` | 欄位的中繼資料。OpenSearch 會儲存此中繼資料並在對應中回傳，但不會使用它。 | 無 | 是 |
-| [`normalizer`]({{site.url}}{{site.baseurl}}/analyzers/normalizers/) | 用於在編製索引與搜尋前處理值的正規化器。OpenSearch 會將其同時套用至索引值與查詢，doc values 儲存正規化後的形式，而 `_source` 則保留原始值。使用 `lowercase` 正規化器可對欄位執行不區分大小寫的比對。 | `default`（無正規化） | 否 |
-| `null_value` | 用來取代 `null` 進行索引的值。請以字串指定；其他 JSON 類型會轉換為其字串形式。若未指定此參數，`null` 值會被視為遺漏，且 `exists` 查詢不會符合該文件。 | `null` | 否 |
+| `copy_to` | 在編製索引時，要將此欄位值複製到的一或多個其他欄位名稱。如需詳細資訊，請參閱[複製至]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/copy-to/)。 | 無 | 是 |
+| `doc_values` | 布林值，指定是否應將欄位儲存在磁碟上，以便用於彙總、排序或指令碼。如需詳細資訊，請參閱[文件值]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/doc-values/)。 | `true` | 否 |
+| `fields` | 一或多個子欄位，使用不同的欄位類型為相同的值編製索引。使用子欄位可支援 `wildcard` 類型不支援的操作，例如對 `keyword` 子欄位進行範圍查詢。如需詳細資訊，請參閱[欄位]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/fields/)。 | 無 | 是 |
+| `ignore_above` | 整數值，指定字串的最大長度。超過此長度的字串既不會編製索引，也不會寫入文件值，因此不會符合任何查詢，也不會出現在彙總中。該值仍會保留在 `_source` 中。如需詳細資訊，請參閱[忽略超過長度的值]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/ignore-above/)。 | `2147483647` | 是 |
+| `meta` | 關於欄位的中繼資料。OpenSearch 會儲存此中繼資料，並在對應中傳回，但不會使用它。如需詳細資訊，請參閱[中繼資料]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/meta/)。 | 無 | 是 |
+| [`normalizer`]({{site.url}}{{site.baseurl}}/analyzers/normalizers/) | 用於預先處理值以供編製索引和搜尋的正規化器。OpenSearch 會將它套用至已編製索引的值和查詢，文件值會儲存正規化後的形式，而 `_source` 則保留原始值。使用 `lowercase` 正規化器可對欄位執行不區分大小寫的比對。 | `default`（不進行正規化） | 否 |
+| `null_value` | 用於取代 `null` 來編製索引的值。請將其指定為字串；其他 JSON 類型會轉換為字串形式。如果未指定此參數，`null` 值會被視為缺漏，而 `exists` 查詢不會符合該文件。如需詳細資訊，請參閱[空值]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/null-value/)。 | `null` | 否 |
 
 ## 儲存空間需求
 

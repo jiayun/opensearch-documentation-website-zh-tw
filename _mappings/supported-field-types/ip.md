@@ -48,10 +48,10 @@ PUT testindex/_doc/1
 ```
 {% include copy-curl.html %}
 
-查詢索引中的特定 IP 位址：
+查詢索引中特定的 IP 位址：
 
 ```json
-GET testindex/_doc/1 
+GET testindex/_search
 {
   "query": {
     "term": {
@@ -62,11 +62,11 @@ GET testindex/_doc/1
 ```
 {% include copy-curl.html %}
 
-## 搜尋 IP 位址及其相關聯的網路遮罩
+## 搜尋 IP 位址及其相關的網路遮罩
 
-您可以使用 [Classless Inter-Domain Routing (CIDR) 標記法](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing#CIDR_notation) 查詢索引中的 IP 位址。使用 CIDR 標記法時，請指定 IP 位址與前置長度 (0–32)，兩者以 `/` 分隔。例如，前置長度 24 會比對開頭 24 位元相同的所有 IP 位址。
+您可以使用[無類別網域間路由 (CIDR) 表示法](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing#CIDR_notation)在索引中查詢 IP 位址。使用 CIDR 表示法時，請指定 IP 位址和前置長度，並以 `/` 分隔。IPv4 位址的前置長度必須介於 0 到 32 之間，IPv6 位址的前置長度則必須介於 0 到 128 之間。例如，前置長度為 24 時，會比對所有前 24 個位元相同的 IP 位址。
 
-#### IPv4 格式的範例查詢
+### IPv4 格式的查詢範例
 
 ```json
 GET testindex/_search 
@@ -80,7 +80,7 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-#### IPv6 格式的範例查詢
+### IPv6 格式的查詢範例
 
 ```json
 GET testindex/_search 
@@ -94,7 +94,7 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-如果您在 `query_string` 查詢中使用 IPv6 格式的 IP 位址，必須逸出 `:` 字元，因為這些字元會被剖析為特殊字元。您可以將 IP 位址以引號括住，並使用 `\` 逸出這些引號。
+如果您在 `query_string` 查詢中使用 IPv6 格式的 IP 位址，則需要將 `:` 字元逸出，因為這些字元會被剖析為特殊字元。您可以用引號括住 IP 位址，並使用 `\` 將這些引號逸出，以達成此目的。
 
 ```json
 GET testindex/_search 
@@ -110,16 +110,16 @@ GET testindex/_search
 
 ## 參數
 
-下表列出 `ip` 欄位類型可接受的參數。所有參數皆為選用。
+下表列出 `ip` 欄位類型接受的參數。所有參數皆為選用。
 
-參數 | 說明
-:--- | :---
-`boost` | 浮點值，用於指定此欄位對相關性分數的權重。大於 1.0 的值會提高欄位的相關性。介於 0.0 與 1.0 之間的值會降低欄位的相關性。預設值為 1.0。可動態更新。
-`doc_values` | 布林值，用於指定是否應將欄位儲存在磁碟上，以便用於彙總、排序或指令碼。預設值為 `true`。
-`ignore_malformed` | 布林值，用於指定是否忽略格式錯誤的值而不擲回例外狀況。預設值為 `false`。可動態更新。
-`index` | 布林值，用於指定欄位是否可供搜尋。預設值為 `true`。對於使用可插式資料格式的索引，預設值為 `false`，且不支援 `true`。如需詳細資訊，請參閱[可插式資料格式索引]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/index-parameter/#pluggable-data-format-indexes)。
-[`null_value`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/index#null-value) | 用於取代 `null` 的值。其類型必須與欄位相同。若未指定此參數，當欄位值為 `null` 時，該欄位會被視為缺少。預設值為 `null`。
-`store` | 布林值，用於指定是否應儲存欄位值，並可與 `_source` 欄位分開擷取。預設值為 `false`。
+參數 | 說明 
+:--- | :--- 
+`boost` | 一個浮點數值，指定此欄位對相關性分數的權重。高於 1.0 的值會提高該欄位的相關性；介於 0.0 與 1.0 之間的值會降低該欄位的相關性。預設為 1.0。可動態更新。如需更多資訊，請參閱[權重提升]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/boost/)。
+`doc_values` | 一個布林值，指定是否應將該欄位儲存在磁碟上，以便用於彙總、排序或指令碼。預設為 `true`。如需更多資訊，請參閱[文件值]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/doc-values/)。
+`ignore_malformed` | 一個布林值，指定是否忽略格式錯誤的值而不擲回例外狀況。預設為 `false`。可動態更新。如需更多資訊，請參閱[忽略格式錯誤的值]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/ignore-malformed/)。
+`index` | 一個布林值，指定該欄位是否可搜尋。預設為 `true`。對於使用可插拔資料格式的索引，預設為 `false`，且不支援 `true`。如需更多資訊，請參閱[使用可插拔資料格式的索引]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/index-parameter/#pluggable-data-format-indexes)。
+[`null_value`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/index#null-value) | 用來取代 `null` 的值。必須是 IPv4 或 IPv6 位址。若未指定此參數，當欄位值為 `null` 時，該欄位會被視為遺失。預設為 `null`。
+`store` | 一個布林值，指定是否應儲存欄位值，並可從 `_source` 欄位個別擷取。預設為 `false`。如需更多資訊，請參閱[儲存]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/store/)。
 
 ## 衍生的來源
 

@@ -105,12 +105,12 @@ redirect_from:
 ## 特殊搜尋欄位類型
 
 | 欄位類型  | 說明 |
-| [`semantic`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/semantic/)                     | 包裝文字或二進位欄位，以簡化語意搜尋的設定。                                                                           |
+| [`semantic`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/semantic/)                     | 封裝文字或二進位欄位，以簡化語意搜尋的設定。                                                                           |
 | [`rank_feature`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/rank/)                     | 提升或降低文件的相關性分數。                                                                                     |
 | [`rank_features`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/rank/)                    | 提升或降低文件的相關性分數。用於特徵清單稀疏的情況。                                          |
 | [`percolator`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/percolator/)                 | 一種欄位，可作為反向搜尋作業的預存查詢。                                                                        |
-| [`star_tree`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/star-tree/)                   | 使用 [star-tree 索引](https://docs.pinot.apache.org/basics/indexing/star-tree-index) 預先計算彙總，以提升效能。 |
-| [`derived`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/derived/)                       | 一種動態產生的欄位，透過指令碼從其他欄位計算而得。                                                                  |
+| [`star_tree`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/star-tree/)                   | 使用 [star-tree 索引](https://docs.pinot.apache.org/basics/indexing/star-tree-index) 預先計算彙總，以獲得更快的效能。 |
+| [Derived]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/derived/)                         | 一種動態產生的欄位，透過指令碼從其他欄位計算而得。在對應或搜尋請求的 `derived` 物件中定義，而非由 `type` 值定義。 |
 
 
 ## 陣列

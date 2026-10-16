@@ -54,5 +54,5 @@ PUT testindex/_doc/1
 
 參數 | 說明 
 :--- | :--- 
-`doc_values` | 布林值，指定是否應將此欄位儲存在磁碟上，以便用於彙總、排序或指令碼。選用。預設為 `false`。
-`store` | 布林值，指定是否應儲存欄位值，並可從 `_source` 欄位個別擷取。選用。預設為 `false`。
+`doc_values` | 布林值，指定是否將該欄位儲存在磁碟上，以便用於彙總、排序或指令碼。選用。預設為 `false`。如需更多資訊，請參閱 [Doc values]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/doc-values/)。
+`store` | 布林值，指定是否儲存欄位值，並使其可與 `_source` 欄位分開擷取。選用。預設為 `false`。如需更多資訊，請參閱 [Store]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/store/)。

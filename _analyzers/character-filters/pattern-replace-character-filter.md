@@ -60,12 +60,19 @@ GET /_analyze
  
 ## 參數
 
-`pattern_replace` 字元篩選器必須使用下列參數進行設定。
+`pattern_replace` 字元篩選器支援下列參數。
 
-| 參數 | 必要/選用 | 資料類型 | 說明 |
-|:---|:---|
-| `pattern` | 必要 | 字串 | 用於比對輸入文字部分內容的規則運算式。篩選器會識別並比對此模式以執行取代。 |
-| `replacement` | 選用 | 字串 | 用來取代模式比對結果的字串。使用空字串（`""`）可移除比對到的文字。預設為空字串（`""`）。 |
+| 參數   | 必要/選用 | 資料類型 | 說明    |
+|:---|:---|:---|:---|
+| `pattern`   | 必要 | 字串 | 用於比對輸入文字片段的規則運算式。篩選器會識別並比對此模式以執行替換。 |
+| `replacement` | 選用 | 字串 | 用來替換符合模式之內容的字串。使用空字串 (`""`) 可移除符合的文字。替換內容可以以 `$1`、`$2` 等形式參照 `pattern` 中的擷取群組。範例請參閱[使用擷取群組](#using-capturing-groups)。預設為空字串 (`""`)。   |
+| `flags` | 選用 | 字串 | 一或多個 [Java 規則運算式旗標](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html#field.summary)，用於修改 `pattern` 的比對方式，例如 `CASE_INSENSITIVE`。若要指定多個旗標，請以管線符號 (`\|`) 分隔，例如 `"CASE_INSENSITIVE\|COMMENTS"`。 |
+
+撰寫不良的規則運算式可能會讓分析非常緩慢，在極端情況下甚至會導致 `StackOverflowError` 而使節點停止。請避免可能以多種方式比對相同文字的模式，例如 `(a+)+` 這類巢狀量詞，並使用 [Analyze API]({{site.url}}{{site.baseurl}}/api-reference/analyze-apis/) 在具代表性的文字上測試新模式。
+{: .warning}
+
+如果替換改變了文字的長度，搜尋結果不會受到影響，但[醒目提示]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight/)可能不準確。OpenSearch 會調整詞元的字元位移以符合原始文字，但對於緊鄰替換內容的詞元，調整可能不夠精確。例如，如果篩選器從 `Call (555) 123-4567 today` 中移除括號與連字號，搜尋 `555` 時會醒目提示 `(<em>555)</em>`，包括右括號。如果您需要精確的醒目提示，請在自己的資料上測試結果。
+{: .note}
 
 ## 建立自訂分析器
 

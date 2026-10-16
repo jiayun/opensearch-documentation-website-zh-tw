@@ -412,8 +412,8 @@ PUT testindex/_doc/8
 
 參數 | 說明 
 :--- | :--- 
-`coerce` | 指定是否自動封閉未封閉線性環的布林值。預設為 `false`。
-`doc_values` | 指定是否應將該欄位儲存在磁碟上，以便用於彙總、排序或指令碼的布林值。預設為 `true`。
-`ignore_malformed` | 指定忽略格式錯誤的 GeoJSON 或 WKT geoshape 而不擲回例外的布林值。預設為 `false` (當 geoshape 格式錯誤時擲回例外)。
-`ignore_z_value` | 專屬於具有三個座標的點。如果 `ignore_z_value` 為 `true`，則第三個座標不會編製索引，但仍會儲存在 `_source` 欄位中。如果 `ignore_z_value` 為 `false`，則會擲回例外。預設為 `true`。
+`coerce` | 布林值，指定是否自動封閉未閉合的線性環。預設為 `false`。如需更多資訊，請參閱 [Coerce]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/coerce/)。
+`doc_values` | 布林值，指定是否將該欄位儲存在磁碟上，以便用於彙總、排序或指令碼。預設為 `true`。如需更多資訊，請參閱 [Doc values]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/doc-values/)。
+`ignore_malformed` | 布林值，指定是否忽略格式錯誤的 GeoJSON 或 WKT geoshape，而不擲回例外。預設為 `false` (當 geoshape 格式錯誤時擲回例外)。如需更多資訊，請參閱 [Ignore malformed]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/ignore-malformed/)。
+`ignore_z_value` | 專屬於具有三個座標的點。若 `ignore_z_value` 為 `true`，則第三個座標不會編製索引，但仍會儲存在 `_source` 欄位中。若 `ignore_z_value` 為 `false`，則會擲回例外。預設為 `true`。
 `orientation` | 指定 geoshape 座標清單中頂點的走訪順序。`orientation` 接受下列值：<br> 1. RIGHT：逆時針。使用下列其中一個字串 (大寫或小寫) 指定 RIGHT 方向：`right`、`counterclockwise`、`ccw`。<br> 2. LEFT：順時針。使用下列其中一個字串 (大寫或小寫) 指定 LEFT 方向：`left`、`clockwise`、`cw`。  個別文件可以覆寫此值。<br> 預設為 `RIGHT`。

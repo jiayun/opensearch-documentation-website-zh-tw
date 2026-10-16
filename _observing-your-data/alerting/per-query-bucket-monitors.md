@@ -102,6 +102,6 @@ has_children: false
 
 每當您更新偵測器的間隔時，請務必更新相關聯的監視器間隔，因為 Anomaly Detection 外掛程式不會自動執行此操作。
 
-**步驟 2.** 選擇執行監視器的頻率，例如依時間間隔（分鐘、小時、天）或依排程。如果您依時間間隔或依[自訂 cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/#cron-expressions)執行，則必須提供時區。
+**步驟 2.** 選擇執行監視器的頻率，例如依時間間隔（分鐘、小時、天）或依排程。如果您依時間間隔或依[自訂 cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/cron-expressions/)執行，則必須提供時區。
 
 **步驟 3.** 新增觸發條件至監視器。

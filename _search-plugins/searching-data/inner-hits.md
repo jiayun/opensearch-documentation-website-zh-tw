@@ -7,19 +7,25 @@ has_children: false
 nav_order: 60
 ---
 
-# 擷取內部命中結果
+# 擷取內部命中
 
-在 OpenSearch 中，當您使用[巢狀物件]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/nested/)或 [parent-join]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/join/) 執行搜尋時，底層的命中結果（巢狀內部物件或子文件）預設會隱藏。您可以在搜尋查詢中使用 `inner_hits` 參數來擷取內部命中結果。
+在 OpenSearch 中，當您使用 [巢狀物件]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/nested/) 或 [parent-join]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/join/) 執行搜尋時，底層的命中結果（巢狀內部物件或子文件）預設會被隱藏。您可以在搜尋查詢中使用 `inner_hits` 參數來擷取內部命中。
 
-您也可以搭配下列功能使用 `inner_hits`：
+請在下列情境中使用內部命中：
 
-  - [醒目提示查詢相符項目]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight/)
-  - [解釋]({{site.url}}{{site.baseurl}}/api-reference/explain/)
+- 識別是哪些巢狀物件或子文件導致文件符合條件，例如，包含搜尋字詞的網誌文章留言，或符合查詢的支援工單更新。
+- 在單一請求中同時擷取文件及其符合條件的巢狀物件或子文件，例如，產品及其符合條件的評論，或職缺及其符合條件的應徵。這可避免針對相關文件另外傳送查詢。
 
-## 巢狀物件的內部命中結果
-巢狀物件可讓您為物件陣列編製索引，並在同一份文件中維持物件之間的關係。下列範例請求使用 `inner_hits` 參數來擷取底層的內部命中結果。
+您也可以將 `inner_hits` 與下列功能搭配使用：
 
-1. 建立包含巢狀物件的索引對應：
+  - [突顯查詢符合項目]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight/)
+  - [Explain]({{site.url}}{{site.baseurl}}/api-reference/explain/)
+
+## 巢狀物件中的內部命中
+
+巢狀物件可讓您為物件陣列編製索引，並在同一份文件中維持其關聯性。下列範例請求使用 `inner_hits` 參數來擷取基礎的內部命中。
+
+1. 建立含有巢狀物件的索引對應：
 
     ```json
     PUT /my_index
@@ -37,7 +43,7 @@ nav_order: 60
       }
     }
     ```
-{% include copy-curl.html %}
+    {% include copy-curl.html %}
 
 2. 將資料編製索引：
 
@@ -57,9 +63,9 @@ nav_order: 60
       ]
     }
     ```
-{% include copy-curl.html %}
+    {% include copy-curl.html %}
 
-3. 使用 `inner_hits` 進行查詢：
+3. 使用 `inner_hits` 查詢：
 
     ```json
     GET /my_index/_search
@@ -79,9 +85,9 @@ nav_order: 60
       }
     }
     ```
-{% include copy-curl.html %}
+    {% include copy-curl.html %}
 
-上述查詢會搜尋包含姓名 John 的巢狀使用者物件，並在回應的 `inner_hits` 區段中傳回相符的巢狀文件：
+前述查詢會搜尋包含名稱 John 的巢狀使用者物件，並在回應的 `inner_hits` 區段中傳回相符的巢狀文件：
 
 ```json
 {
@@ -140,10 +146,205 @@ nav_order: 60
   }
 }
 ```
-## 父／子物件的內部命中結果
-Parent-join 關係可讓您在同一個索引中，建立不同類型文件之間的關係。下列範例請求使用父／子物件，搭配 `inner_hits` 進行搜尋。
+### 識別符合條件的巢狀物件
 
-1. 建立包含 parent-join 欄位的索引：
+巢狀物件的每個 inner hit 都包含一個 `_nested` 物件，用來識別符合條件的巢狀物件。`field` 屬性包含巢狀欄位的名稱，`offset` 屬性則包含該物件在原始文件中該欄位陣列裡的位置，從 `0` 開始計算。在前述回應中，`0` 的 `offset` 表示此 inner hit 是 `user` 陣列中的第一個物件。由於 inner hits 會依分數或您指定的排序方式排序，inner hits 的順序通常與文件中物件的順序不同，因此請使用 `offset` 來識別原始物件。
+
+預設情況下，每個 inner hit 的 `_source` 只包含符合條件的巢狀物件，而非整份來源文件。您可以使用[來源篩選]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/retrieve-specific-fields/#using-source-filtering)變更傳回的欄位、為 inner hits 停用 `_source`，或在 `inner_hits` 的 `stored_fields` 中指定欄位，以傳回巢狀物件的[儲存欄位]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/store/)。
+
+### 擷取巢狀內部命中而不使用來源
+
+巢狀物件不會個別儲存：其來源是父文件來源的一部分。若要傳回巢狀內部命中的 `_source`，OpenSearch 會解析父文件的來源並擷取相符的物件。對每個內部命中都這麼做會增加搜尋時間，特別是當您為搜尋或為 `inner_hits` 增加 `size` 時。若要避免此成本，請為內部命中停用 `_source`，改為從 doc values 擷取欄位值。
+
+下列範例使用包含巢狀 `comments` 的 `articles` 索引。建立索引並新增文件：
+
+```json
+PUT /articles
+{
+  "mappings": {
+    "properties": {
+      "comments": {
+        "type": "nested",
+        "properties": {
+          "author": { "type": "keyword" },
+          "text": { "type": "text" },
+          "reactions": {
+            "type": "nested",
+            "properties": {
+              "user": { "type": "keyword" },
+              "emoji": { "type": "keyword" }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+{% include copy-curl.html %}
+
+```json
+PUT /articles/_doc/1?refresh=true
+{
+  "title": "Choosing a backpacking tent",
+  "comments": [
+    {
+      "author": "ana",
+      "text": "Great overview of tent weights",
+      "reactions": []
+    },
+    {
+      "author": "ben",
+      "text": "Which tent survives strong wind?",
+      "reactions": [
+        { "user": "ana", "emoji": "thumbs_up" },
+        { "user": "chen", "emoji": "heart" }
+      ]
+    }
+  ]
+}
+```
+{% include copy-curl.html %}
+
+下列請求會尋找提及 `wind` 的留言，並從 doc values 只傳回每個相符留言的 `author`：
+
+```json
+GET /articles/_search
+{
+  "_source": false,
+  "query": {
+    "nested": {
+      "path": "comments",
+      "query": {
+        "match": { "comments.text": "wind" }
+      },
+      "inner_hits": {
+        "_source": false,
+        "docvalue_fields": ["comments.author"]
+      }
+    }
+  }
+}
+```
+{% include copy-curl.html %}
+
+內部命中會包含 `fields` 物件，而非 `_source`：
+
+```json
+"inner_hits": {
+  "comments": {
+    "hits": {
+      "total": {
+        "value": 1,
+        "relation": "eq"
+      },
+      "max_score": 0.31506687,
+      "hits": [
+        {
+          "_index": "articles",
+          "_id": "1",
+          "_nested": {
+            "field": "comments",
+            "offset": 1
+          },
+          "_score": 0.31506687,
+          "fields": {
+            "comments.author": [
+              "ben"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
+```
+
+### 多層巢狀物件的內部命中
+
+如果巢狀物件包含其他巢狀物件，您可以在 `nested` 查詢中指定完整的點分隔路徑，以傳回任一層級的內部命中。下列請求會傳回使用者 `ana` 的回應反應，這些反應巢狀於 `comments.reactions` 中：
+
+```json
+GET /articles/_search
+{
+  "_source": false,
+  "query": {
+    "nested": {
+      "path": "comments.reactions",
+      "query": {
+        "term": { "comments.reactions.user": "ana" }
+      },
+      "inner_hits": {}
+    }
+  }
+}
+```
+{% include copy-curl.html %}
+
+內部命中會以完整路徑命名。每個內部命中的 `_nested` 物件會針對每個層級包含另一個 `_nested` 物件。在此回應中，該反應是第二則留言（`offset` `1`）的 `reactions` 陣列中的第一個物件（`offset` `0`）：
+
+```json
+{
+  "took": 4,
+  "timed_out": false,
+  "_shards": {
+    "total": 1,
+    "successful": 1,
+    "skipped": 0,
+    "failed": 0
+  },
+  "hits": {
+    "total": {
+      "value": 1,
+      "relation": "eq"
+    },
+    "max_score": 1,
+    "hits": [
+      {
+        "_index": "articles",
+        "_id": "1",
+        "_score": 1,
+        "inner_hits": {
+          "comments.reactions": {
+            "hits": {
+              "total": {
+                "value": 1,
+                "relation": "eq"
+              },
+              "max_score": 1,
+              "hits": [
+                {
+                  "_index": "articles",
+                  "_id": "1",
+                  "_nested": {
+                    "field": "comments",
+                    "offset": 1,
+                    "_nested": {
+                      "field": "reactions",
+                      "offset": 0
+                    }
+                  },
+                  "_score": 1,
+                  "_source": {
+                    "emoji": "thumbs_up",
+                    "user": "ana"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    ]
+  }
+}
+```
+
+## 父子物件的內部命中
+
+父聯結 (parent-join) 關係可讓您在同一索引內建立不同類型文件之間的關係。以下範例請求使用 `inner_hits` 搭配父子物件進行搜尋。
+
+1. 建立一個包含父聯結欄位的索引：
 
     ```json
     PUT /my_index
@@ -163,9 +364,9 @@ Parent-join 關係可讓您在同一個索引中，建立不同類型文件之�
       }
     }
     ```
-{% include copy-curl.html %}
+    {% include copy-curl.html %}
 
-2. 將資料編製索引：
+2. 為資料編製索引：
 
     ```json
     # Index a parent document
@@ -185,7 +386,7 @@ Parent-join 關係可讓您在同一個索引中，建立不同類型文件之�
       }
     }
     ```
-{% include copy-curl.html %}
+    {% include copy-curl.html %}
 
 3. 使用 `inner_hits` 進行搜尋：
 
@@ -205,9 +406,9 @@ Parent-join 關係可讓您在同一個索引中，建立不同類型文件之�
       }
     }
     ```
-{% include copy-curl.html %}
+    {% include copy-curl.html %}
 
-上述查詢會搜尋具有符合查詢條件之子文件的父文件（在此範例中，子文件包含詞彙 `"child"`）。查詢會在回應的 `inner_hits` 區段中傳回相符的子文件：
+前述查詢會搜尋擁有符合查詢條件之子文件的父文件（在此範例中，即包含詞元 `"child"` 的文件）。它會在回應的 `inner_hits` 區段中傳回符合條件的子文件：
 
 ```json
 {
@@ -258,9 +459,11 @@ Parent-join 關係可讓您在同一個索引中，建立不同類型文件之�
 }
 ```
 
-## 搭配 `inner_hits` 同時使用 parent-join 與巢狀物件
+您也可以在 [`has_parent`]({{site.url}}{{site.baseurl}}/query-dsl/joining/has-parent/) 查詢中指定 `inner_hits`。在此情況下，查詢會傳回子文件，而每個子文件的內部命中會包含其符合條件的父文件。
 
-下列範例示範如何搭配 `inner_hits` 同時使用 parent-join 與巢狀物件。
+## 同時搭配父子聯結與巢狀物件使用內部命中
+
+以下範例示範如何搭配 `inner_hits` 同時使用父子聯結與巢狀物件。
 
 1. 建立具有下列對應的索引：
 
@@ -289,7 +492,7 @@ Parent-join 關係可讓您在同一個索引中，建立不同類型文件之�
       }
     }
     ```
-{% include copy-curl.html %}
+    {% include copy-curl.html %}
 
 2. 將資料編製索引：
 
@@ -321,9 +524,9 @@ Parent-join 關係可讓您在同一個索引中，建立不同類型文件之�
       ]
     }
     ```
-{% include copy-curl.html %}
+    {% include copy-curl.html %}
 
-3. 使用 `inner_hits` 進行查詢：
+3. 使用 `inner_hits` 查詢：
 
     ```json
     GET /my_index/_search
@@ -349,9 +552,9 @@ Parent-join 關係可讓您在同一個索引中，建立不同類型文件之�
       }
     }
     ```
-{% include copy-curl.html %}
+    {% include copy-curl.html %}
 
-上述查詢會搜尋具有包含 John 所發表留言之子文件的父文件。指定 `inner_hits` 可確保傳回相符的子文件及其巢狀留言：
+前述查詢會搜尋具有子文件的父文件，且這些子文件包含 John 所留下的留言。指定 `inner_hits` 可確保傳回相符的子文件及其巢狀留言：
 
 ```json
 {
@@ -438,21 +641,22 @@ Parent-join 關係可讓您在同一個索引中，建立不同類型文件之�
 }
 ```
 
-<!-- vale off -->
-## inner_hits 參數
-<!-- vale on -->
-您可以在使用 `inner_hits` 進行搜尋時，傳遞下列額外參數，適用於巢狀物件與 parent-join 關聯：
+## Inner hits 參數
 
-* `from`：從 `inner_hits` 結果中開始擷取命中的偏移量。
-* `size`：要傳回的內部命中數量上限。
-* `sort`：內部命中的排序方式。
-* `name`：回應中內部命中的自訂名稱。這有助於在單一查詢中區分多個內部命中。
+下表列出您可以在 `inner_hits` 中為巢狀物件與 parent-join 關係指定的參數。
 
-<!-- vale off -->
-### 範例：搭配巢狀物件使用 inner_hits 參數
-<!-- vale on -->
+參數 | 說明
+:--- | :---
+`from` | 開始傳回 inner hits 的位移。預設為 `0`。
+`size` | 要傳回的 inner hits 數量上限。預設為 `3`。
+`sort` | inner hits 的排序方式。預設情況下，inner hits 依相關性分數排序。
+`name` | 回應中 inner hits 的自訂名稱。可用於區分單一查詢中的多個 inner hits。預設情況下，對於 `nested` 查詢，名稱為巢狀 `path`；對於 `has_child` 查詢，名稱為子關係名稱；對於 `has_parent` 查詢，名稱為父關係名稱。
 
-1. 使用下列對應建立索引：
+Inner hits 也接受您可為搜尋請求的命中結果指定的許多選項，包括 [`highlight`]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight/)、`explain`、[來源篩選]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/retrieve-specific-fields/#using-source-filtering)、[`script_fields`]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/retrieve-specific-fields/#using-scripted-fields)、[`docvalue_fields`]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/retrieve-specific-fields/#searching-with-doc-value-fields)、`version` 與 `seq_no_primary_term`。巢狀物件不會被指派序號，因此 OpenSearch 會拒絕 `nested` 查詢之 inner hits 中的 `seq_no_primary_term`。
+
+### 範例：搭配巢狀物件的 inner hits 參數
+
+1. 建立具有下列對應的索引：
 
     ```json
     PUT /products
@@ -501,7 +705,7 @@ Parent-join 關係可讓您在同一個索引中，建立不同類型文件之�
     ```
     {% include copy-curl.html %}
 
-3. 使用 `inner_hits` 進行查詢並提供額外參數：
+3. 使用 `inner_hits` 查詢並提供其他參數：
 
     ```json
     GET /products/_search
@@ -526,7 +730,7 @@ Parent-join 關係可讓您在同一個索引中，建立不同類型文件之�
     ```
     {% include copy-curl.html %}
 
-以下是預期結果：
+預期結果如下：
 
 ```json
 {
@@ -609,9 +813,7 @@ Parent-join 關係可讓您在同一個索引中，建立不同類型文件之�
 }
 ```
 
-<!-- vale off -->
-### 範例：搭配 parent-join 關聯使用 inner_hits 參數
-<!-- vale on -->
+### 範例：具有父子聯結關係的內部命中參數
 
 1. 使用下列對應建立索引：
 
@@ -782,33 +984,6 @@ Parent-join 關係可讓您在同一個索引中，建立不同類型文件之�
   }
 }
 ```
-<!-- vale off -->
-## 使用 inner_hits 的優點
-<!-- vale on -->
-* **詳細的查詢結果**
-
-    您可以使用 `inner_hits` 直接從父文件的搜尋結果中，取得符合條件的巢狀或子文件的詳細資訊。這對於了解相符項目的內容與細節特別有用，且無須執行額外的查詢。
-    
-    範例使用情境：在部落格文章索引中，您將留言作為巢狀物件。當搜尋包含特定留言的部落格文章時，您可以取得符合搜尋條件的相關留言，以及該文章的相關資訊。
-
-* **最佳化的效能**
-
-    若不使用 `inner_hits`，您可能需要執行多個查詢才能取得相關文件。使用 `inner_hits` 可將這些查詢合併為單一查詢，減少與 OpenSearch 伺服器之間的來回次數，並改善整體效能。
-
-    範例使用情境：在電子商務應用程式中，您將產品作為父文件，並將評論作為子文件。使用 `inner_hits` 的單一查詢即可取得產品及其相關評論，避免多個個別查詢。
-
-* **簡化的查詢邏輯**
-
-    您可以將父/子或巢狀文件邏輯合併在單一查詢中，以簡化應用程式程式碼並降低複雜度。將查詢邏輯集中於 OpenSearch 有助於確保程式碼更容易維護且更一致
-
-    範例使用情境：在人力銀行網站中，您將職缺作為父文件，並將應徵記錄作為巢狀或子文件。您可以透過單一查詢取得職缺及其特定應徵記錄，以簡化應用程式邏輯。
-
-* **情境相關性**
-
-    使用 `inner_hits` 可顯示哪些巢狀或子文件確實符合查詢條件，藉此提供情境相關性。對於結果相關性取決於文件中符合查詢之特定部分的應用程式而言，這至關重要。
-
-    範例使用情境：在客戶支援系統中，您將工單作為父文件，並將留言或更新作為巢狀或子文件。您可以判斷哪一則特定留言符合搜尋，以便更了解工單搜尋的情境。
-
 ## 後續步驟
 
 - 了解如何在 [nested]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/nested/) 或 [join]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/join/) 欄位上使用[聯結查詢]({{site.url}}{{site.baseurl}}/query-dsl/joining/)。

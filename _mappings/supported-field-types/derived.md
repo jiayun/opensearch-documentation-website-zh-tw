@@ -140,15 +140,15 @@ PUT /logs/_mapping
 
 ## 參數
 
-下表列出 `derived` 欄位類型接受的參數。所有參數都是動態的，不需重新編製文件索引即可修改。
+下表列出 `derived` 欄位類型接受的參數。所有參數都是動態的，無需重新為文件編製索引即可修改。
 
-| 參數 | 必要/選用 | 說明 |
+| 參數 | 必要/選用 | 說明 | 
 | :--- | :--- | :--- |
-| `type` | 必要 | 衍生欄位的類型。支援的類型包括 `boolean`、`date`、`geo_point`、`ip`、`keyword`、`text`、`long`、`double`、`float` 和 `object`。 |
-| `script` | 必要 | 與衍生欄位相關聯的指令碼。指令碼發出的任何值都必須使用 `emit()` 發出。發出值的類型必須符合衍生欄位的 `type`。如果已啟用 `doc_values` 和 `_source` 欄位，指令碼可以存取這兩個欄位。欄位的 doc value 可使用 `doc['field_name'].value` 存取，而來源可使用 `params._source["field_name"]` 存取。 |
-| `format` | 選用 | 用於剖析日期的格式。僅適用於 `date` 欄位。有效值為 `strict_date_time_no_millis`、`strict_date_optional_time` 和 `epoch_millis`。如需詳細資訊，請參閱[格式]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/date/#formats)。|
-| `ignore_malformed`| 選用 | 一個布林值，指定在衍生欄位上執行查詢時是否忽略格式錯誤的值。預設值為 `false` (遇到格式錯誤的值時擲回例外狀況)。 |
-| `prefilter_field` | 選用 | 一個已編製索引的文字欄位，用於提升衍生欄位的效能。指定現有的已編製索引欄位，以便在篩選衍生欄位之前先對其進行篩選。如需詳細資訊，請參閱[預先篩選欄位](#prefilter-field)。 |
+| `type` | 必要 | 衍生欄位的類型。支援的類型為 `boolean`、`date`、`geo_point`、`ip`、`keyword`、`text`、`long`、`double`、`float` 和 `object`。 |
+| `script` | 必要 | 與衍生欄位關聯的指令碼。指令碼發出的任何值都必須使用 `emit()` 發出。發出值的類型必須符合衍生欄位的 `type`。若已啟用 `doc_values` 與 `_source` 欄位，指令碼可存取這兩者。欄位的 doc value 可透過 `doc['field_name'].value` 存取，來源則可透過 `params._source["field_name"]` 存取。 |
+| `format` | 選用 | 用於剖析日期的格式。僅適用於 `date` 欄位。有效值為 `strict_date_time_no_millis`、`strict_date_optional_time` 和 `epoch_millis`。如需更多資訊，請參閱[格式]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/date/#formats)。如需更多資訊，請參閱[格式]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/format/)。|
+| `ignore_malformed`| 選用 | 布林值，指定在衍生欄位上執行查詢時是否忽略格式錯誤的值。預設值為 `false`（遇到格式錯誤的值時擲回例外狀況）。如需更多資訊，請參閱[忽略格式錯誤]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/ignore-malformed/)。 |
+| `prefilter_field` | 選用 | 提供用來提升衍生欄位效能的已編製索引文字欄位。指定一個現有的已編製索引欄位，在以衍生欄位篩選之前先依此欄位篩選。如需更多資訊，請參閱[預先篩選欄位](#prefilter-field)。 |
 
 ## 在指令碼中發出值
 

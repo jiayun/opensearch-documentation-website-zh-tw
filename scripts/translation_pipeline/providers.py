@@ -630,8 +630,9 @@ class ProviderPool:
                 targets = [n for n, (_, bucket) in config.AGY_MODELS.items()
                            if bucket == group and n in self.providers]
             for target in targets:
-                if target not in self.disabled:
+                if target not in self.disabled or self.disabled[target] == TRANSPORT:
                     self.disabled[target] = error.kind
+                    self.disabled_until.pop(target, None)
                     if error.kind == QUOTA:
                         until = quota_reset_timestamp(error.detail, self._clock())
                         # A failed meter read must block inference, but is not
@@ -679,13 +680,14 @@ class ProviderPool:
     def call(self, chain: list[str], system: str, prompt: str, purpose: str) -> ModelReply:
         """Call the first usable provider in chain.
 
-        Switches provider only on quota/auth/unavailable. Transport failures
-        are retried TRANSPORT_RETRIES times on the same provider and then
-        re-raised. INVALID/TRUNCATED replies are re-raised to the caller.
+        Switches provider on quota/auth/unavailable. HTTP gateway/service
+        failures briefly back off that provider and try the next one. Other
+        transport failures retry TRANSPORT_RETRIES times, then re-raise.
+        INVALID/TRUNCATED replies are re-raised to the caller.
         """
         for name in self._order_chain(chain, purpose, len(prompt)):
             if self.stopped.is_set():
-                raise NoProviderAvailable("run stopped after a quota failure")
+                raise NoProviderAvailable("run stopped")
             if name not in self.providers or self.is_disabled(name):
                 continue
             provider = self.providers[name]
@@ -694,7 +696,7 @@ class ProviderPool:
                 # Another worker can discover the quota while this one sleeps
                 # after a transport failure. Do not retry a disabled backend.
                 if self.stopped.is_set():
-                    raise NoProviderAvailable("run stopped after a quota failure")
+                    raise NoProviderAvailable("run stopped")
                 if self.is_disabled(name):
                     break
                 started = time.monotonic()
@@ -713,6 +715,20 @@ class ProviderPool:
                               seconds=round(time.monotonic() - started, 1))
                     if exc.kind in SWITCH_KINDS:
                         self.disable(name, exc)
+                        break
+                    if exc.kind == TRANSPORT and re.search(r"\b(?:502|503|504)\b", exc.detail):
+                        # A busy service is not an exhausted account. Avoid
+                        # repeatedly queueing pages behind it, without erasing
+                        # a quota/auth failure discovered by another worker.
+                        with self._lock:
+                            backed_off = name not in self.disabled
+                            if backed_off:
+                                until = self._clock() + 300
+                                self.disabled[name] = TRANSPORT
+                                self.disabled_until[name] = until
+                        if backed_off:
+                            self._log("provider_backoff", provider=name, kind=TRANSPORT,
+                                      reset_at=until, detail=exc.detail)
                         break
                     if exc.kind == TRANSPORT and tries < config.TRANSPORT_RETRIES:
                         tries += 1

@@ -24,7 +24,7 @@ redirect_from:
 
 每個政策都有儲存政策狀態的相關中繼資料。快照管理會將 SM 政策與中繼資料儲存在系統索引中，並從系統索引讀取。因此，快照管理依賴 OpenSearch 叢集的索引編製與搜尋功能。政策的中繼資料只保留最近一次建立與刪除的資訊。中繼資料會在每次執行排程工作前讀取，讓 SM 能從上一個工作的狀態繼續執行。您可以使用 [explain API]({{site.url}}{{site.baseurl}}/opensearch/snapshots/sm-api#explain) 檢視中繼資料。
 
-SM 排程是自訂的 [cron]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/#cron-expressions) 運算式。它由兩部分組成：建立排程與刪除排程。您必須設定指定快照建立頻率與時間的建立排程。此外，您也可以選擇性地設定另一個用於刪除快照的排程。
+SM 排程是自訂的 [cron]({{site.url}}{{site.baseurl}}/api-reference/cron-expressions/) 運算式。它由兩部分組成：建立排程與刪除排程。您必須設定指定快照建立頻率與時間的建立排程。此外，您也可以選擇性地設定另一個用於刪除快照的排程。
 
 SM 組態包含快照的索引與儲存庫，並支援您透過 API [建立快照]({{site.url}}{{site.baseurl}}/opensearch/snapshots/snapshot-restore#take-snapshots)時可定義的所有參數。此外，您還可以指定快照名稱中所用日期的格式與時區。
 

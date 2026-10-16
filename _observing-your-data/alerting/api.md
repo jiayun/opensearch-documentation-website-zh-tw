@@ -253,7 +253,7 @@ POST _plugins/_alerting/monitors
 </details>
 
 
-若要指定時區，您可以在請求的 `schedule` 區段中加入含有時區名稱的 [cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/#cron-expressions)。下列範例會建立一個監視器，於每月第一天太平洋時間下午 12:10 執行。
+若要指定時區，您可以在請求的 `schedule` 區段中加入含有時區名稱的 [cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/cron-expressions/)。下列範例會建立一個監視器，於每月第一天太平洋時間下午 12:10 執行。
 
 #### 請求範例
 ```json
@@ -1898,9 +1898,9 @@ PUT _plugins/_alerting/comments/{comment-id}
 
 </details>
 
-## 搜尋評論
+## 搜尋註解
 
-使用下列請求來查詢並擷取與警示相關聯的現有評論。
+使用下列請求來查詢並擷取與警示相關聯的現有註解。
 
 #### 請求範例
 ```json
@@ -1978,9 +1978,9 @@ GET _plugins/_alerting/comments/_search
 
 </details>
 
-## 刪除評論
+## 刪除註解
 
-使用下列請求來移除與警示相關聯的特定評論。
+使用下列請求來移除與警示相關聯的特定註解。
 
 #### 請求範例
 ```json

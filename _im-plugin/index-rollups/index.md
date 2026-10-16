@@ -31,7 +31,7 @@ redirect_from:
 
 請謹慎選擇分組欄位。粒度過高的欄位所產生的彙整文件數量幾乎與來源文件一樣多，節省的空間有限。欄位的順序也很重要：先依桶數最少的欄位分組。例如，對於依城市劃分的人口統計資料集，應先依城市分組，並將人口統計資料儲存為指標。
 
-作業會依固定間隔或您以 [cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/#cron-expressions) 定義的排程執行，每次執行會處理一定數量的頁面，以在執行時間與記憶體之間取得平衡。請加入執行延遲，讓匯入作業有時間完成：延遲 10 分鐘時，彙整下午 1 點至 2 點這一小時的執行會在下午 2:10 開始。將作業標記為連續，即可在資料匯入時即進行彙整，而非一次性處理。
+作業會依固定間隔或您以 [cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/cron-expressions/) 定義的排程執行，每次執行會處理一定數量的頁面，以在執行時間與記憶體之間取得平衡。請加入執行延遲，讓匯入作業有時間完成：延遲 10 分鐘時，彙整下午 1 點至 2 點這一小時的執行會在下午 2:10 開始。將作業標記為連續，即可在資料匯入時即進行彙整，而非一次性處理。
 
 若要建立作業，請使用 [Index rollups API]({{site.url}}{{site.baseurl}}/im-plugin/index-rollups/rollup-api/) 或[建立彙整作業](#creating-a-rollup-job)中的步驟。
 
@@ -1326,7 +1326,7 @@ GET rollup_ndx-log-*/_search
 
    1. 若要依排程執行作業，而非僅在原則呼叫時執行，請保持選取 **Enable job by default**。
    1. 若要在匯入資料時進行彙整，請在 **Continuous** 中選取 **Yes**。
-   1. 在 **Rollup execution frequency** 中，選取 **Define by fixed interval** 並輸入 **Rollup interval**，或選取 **Define by cron expression** 並輸入 cron 運算式及時區。如需運算式語法，請參閱 [Cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/#cron-expressions)。
+   1. 在 **Rollup execution frequency** 中，選取 **Define by fixed interval** 並輸入 **Rollup interval**，或選取 **Define by cron expression** 並輸入 cron 運算式及時區。如需運算式語法，請參閱 [Cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/cron-expressions/)。
    1. 在 **Page per execution** 中，輸入每次執行要處理的頁數。數值越大，執行速度越快，使用的記憶體也越多。
    1. 視需要在 **Execution delay** 中，輸入作業執行前等待匯入完成的時間。
 

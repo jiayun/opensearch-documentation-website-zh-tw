@@ -45,11 +45,11 @@ PUT chess_store
 
 | 參數   | 說明   |
 | :--- | :--- |
-| `analyzer` | 指定輸入文字在索引時使用的分析器。預設為 `simple`。請參閱 [索引分析器]({{site.url}}{{site.baseurl}}/analyzers/index-analyzers/)。  |
-| `search_analyzer` | 定義搜尋時使用的分析器。預設為 `analyzer` 的值。請參閱 [搜尋分析器]({{site.url}}{{site.baseurl}}/analyzers/search-analyzers/)。 |
-| `preserve_separators` | 若為 `true`（預設），會保留空格或標點符號等分隔符。若設為 `false`，則允許 `queensg` 之類的查詢比對「Queen's Gambit」這類建議。    |
-| `preserve_position_increments` | 若為 `true`（預設），會為分析後的詞元維持位置增量。將此設為 `false` 時，輸入 `s` 可以比對出「The Sicilian Defense」這類建議，因為它會略過「The」等停用詞。或者，您也可以在不變更分析器的情況下，將「Sicilian Defense」與「The Sicilian Defense」作為不同輸入分別編製索引。 |
-| `max_input_length`             | 限制每個輸入字串的長度。預設為 `50` 個 UTF-16 碼位。此限制僅在索引時生效，以防止過大的輸入使底層資料結構膨脹。大多數前綴完成項在此限制內皆可正常運作。可動態更新。 |
+| `analyzer` | 指定輸入文字在索引時使用的分析器。預設為 `simple`。請參閱[索引分析器]({{site.url}}{{site.baseurl}}/analyzers/index-analyzers/)。更多資訊請參閱[分析器]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/analyzer/)。 |
+| `search_analyzer` | 定義搜尋時使用的分析器。預設為 `analyzer` 的值。請參閱[搜尋分析器]({{site.url}}{{site.baseurl}}/analyzers/search-analyzers/)。更多資訊請參閱[搜尋分析器]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/search-analyzer/)。 |
+| `preserve_separators` | 若為 `true`（預設），會保留空格或標點符號等分隔符。若設為 `false`，則允許 `queensg` 這類查詢比對到「Queen's Gambit」這類建議。    |
+| `preserve_position_increments` | 若為 `true`（預設），會保留分析後詞元的位置增量。將此設為 `false` 時，輸入 `s` 可以比對到「The Sicilian Defense」這類建議，因為它會跳過「The」這類停用詞。或者，您也可以將「Sicilian Defense」和「The Sicilian Defense」作為個別輸入編製索引，而不變更分析器。 |
+| `max_input_length`             | 限制每個輸入字串的長度。預設為 `50` 個 UTF-16 字碼指標。此限制僅在索引時生效，以防止過大的輸入使底層資料結構膨脹。大多數前綴補全在此限制內都能正常運作。可動態更新。 |
 
 ### 對應範例
 
@@ -320,9 +320,9 @@ GET chess_store/_search
 `size` | 指定傳回建議數量上限的整數。選用。預設為 5。
 `skip_duplicates` | 指定是否略過重複建議的布林值。選用。預設為 `false`。
 
-## 模糊 completion 查詢
+## 模糊完成查詢
 
-若要允許模糊比對，您可以為 completion 查詢指定 `fuzziness` 參數。如此一來，即使使用者輸入錯誤的搜尋詞，completion 查詢仍會傳回結果。此外，比對查詢的前綴越長，文件的分數就越高。
+若要允許模糊比對，您可以為完成查詢指定 `fuzziness` 參數。在此情況下，即使使用者拼錯搜尋詞，完成查詢仍會傳回結果。此外，符合查詢的前置字串越長，文件的分數越高。
 
 ```json
 GET chess_store/_search
@@ -343,18 +343,18 @@ GET chess_store/_search
 ```
 {% include copy-curl.html %}
 
-若要使用所有預設模糊選項，請指定 `"fuzzy": {}` 或 `"fuzzy": true`。
+若要使用所有預設的模糊選項，請指定 `"fuzzy": {}` 或 `"fuzzy": true`。
 {: .tip}
 
-下表列出 `fuzzy` completion suggester 查詢接受的參數。所有參數皆為選用。
+下表列出 `fuzzy` 完成建議器查詢可接受的參數。所有參數皆為選用。
 
 參數 | 說明 
 :--- | :--- 
-`fuzziness` | 模糊度可設為下列其中之一：<br> 1. 指定此次編輯允許的最大 [Damerau–Levenshtein 距離](https://en.wikipedia.org/wiki/Damerau–Levenshtein_distance) 的整數。<br> 2. `AUTO`：0–2 個字元的字串必須完全相符，3–5 個字元的字串允許 1 次編輯，超過 5 個字元的字串允許 2 次編輯。<br> 預設為 `AUTO`。
-`min_length` | 指定輸入必須達到的最小長度才會開始傳回建議的整數。若搜尋詞短於 `min_length`，則不會傳回任何建議。預設為 3。
-`prefix_length` | 指定相符前綴必須達到的最小長度才會開始傳回建議的整數。若 `prefix_length` 的前綴未相符，但搜尋詞仍在 Damerau–Levenshtein 距離內，則不會傳回任何建議。預設為 1。
-`transpositions` | 指定是否將相鄰字元互換（transposition）計為一次編輯而非兩次的布林值。範例：建議的 `input` 參數為 `abcde`，而 `fuzziness` 為 1。若 `transpositions` 設為 `true`，`abdce` 會相符；但若 `transpositions` 設為 `false`，`abdce` 則不會相符。預設為 `true`。
-`unicode_aware` | 指定在測量編輯距離、互換與長度時是否使用 Unicode 碼位的布林值。若 `unicode_aware` 設為 `true`，測量速度會較慢。預設為 `false`，此時距離以位元組為單位測量。
+`fuzziness` | 比對前置字串時允許的最大編輯次數，指定為 `0`、`1`、`2`、`AUTO` 或 `AUTO:<low>,<high>`。預設為 `AUTO`。如需更多資訊，請參閱 [Fuzziness]({{site.url}}{{site.baseurl}}/query-dsl/fuzziness/)。
+`min_length` | 整數，指定開始傳回建議時輸入必須達到的最小長度。若搜尋詞短於 `min_length`，則不會傳回任何建議。預設為 3。
+`prefix_length` | 整數，指定開始傳回建議時符合的前置字串必須達到的最小長度。若 `prefix_length` 的前置字串不相符，但搜尋詞仍在 Damerau–Levenshtein 距離內，則不會傳回任何建議。預設為 1。
+`transpositions` | 布林值，指定是否將換位（相鄰字元互換）計為一次編輯而非兩次。範例：建議的 `input` 參數為 `abcde`，且 `fuzziness` 為 1。若 `transpositions` 設為 `true`，`abdce` 會相符，但若 `transpositions` 設為 `false`，`abdce` 則不會相符。預設為 `true`。
+`unicode_aware` | 布林值，指定在測量編輯距離、換位與長度時是否使用 Unicode 碼點。若 `unicode_aware` 設為 `true`，測量速度會較慢。預設為 `false`，在此情況下距離以位元組為單位測量。
 
 ## 正規表示式查詢
 

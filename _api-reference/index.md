@@ -138,8 +138,10 @@ OpenSearch 提供下列 REST API。
 
 ## 參考
 
-下列頁面提供額外的 API 參考資訊：
+下列頁面提供其他 API 參考資訊：
 
 - [通用 REST 參數]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/)
 - [支援的單位]({{site.url}}{{site.baseurl}}/api-reference/units/)
+- [索引名稱語法]({{site.url}}{{site.baseurl}}/api-reference/index-name-syntax/)
+- [Cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/cron-expressions/)
 - [常用 API]({{site.url}}{{site.baseurl}}/api-reference/popular-api/)

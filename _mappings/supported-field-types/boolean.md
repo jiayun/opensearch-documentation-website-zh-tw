@@ -73,14 +73,14 @@ GET testindex/_search
 
 下表列出布林值欄位類型接受的參數。所有參數皆為選用。
 
-參數 | 說明 
-:--- | :--- 
-`boost` | 一個浮點數值，指定此欄位對相關性分數的權重。大於 1.0 的值會提高欄位的相關性。介於 0.0 和 1.0 之間的值會降低欄位的相關性。預設為 1.0。可動態更新。
-`doc_values` | 一個布林值，指定是否應將欄位儲存在磁碟上，以便用於彙總、排序或指令碼。預設為 `true`。
-`index` | 一個布林值，指定欄位是否應可供搜尋。預設為 `true`。對於使用可插拔資料格式的索引，預設為 `false`，且不支援 `true`。如需更多資訊，請參閱[可插拔資料格式索引]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/index-parameter/#pluggable-data-format-indexes)。
-`meta` | 接受此欄位的中繼資料。
-[`null_value`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/index#null-value) | 用來取代 `null` 的值。必須與欄位類型相同。若未指定此參數，當欄位值為 `null` 時，該欄位會被視為缺少。預設為 `null`。
-`store` | 一個布林值，指定是否應儲存欄位值，且可與 `_source` 欄位分開擷取。預設為 `false`。 
+參數 | 說明
+:--- | :---
+`boost` | 一個浮點數值，用來指定此欄位對相關性分數的權重。大於 1.0 的值會提高此欄位的相關性。介於 0.0 與 1.0 之間的值會降低此欄位的相關性。預設值為 1.0。可動態更新。如需更多資訊，請參閱 [Boost]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/boost/)。
+`doc_values` | 一個布林值，用來指定此欄位是否應儲存在磁碟上，以便用於彙總、排序或指令碼。預設值為 `true`。如需更多資訊，請參閱 [Doc values]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/doc-values/)。
+`index` | 一個布林值，用來指定此欄位是否可供搜尋。預設值為 `true`。對於使用可插拔資料格式的索引，預設值為 `false`，且不支援 `true`。如需更多資訊，請參閱[可插拔資料格式索引]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/index-parameter/#pluggable-data-format-indexes)。
+`meta` | 接受此欄位的中繼資料。如需更多資訊，請參閱 [Meta]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/meta/)。
+[`null_value`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/index#null-value) | 用來取代 `null` 的值。必須與此欄位具有相同的類型。若未指定此參數，當此欄位的值為 `null` 時，會將其視為缺少值。預設值為 `null`。
+`store` | 一個布林值，用來指定此欄位值是否應儲存，並可與 `_source` 欄位分開擷取。預設值為 `false`。如需更多資訊，請參閱 [Store]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/store/)。
 
 ## 彙總和指令碼中的布林值
 

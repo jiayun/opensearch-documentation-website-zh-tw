@@ -212,19 +212,19 @@ GET _search
 ```
 {% include copy-curl.html %}
 
-`<field>` 接受下列參數。除了 `query` 以外的所有參數都是選用的。
+`<field>` 接受下列參數。除了 `query` 之外，所有參數都是選用的。
 
 參數 | 資料類型 | 說明
 :--- | :--- | :---
 `query` | 字串 | 用於搜尋的文字、數字、布林值或日期。必要。
-`analyzer` | 字串 | 用於將查詢字串文字斷詞的[分析器]({{site.url}}{{site.baseurl}}/analyzers/index/)。預設為針對 `default_field` 指定的索引時間分析器。若未針對 `default_field` 指定分析器，則 `analyzer` 是索引的預設分析器。如需 `index.query.default_field` 的詳細資訊，請參閱[動態索引設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/#dynamic-index-settings)。
-`fuzziness` | `AUTO`、`0` 或正整數 | 在判斷某個詞元是否符合某個值時，將一個單字變更為另一個單字所需的字元編輯次數（插入、刪除、取代）。例如，`wined` 與 `wind` 之間的距離為 1。預設值 `AUTO` 會根據搜尋詞元的長度動態選取編輯距離。您可以使用 `AUTO:[low],[high]` 語法自訂臨界值，其中 `low` 與 `high` 定義字元長度界限。省略時，OpenSearch 會使用 `AUTO:3,6` 作為預設值，套用下列規則：<br>- 包含 0--2 個字元的詞元：需要完全相符（0 次編輯）。<br>- 包含 3--5 個字元的詞元：最多允許 1 次編輯。<br>- 包含 6 個以上字元的詞元：最多允許 2 次編輯。<br>例如，`AUTO:4,7` 要求包含 0--3 個字元的詞元完全相符，包含 4--6 個字元的詞元最多允許 1 次編輯，而包含 7 個以上字元的詞元最多允許 2 次編輯。在大多數情境下，建議使用 `AUTO`。
-`fuzzy_rewrite` | 字串 | 決定 OpenSearch 如何重寫查詢。有效值為 `constant_score`、`scoring_boolean`、`constant_score_boolean`、`top_terms_N`、`top_terms_boost_N` 及 `top_terms_blended_freqs_N`。若 `fuzziness` 參數不是 `0`，查詢預設會使用 `top_terms_blended_freqs_${max_expansions}` 的 `fuzzy_rewrite` 方法。預設值為 `constant_score`。 
-`fuzzy_transpositions` | 布林值 | 將 `fuzzy_transpositions` 設為 `true`（預設值）會將相鄰字元的調換加入 `fuzziness` 選項的插入、刪除及取代作業中。例如，若 `fuzzy_transpositions` 為 true，則 `wind` 與 `wnid` 之間的距離為 1（調換「n」與「i」）；若為 false，則距離為 2（刪除「n」、插入「n」）。若 `fuzzy_transpositions` 為 false，則 `rewind` 與 `wnid` 與 `wind` 的距離相同（2），儘管以更貼近人類的觀點來看，`wnid` 是明顯的打字錯誤。對大多數使用情境而言，預設值是很好的選擇。
-`max_expansions` | 正整數 |  查詢可擴充的詞元數上限。模糊查詢會「擴充」為多個符合 `fuzziness` 中所指定距離的相符詞元。接著 OpenSearch 會嘗試比對這些詞元。預設值為 `50`。
-`minimum_should_match` | 正或負整數、正或負百分比、組合 | 若查詢字串包含多個搜尋詞元，且您使用 `or` 運算子，此參數為文件被視為相符所必須符合的詞元數。例如，若 `minimum_should_match` 為 2，則 `wind often rising` 不符合 `The Wind Rises.`；若 `minimum_should_match` 為 `1`，則符合。如需詳細資訊，請參閱[最低相符條件]({{site.url}}{{site.baseurl}}/query-dsl/minimum-should-match/)。
-`operator` | 字串 | 若查詢字串包含多個搜尋詞元，此參數決定文件必須所有詞元都符合（`and`）或只要有一個詞元符合（`or`）才視為相符。有效值為 `or` 與 `and`。預設值為 `or`。
-`prefix_length` | 非負整數 | 在模糊比對中不列入考量的前置字元數。預設值為 `0`。
+`analyzer` | 字串 | 用來將查詢字串文字斷詞的[分析器]({{site.url}}{{site.baseurl}}/analyzers/index/)。預設是為 `default_field` 指定的索引時分析器。如果沒有為 `default_field` 指定分析器，則 `analyzer` 是索引的預設分析器。如需 `index.query.default_field` 的詳細資訊，請參閱[動態索引設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/#dynamic-index-settings)。
+`fuzziness` | `AUTO`、`0` 或正整數 | 比對每個詞元（最後一個詞元除外）時允許的最大編輯次數，指定為 `0`、`1`、`2`、`AUTO` 或 `AUTO:<low>,<high>`。若未指定，詞元必須完全相符。如需詳細資訊，請參閱[模糊比對]({{site.url}}{{site.baseurl}}/query-dsl/fuzziness/)。
+`fuzzy_rewrite` | 字串 | 決定 OpenSearch 如何重寫查詢。有效值為 `constant_score`、`scoring_boolean`、`constant_score_boolean`、`top_terms_N`、`top_terms_boost_N` 及 `top_terms_blended_freqs_N`。如果 `fuzziness` 參數不是 `0`，查詢預設會使用 `top_terms_blended_freqs_${max_expansions}` 的 `fuzzy_rewrite` 方法。預設為 `constant_score`。
+`fuzzy_transpositions` | 布林值 | 將 `fuzzy_transpositions` 設為 `true`（預設）會將相鄰字元互換加入 `fuzziness` 選項的插入、刪除及取代操作。例如，如果 `fuzzy_transpositions` 為 true，`wind` 與 `wnid` 之間的距離為 1（互換「n」和「i」）；如果為 false，則距離為 2（刪除「n」、插入「n」）。如果 `fuzzy_transpositions` 為 false，則 `rewind` 和 `wnid` 與 `wind` 的距離相同（2），儘管以人為中心的觀點認為 `wnid` 是明顯的打字錯誤。預設值對大多數使用案例而言是很好的選擇。
+`max_expansions` | 正整數 | 查詢可擴充至的最大詞元數。模糊查詢會「擴充至」一定數量的相符詞元，這些詞元位於 `fuzziness` 中指定的距離內。接著 OpenSearch 會嘗試比對這些詞元。預設為 `50`。
+`minimum_should_match` | 正或負整數、正或負百分比、組合 | 如果查詢字串包含多個搜尋詞元，且您使用 `or` 運算子，則文件必須符合的詞元數才會被視為相符。例如，如果 `minimum_should_match` 為 2，則 `wind often rising` 不符合 `The Wind Rises.`。如果 `minimum_should_match` 為 `1`，則符合。如需詳細資訊，請參閱[最少應符合數]({{site.url}}{{site.baseurl}}/query-dsl/minimum-should-match/)。
+`operator` | 字串 | 如果查詢字串包含多個搜尋詞元，文件必須所有詞元都符合（`and`）或只要有一個詞元符合（`or`）才被視為相符。有效值為 `or` 及 `and`。預設為 `or`。
+`prefix_length` | 非負整數 | 在模糊比對中不列入考量的前置字元數。預設為 `0`。
 
-`fuzziness`、`fuzzy_transpositions`、`fuzzy_rewrite`、`max_expansions` 及 `prefix_length` 參數可套用至為除了最後一個詞元以外的所有詞元所建構的詞元子查詢。它們對為最後一個詞元所建構的前綴查詢沒有任何影響。
+`fuzziness`、`fuzzy_transpositions`、`fuzzy_rewrite`、`max_expansions` 及 `prefix_length` 參數可套用至為所有詞元（最後一個詞元除外）建構的詞元子查詢。它們對為最後一個詞元建構的前綴查詢沒有任何影響。
 {: .note}

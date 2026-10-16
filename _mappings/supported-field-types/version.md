@@ -279,14 +279,14 @@ GET test_versions/_search
 
 ## 參數
 
-下表列出版本欄位類型接受的參數。所有參數皆為選用。
+下表列出 version 欄位類型可接受的參數。所有參數皆為選用。
 
-參數 | 說明 
-:--- | :--- 
-`doc_values` | 布林值，指定是否應將欄位儲存在磁碟上，以便用於彙總、排序或指令碼。預設為 `true`。
-`index` | 布林值，指定欄位是否可供搜尋。預設為 `true`。
-`meta` | 接受此欄位的中繼資料。
-`store` | 布林值，指定是否應儲存欄位值，並可獨立於 `_source` 欄位擷取。預設為 `false`。
+參數 | 說明
+:--- | :---
+`doc_values` | 布林值，指定是否應將欄位儲存在磁碟上，以便用於彙總、排序或指令碼。預設為 `true`。如需更多資訊，請參閱 [Doc values]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/doc-values/)。
+`index` | 布林值，指定欄位是否可供搜尋。預設為 `true`。如需更多資訊，請參閱 [Index]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/index-parameter/)。
+`meta` | 接受此欄位的中繼資料。如需更多資訊，請參閱 [Meta]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/meta/)。
+`store` | 布林值，指定是否應儲存欄位值，且可與 `_source` 欄位分開擷取。預設為 `false`。如需更多資訊，請參閱 [Store]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/store/)。
 
 ## 限制
 

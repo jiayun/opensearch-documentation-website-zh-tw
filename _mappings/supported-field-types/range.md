@@ -104,11 +104,11 @@ PUT testindex/_doc/2
 
 ## 查詢範圍欄位
 
-您可以使用 [Term query](#term-query) 或 [Range query](#range-query) 來搜尋範圍欄位中的值。 
+您可以使用[詞項查詢](#term-query)或[範圍查詢](#range-query)來搜尋範圍欄位中的值。 
 
-### Term query
+### 詞項查詢
 
-Term query 會接受一個值，並比對所有該值落在範圍內的範圍欄位。
+詞項查詢會接受一個值，並比對所有該值落在範圍內的範圍欄位。
 
 下列查詢會傳回文件 1，因為 3.5 落在範圍 [1.0, 4.0] 內：
 
@@ -126,11 +126,11 @@ GET testindex/_search
 ```
 {% include copy-curl.html %}
 
-### Range query
+### 範圍查詢
 
-對範圍欄位執行 Range query 會傳回落在該範圍內的文件。 
+對範圍欄位執行範圍查詢會傳回落在該範圍內的文件。 
 
-查詢 2019 年的所有畢業日期，並以 "MM/dd/yyyy" 格式提供日期範圍：
+查詢 2019 年的所有畢業日期，並以「MM/dd/yyyy」格式提供日期範圍：
 
 ```json
 GET testindex1/_search
@@ -149,7 +149,7 @@ GET testindex1/_search
 ```
 {% include copy-curl.html %}
 
-上述查詢對於 `within` 與 `intersects` 關係會傳回文件 1，但對於 `contains` 關係則不會傳回。如需關係類型的詳細資訊，請參閱 [範圍查詢參數]({{site.url}}{{site.baseurl}}/query-dsl/term/range#parameters)。
+上述查詢對於 `within` 與 `intersects` 關係會傳回文件 1，但對於 `contains` 關係則不會傳回。如需關係類型的詳細資訊，請參閱[範圍查詢參數]({{site.url}}{{site.baseurl}}/query-dsl/term/range#parameters)。
 
 ## 參數
 
@@ -157,8 +157,8 @@ GET testindex1/_search
 
 參數 | 說明 
 :--- | :--- 
-`boost` | 一個浮點數值，指定此欄位對相關性分數的權重。高於 1.0 的值會提高欄位的相關性；介於 0.0 與 1.0 之間的值會降低欄位的相關性。預設值為 1.0。可動態更新。
-`coerce` | 一個布林值，表示要將整數值的小數部分截斷，並將字串轉換為數值。預設值為 `true`。可動態更新。
-`doc_values` | 一個布林值，指定是否應將欄位儲存在磁碟上，以便用於彙總、排序或指令碼。預設值為 `true`。
-`index` | 一個布林值，指定欄位是否應可被搜尋。預設值為 `true`。 
-`store` | 一個布林值，指定是否應儲存欄位值，並可從 `_source` 欄位另外擷取。預設值為 `false`。 
+`boost` | 一個浮點數值，用來指定此欄位對相關性分數的權重。大於 1.0 的值會提高欄位的相關性。介於 0.0 與 1.0 之間的值會降低欄位的相關性。預設值為 1.0。可動態更新。如需更多資訊，請參閱 [Boost]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/boost/)。
+`coerce` | 一個布林值，用來指示是否將整數值的小數部分截斷，以及是否將字串轉換為數值。預設值為 `true`。可動態更新。如需更多資訊，請參閱 [Coerce]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/coerce/)。
+`doc_values` | 一個布林值，用來指定是否應將欄位儲存在磁碟上，以便用於彙總、排序或指令碼。預設值為 `true`。如需更多資訊，請參閱 [Doc values]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/doc-values/)。
+`index` | 一個布林值，用來指定欄位是否可供搜尋。預設值為 `true`。如需更多資訊，請參閱 [Index]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/index-parameter/)。
+`store` | 一個布林值，用來指定是否應儲存欄位值，且可與 `_source` 欄位分開擷取。預設值為 `false`。如需更多資訊，請參閱 [Store]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/store/)。

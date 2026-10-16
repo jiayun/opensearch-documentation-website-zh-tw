@@ -107,7 +107,7 @@ PUT _plugins/_rollup/jobs/{rollup_id}?if_seq_no=1&if_primary_term=1
 `source_index` | 彙總任務讀取的索引。不可包含萬用字元。 | 字串 | 是
 `target_index` | 指定彙總資料匯入的目標索引。您可以建立新的目標索引，或使用現有索引。目標索引不可混合原始資料與彙總資料。此欄位支援動態產生的索引名稱，例如 {% raw %}`rollup_{{ctx.source_index}}`{% endraw %}，其中 `source_index` 不可包含萬用字元。 | 字串 | 是
 `target_index_settings` | 指定要在彙總期間建立的目標索引上套用的[索引設定]({{site.url}}{{site.baseurl}}/im-plugin/index-settings/)。 | 物件 | 否
-`schedule` | 索引彙總任務的排程，可以是間隔或 [cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/#cron-expressions)。 | 物件 | 是
+`schedule` | 索引彙總任務的排程，可以是間隔或 [cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/cron-expressions/)。 | 物件 | 是
 `schedule.interval` | 指定彙總任務的執行頻率。 | 物件 | 否
 `schedule.interval.start_time` | 間隔的開始時間。建立任務時若省略此項，OpenSearch 會將其設為目前時間。更新任務時為必要。 | 時間戳記 | 否
 `schedule.interval.period` | 定義間隔週期。 | 字串 | 是

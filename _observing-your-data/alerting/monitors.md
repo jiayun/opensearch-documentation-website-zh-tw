@@ -29,7 +29,7 @@ Alerting 外掛程式提供下列監視器類型：
 
 ## 監視器排程
 
-監視器會以固定間隔執行，例如每小時或每天，或依您以 cron 運算式定義的排程執行。當間隔無法描述您需要監視器執行的時間時（例如每個平日 11:30 AM），請使用 cron 運算式。關於語法，請參閱[Cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/#cron-expressions)。
+監視器會以固定間隔執行，例如每小時或每天，或依您以 cron 運算式定義的排程執行。當間隔無法描述您需要監視器執行的時間時（例如每個平日 11:30 AM），請使用 cron 運算式。關於語法，請參閱[Cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/cron-expressions/)。
 
 關於使用 cron 運算式的監視器，請參閱[建立查詢層級監視器]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/api/#example-request-2)。
 

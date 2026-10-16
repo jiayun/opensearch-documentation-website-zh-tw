@@ -134,26 +134,26 @@ PUT testindex/_doc/1
 
 ## 參數
 
-下表列出數值欄位類型接受的參數。所有參數都是選用。
+下表列出數值欄位類型接受的參數。所有參數皆為選用。
 
 參數 | 說明 
 :--- | :--- 
-`boost` | 浮點值，指定此欄位對相關性分數的權重。大於 1.0 的值會提高欄位的相關性。介於 0.0 與 1.0 之間的值會降低欄位的相關性。預設為 1.0。可動態更新。
-`coerce` | 布林值，指出是否截斷整數值的小數，並將字串轉換為數值。預設為 `true`。可動態更新。
-`doc_values` | 布林值，指定是否應將欄位儲存在磁碟上，以便用於彙總、排序或指令碼。預設為 `true`。
-`ignore_malformed` | 布林值，指定是否忽略格式錯誤的值且不擲回例外狀況。預設為 `false`。可動態更新。
-`index` | 布林值，指定欄位是否應可供搜尋。預設為 `true`。對於使用可插拔資料格式的索引，預設為 `false`，且不支援 `true`。如需詳細資訊，請參閱[可插拔資料格式索引]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/index-parameter/#pluggable-data-format-indexes)。
-`meta` | 接受此欄位的中繼資料。
-[`null_value`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/index#null-value) | 用來取代 `null` 的值。必須與欄位類型相同。若未指定此參數，當欄位值為 `null` 時，該欄位會被視為缺少。預設為 `null`。
-`skip_list` | 布林值，指定是否為 doc values 啟用略過清單索引。啟用後，這會建立已編製索引的 doc values，可讓查詢引擎略過不相關的文件範圍，進而改善 `range` 查詢的效能。預設為 `false`。
-`store` | 布林值，指定是否應儲存欄位值，且可與 `_source` 欄位分開擷取。預設為 `false`。 
+`boost` | 一個浮點數值，指定此欄位對相關性分數的權重。高於 1.0 的值會提高欄位的相關性；介於 0.0 與 1.0 之間的值會降低欄位的相關性。預設為 1.0。可動態更新。如需更多資訊，請參閱 [Boost]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/boost/)。
+`coerce` | 一個布林值，表示要截斷整數值的小數，並將字串轉換為數值。預設為 `true`。可動態更新。如需更多資訊，請參閱 [Coerce]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/coerce/)。
+`doc_values` | 一個布林值，指定是否應將欄位儲存在磁碟上，以便用於彙總、排序或指令碼。預設為 `true`。如需更多資訊，請參閱 [Doc values]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/doc-values/)。
+`ignore_malformed` | 一個布林值，指定是否忽略格式錯誤的值而不擲回例外狀況。預設為 `false`。可動態更新。如需更多資訊，請參閱 [Ignore malformed]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/ignore-malformed/)。
+`index` | 一個布林值，指定欄位是否應可搜尋。預設為 `true`。對於使用可插拔資料格式的索引，預設為 `false`，且不支援 `true`。如需更多資訊，請參閱 [Pluggable data format indexes]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/index-parameter/#pluggable-data-format-indexes)。
+`meta` | 接受此欄位的中繼資料。如需更多資訊，請參閱 [Meta]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/meta/)。
+[`null_value`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/index#null-value) | 用來取代 `null` 的值。必須與欄位屬於相同類型。若未指定此參數，當欄位的值為 `null` 時，該欄位會被視為遺失。預設為 `null`。
+`skip_list` | 一個布林值，指定是否啟用 doc values 的 skip list 索引。啟用後，會建立已編製索引的 doc values，讓查詢引擎能略過不相關的文件範圍，從而提升 `range` 查詢的效能。預設為 `false`。
+`store` | 一個布林值，指定是否應儲存欄位值，並可與 `_source` 欄位分開擷取。預設為 `false`。如需更多資訊，請參閱 [Store]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/store/)。
 
-縮放浮點有一個額外的必要參數：`scaling_factor`。
+Scaled float 另有一個必要參數：`scaling_factor`。
 
 參數 | 說明 
 :--- | :--- 
-`scaling_factor` | double 值，會乘以欄位值並四捨五入至最接近的 long。必要。 
-`skip_list` | 布林值，指定是否為 doc values 啟用略過清單索引。啟用後，OpenSearch 會建立已編製索引的 doc values，可讓查詢引擎略過不相關的文件範圍，進而改善 `range` 查詢的效能。預設為 `false`。
+`scaling_factor` | 一個雙精度浮點數值，會與欄位值相乘並四捨五入至最接近的 long。必要。
+`skip_list` | 一個布林值，指定是否啟用 doc values 的 skip list 索引。啟用後，OpenSearch 會建立已編製索引的 doc values，讓查詢引擎能略過不相關的文件範圍，從而提升 `range` 查詢的效能。預設為 `false`。
 
 ## 衍生的來源
 

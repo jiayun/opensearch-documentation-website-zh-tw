@@ -2,7 +2,7 @@
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: "支援的單位"
-nav_order: 150
+nav_order: 160
 redirect_from:
   - /opensearch/units/
 ---
@@ -32,11 +32,11 @@ OpenSearch 在所有 REST 操作中支援下列單位。
 單位 | 指定方式
 :--- | :---
 位元組 | `b`
-二進位千位元組 | `kb` 或 `k`
-二進位百萬位元組 | `mb` 或 `m`
-二進位十億位元組 | `gb` 或 `g`
-二進位兆位元組 | `tb` 或 `t`
-二進位千兆位元組 | `pb` 或 `p`
+Kibibytes | `kb` 或 `k`
+Mebibytes | `mb` 或 `m`
+Gibibytes | `gb` 或 `g`
+Tebibytes | `tb` 或 `t`
+Pebibytes | `pb` 或 `p`
 
 ## 距離單位
 
@@ -52,20 +52,22 @@ OpenSearch 在所有 REST 操作中支援下列單位。
 公尺 | `m` 或 `meters`
 公分 | `cm` 或 `centimeters`
 公釐 | `mm` 或 `millimeters`
-海浬 | `NM`、`nmi` 或 `nauticalmiles`
+海里 | `NM`、`nmi` 或 `nauticalmiles`
 
 ## 無單位的數量
 
-對於沒有單位的大型數值，例如文件數量，請使用下列字尾。例如，`5k` 等於 5,000。
+對於沒有單位的大型數值（例如文件數量），請使用下列後綴。例如，`5k` 等於 5,000。
 
-字尾 | 倍數
+後綴 | 倍數
 :--- | :---
-`k` | 千（1,000）
-`m` | 百萬（1,000,000）
-`g` | 十億（1,000,000,000）
-`t` | 兆（1,000,000,000,000）
-`p` | 千兆（1,000,000,000,000,000）
+`k` | Kilo (1,000)
+`m` | Mega (1,000,000)
+`g` | Giga (1,000,000,000)
+`t` | Tera (1,000,000,000,000)
+`p` | Peta (1,000,000,000,000,000)
 
 ## 相關文件
 
-- [常用 REST 參數]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/)
+- [常見 REST 參數]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/)
+- [索引名稱語法]({{site.url}}{{site.baseurl}}/api-reference/index-name-syntax/)
+- [Cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/cron-expressions/)

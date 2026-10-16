@@ -8,6 +8,7 @@ from unittest import mock
 
 from test_translation_helpers import REPO, FakeProvider
 
+from translation_pipeline import config
 from translation_pipeline import providers as P
 from translation_pipeline.providers import (AUTH, INVALID, QUOTA, TRANSPORT, TRUNCATED, UNAVAILABLE,
                                             AgyProvider, ClaudeProvider, NoProviderAvailable,
@@ -146,7 +147,7 @@ class ProviderCommandTests(unittest.TestCase):
             return 0, json.dumps({"response": {"text": "ok"}}), ""
         AgyProvider(runner=runner).complete("SYS", "PROMPT; rm -rf /\n--dangerously-skip-permissions")
         argv = seen["argv"]
-        self.assertEqual(argv, ["agy", "--model", "gemini-3.1-pro-high", "--mode", "plan",
+        self.assertEqual(argv, ["agy", "--model", config.AGY_MODEL, "--mode", "plan",
                                 "--output-format", "json", "--disable-slash-commands",
                                 "--print=SYS\n\nPROMPT; rm -rf /\n--dangerously-skip-permissions"])
         self.assertEqual(seen["stdin"], "")
@@ -359,6 +360,48 @@ class PoolTests(unittest.TestCase):
     def test_transport_recovers_on_retry(self):
         a = FakeProvider("claude", "claude", lambda p, n: ProviderError(TRANSPORT, "reset") if n < 3 else "ok")
         self.assertEqual(self.pool([a]).call(["claude"], "s", "p", "t").text, "ok")
+
+    def test_service_errors_switch_immediately_then_retry_after_backoff(self):
+        for status in (502, 503, 504):
+            with self.subTest(status=status):
+                timestamp = [1000]
+                a = FakeProvider('claude', 'claude', lambda p, n:
+                                 ProviderError(TRANSPORT, f'HTTP {status} unavailable') if n == 1 else 'recovered')
+                b = FakeProvider('agy', 'agy', lambda p, n: 'fallback')
+                pool = ProviderPool({'claude': a, 'agy': b}, clock=lambda: timestamp[0],
+                                    sleep=lambda _: self.fail('service errors should switch without sleeping'))
+                self.assertEqual(pool.call(['claude', 'agy'], 's', 'p', 'review').text, 'fallback')
+                self.assertEqual(pool.call(['claude', 'agy'], 's', 'p', 'review').text, 'fallback')
+                self.assertEqual(len(a.calls), 1)
+                self.assertEqual(pool.disabled['claude'], TRANSPORT)
+                timestamp[0] += 301
+                self.assertEqual(pool.call(['claude', 'agy'], 's', 'p', 'review').text, 'recovered')
+                self.assertEqual(pool.disabled, {})
+
+    def test_service_failure_does_not_shorten_concurrent_quota_cooldown(self):
+        def fail(prompt, count):
+            pool.disable('claude', ProviderError(QUOTA, 'Weekly limit reached'))
+            return ProviderError(TRANSPORT, 'HTTP 503 Service Unavailable')
+        a = FakeProvider('claude', 'claude', fail)
+        b = FakeProvider('agy', 'agy', lambda p, n: 'ok')
+        pool = ProviderPool({'claude': a, 'agy': b}, clock=lambda: 1000)
+        self.assertEqual(pool.call(['claude', 'agy'], 's', 'p', 'review').text, 'ok')
+        self.assertEqual(pool.disabled['claude'], QUOTA)
+        self.assertGreater(pool.disabled_until['claude'], 1300)
+
+    def test_real_failure_replaces_temporary_service_backoff(self):
+        for kind in (QUOTA, AUTH, UNAVAILABLE):
+            with self.subTest(kind=kind):
+                a = FakeProvider('claude', 'claude', lambda p, n: ProviderError(TRANSPORT, 'HTTP 503'))
+                b = FakeProvider('agy', 'agy', lambda p, n: 'ok')
+                pool = ProviderPool({'claude': a, 'agy': b}, clock=lambda: 1000)
+                pool.call(['claude', 'agy'], 's', 'p', 'review')
+                pool.disable('claude', ProviderError(kind, 'Weekly limit reached'))
+                self.assertEqual(pool.disabled['claude'], kind)
+                if kind == QUOTA:
+                    self.assertGreater(pool.disabled_until['claude'], 1300)
+                else:
+                    self.assertNotIn('claude', pool.disabled_until)
 
     def test_invalid_reply_is_not_a_provider_switch(self):
         a = FakeProvider("claude", "claude", lambda p, n: ProviderError(TRUNCATED, "cut"))

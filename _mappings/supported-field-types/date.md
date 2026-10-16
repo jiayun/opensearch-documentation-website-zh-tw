@@ -50,17 +50,17 @@ PUT testindex
 
 參數 | 說明 
 :--- | :--- 
-`boost` | 一個浮點數值，指定此欄位對相關性分數的權重。高於 1.0 的值會提高該欄位的相關性，介於 0.0 與 1.0 之間的值會降低該欄位的相關性。預設為 1.0。可動態更新。
-`doc_values` | 一個布林值，指定是否應將該欄位儲存在磁碟上，以便用於彙總、排序或指令碼。預設為 `true`。
-`format` | 解析日期所用的格式。預設為 `strict_date_optional_time||epoch_millis`。
-`ignore_malformed` | 一個布林值，指定是否忽略格式錯誤的值而不擲回例外狀況。預設為 `false`。可動態更新。
-`index` | 一個布林值，指定該欄位是否可供搜尋。預設為 `true`。對於使用可插拔資料格式的索引，預設為 `false`，且不支援 `true`。如需更多資訊，請參閱 [可插拔資料格式索引]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/index-parameter/#pluggable-data-format-indexes)。
-`locale` | 依地區與語言表示日期的方式。預設為 [`ROOT`](https://docs.oracle.com/javase/8/docs/api/java/util/Locale.html#ROOT)（不因地區與語言而異的地區設定）。
-`meta` | 接受此欄位的中繼資料。
-[`null_value`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/index#null-value) | 用來取代 `null` 的值。必須與該欄位屬於相同類型。若未指定此參數，當欄位值為 `null` 時，該欄位會被視為遺失。預設為 `null`。
-`print_format` | OpenSearch 在搜尋回應的 `fields` 與 `docvalue_fields` 區段、彙總鍵值以及衍生來源中回傳日期所用的格式。不影響 `_source` 中的日期，這些日期會依原本提供的方式回傳。預設為 `format` 中指定的第一種格式。
-`skip_list` | 一個布林值，指定是否啟用 doc values 的跳躍清單索引。啟用後，OpenSearch 會建立已編製索引的 doc values，讓查詢引擎能略過不相關的文件範圍，從而改善 `range` 查詢的效能。`@timestamp` 欄位以及用於索引排序的欄位會自動啟用跳躍清單索引。對所有其他欄位，預設為 `false`。
-`store` | 一個布林值，指定是否應儲存欄位值，並使其可與 `_source` 欄位分開擷取。預設為 `false`。 
+`boost` | 浮點數值，指定此欄位對相關性分數的權重。大於 1.0 的值會提高此欄位的相關性。介於 0.0 與 1.0 之間的值會降低此欄位的相關性。預設為 1.0。可動態更新。如需詳細資訊，請參閱 [Boost]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/boost/)。
+`doc_values` | 布林值，指定是否應將此欄位儲存於磁碟，以便用於彙總、排序或指令碼。預設為 `true`。如需詳細資訊，請參閱 [Doc values]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/doc-values/)。
+`format` | 用於剖析日期的格式。預設為 `strict_date_optional_time. For more information, see [Format]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/format/).||epoch_millis`。
+`ignore_malformed` | 布林值，指定是否忽略格式錯誤的值而不擲回例外狀況。預設為 `false`。可動態更新。如需詳細資訊，請參閱 [Ignore malformed]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/ignore-malformed/)。
+`index` | 布林值，指定此欄位是否可供搜尋。預設為 `true`。對於使用可插拔資料格式的索引，預設為 `false`，且不支援 `true`。如需詳細資訊，請參閱[可插拔資料格式索引]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/index-parameter/#pluggable-data-format-indexes)。
+`locale` | 依地區與語言表示日期的方式。預設為 [`ROOT`](https://docs.oracle.com/javase/8/docs/api/java/util/Locale.html#ROOT)（與地區及語言無關的地區設定）。
+`meta` | 接受此欄位的中繼資料。如需詳細資訊，請參閱 [Meta]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/meta/)。
+[`null_value`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/index#null-value) | 用來取代 `null` 的值。必須與此欄位的類型相同。若未指定此參數，當欄位值為 `null` 時，此欄位會被視為缺少值。預設為 `null`。
+`print_format` | OpenSearch 在搜尋回應的 `fields` 與 `docvalue_fields` 區段、彙總鍵以及衍生來源中傳回日期時所使用的格式。不會影響 `_source` 中的日期，這些日期會依原始提供的內容傳回。預設為 `format` 中指定的第一個格式。
+`skip_list` | 布林值，指定是否為 doc values 啟用跳躍清單（skip list）索引。啟用後，OpenSearch 會建立已編製索引的 doc values，讓查詢引擎略過不相關的文件範圍，進而提升 `range` 查詢的效能。對於 `@timestamp` 欄位以及用於索引排序的欄位，會自動啟用跳躍清單索引。對於其他所有欄位，預設為 `false`。
+`store` | 布林值，指定是否應儲存此欄位值，並可與 `_source` 欄位分開擷取。預設為 `false`。如需詳細資訊，請參閱 [Store]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/store/)。
 
 ## 格式
 

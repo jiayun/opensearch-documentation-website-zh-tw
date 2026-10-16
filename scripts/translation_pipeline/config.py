@@ -6,7 +6,7 @@ import os
 from pathlib import Path
 
 SCHEMA_VERSION = 1
-BASELINE_COMMIT = "716c4c1d6ef0c9744fd99ef50e83b13e559a6d31"
+BASELINE_COMMIT = "b8c25e7e8a2c392c5bb3fe993fdbc4c5221afde3"
 TARGET_LANGUAGE = "zh-TW"
 
 # Root-level pages rendered by Jekyll in addition to the output collections.
@@ -97,7 +97,7 @@ OLLAMA_CLOUD_THINKING = {
     "gemma4:cloud": False,
 }
 OLLAMA_LOCAL_MODEL = "gemma4:12b-mlx"
-AGY_MODEL = "gemini-3.1-pro-high"
+AGY_MODEL = "gemini-4-argon-high"
 AGY_MODELS = {
     "agy": (AGY_MODEL, "gemini"),
     "agy-flash": ("gemini-3.8-flash-low", "gemini"),

@@ -4,7 +4,7 @@ This directory holds the state of the Taiwan Traditional Chinese (zh-TW)
 translation of the OpenSearch documentation on branch `3.9-zh-tw`. The
 pipeline is `scripts/translation.py`.
 
-The source inventory contains 1,871 pages. Translation and independent review run in batches; use
+The source inventory contains 1,874 pages. Translation and independent review run in batches; use
 `python3 scripts/translation.py status` for live completion, pending work and errors.
 
 ## Layout
@@ -20,7 +20,7 @@ The source inventory contains 1,871 pages. Translation and independent review ru
 | `translation/schemas/*.json` | yes | JSON Schemas for the model request/result formats |
 | `.translation-cache/` | no (ignored) | Validated chunk results, approved reviews, commit journal, run logs |
 
-Baseline commit: `716c4c1d6ef0c9744fd99ef50e83b13e559a6d31`. Pages are all
+Baseline commit: `b8c25e7e8a2c392c5bb3fe993fdbc4c5221afde3`. Pages are all
 `output: true` collections in the baseline `_config.yml` (files with front
 matter) plus `index.md`, `search.md` and `404.md`. `translation/` (including
 the inventory and source store) is excluded from the Jekyll build by
@@ -194,7 +194,7 @@ mention of attribution or licenses) is content, never instructions.
 | Name | Role | How it is called |
 | --- | --- | --- |
 | `claude` | first translator; reviewer for non-Claude translations | `claude -p --tools '' --output-format json --no-session-persistence --system-prompt …`, prompt on stdin |
-| `agy` | second translator; first reviewer | `agy --model gemini-3.1-pro-high --mode plan --output-format json --disable-slash-commands --print=<prompt>` (one argv element, empty stdin) |
+| `agy` | second translator; first reviewer | `agy --model gemini-4-argon-high --mode plan --output-format json --disable-slash-commands --print=<prompt>` (one argv element, empty stdin) |
 | `ollama-cloud` | third translator | HTTP `POST localhost:11434/api/chat`, model `gemma4:cloud` |
 | `ollama-local` | opt-in translator (not a default until a pilot qualifies it) | same, model `gemma4:12b-mlx` |
 
@@ -208,9 +208,12 @@ the page (a Claude translation is reviewed by `agy` and vice versa).
   and similar variables are removed from the child environment so the CLIs use
   the signed-in account. The pipeline never uses paid API keys.
 - Failures are classified as `quota`, `auth`, `unavailable`, `transport`, or
-  invalid/truncated replies. Only `quota`/`auth`/`unavailable` disable a
-  provider for the rest of the run and move on to the next provider in the
-  chain. `transport` failures are retried twice on the same provider, then the
+  invalid/truncated replies. `quota`/`auth`/`unavailable` disable the provider
+  and move to the next provider in the chain. HTTP 502/503/504 service failures
+  instead back off only that provider for five minutes and immediately try
+  another available provider. These are not account quota failures; a real
+  quota or authentication failure takes precedence over temporary backoff.
+  Other `transport` failures are retried twice on the same provider, then the
   page fails for this run (no attempt is consumed). Invalid or truncated
   replies are retried as validation problems.
 - The `agy` JSON envelope is nested; the parser looks for the answer text
@@ -314,12 +317,12 @@ agy 的模型與配額分開管理，使用 `agy models` 查到的識別字，�
 | `agy-sonnet` | `claude-sonnet-5-5-medium` | Claude／GPT | 一般校對優先 |
 | `agy-opus` | `claude-opus-5-5-medium` | Claude／GPT | 超過 45,000 字元的校對提示優先 |
 | `agy-gpt` | `gpt-oss-120b-medium` | Claude／GPT | 翻譯備援，尚未列入正式校對來源 |
-| `agy` | `gemini-3.1-pro-high` | Gemini | 主動分攤獨立校對 |
+| `agy` | `gemini-4-argon-high` | Gemini | 主動分攤獨立校對 |
 | `agy-flash` | `gemini-3.8-flash-low` | Gemini | 翻譯後備 |
 
 每個群組內的模型共享停用與 CLI 回報的重置時間，另一組仍可用；不把 agy 的 Claude／GPT 配額與獨立 Claude CLI 公司帳號配額混在一起。校對獨立性則看模型家族：agy Claude 與獨立 Claude CLI 都屬於 `claude`，不得互相校對同一譯文。數字百分比不由本程式估算，實際配額不足以服務回覆判定。
 
-一般校對的輪替為 Gemini Pro、Gemini Pro、Sonnet、Codex；跳過冷卻中或與譯文同家族的來源。Gemini 群組可用時會實際分到工作，不必等 Codex 不可用才接手；Claude／GPT 群組冷卻時，Gemini Pro 約承擔三分之二的一般校對呼叫。
+一般校對的輪替為 Gemini Argon、Gemini Argon、Sonnet、Codex；跳過冷卻中或與譯文同家族的來源。Gemini 群組可用時會實際分到工作，不必等 Codex 不可用才接手；Claude／GPT 群組冷卻時，Gemini Argon 約承擔三分之二的一般校對呼叫。
 
 Claude 的 `You've hit your session limit · resets 3am (Asia/Taipei)` 會歸類為配額耗盡，立即停用該次執行的 Claude，不做連線重試。其他執行緒也會跳過已停用來源。CLI 明確回報重置時間與時區時，批次會等到該時間後一分鐘再恢復 Claude 優先順序；未回報重置時間則不自行猜測。
 

@@ -10,12 +10,12 @@ redirect_from:
 
 # 排序結果
 
-排序功能可讓您的使用者以對他們最有意義的方式排序結果。
+排序可讓使用者以對自己最有意義的方式排序結果。
 
-依預設，全文查詢會依相關性分數排序結果。
-您可以將 `order` 參數設為 `asc` 或 `desc`，選擇依任何欄位值以遞增或遞減順序排序結果。
+預設情況下，全文查詢會依相關性分數排序結果。
+您可以設定 `order` 參數為 `asc` 或 `desc`，選擇依任何欄位值以遞增或遞減順序排序結果。如果您未指定 `order`，依 `_score` 排序時結果會以遞減順序排列，依其他任何欄位排序時則以遞增順序排列。
 
-例如，若要依 `line_id` 值以遞減順序排序結果，請使用下列查詢：
+例如，若要依 `line_id` 值的遞減順序排序結果，請使用下列查詢：
 
 ```json
 GET shakespeare/_search
@@ -232,9 +232,9 @@ GET shakespeare/_search
 }
 ```
 
-`sort` 參數是陣列，因此您可以依優先順序指定多個欄位值。
+`sort` 參數是一個陣列，因此您可以依優先順序指定多個欄位值。
 
-如果您有兩個欄位的 `line_id` 值相同，OpenSearch 會使用第二個排序選項 `speech_number`：
+如果您有兩個欄位的 `line_id` 值相同，OpenSearch 會使用 `speech_number`，也就是排序的第二個選項：
 
 ```json
 GET shakespeare/_search
@@ -262,7 +262,7 @@ GET shakespeare/_search
 ```
 {% include copy-curl.html %}
 
-您可以繼續依任意數量的欄位值排序，讓結果以正確的順序排列。欄位值不一定要是數值&mdash;您也可以依日期或時間戳記欄位排序：
+您可以繼續依任意數量的欄位值排序，以取得正確順序的結果。不必是數值——您也可以依日期或時間戳記欄位排序：
 
 ```json
 "sort": [
@@ -275,9 +275,9 @@ GET shakespeare/_search
 ```
 {% include copy-curl.html %}
 
-經過分析的文字欄位無法用於排序文件，因為倒排索引只包含個別斷詞後的詞彙，而非完整字串。因此，例如您無法依 `play_name` 排序。
+經過分析的文字欄位無法用來排序文件，因為反向索引只包含個別斷詞後的詞元，而不是完整字串。例如，您無法依 `play_name` 排序。
 
-若要避開此限制，您可以使用對應為 keyword 類型的文字欄位原始版本。在下列範例中，`play_name.keyword` 未經分析，因此您有一份完整原始版本的副本可供排序使用：
+若要繞過此限制，您可以使用對應為 keyword 類型的文字欄位原始版本。在下列範例中，`play_name.keyword` 未經分析，因此您擁有完整原始版本的副本可用於排序：
 
 ```json
 GET shakespeare/_search
@@ -302,11 +302,11 @@ GET shakespeare/_search
 
 結果會依 `play_name` 欄位以字母順序排序。
 
-將 `sort` 與 [`search_after` 參數]({{site.url}}{{site.baseurl}}/opensearch/search/paginate#the-search_after-parameter) 搭配使用，可提高捲動效率。
+搭配 [`search_after` 參數]({{site.url}}{{site.baseurl}}/opensearch/search/paginate#the-search_after-parameter) 使用 `sort` 可實現更有效率的捲動。
 結果會從您在 `search_after` 陣列中指定的排序值之後的文件開始。
 
-請確保 `search_after` 陣列中的值與 `sort` 陣列中的值數量相同，且排列順序也相同。
-在此情況下，您請求的結果會從 `line_id = 3202` 和 `speech_number = 8` 之後的文件開始：
+請確保 `search_after` 陣列中的值數量與 `sort` 陣列相同，且以相同方式排序。
+在此情況下，您請求的是從 `line_id = 3202` 和 `speech_number = 8` 之後的文件開始的結果：
 
 ```json
 GET shakespeare/_search
@@ -435,9 +435,248 @@ GET students/_search
 }
 ```
 
+## 跨索引排序數值欄位
+
+當您搜尋多個索引時，同一個欄位在每個索引中可能對應到不同的數值或日期類型。使用 `numeric_type` 選項可將所有索引的排序值轉換為單一類型。有效值為 `double`、`long`、`date` 和 `date_nanos`。
+
+例如，`prices-eu` 索引將 `price` 對應為 `double`，而 `prices-us` 索引將其對應為 `long`：
+
+```json
+PUT /prices-eu
+{
+  "mappings": {
+    "properties": {
+      "product": { "type": "keyword" },
+      "price": { "type": "double" }
+    }
+  }
+}
+```
+{% include copy-curl.html %}
+
+```json
+PUT /prices-us
+{
+  "mappings": {
+    "properties": {
+      "product": { "type": "keyword" },
+      "price": { "type": "long" }
+    }
+  }
+}
+```
+{% include copy-curl.html %}
+
+將文件編製索引至這兩個索引：
+
+```json
+POST /_bulk?refresh=true
+{ "index": { "_index": "prices-eu", "_id": "1" } }
+{ "product": "tent", "price": 129.5 }
+{ "index": { "_index": "prices-eu", "_id": "2" } }
+{ "product": "lantern", "price": 24.99 }
+{ "index": { "_index": "prices-us", "_id": "1" } }
+{ "product": "stove", "price": 60 }
+{ "index": { "_index": "prices-us", "_id": "2" } }
+{ "product": "backpack", "price": 95 }
+```
+{% include copy-curl.html %}
+
+若未使用 `numeric_type`，每筆命中的排序值會保留其索引的類型，例如來自 `prices-eu` 的 `24.99` 以及來自 `prices-us` 的 `60`。下列請求會將所有排序值轉換為 `double`：
+
+```json
+GET /prices-eu,prices-us/_search
+{
+  "sort": [
+    {
+      "price": {
+        "order": "asc",
+        "numeric_type": "double"
+      }
+    }
+  ]
+}
+```
+{% include copy-curl.html %}
+
+`prices-us` 文件的排序值會以 `60.0` 和 `95.0` 傳回：
+
+```json
+{
+  ...
+  "hits": {
+    ...
+    "hits": [
+      {
+        "_index": "prices-eu",
+        "_id": "2",
+        "_score": null,
+        "_source": {
+          "product": "lantern",
+          "price": 24.99
+        },
+        "sort": [
+          24.99
+        ]
+      },
+      {
+        "_index": "prices-us",
+        "_id": "1",
+        "_score": null,
+        "_source": {
+          "product": "stove",
+          "price": 60
+        },
+        "sort": [
+          60.0
+        ]
+      },
+      {
+        "_index": "prices-us",
+        "_id": "2",
+        "_score": null,
+        "_source": {
+          "product": "backpack",
+          "price": 95
+        },
+        "sort": [
+          95.0
+        ]
+      },
+      {
+        "_index": "prices-eu",
+        "_id": "1",
+        "_score": null,
+        "_source": {
+          "product": "tent",
+          "price": 129.5
+        },
+        "sort": [
+          129.5
+        ]
+      }
+    ]
+  }
+}
+```
+
+如果您指定 `long`，小數值會被截斷。例如，`129.5` 和 `24.99` 會以 `129` 和 `24` 傳回，而僅小數部分不同的文件會排序為相等。
+
+### 排序日期與奈秒日期欄位
+
+`date` 欄位以毫秒儲存值，而 `date_nanos` 欄位以奈秒儲存值。如果排序欄位在某個索引中對應為 `date`，而在另一個索引中對應為 `date_nanos`，OpenSearch 會直接比較原始值，不會將其轉換為相同的解析度。因此，以遞增順序排序時，`date_nanos` 索引中的文件會排在 `date` 索引的所有文件之後，無論其時間戳記為何。
+
+例如，建立一個 `events-ms` 索引，將 `ts` 對應為 `date`，並建立一個 `events-ns` 索引，將其對應為 `date_nanos`：
+
+```json
+PUT /events-ms
+{
+  "mappings": {
+    "properties": {
+      "ts": { "type": "date" }
+    }
+  }
+}
+```
+{% include copy-curl.html %}
+
+```json
+PUT /events-ns
+{
+  "mappings": {
+    "properties": {
+      "ts": { "type": "date_nanos" }
+    }
+  }
+}
+```
+{% include copy-curl.html %}
+
+將三個事件編製索引。`events-ns` 中的 `upload` 事件發生於 11:00，介於 `events-ms` 中的 `login`（10:00）與 `logout`（12:00）事件之間：
+
+```json
+POST /_bulk?refresh=true
+{ "index": { "_index": "events-ms", "_id": "1" } }
+{ "event": "login", "ts": "2026-10-13T10:00:00Z" }
+{ "index": { "_index": "events-ms", "_id": "2" } }
+{ "event": "logout", "ts": "2026-10-13T12:00:00Z" }
+{ "index": { "_index": "events-ns", "_id": "1" } }
+{ "event": "upload", "ts": "2026-10-13T11:00:00.123456789Z" }
+```
+{% include copy-curl.html %}
+
+對 `ts` 進行預設的遞增排序，會依序傳回 `login`、`logout`，然後是 `upload`。
+
+若要依時間先後順序排序事件，請將 `numeric_type` 設為 `date` 或 `date_nanos`。`date` 值會將所有值轉換為毫秒，而 `date_nanos` 會將其轉換為奈秒：
+
+```json
+GET /events-ms,events-ns/_search
+{
+  "_source": ["event"],
+  "sort": [
+    {
+      "ts": {
+        "order": "asc",
+        "numeric_type": "date_nanos"
+      }
+    }
+  ]
+}
+```
+{% include copy-curl.html %}
+
+回應會依時間先後順序傳回事件：
+
+```json
+{
+  ...
+  "hits": {
+    ...
+    "hits": [
+      {
+        "_index": "events-ms",
+        "_id": "1",
+        "_score": null,
+        "_source": {
+          "event": "login"
+        },
+        "sort": [
+          1791885600000000000
+        ]
+      },
+      {
+        "_index": "events-ns",
+        "_id": "1",
+        "_score": null,
+        "_source": {
+          "event": "upload"
+        },
+        "sort": [
+          1791889200123456789
+        ]
+      },
+      {
+        "_index": "events-ms",
+        "_id": "2",
+        "_score": null,
+        "_source": {
+          "event": "logout"
+        },
+        "sort": [
+          1791892800000000000
+        ]
+      }
+    ]
+  }
+}
+```
+
+奈秒值只能表示 1970 年至 2262 年之間的日期。如果 `date` 欄位包含超出此範圍的值，使用 `date_nanos` 進行轉換時，包含該文件的分片會發生失敗。搜尋隨後會傳回部分結果，並在回應的 `_shards.failures` 陣列中回報此失敗。若要排序包含這類日期的資料，請使用 `"numeric_type": "date"`。
+{: .warning}
+
 ## 排序巢狀物件
 
-排序 [巢狀]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/nested/) 物件時，請提供 `path` 參數，指定要排序欄位的路徑。
+排序[巢狀]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/nested/)物件時，請提供 `path` 參數，指定要排序之欄位的路徑。
 
 例如，在索引 `students` 中，將變數 `first_sem` 對應為 `nested`：
 
@@ -455,7 +694,7 @@ PUT students
 ```
 {% include copy-curl.html %}
 
-將兩份包含巢狀欄位的文件編製索引：
+為兩份包含巢狀欄位的文件編製索引：
 
 ```json
 PUT students/_doc/1
@@ -500,6 +739,105 @@ GET students/_search
 }
 ```
 {% include copy-curl.html %}
+
+`nested` 物件接受下列參數。
+
+參數 | 說明
+:--- | :---
+`path` | 包含排序欄位之巢狀物件的路徑。必要。
+`filter` | 一個查詢，用於選取其值將用於排序的巢狀物件。不符合篩選條件的巢狀物件會被忽略。一般而言，您會在此重複搜尋查詢的巢狀條件，讓文件僅依符合條件之巢狀物件的值排序。
+`max_children` | 計算排序值時，每份文件最多考慮的巢狀物件數量。預設會考慮所有巢狀物件。
+`nested` | 一個 `nested` 物件，用於排序巢狀物件內部又再巢狀一層的物件中的欄位。請指定內層的 `path`，並可選擇性地指定其自身的 `filter` 與 `max_children`。
+
+例如，在下列索引中，每個產品都包含一個帶有區域與價格的巢狀 `offers` 物件，而每個優惠都包含一個巢狀的 `discounts` 物件：
+
+```json
+PUT sort-offers
+{
+  "mappings": {
+    "properties": {
+      "product": { "type": "keyword" },
+      "offers": {
+        "type": "nested",
+        "properties": {
+          "region": { "type": "keyword" },
+          "price": { "type": "double" },
+          "discounts": {
+            "type": "nested",
+            "properties": {
+              "percent": { "type": "integer" }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+{% include copy-curl.html %}
+
+為兩個產品編製索引：
+
+```json
+POST _bulk?refresh=true
+{ "index": { "_index": "sort-offers", "_id": "1" } }
+{ "product": "tent", "offers": [ { "region": "eu", "price": 120, "discounts": [ { "percent": 5 }, { "percent": 15 } ] }, { "region": "us", "price": 90, "discounts": [ { "percent": 10 } ] } ] }
+{ "index": { "_index": "sort-offers", "_id": "2" } }
+{ "product": "stove", "offers": [ { "region": "eu", "price": 100, "discounts": [ { "percent": 20 } ] }, { "region": "us", "price": 140, "discounts": [ { "percent": 0 } ] } ] }
+```
+{% include copy-curl.html %}
+
+下列請求依產品在 `eu` 區域的最低價格排序。`filter` 會排除 `us` 的優惠，因此 `tent` 會依其 `eu` 價格 120 排序，而不是依其較低的 `us` 價格 90 排序：
+
+```json
+GET sort-offers/_search
+{
+  "_source": ["product"],
+  "sort": [
+    {
+      "offers.price": {
+        "order": "asc",
+        "mode": "min",
+        "nested": {
+          "path": "offers",
+          "filter": {
+            "term": { "offers.region": "eu" }
+          }
+        }
+      }
+    }
+  ]
+}
+```
+{% include copy-curl.html %}
+
+`stove` 會最先傳回，排序值為 `100.0`，接著是 `tent`，排序值為 `120.0`。
+
+若要排序多層巢狀物件中的欄位，請在外層 `nested` 物件內指定一個 `nested` 物件。下列請求依產品在任何優惠中的最高折扣排序：
+
+```json
+GET sort-offers/_search
+{
+  "_source": ["product"],
+  "sort": [
+    {
+      "offers.discounts.percent": {
+        "order": "desc",
+        "mode": "max",
+        "nested": {
+          "path": "offers",
+          "nested": {
+            "path": "offers.discounts"
+          }
+        }
+      }
+    }
+  ]
+}
+```
+{% include copy-curl.html %}
+
+`stove` 會最先傳回，排序值為 `20`，接著是 `tent`，排序值為 `15`。
 
 ## 處理缺失值
 
@@ -751,6 +1089,103 @@ GET students*/_search
 }
 ```
 
+## 使用指令碼排序
+
+若要依未儲存在單一欄位中的值排序，請使用指令碼計算該值。在 `sort` 陣列中，指定 `_script` 物件。`_script` 物件接受下列參數。
+
+參數 | 說明
+:--- | :---
+`type` | 指令碼所傳回值的類型。有效值為 `number` 和 `string`。必要。
+`script` | 計算排序值的指令碼。如需更多資訊，請參閱[如何使用指令碼]({{site.url}}{{site.baseurl}}/scripting/using-scripts/)。
+`order` | 排序順序。有效值為 `asc` 和 `desc`。預設為 `asc`。
+`mode` | 當指令碼傳回多個值時，用於排序的值。如需更多資訊，請參閱[排序模式](#sort-mode)。
+`nested` | 當指令碼讀取[巢狀]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/nested/)物件的欄位時，要在其中執行指令碼的巢狀物件。在 `nested.path` 中指定巢狀物件的路徑。如需更多資訊，請參閱[排序巢狀物件](#sorting-nested-objects)。
+
+下列請求會使用在 `params` 中傳入的匯率，將產品價格轉換為另一種貨幣後依價格排序：
+
+```json
+GET /prices-eu,prices-us/_search
+{
+  "_source": ["product", "price"],
+  "sort": {
+    "_script": {
+      "type": "number",
+      "script": {
+        "source": "doc['price'].value * params.exchange_rate",
+        "params": {
+          "exchange_rate": 0.92
+        }
+      },
+      "order": "desc"
+    }
+  }
+}
+```
+{% include copy-curl.html %}
+
+每個命中結果的 `sort` 陣列都包含指令碼計算出的值：
+
+```json
+{
+  ...
+  "hits": {
+    ...
+    "hits": [
+      {
+        "_index": "prices-eu",
+        "_id": "1",
+        "_score": null,
+        "_source": {
+          "product": "tent",
+          "price": 129.5
+        },
+        "sort": [
+          119.14
+        ]
+      },
+      {
+        "_index": "prices-us",
+        "_id": "2",
+        "_score": null,
+        "_source": {
+          "product": "backpack",
+          "price": 95
+        },
+        "sort": [
+          87.4
+        ]
+      },
+      {
+        "_index": "prices-us",
+        "_id": "1",
+        "_score": null,
+        "_source": {
+          "product": "stove",
+          "price": 60
+        },
+        "sort": [
+          55.2
+        ]
+      },
+      {
+        "_index": "prices-eu",
+        "_id": "2",
+        "_score": null,
+        "_source": {
+          "product": "lantern",
+          "price": 24.99
+        },
+        "sort": [
+          22.9908
+        ]
+      }
+    ]
+  }
+}
+```
+
+以指令碼為基礎的排序會為每份符合的文件執行指令碼，因此比依欄位排序慢。如果您經常依相同的計算值排序，請考慮在編製索引時計算該值並將其儲存在欄位中。
+
 ## 追蹤分數
 
 依預設，依欄位排序時不會計算分數。您可以將 `track_scores` 設為 `true` 來計算並追蹤分數：
@@ -779,15 +1214,17 @@ GET students/_search
 
 參數 | 說明
 :--- | :---
-`distance_type` | 指定計算距離的方法。有效值為 `arc` 和 `plane`。`plane` 方法較快，但對於長距離或靠近極點的位置較不準確。預設為 `arc`。
-`mode` | 指定如何處理含有多個地理點的欄位。依預設，當排序順序為遞增時，文件會依最短距離排序；當排序順序為遞減時，則依最長距離排序。有效值為 `min`、`max`、`median` 和 `avg`。
-`unit` | 指定用於計算排序值的單位。預設為公尺 (`m`)。
-`ignore_unmapped` | 指定如何處理未對應的欄位。將 `ignore_unmapped` 設為 `true` 可忽略未對應的欄位。預設為 `false` (遇到未對應的欄位時產生錯誤)。
+`distance_type` | 指定計算距離的方法。有效值為 `arc` 和 `plane`。`plane` 方法速度較快，但在長距離或接近極點時較不精確。預設為 `arc`。
+`mode` | 指定如何處理含有多個地理點的欄位。預設情況下，排序順序為遞增時，文件會依最短距離排序；排序順序為遞減時，則依最長距離排序。有效值為 `min`、`max`、`median` 和 `avg`。
+`unit` | 指定計算排序值時使用的單位。預設為公尺 (`m`)。
+`ignore_unmapped` | 指定如何處理未對應的欄位。將 `ignore_unmapped` 設為 `true` 可忽略未對應的欄位，效果與在欄位排序中設定 `unmapped_type` 相同。預設為 `false` (遇到未對應的欄位時產生錯誤)。如需更多資訊，請參閱[忽略未對應的欄位](#ignoring-unmapped-fields)。
+
+您可以使用任何[地理點格式]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/geo-point/#formats)指定參考點，例如包含 `lat` 和 `lon` 的物件、`"lat,lon"` 字串、geohash 或 `[lon, lat]` 陣列。
 
 `_geo_distance` 參數不支援 `missing_values`。當文件不包含用於計算距離的欄位時，距離一律視為 `infinity`。
 {: .note}
 
-例如，建立索引並將 `point` 欄位對應為 `geo_point`：
+例如，建立一個索引並將 `point` 欄位對應為 `geo_point`：
 
 ```json
 PUT testindex1
@@ -803,7 +1240,7 @@ PUT testindex1
 ```
 {% include copy-curl.html %}
 
-將兩個包含地理點的文件編製索引：
+將兩份包含地理點的文件編製索引：
 
 ```json
 PUT testindex1/_doc/1
@@ -821,7 +1258,7 @@ PUT testindex1/_doc/2
 ```
 {% include copy-curl.html %}
 
-搜尋所有文件並依與所提供點的距離排序：
+搜尋所有文件，並依與所提供點的距離排序：
 
 ```json
 GET testindex1/_search
@@ -845,7 +1282,7 @@ GET testindex1/_search
 ```
 {% include copy-curl.html %}
 
-回應包含已排序的文件：
+回應包含排序後的文件：
 
 ```json
 {
@@ -897,10 +1334,10 @@ GET testindex1/_search
 }
 ```
 
-您可以使用 geopoint 欄位類型支援的任何格式提供座標。如需所有格式的說明，請參閱 [geopoint 欄位類型文件]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/geo-point/)。
+您可以使用地理點欄位類型支援的任何格式提供座標。所有格式的說明請參閱[地理點欄位類型文件]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/geo-point/)。
 {: .note}
 
-若要將多個地理點傳遞至 `_geo_distance`，請使用陣列：
+若要將多個地理點傳遞給 `_geo_distance`，請使用陣列：
 
 ```json
 GET testindex1/_search
@@ -924,7 +1361,7 @@ GET testindex1/_search
 ```
 {% include copy-curl.html %}
 
-對於每份文件，排序距離會計算為搜尋中提供的所有點與文件中所有點之間距離的最小值、最大值或平均值 (依 `mode` 指定)。
+對每份文件而言，排序距離的計算方式是取搜尋中提供的所有點與文件中所有點之間距離的最小值、最大值或平均值 (由 `mode` 指定)。
 
 ## 效能考量
 

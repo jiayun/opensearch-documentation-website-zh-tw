@@ -127,6 +127,86 @@ GET shakespeare/_search
 
 - **文字重新分析**：在沒有倒排索引中的詞項紀錄與詞彙向量的情況下，醒目提示器會重新分析文字以便醒目提示。對於每份需要醒目提示的文件與每個欄位，醒目提示器會建立一個小型記憶體內索引，並透過 Lucene 的查詢執行規劃器重新執行原始查詢，以存取目前文件的低階相符資訊。重新分析文字在大多數使用案例中運作良好。不過，對於大型欄位，此方法會耗用更多記憶體與時間。
 
+## 片段分割與文字評分
+
+為了建立醒目提示，醒目提示器會將欄位文字分割成片段，依據查詢為片段評分，並傳回評分最高的片段，其中符合的詞彙會以醒目提示標籤括住。各種醒目提示器類型的差異如下：
+
+- 將文字分割成片段：`plain` 醒目提示器純粹依長度分割文字：每當文字超過 `fragment_size` 的下一個倍數時，就會開始新的片段。因此，片段可能會在句子中間或標點符號處開始或結束。`unified` 和 `fvh` 醒目提示器使用句子邊界，因此當 `fragment_size` 允許時，片段會包含完整的句子。
+- 為片段評分：`plain` 醒目提示器依片段所含的唯一查詢詞彙數量評分，其中每個詞彙會貢獻其 boost（預設為 1）。`fvh` 醒目提示器會計算查詢詞彙的每一次出現，而不只是唯一詞彙。`unified` 醒目提示器使用 BM25 演算法為片段評分。使用 `number_of_fragments` 選項可指定要傳回多少個最佳片段。
+- 醒目提示詞彙：醒目提示器會從查詢中擷取個別詞彙、片語和前置詞，並在選取的片段中醒目提示它們。它們不會評估查詢的布林邏輯。如需更多資訊，請參閱[查詢限制](#query-limitations)。
+
+例如，建立包含產品評論的索引：
+
+```json
+PUT /product-reviews
+{
+  "mappings": {
+    "properties": {
+      "review": {
+        "type": "text",
+        "analyzer": "english"
+      }
+    }
+  }
+}
+```
+{% include copy-curl.html %}
+
+```json
+PUT /product-reviews/_doc/1?refresh=true
+{
+  "review": "The tent kept us dry during two nights of heavy rain. Setting it up took ten minutes. The only problem was the zipper on the tent door, which jammed twice. Overall, a great tent for the price."
+}
+```
+{% include copy-curl.html %}
+
+下列請求使用 `plain` 醒目提示器，並以 40 個字元的 `fragment_size` 醒目提示 `tent`：
+
+```json
+GET /product-reviews/_search
+{
+  "query": {
+    "match": {
+      "review": "tent"
+    }
+  },
+  "highlight": {
+    "number_of_fragments": 3,
+    "fields": {
+      "review": {
+        "type": "plain",
+        "fragment_size": 40
+      }
+    }
+  }
+}
+```
+{% include copy-curl.html %}
+
+`plain` 醒目提示器依長度分割文字，因此第三個片段會以結束前一句的句號開頭：
+
+```json
+"highlight": {
+  "review": [
+    "The <em>tent</em> kept us dry during two nights",
+    " on the <em>tent</em> door, which jammed twice",
+    ". Overall, a great <em>tent</em> for the price."
+  ]
+}
+```
+
+如果您使用 `unified` 醒目提示器執行相同的請求，每個片段都會從句子的開頭開始：
+
+```json
+"highlight": {
+  "review": [
+    "The <em>tent</em> kept us dry during two nights of",
+    "The only problem was the zipper on the <em>tent</em>",
+    "Overall, a great <em>tent</em> for the price."
+  ]
+}
+```
+
 ## 醒目提示器類型
 
 OpenSearch 支援四種醒目提示器實作：`plain`、`unified`、`fvh` (Fast Vector Highlighter) 及 `semantic`。
@@ -346,37 +426,37 @@ POST /neural-search-index/_search
 
 ## 醒目提示選項
 
-下表說明您可以在全域或欄位層級指定的醒目提示選項。欄位層級設定會覆寫全域設定。
+下表說明您可以在全域或欄位層級指定的醒目提示選項。欄位層級的設定會覆寫全域設定。
 
 選項 | 說明
 :--- | :---
 `type` | 指定要使用的醒目提示器。有效值為 `unified`、`fvh`、`plain` 和 `semantic`。預設為 `unified`。
-`fields` | 指定要搜尋醒目提示文字的欄位。支援萬用字元運算式。若使用萬用字元，則只會醒目提示 `text` 和 `keyword` 欄位。例如，您可以將 `fields` 設為 `my_field*`，以包含所有開頭為前置字元 `my_field` 的 `text` 和 `keyword` 欄位。 
-`force_source` | 指定醒目提示的欄位值應取自 `_source` 欄位，而非取自已儲存的欄位值。預設為 `false`。
-`require_field_match` | 指定是否只醒目提示包含搜尋查詢相符項目的欄位。預設為 `true`。若要醒目提示所有欄位，請將此選項設為 `false`。
+`fields` | 指定要搜尋待醒目提示文字的欄位。支援萬用字元運算式。若使用萬用字元，只有 `text` 和 `keyword` 欄位會被醒目提示。例如，您可以將 `fields` 設為 `my_field*`，以包含所有以前綴 `my_field` 開頭的 `text` 和 `keyword` 欄位。
+`force_source` | 指定用於醒目提示的欄位值應從 `_source` 欄位取得，而非從已儲存的欄位值取得。預設為 `false`。
+`require_field_match` | 指定是否僅醒目提示包含搜尋查詢符合結果的欄位。預設為 `true`。若要醒目提示所有欄位，請將此選項設為 `false`。
 `pre_tags` | 以字串陣列指定醒目提示文字的 HTML 起始標籤。
 `post_tags` | 以字串陣列指定醒目提示文字的 HTML 結束標籤。
-`tags_schema` | 若將此選項設為 `styled`，OpenSearch 會使用內建的標籤結構描述。在此結構描述中，`pre_tags` 為 `<em class="hlt1">`、`<em class="hlt2">`、`<em class="hlt3">`、`<em class="hlt4">`、`<em class="hlt5">`、`<em class="hlt6">`、`<em class="hlt7">`、`<em class="hlt8">`、`<em class="hlt9">` 和 `<em class="hlt10">`，而 `post_tags` 為 `</em>`。
-`boundary_chars` | 所有邊界字元組合成一個字串。<br> 預設為 `".,!? \t\n"`。
-`boundary_scanner` | 僅適用於 `unified` 和 `fvh` 醒目提示器。指定是否將醒目提示的片段分割為句子、單字或字元。有效值如下：<br>- `sentence`：依 [BreakIterator](https://docs.oracle.com/javase/8/docs/api/java/text/BreakIterator.html) 的定義，在句子邊界分割醒目提示的片段。您可以在 `boundary_scanner_locale` 選項中指定 BreakIterator 的地區設定。 <br>- `word`：依 [BreakIterator](https://docs.oracle.com/javase/8/docs/api/java/text/BreakIterator.html) 的定義，在單字邊界分割醒目提示的片段。您可以在 `boundary_scanner_locale` 選項中指定 BreakIterator 的地區設定。<br>- `chars`：在 `boundary_chars` 中列出的任何字元處分割醒目提示的片段。僅適用於 `fvh` 醒目提示器。 
-`boundary_scanner_locale` | 為 `boundary_scanner` 提供 [地區設定](https://docs.oracle.com/javase/8/docs/api/java/util/Locale.html)。有效值為語言標籤（例如 `"en-US"`）。預設為 [Locale.ROOT](https://docs.oracle.com/javase/8/docs/api/java/util/Locale.html#ROOT)。
-`boundary_max_scan` | 當 `fvh` 醒目提示器的 `boundary_scanner` 參數設為 `chars` 時，控制掃描邊界字元的距離。預設為 20。
-`encoder` | 指定醒目提示的片段在傳回之前是否應進行 HTML 編碼。有效值為 `default`（不編碼）或 `html`（先逸出 HTML 文字，再插入醒目提示標籤）。例如，若欄位文字為 `<h3>Hamlet</h3>` 且 `encoder` 設為 `html`，則醒目提示的文字為 `"&lt;h3&gt;<em>Hamlet</em>&lt;&#x2F;h3&gt;"`。 
-`fragmenter` | 指定如何將文字分割為醒目提示的片段。僅適用於 `plain` 醒目提示器。有效值如下：<br>- `span`（預設）：將文字分割為大小相同的片段，但盡量不在醒目提示詞彙之間分割文字。 <br>- `simple`：將文字分割為大小相同的片段。
+`tags_schema` | 若將此選項設為 `styled`，OpenSearch 會使用內建的標籤架構。在此架構中，`pre_tags` 為 `<em class="hlt1">`、`<em class="hlt2">`、`<em class="hlt3">`、`<em class="hlt4">`、`<em class="hlt5">`、`<em class="hlt6">`、`<em class="hlt7">`、`<em class="hlt8">`、`<em class="hlt9">` 和 `<em class="hlt10">`，而 `post_tags` 為 `</em>`。
+`boundary_chars` | 合併為一個字串的所有邊界字元。<br> 預設為 `".,!? \t\n"`。
+`boundary_scanner` | 僅適用於 `unified` 和 `fvh` 醒目提示器。指定是否將醒目提示的片段依句子、詞或字元分割。有效值如下：<br>- `sentence`：在句子邊界分割醒目提示的片段，邊界由 [BreakIterator](https://docs.oracle.com/javase/8/docs/api/java/text/BreakIterator.html) 定義。您可以在 `boundary_scanner_locale` 選項中指定 BreakIterator 的地區設定。<br>- `word`：在詞邊界分割醒目提示的片段，邊界由 [BreakIterator](https://docs.oracle.com/javase/8/docs/api/java/text/BreakIterator.html) 定義。您可以在 `boundary_scanner_locale` 選項中指定 BreakIterator 的地區設定。<br>- `chars`：在 `boundary_chars` 中列出的任何字元處分割醒目提示的片段。僅適用於 `fvh` 醒目提示器。
+`boundary_scanner_locale` | 為 `boundary_scanner` 提供[地區設定](https://docs.oracle.com/javase/8/docs/api/java/util/Locale.html)。有效值為語言標籤（例如 `"en-US"`）。預設為 [Locale.ROOT](https://docs.oracle.com/javase/8/docs/api/java/util/Locale.html#ROOT)。
+`boundary_max_scan` | 控制當 `fvh` 醒目提示器的 `boundary_scanner` 參數設為 `chars` 時，掃描邊界字元的距離。預設為 20。
+`encoder` | 指定醒目提示的片段在傳回前是否應進行 HTML 編碼。有效值為 `default`（不編碼）或 `html`（先跳脫 HTML 文字，再插入醒目提示標籤）。例如，若欄位文字為 `<h3>Hamlet</h3>` 且 `encoder` 設為 `html`，則醒目提示的文字為 `"&lt;h3&gt;<em>Hamlet</em>&lt;&#x2F;h3&gt;"`。
+`fragmenter` | 指定如何將文字分割成醒目提示的片段。僅適用於 `plain` 醒目提示器。有效值如下：<br>- `span`（預設）：將文字分割成相同大小的片段，但盡量不在醒目提示的詞彙之間分割文字。<br>- `simple`：將文字分割成相同大小的片段。
 `fragment_offset` | 指定您要開始醒目提示的字元位移。僅適用於 `fvh` 醒目提示器。
 `fragment_size` | 醒目提示片段的大小，以字元數指定。若 `number_of_fragments` 設為 0，則忽略 `fragment_size`。預設為 100。
-`number_of_fragments`| 傳回的片段數上限。若 `number_of_fragments` 設為 0，OpenSearch 會傳回整個欄位的醒目提示內容。預設為 5。
-`order` | 醒目提示片段的排序順序。將 `order` 設為 `score`，以依相關性排序片段。每個醒目提示器使用不同的演算法來計算相關性分數。預設為 `none`。
-`highlight_query` | 指定應醒目提示搜尋查詢以外之查詢的相符項目。當使用較快的查詢取得文件相符項目，並使用較慢的查詢（例如 `rescore_query`）來精簡結果時，`highlight_query` 選項很有用。我們建議將搜尋查詢納入 `highlight_query` 中。
-`matched_fields` | 合併來自不同欄位的相符項目，以醒目提示單一欄位。此功能最常見的使用案例是醒目提示以不同方式分析並保留在多欄位中的文字。若使用 `fvh`，`matched_fields` 清單中的所有欄位都必須將其 `term_vector` 欄位設為 `with_positions_offsets`。合併相符項目的欄位是唯一載入的欄位，因此建議將其 `store` 選項設為 `yes`。僅適用於 `fvh` 和 `unified` 醒目提示器。
-`no_match_size` | 指定若沒有相符的片段可醒目提示時，從欄位開頭算起要傳回的字元數。預設為 0。
-`phrase_limit` | 文件中納入考量的相符片語數。限制 `fvh` 醒目提示器要分析的片語數，以避免耗用大量記憶體。若使用 `matched_fields`，`phrase_limit` 會指定每個相符欄位的片語數。`phrase_limit` 越高，查詢時間越長，記憶體耗用也越多。僅適用於 `fvh` 醒目提示器。預設為 256。
-`max_analyzer_offset` | 指定醒目提示請求要分析的字元數上限。其餘文字將不會處理。若要醒目提示的文字超過此位移，則會傳回空的醒目提示。醒目提示請求要分析的字元數上限由 `index.highlight.max_analyzed_offset` 定義。達到此限制時，會傳回錯誤。請將 `max_analyzer_offset` 設為低於 `index.highlight.max_analyzed_offset` 的值，以避免發生錯誤。
-`options` | 包含醒目提示器特定選項的全域物件。
-`options.max_inference_batch_size` | 指定使用批次推論模式時，每個傳送至模型伺服器的推論請求要包含的文件數上限。若要處理的文件數超過此值，則會以此大小的批次反覆處理文件。預設為 `100`。僅適用於啟用批次推論模式時的 `semantic` 醒目提示器。
-`options.model_id` | 要用於醒目提示的已部署 ML 模型 ID。`semantic` 醒目提示器為必要。啟用批次推論模式時，模型必須是具備批次處理能力的外部託管模型。請參閱[連線至外部託管的模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/)。
+`number_of_fragments`| 傳回片段的最大數量。若 `number_of_fragments` 設為 0，OpenSearch 會傳回整個欄位的醒目提示內容。預設為 5。
+`order` | 醒目提示片段的排序方式。將 `order` 設為 `score` 可依相關性排序片段。每個醒目提示器使用不同的演算法計算相關性分數。預設為 `none`。
+`highlight_query` | 指定應醒目提示搜尋查詢以外之查詢的符合結果。`highlight_query` 選項在使用較快的查詢取得文件符合結果，並使用較慢的查詢（例如 `rescore_query`）精煉結果時很有用。OpenSearch 不會檢查 `highlight_query` 是否與搜尋查詢相符。若 `highlight_query` 未包含搜尋查詢，文件中符合的詞彙可能不會被醒目提示，而不符合的詞彙可能會被醒目提示。建議將搜尋查詢包含在 `highlight_query` 中。
+`matched_fields` | 合併來自不同欄位的符合結果，以醒目提示單一欄位。此功能最常見的使用情境是醒目提示以不同方式分析並儲存在多欄位（multi-fields）中的文字。若使用 `fvh`，`matched_fields` 清單中的所有欄位都必須將 `term_vector` 欄位設為 `with_positions_offsets`。合併符合結果的欄位是唯一載入的欄位，因此將其 `store` 選項設為 `yes` 會有所幫助。僅適用於 `fvh` 和 `unified` 醒目提示器。
+`no_match_size` | 指定在沒有可醒目提示的符合片段時，從欄位開頭起傳回的字元數。預設為 0。
+`phrase_limit` | 文件中被考慮的符合片語數量。限制 `fvh` 醒目提示器要分析的片語數量，以避免消耗大量記憶體。若使用 `matched_fields`，`phrase_limit` 會指定每個符合欄位的片語數量。較高的 `phrase_limit` 會導致查詢時間增加並消耗更多記憶體。僅適用於 `fvh` 醒目提示器。預設為 256。
+`max_analyzer_offset` | 指定醒目提示請求要分析的最大字元數。其餘文字將不會被處理。若待醒目提示的文字超過此位移，則會傳回空的醒目提示結果。醒目提示請求要分析的最大字元數由 `index.highlight.max_analyzed_offset` 索引設定定義，預設為 `1000000`。若必須重新分析的欄位長度超過此限制，整個搜尋請求將會失敗。以位移或詞彙向量編製索引的欄位不會被 `unified` 和 `fvh` 醒目提示器重新分析，因此此限制不適用於它們。`plain` 醒目提示器一律會重新分析文字。將 `max_analyzer_offset` 設為低於 `index.highlight.max_analyzed_offset` 的值可避免此錯誤。
+`options` | 包含特定醒目提示器選項的全域物件。
+`options.max_inference_batch_size` | 指定在使用批次推論模式時，對模型伺服器的每個推論請求可包含的最大文件數。若待處理的文件數超過此值，文件會以此大小的批次反覆處理。預設為 `100`。僅在啟用批次推論模式時適用於 `semantic` 醒目提示器。
+`options.model_id` | 用於醒目提示之已部署 ML 模型的 ID。`semantic` 醒目提示器必須提供此項。啟用批次推論模式時，模型必須是具備批次處理能力的外部託管模型。請參閱[連線至外部託管的模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/)。
 
-unified 醒目提示器的句子掃描器會將大於 `fragment_size` 的句子，在達到 `fragment_size` 後的第一個單字邊界處分割。若要傳回完整句子而不分割，請將 `fragment_size` 設為 0。
+unified 醒目提示器的句子掃描器會在達到 `fragment_size` 後的第一個詞邊界處，分割大於 `fragment_size` 的句子。若要傳回完整句子而不分割，請將 `fragment_size` 設為 0。
 {: .note}
 
 ## 變更醒目提示標籤
@@ -491,7 +571,7 @@ GET shakespeare/_search
 
 ## 指定醒目提示查詢
 
-預設情況下，OpenSearch 僅會考慮搜尋查詢來進行醒目提示。如果您使用快速查詢取得文件符合結果，並使用較慢的查詢（例如 `rescore_query`）來精煉結果，則對精煉後的結果進行醒目提示會很有用。您可以透過新增 `highlight_query` 來達成：
+根據預設，OpenSearch 只會考量用於醒目提示的搜尋查詢。如果您使用快速查詢來取得文件相符項目，並使用較慢的查詢（例如 `rescore_query`）來精簡結果，醒目提示精簡後的結果會很有用。您可以新增 `highlight_query` 來達成此目的。請將搜尋查詢包含在 `highlight_query` 中，如下列範例所示，因為 OpenSearch 只會醒目提示 `highlight_query` 的詞彙：
 
 ```json
 GET shakespeare/_search

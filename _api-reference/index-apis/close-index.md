@@ -9,11 +9,18 @@ redirect_from:
   - /opensearch/rest-api/index-apis/close-index/
 ---
 
-# 關閉索引 API
+# Close Index API
 **於 1.0 版推出**
 {: .label .label-purple }
 
-關閉索引 API 作業會關閉索引。索引一旦關閉，您就無法對其新增資料，也無法在該索引內搜尋任何資料。
+close index API 操作會關閉索引。索引一旦關閉，您就無法對其新增資料，也無法在該索引內搜尋任何資料。
+
+OpenSearch 會封鎖已關閉索引上的所有讀取與寫入操作。在已關閉索引中搜尋或將文件編製索引的請求都會失敗。由於已關閉的索引不會處理請求，OpenSearch 不會維護用於編製索引與搜尋的記憶體內結構，因而降低該索引對叢集造成的額外負擔。若要讓索引再次可供使用，請使用 [Open Index API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/open-index/)。
+
+當您關閉或開啟索引時，叢集管理員會重新啟動該索引的分片，這些分片接著會經歷一般的復原程序。OpenSearch 會繼續複寫已關閉索引的資料，以確保有足夠的分片副本可供使用。
+
+已關閉的索引仍會佔用磁碟空間。關閉索引並不會釋放磁碟空間。若要回收空間，請刪除您不再需要的索引。若要防止使用者關閉索引，請將 `cluster.indices.close.enable` 叢集設定設為 `false`。如此一來，OpenSearch 就會拒絕所有關閉索引的請求。如需更多資訊，請參閱[索引的叢集設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/cluster-settings-for-indexes/)。
+{: .warning}
 
 
 ## 端點
@@ -26,7 +33,7 @@ POST /{index}/_close
 
 參數 | 類型 | 說明
 :--- | :--- | :---
-&lt;index&gt; | 字串 | 要關閉的索引。可以是以逗號分隔的多個索引名稱清單。使用 `_all` 或 * 可關閉所有索引。
+`index` | 字串 | 要關閉的索引。可以是以逗號分隔的多個索引名稱清單。使用 `_all` 或 `*` 可關閉所有索引。若要防止使用 `_all` 或萬用字元運算式關閉索引，請將 `action.destructive_requires_name` 叢集設定設為 `true`。
 
 ## 查詢參數
 

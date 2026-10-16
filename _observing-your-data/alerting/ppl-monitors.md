@@ -51,7 +51,7 @@ POST /application_logs/_bulk?refresh=true
 
 1. 選取 **Alerting** > **Monitors** > **Create monitor**。
 2. 選取 **PPL monitor** 選項。
-3. 輸入監視器名稱並設定排程（依時間間隔或自訂 cron 運算式）。如需 cron 運算式的詳細資訊，請參閱 [Cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/#cron-expressions)。
+3. 輸入監視器名稱並設定排程（依時間間隔或自訂 cron 運算式）。如需 cron 運算式的詳細資訊，請參閱 [Cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/cron-expressions/)。
 4. 在 **Query** 區段中輸入您的 PPL 查詢，例如：
 
    ```sql

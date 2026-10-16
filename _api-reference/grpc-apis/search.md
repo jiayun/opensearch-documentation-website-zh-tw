@@ -644,14 +644,14 @@ gRPC Search API 支援下列查詢類型：
 
 下列各節說明通用訊息類型使用的值。
 
-#### Fuzziness
+#### 模糊度
 
-[`Fuzziness`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.7.0/protos/schemas/common.proto#L2626) 訊息是 `oneof` 類型，接受下列值。
+[`Fuzziness`](https://github.com/opensearch-project/opensearch-protobufs/blob/1.7.0/protos/schemas/common.proto#L2626) 訊息是一種 `oneof` 類型，可接受下列值。
 
 | 欄位 | Protobuf 類型 | 說明 |
 | :---- | :---- | :---- |
-| `string` | `string` | `AUTO` 根據詞項長度產生編輯距離。您可以選擇提供 `AUTO:[low],[high]`。 |
-| `int32` | `int32` | `0`、`1` 或 `2`：允許的最大 [Levenshtein 距離](https://en.wikipedia.org/wiki/Levenshtein_distance)。 |
+| `string` | `string` | `AUTO` 會根據詞彙的長度產生編輯距離。您可以選擇性提供 `AUTO:[low],[high]`。 |
+| `int32` | `int32` | `0`、`1` 或 `2`：允許的最大 [Damerau–Levenshtein 距離](https://en.wikipedia.org/wiki/Damerau–Levenshtein_distance)。如需更多資訊，請參閱 [Fuzziness]({{site.url}}{{site.baseurl}}/query-dsl/fuzziness/)。 |
 
 #### 改寫參數值
 

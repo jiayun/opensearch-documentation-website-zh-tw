@@ -133,7 +133,7 @@ ISM 會依定義的順序評估轉換。它會使用第一個評估為 `true` �
 `min_size` | 轉換所需的主要分片儲存空間總大小下限 (不計副本)。例如，如果您將 `min_size` 設為 100 GiB，而您的索引有 5 個主要分片和 5 個副本分片，每個分片各為 20 GiB，則所有主要分片的總大小為 100 GiB，因此您的索引會轉換至下一個狀態。 | 字串 | 否
 `no_alias` | 根據別名是否存在來控制轉換。如果為 `true`，則只有在索引**沒有別名**時才會轉換。如果為 `false`，則只有在至少**存在一個別名**時才會轉換。 | 布林值 | 否
 `cron` | 如果沒有其他轉換先發生，則觸發轉換的 `cron` 作業。 | 物件 | 否
-`cron.cron.expression` | 觸發轉換的 `cron` 運算式。如需語法，請參閱 [Cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/#cron-expressions)。 | 字串 | 是
+`cron.cron.expression` | 觸發轉換的 `cron` 運算式。如需語法，請參閱 [Cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/cron-expressions/)。 | 字串 | 是
 `cron.cron.timezone` | 觸發轉換的 `cron` 運算式所使用的時區。 | 字串 | 是
 
 所有以時間為基礎的值 (`min_index_age`、`min_rollover_age`、`min_state_age`) 都使用[標準 OpenSearch 時間單位]({{site.url}}{{site.baseurl}}/api-reference/units/#time-units)。
@@ -177,7 +177,7 @@ ISM 會根據 `job_interval` [設定]({{site.url}}{{site.baseurl}}/im-plugin/ism
 
 此範例使用的一小時時間範圍通常已足夠，但您可以將它增加到 2 或 3 小時，以避免錯過時間範圍而必須等待一週才能進行轉換。或者，您也可以使用更廣泛的運算式，例如 `* * * * SAT,SUN`，讓轉換在週末的任何時間發生。
 
-如需撰寫 cron 運算式的相關資訊，請參閱 [Cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/#cron-expressions)。
+如需撰寫 cron 運算式的相關資訊，請參閱 [Cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/cron-expressions/)。
 
 
 ## 錯誤通知

@@ -34,22 +34,22 @@ grand_parent: Supported field types
 
 參數 | 資料類型 | 說明
 :--- | :--- | :---
-`language` | 字串 | 語言碼（例如德文為 `de`，法文為 `fr`）。選用。
-`country` | 字串 | 國家碼（例如德國為 `DE`，法國為 `FR`）。選用。
-`variant` | 字串 | 用於其他排序選項的變體字串（例如德文電話簿排序為 `@collation=phonebook`）。選用。
-`strength` | 字串 | 排序強度等級。有效值為 `primary`、`secondary`、`tertiary`、`quaternary` 和 `identical`。預設為 `tertiary`。選用。
-`decomposition` | 字串 | 如何處理字元正規化。有效值為 `no` 和 `canonical`。預設為 `no`。選用。
-`alternate` | 字串 | 如何處理空格與標點符號。有效值為 `shifted` 和 `non-ignorable`。選用。
+`language` | 字串 | 語言碼（例如，`de` 代表德語，`fr` 代表法語）。選用。
+`country` | 字串 | 國家碼（例如，`DE` 代表德國，`FR` 代表法國）。選用。
+`variant` | 字串 | 用於額外定序選項的變體字串（例如，`@collation=phonebook` 代表德語電話簿順序）。選用。
+`strength` | 字串 | 定序強度等級。有效值為 `primary`、`secondary`、`tertiary`、`quaternary` 和 `identical`。預設為 `tertiary`。選用。
+`decomposition` | 字串 | 字元正規化的處理方式。有效值為 `no` 和 `canonical`。預設為 `no`。選用。
+`alternate` | 字串 | 空白字元和標點符號的處理方式。有效值為 `shifted` 和 `non-ignorable`。選用。
 `case_level` | 布林值 | 當 `strength` 為 `primary` 時，是否考慮大小寫差異。預設為 `false`。選用。
-`case_first` | 字串 | 大寫或小寫先排序。有效值為 `lower` 和 `upper`。選用。
-`numeric` | 布林值 | 是否依數值排序數字子字串。例如 `item-9` 會排在 `item-21` 之前。預設為 `false`。選用。
-`variable_top` | 字串 | 指定 `alternate` 選項中哪些字元視為可變字元。選用。
-`hiragana_quaternary_mode` | 布林值 | 在 `quaternary` 強度下，是否區分片假名與平假名。選用。
-`doc_values` | 布林值 | 是否將欄位儲存在磁碟上以供排序與彙總使用。預設為 `true`。選用。
-`index` | 布林值 | 欄位是否可搜尋。預設為 `true`。選用。
-`null_value` | 字串 | 用來替代明確 `null` 值的字串值。預設為 `null`（欄位視為遺漏）。選用。
-`store` | 布林值 | 是否將欄位值與 `_source` 分開儲存。預設為 `false`。選用。
-`fields` | 物件 | 以不同方式為相同值編製索引的多欄位對應。選用。
+`case_first` | 字串 | 大寫或小寫字母何者排序在前。有效值為 `lower` 和 `upper`。選用。
+`numeric` | 布林值 | 是否依數值排序數字子字串。例如，`item-9` 排在 `item-21` 之前。預設為 `false`。選用。
+`variable_top` | 字串 | 指定 `alternate` 選項將哪些字元視為可變字元。選用。
+`hiragana_quaternary_mode` | 布林值 | 是否在 `quaternary` 強度下區分片假名和平假名。選用。
+`doc_values` | 布林值 | 是否將欄位儲存於磁碟上，以供排序和彙總使用。預設為 `true`。選用。如需詳細資訊，請參閱[文件值]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/doc-values/)。
+`index` | 布林值 | 欄位是否可供搜尋。預設為 `true`。選用。如需詳細資訊，請參閱[索引]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/index-parameter/)。
+`null_value` | 字串 | 用來取代明確指定之 `null` 值的字串值。預設為 `null`（將欄位視為缺少）。選用。如需詳細資訊，請參閱[空值]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/null-value/)。
+`store` | 布林值 | 是否將欄位值與 `_source` 分開儲存。預設為 `false`。選用。如需詳細資訊，請參閱[儲存]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/store/)。
+`fields` | 物件 | 多欄位對應，可用不同方式為相同的值編製索引。選用。如需詳細資訊，請參閱[欄位]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/fields/)。
 
 ## 範例：德文電話簿排序
 

@@ -8,15 +8,17 @@ nav_order: 160
 
 # Hunspell 詞元篩選器
 
-`hunspell` 詞元篩選器用於對特定語言的單字進行詞幹提取與詞形分析。此篩選器會套用 Hunspell 字典，這類字典廣泛用於拼字檢查器。它的運作方式是將單字拆解為其字根形式（詞幹提取）。
+`hunspell` 詞元篩選器用於特定語言的詞幹擷取與構詞分析。此篩選器會套用 Hunspell 字典，這類字典廣泛用於拼字檢查工具。其運作方式是將詞彙拆解為字根形式（詞幹擷取）。
+
+如果您的語言有可用的演算法詞幹擷取器，例如 [`stemmer`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/stemmer/) 或 [`porter_stem`]({{site.url}}{{site.baseurl}}/analyzers/token-filters/porter-stem/) 篩選器，請先試用它們，再使用 `hunspell`。演算法詞幹擷取器速度更快、使用較少記憶體，且不需要字典檔案，通常能產生相當或更好的搜尋結果。如需更多資訊，請參閱[詞幹擷取]({{site.url}}{{site.baseurl}}/analyzers/stemming/)。
 
 Hunspell 字典檔案會在啟動時自動從 `<OS_PATH_CONF>/hunspell/<locale>` 目錄載入。例如，`en_GB` 地區設定在 `<OS_PATH_CONF>/hunspell/en_GB/` 目錄中必須至少有一個 `.aff` 檔案，以及一個或多個 `.dic` 檔案。
 
-您也可以使用 `ref_path` 參數從自訂目錄載入字典，以便為同一個地區設定維護多組獨立的字典。如需詳細資訊，請參閱[使用 ref_path 載入自訂字典](#custom-dictionary-loading)。
+或者，您可以使用 `ref_path` 參數從自訂目錄載入字典，為同一個地區設定維護多組獨立的字典集。如需更多資訊，請參閱[使用 ref_path 載入自訂字典](#custom-dictionary-loading)。
 
-您也可以在執行階段熱重新載入 Hunspell 字典，而不需要重新啟動節點。如需詳細資訊，請參閱[熱重新載入 Hunspell 字典](#hot-reloading-hunspell-dictionaries)。
+您也可以在執行階段熱重新載入 Hunspell 字典，而不必重新啟動節點。如需更多資訊，請參閱[熱重新載入 Hunspell 字典](#hot-reloading-hunspell-dictionaries)。
 
-您可以從 [LibreOffice 字典](https://github.com/LibreOffice/dictionaries)下載這些檔案。
+您可以從 [LibreOffice 字典](https://github.com/LibreOffice/dictionaries) 下載這些檔案。
 
 ## 參數
 
@@ -63,6 +65,18 @@ PUT /my_index
 }
 ```
 {% include copy-curl.html %}
+
+## Hunspell 節點設定
+
+下表列出控制 OpenSearch 如何從預設 `<OS_PATH_CONF>/hunspell/` 目錄載入 Hunspell 字典的靜態節點設定。請在 `opensearch.yml` 中進行設定。
+
+設定 | 資料類型 | 說明
+:--- | :--- | :---
+`indices.analysis.hunspell.dictionary.lazy` | 布林值 | 若為 `false`，OpenSearch 會在節點啟動時載入 `hunspell` 目錄中的所有字典，並對任何載入失敗的字典記錄錯誤。若為 `true`，OpenSearch 會在 `hunspell` 篩選器首次使用某個字典時才載入該字典，因此字典錯誤只會在索引或分析請求參照該地區設定時出現。預設為 `false`。
+`indices.analysis.hunspell.dictionary.ignore_case` | 布林值 | 若為 `true`，單字會不分大小寫地與字典條目比對。例如，若字典包含帶有 `-ing` 字尾規則的 `Jump`，則只有當 `ignore_case` 為 `true` 時，文字 `jumping` 才會經過詞幹擷取還原為 `jump`。此設定適用於所有地區設定。預設為 `false`。
+`indices.analysis.hunspell.dictionary.<locale>.ignore_case` | 布林值 | 為單一地區設定指定 `ignore_case`，例如 `indices.analysis.hunspell.dictionary.en_US.ignore_case`。會覆寫全域的 `ignore_case` 設定。
+
+您也可以在地區設定目錄中新增 `settings.yml` 檔案，為單一字典設定 `ignore_case`，例如包含 `ignore_case: true` 的 `<OS_PATH_CONF>/hunspell/en_US/settings.yml`。若檔案與地區設定專屬的節點設定同時指定 `ignore_case`，則以節點設定為優先。
 
 ## 載入自訂字典
 

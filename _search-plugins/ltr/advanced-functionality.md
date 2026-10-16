@@ -414,9 +414,9 @@ GET /_plugins/_ltr/{nodeId}/stats/{stat}
 實驗性
 {: .label .label-red }
 
-`TermStatQuery` 處於實驗階段，且其領域特定語言 (DSL) 可能會隨著程式碼演進而變更。如需穩定的詞項統計資料存取，請參閱 [ExplorerQuery]{.title-ref}。
+`TermStatQuery` 目前處於實驗階段，隨著程式碼演進，領域特定語言（DSL）可能會變動。如需穩定的詞彙統計存取方式，請參閱 [`ExplorerQuery`]({{site.url}}{{site.baseurl}}/search-plugins/ltr/feature-engineering/#getting-raw-term-statistics)。
 
-`TermStatQuery` 是舊版 `ExplorerQuery` 重新設計的版本。它提供更清楚的方式來指定詞項，並為實驗提供更大的彈性。此查詢呈現的資料與 [ExplorerQuery]{.title-ref} 相同，但它允許您指定自訂的 Lucene 運算式來擷取所需的資料，如下列範例所示：
+`TermStatQuery` 是舊版 `ExplorerQuery` 的重新設計版本。它提供更清楚的方式來指定詞彙，並為實驗提供更大的彈性。此查詢回傳的資料與 `ExplorerQuery` 相同，但允許您指定自訂的 Lucene 運算式來取得所需的資料，如下列範例所示：
 
 ```json
 POST tmdb/_search
@@ -433,36 +433,36 @@ POST tmdb/_search
 ```
 {% include copy-curl.html %}
 
-`expr` 參數用於指定 Lucene 運算式。此運算式會以每個詞項為基礎執行。運算式可以是簡單的統計類型，或是包含多種統計類型的自訂公式，例如 `(tf * idf) / 2`。Lucene 運算式內容中可用的統計類型列於下表。
+`expr` 參數用於指定 Lucene 運算式。此運算式會以每個詞彙為單位執行。運算式可以是簡單的統計類型，也可以是包含多個統計類型的自訂公式，例如 `(tf * idf) / 2`。Lucene 運算式環境中可用的統計類型列於下表。
 
 類型 | 說明
 :---| :---
-`df` | 詞項的直接文件頻率。例如，若 `rambo` 出現在多份文件中的三個電影標題中，則該值會是 `3`。
-`idf` | 使用公式 `log((NUM_DOCS+1)/(raw_df+1)) + 1` 計算的逆文件頻率 (IDF)。
-`tf` | 文件中的詞項頻率。例如，若 `rambo` 在同一份文件的電影簡介中出現三次，則該值會是 `3`。
-`tp` | 文件中的詞項位置。單一詞項可能傳回多個位置，因此您應檢閱 `pos_aggr` 參數的行為。
-`ttf` | 詞項在整個索引中的總詞項頻率。例如，若 `rambo` 在所有文件的 `overview` 欄位中共被提及 100 次，則該值會是 `100`。
+`df` | 詞彙的直接文件頻率。例如，若 `rambo` 出現在多份文件中的三個電影標題裡，則值會是 `3`。
+`idf` | 使用公式 `log((NUM_DOCS+1)/(raw_df+1)) + 1` 計算的反向文件頻率（IDF）。
+`tf` | 文件的詞彙頻率。例如，若 `rambo` 在同一份文件的電影簡介中出現三次，則值會是 `3`。
+`tp` | 文件的詞彙位置。單一詞彙可能回傳多個位置，因此您應檢視 `pos_aggr` 參數的行為。
+`ttf` | 詞彙在整個索引中的總詞彙頻率。例如，若 `rambo` 在所有文件的 `overview` 欄位中總共出現 100 次，則值會是 `100`。
 
-`aggr` 參數指定要套用至從 `expr` 收集之統計資料的彙總類型。例如，若您指定詞項 `rambo` 與 `rocky`，則查詢會收集這兩個詞項的統計資料。由於您只能傳回單一值，因此需要決定要使用哪一種統計計算。可用的彙總類型有 `min`、`max`、`avg`、`sum` 與 `stddev`。此查詢也提供下列計數：`matches` (目前文件中相符的詞項數目) 與 `unique` (查詢中傳入的唯一詞項數目)。
+`aggr` 參數指定要套用至從 `expr` 收集之統計資料的彙總類型。例如，若您指定詞彙 `rambo` 和 `rocky`，則查詢會收集這兩個詞彙的統計資料。由於只能回傳單一值，您需要決定要使用哪種統計計算。可用的彙總類型為 `min`、`max`、`avg`、`sum` 和 `stddev`。此查詢也提供下列計數：`matches`（目前文件中符合的詞彙數量）和 `unique`（查詢中傳入的不重複詞彙數量）。
 
-`terms` 參數指定您要收集統計資料的詞項陣列。僅支援單一詞項，不支援片語或跨度查詢。若您的欄位已斷詞，您可以在陣列中以單一字串傳入多個詞項。
+`terms` 參數指定要收集統計資料的詞彙陣列。僅支援單一詞彙，不支援片語或 span 查詢。若您的欄位已斷詞，您可以在陣列中的一個字串內傳入多個詞彙。
 
-`fields` 參數指定要檢查所指定 `terms` 的欄位。若未指定 `analyzer`，則會使用每個欄位已設定的 `search_analyzer`。
+`fields` 參數指定要檢查指定 `terms` 的欄位。若未指定 `analyzer`，則會使用每個欄位所設定的 `search_analyzer`。
 
 選用參數列於下表。
 
 類型 | 說明
 :---| :---
-`analyzer` | 若指定，則會使用此分析器，而非每個欄位已設定的 `search_analyzer`。
-`pos_aggr` | 由於每個詞項可以有多個位置，您可以使用此參數指定要套用至詞項位置的彙總。這支援與 `aggr` 參數相同的值，且預設為 `avg`。
+`analyzer` | 若有指定，則使用此分析器取代每個欄位所設定的 `search_analyzer`。
+`pos_aggr` | 由於每個詞彙可能有多個位置，您可以使用此參數指定要套用至詞彙位置的彙總。此參數支援與 `aggr` 參數相同的值，並預設為 `avg`。
 
 ### 指令碼注入
 
-指令碼注入可將詞彙統計資料注入指令碼執行環境。使用 `ScriptFeatures` 時，您可以傳入包含 `terms`、`fields` 和 `analyzer` 參數的 `term_stat` 物件。接著，名為 `termStats` 的注入變數可讓您在自訂指令碼中存取原始值。這可讓您存取所有底層資料，進而進行進階特徵工程。
+指令碼注入可將詞項統計資料注入指令碼內容中。使用 `ScriptFeatures` 時，您可以傳遞帶有 `terms`、`fields` 及 `analyzer` 參數的 `term_stat` 物件。接著，名為 `termStats` 的注入變數會提供您自訂指令碼中原始值的存取權。這讓您能存取所有基礎資料，進而實現進階特徵工程。
 
-若要存取相符詞元的數量，請使用 [`params.matchCount.get`]{.title-ref}。若要存取不重複詞元的數量，請使用 [`params.uniqueTerms`]{.title-ref}。
+若要存取符合的詞元數量，請使用 `params.matchCount.get`。若要存取唯一詞元數量，請使用 `params.uniqueTerms`。
 
-您可以在指令碼定義中將 `term_stat` 參數寫死，也可以傳入參數，在查詢時設定。例如，下列範例查詢定義了一個特徵集，其中的指令碼特徵使用寫死的 `term_stat` 參數：
+您可以在指令碼定義中將 `term_stat` 參數寫死，或傳遞該參數以便在查詢時設定。例如，下列範例查詢定義了一個特徵集，其中包含使用寫死 `term_stat` 參數的指令碼特徵：
 
 ```json
 POST _ltr/_featureset/test
@@ -490,10 +490,10 @@ POST _ltr/_featureset/test
 ```
 {% include copy-curl.html %}
 
-直接指定分析器名稱時，名稱前必須加上驚嘆號（!）。否則，該名稱會被視為用來查找參數值的名稱。
+在本機指定分析器名稱時，必須加上驚嘆號 (!) 前置字元。否則，這些名稱會被視為參數查閱值。
 {: .note}
 
-若要設定參數查找，您可以傳入要從中取得值的參數名稱，如下列範例請求所示：
+若要設定參數查閱，您可以傳遞要從中提取值的參數名稱，如下列範例請求所示：
 
 ```json
 POST _ltr/_featureset/test
@@ -521,7 +521,7 @@ POST _ltr/_featureset/test
 ```
 {% include copy-curl.html %}
 
-或者，您可以將 `term_stat` 參數作為查詢時參數傳入，如下列請求所示：
+或者，您也可以將 `term_stat` 參數作為查詢時參數傳遞，如下列請求所示：
 
 ```json
 POST tmdb/_search

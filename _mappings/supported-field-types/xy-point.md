@@ -101,11 +101,11 @@ PUT testindex1/_doc/5
 
 ## 參數
 
-下表列出 xy point 欄位類型可接受的參數。所有參數皆為選用。
+下表列出 xy point 欄位類型接受的參數。所有參數皆為選用。
 
-參數 | 說明
-:--- | :---
-`doc_values` | 布林值，指定欄位是否應儲存在磁碟上，以便用於彙總、排序或指令碼。預設值為 `true`。
-`ignore_malformed` | 布林值，指定是否忽略格式錯誤的值，且不擲回例外狀況。預設值為 `false`。
-`ignore_z_value` | 專用於具有三個座標的點。若 `ignore_z_value` 為 `true`，則不會將第三個座標編製索引，但仍會儲存在 `_source` 欄位中。若 `ignore_z_value` 為 `false`，則會擲回例外狀況。
-[`null_value`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/index#null-value) | 用來取代 `null` 的值。該值必須與欄位具有相同的類型。若未指定此參數，則當欄位的值為 `null` 時，會將其視為缺少。預設值為 `null`。
+參數 | 說明 
+:--- | :--- 
+`doc_values` | 布林值，指定是否將欄位儲存在磁碟上，以便用於彙總、排序或指令碼。預設為 `true`。如需更多資訊，請參閱 [Doc values]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/doc-values/)。
+`ignore_malformed` | 布林值，指定忽略格式錯誤的值而不擲回例外狀況。預設為 `false`。如需更多資訊，請參閱 [Ignore malformed]({{site.url}}{{site.baseurl}}/mappings/mapping-parameters/ignore-malformed/)。
+`ignore_z_value` | 專用於具有三個座標的點。若 `ignore_z_value` 為 `true`，第三個座標不會編製索引，但仍會儲存在 `_source` 欄位中。若 `ignore_z_value` 為 `false`，則會擲回例外狀況。
+[`null_value`]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/index#null-value) | 用來取代 `null` 的值。該值必須與欄位屬於相同類型。若未指定此參數，當欄位的值為 `null` 時，該欄位會被視為遺失。預設為 `null`。

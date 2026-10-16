@@ -13,7 +13,7 @@ redirect_from:
 
 您可以使用 cron 命令列公用程式，透過 Reporting CLI 發起報告請求，並在任何日期或時間間隔定期執行。請依照 cron 運算式語法，指定您要發起之命令前面的日期與時間。
 
-如要了解 cron 運算式語法，請參閱 [Cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/#cron-expressions)。如要取得 cron 的說明，請執行下列命令來開啟手冊頁面：
+如要了解 cron 運算式語法，請參閱 [Cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/cron-expressions/)。如要取得 cron 的說明，請執行下列命令來開啟手冊頁面：
 
 ```
 man cron

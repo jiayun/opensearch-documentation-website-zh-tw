@@ -579,7 +579,7 @@ POST _plugins/_alerting/workflows/{workflow_id}/_acknowledge/alerts
   * **Daily** — 指定一天中的時間與時區。
   * **Weekly** — 指定一週中的某一天、一天中的時間與時區。
   * **Monthly** — 指定一個月中的某一天、一天中的時間與時區。
-  * **Custom cron expression** — 為排程建立自訂 cron 運算式。可使用 **cron expressions** 連結協助建立這些運算式，或參閱 [Cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/#cron-expressions)。
+  * **Custom cron expression** — 為排程建立自訂 cron 運算式。可使用 **cron expressions** 連結協助建立這些運算式，或參閱 [Cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/cron-expressions/)。
 
 1. 在 **Delegate monitors** 區段中，透過下拉式清單選取要納入工作流程的個別監視器。在 **Visual editor** 中，選取監視器的順序會決定它們在工作流程中的順序。
   

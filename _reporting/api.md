@@ -145,7 +145,7 @@ POST _plugins/_reports/definition
 ```
 {% include copy-curl.html %}
 
-如需 cron 運算式的更多資訊，請參閱[Cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/#cron-expressions)。
+如需 cron 運算式的更多資訊，請參閱[Cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/cron-expressions/)。
 
 ## 列出報告定義 API
 

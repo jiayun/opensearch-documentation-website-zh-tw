@@ -10,10 +10,13 @@ redirect_from:
 ---
 
 # Index Exists API
-**於 1.0 版推出**
+**1.0 版新增**
 {: .label .label-purple }
 
-Index Exists API 操作會傳回索引是否已存在。
+Index exists API 操作會回傳索引是否已經存在。
+
+如果所有指定的索引都存在，此 API 會回傳 `200` 狀態碼；若其中任何一個不存在，則回傳 `404` 狀態碼。此 API 不會區分索引名稱與[別名]({{site.url}}{{site.baseurl}}/im-plugin/index-alias/)，因此即使您指定的是現有別名的名稱，它也會回傳 `200`。
+{: .note}
 
 
 ## 端點

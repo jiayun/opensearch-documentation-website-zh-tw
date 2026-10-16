@@ -50,7 +50,7 @@ redirect_from:
 1. (選用) 在報告中新增頁首或頁尾。頁首和頁尾僅適用於儀表板、視覺化和筆記本報告。
 1. 在 **Report trigger** 下，選擇 **On demand** 或 **Schedule**。
 
-   對於排程報告，請選擇 **Recurring** 或 **Cron based**。您可以每天或在其他時間間隔接收報告，而 Cron 運算式可提供更大的彈性。如需更多資訊，請參閱 [Cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/common-parameters/#cron-expressions)。
+   對於排程報告，請選擇 **Recurring** 或 **Cron based**。您可以每天或在其他時間間隔接收報告，而 Cron 運算式可提供更大的彈性。如需更多資訊，請參閱 [Cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/cron-expressions/)。
 
 2. 選擇 **Create**。
 

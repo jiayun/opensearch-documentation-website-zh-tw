@@ -957,27 +957,27 @@ GET articles/_search
 
 ## 參數
 
-此查詢接受下列參數。除了 `query` 以外的所有參數都是選用。
+此查詢接受下列參數。除了 `query` 之外，所有參數都是選用。
 
 參數 | 資料類型 | 說明
 :--- | :--- | :---
 `query` | 字串 | 用於搜尋的查詢字串。必要。
-`auto_generate_synonyms_phrase_query` | 布林值 | 指定是否要為多詞元同義詞自動建立 [match phrase 查詢]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match-phrase/)。例如，若您將 `ba,batting average` 指定為同義詞並搜尋 `ba`，OpenSearch 會搜尋 `ba OR "batting average"`（若此選項為 `true`）或 `ba OR (batting AND average)`（若此選項為 `false`）。預設為 `true`。
-`analyzer` | 字串 | 用於將查詢字串文字斷詞的 [分析器]({{site.url}}{{site.baseurl}}/analyzers/index/)。預設為針對 `default_field` 所指定的索引時分析器。若未為 `default_field` 指定分析器，則 `analyzer` 是該索引的預設分析器。如需 `index.query.default_field` 的詳細資訊，請參閱 [動態索引設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/#dynamic-index-settings)。
-`boost` | 浮點數 | 以指定的乘數提升子句。適合用於在複合查詢中加權子句。位於 [0, 1) 範圍內的值會降低相關性，大於 1 的值則會提高相關性。預設為 `1`。
-`fields` | 字串陣列 | 要搜尋的欄位清單。若您未提供 `fields` 參數，`multi_match` 查詢會搜尋 `index.query.default_field` 設定中所指定的欄位，該設定預設為 `*`。
-`fuzziness` | 字串 | 在判斷某個詞元是否符合某個值時，將一個字變更為另一個字所需的字元編輯次數（插入、刪除、取代）。例如，`wined` 與 `wind` 之間的距離為 1。有效值為非負整數或 `AUTO`。預設值 `AUTO` 會根據搜尋詞元的長度動態選擇編輯距離。您可以使用 `AUTO:[low],[high]` 語法自訂閾值，其中 `low` 與 `high` 定義字元長度界限。省略時，OpenSearch 會使用 `AUTO:3,6` 作為預設值，套用下列規則：<br>- 包含 0--2 個字元的詞元：需要完全相符（0 次編輯）。<br>- 包含 3--5 個字元的詞元：最多允許 1 次編輯。<br>- 包含 6 個以上字元的詞元：最多允許 2 次編輯。<br>例如，`AUTO:4,7` 對包含 0--3 個字元的詞元要求完全相符，對包含 4--6 個字元的詞元最多允許 1 次編輯，並對包含 7 個以上字元的詞元最多允許 2 次編輯。大多數情境建議使用 `AUTO`。`phrase`、`phrase_prefix` 及 `cross_fields` 查詢不支援。
-`fuzzy_rewrite` | 字串 | 決定 OpenSearch 如何重寫查詢。有效值為 `constant_score`、`scoring_boolean`、`constant_score_boolean`、`top_terms_N`、`top_terms_boost_N` 及 `top_terms_blended_freqs_N`。若 `fuzziness` 參數不是 `0`，查詢預設會使用 `top_terms_blended_freqs_${max_expansions}` 的 `fuzzy_rewrite` 方法。
-`fuzzy_transpositions` | 布林值 | 將 `fuzzy_transpositions` 設為 `true`（預設）會將相鄰字元的互換加入 `fuzziness` 選項的插入、刪除及取代操作。例如，若 `fuzzy_transpositions` 為 true，`wind` 與 `wnid` 之間的距離為 1（互換 "n" 與 "i"）；若為 false，則距離為 2（刪除 "n"、插入 "n"）。若 `fuzzy_transpositions` 為 false，則 `rewind` 與 `wnid` 與 `wind` 的距離相同（皆為 2），儘管以更貼近人類的觀點來看，`wnid` 是明顯的打字錯誤。對大多數使用情境而言，預設值是很好的選擇。
-`lenient` | 布林值 | 將 `lenient` 設為 `true` 會忽略查詢與文件欄位之間的資料類型不符。例如，查詢字串 `"8.2"` 可能符合 `float` 類型的欄位。預設為 `false`。
-`max_expansions` | 正整數 | 查詢可擴展到的詞元數上限。模糊查詢會「擴展」為多個符合的詞元，這些詞元位於 `fuzziness` 所指定的距離內。接著 OpenSearch 會嘗試比對這些詞元。預設為 `50`。
-`minimum_should_match` | 正整數或負整數、正百分比或負百分比，或其組合 | 若查詢字串包含多個搜尋詞元，且您使用 `or` 運算子，此參數指定文件至少須符合多少個詞元才會被視為相符。例如，若 `minimum_should_match` 為 2，則 `wind often rising` 不符合 `The Wind Rises.`；若 `minimum_should_match` 為 `1`，則符合。如需詳細資訊，請參閱[最小應符合數（Minimum should match）]({{site.url}}{{site.baseurl}}/query-dsl/minimum-should-match/)。
-`operator` | 字串 | 若查詢字串包含多個搜尋詞元，此參數指定文件必須符合所有詞元（`AND`）或只需符合其中一個詞元（`OR`），才會被視為相符。有效值為：<br>- `OR`：字串 `to be` 會解讀為 `to OR be`<br>- `AND`：字串 `to be` 會解讀為 `to AND be`<br> 預設為 `OR`。
+`auto_generate_synonyms_phrase_query` | 布林值 | 指定是否要為多詞同義詞自動建立 [match phrase 查詢]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match-phrase/)。例如，如果您將 `ba,batting average` 指定為同義詞並搜尋 `ba`，OpenSearch 會搜尋 `ba OR "batting average"`（如果此選項為 `true`）或 `ba OR (batting AND average)`（如果此選項為 `false`）。預設為 `true`。
+`analyzer` | 字串 | 用於將查詢字串文字斷詞的[分析器]({{site.url}}{{site.baseurl}}/analyzers/index/)。預設為針對 `default_field` 指定的索引時分析器。如果未針對 `default_field` 指定分析器，則 `analyzer` 是索引的預設分析器。如需 `index.query.default_field` 的詳細資訊，請參閱[動態索引設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/#dynamic-index-settings)。
+`boost` | 浮點數 | 以指定的乘數提升子句。適用於在複合查詢中加權子句。介於 [0, 1) 範圍的值會降低相關性，大於 1 的值則會提高相關性。預設為 `1`。
+`fields` | 字串陣列 | 要搜尋的欄位清單。如果您未提供 `fields` 參數，`multi_match` 查詢會搜尋 `index.query.default_field` 設定中指定的欄位，其預設為 `*`。
+`fuzziness` | 字串 | 比對每個詞元時允許的最大編輯次數，指定為 `0`、`1`、`2`、`AUTO` 或 `AUTO:<low>,<high>`。如果未指定，詞元必須完全相符。`cross_fields`、`phrase` 及 `phrase_prefix` 類型不支援。如需詳細資訊，請參閱[模糊比對]({{site.url}}{{site.baseurl}}/query-dsl/fuzziness/)。
+`fuzzy_rewrite` | 字串 | 決定 OpenSearch 如何重寫查詢。有效值為 `constant_score`、`scoring_boolean`、`constant_score_boolean`、`top_terms_N`、`top_terms_boost_N` 及 `top_terms_blended_freqs_N`。如果 `fuzziness` 參數不是 `0`，查詢預設會使用 `top_terms_blended_freqs_${max_expansions}` 的 `fuzzy_rewrite` 方法。
+`fuzzy_transpositions` | 布林值 | 將 `fuzzy_transpositions` 設為 `true`（預設）會將相鄰字元的調換加入 `fuzziness` 選項的插入、刪除及取代作業。例如，如果 `fuzzy_transpositions` 為 true，`wind` 與 `wnid` 之間的距離為 1（調換「n」與「i」）；如果為 false，則距離為 2（刪除「n」、插入「n」）。如果 `fuzzy_transpositions` 為 false，則 `rewind` 與 `wnid` 與 `wind` 的距離相同（2），儘管以人為本的觀點認為 `wnid` 是明顯的打字錯誤。預設值對大多數使用案例而言是很好的選擇。
+`lenient` | 布林值 | 將 `lenient` 設為 `true` 會忽略查詢與文件欄位之間的資料類型不符。例如，查詢字串 `"8.2"` 可以比對類型為 `float` 的欄位。預設為 `false`。
+`max_expansions` | 正整數 | 查詢可擴展的詞元數上限。模糊查詢會「擴展為」若干符合的詞元，這些詞元位於 `fuzziness` 中指定的距離內。接著 OpenSearch 會嘗試比對這些詞元。預設為 `50`。
+`minimum_should_match` | 正整數或負整數、正百分比或負百分比、組合 | 如果查詢字串包含多個搜尋詞元，且您使用 `or` 運算子，則文件必須符合的詞元數才會被視為相符。例如，如果 `minimum_should_match` 為 2，則 `wind often rising` 不符合 `The Wind Rises.`；如果 `minimum_should_match` 為 `1`，則符合。如需詳細資訊，請參閱[最少應符合數]({{site.url}}{{site.baseurl}}/query-dsl/minimum-should-match/)。
+`operator` | 字串 | 如果查詢字串包含多個搜尋詞元，文件必須所有詞元都符合（`AND`）或只要有一個詞元符合（`OR`）才會被視為相符。有效值為：<br>- `OR`：字串 `to be` 會解譯為 `to OR be`<br>- `AND`：字串 `to be` 會解譯為 `to AND be`<br> 預設為 `OR`。
 `prefix_length` | 非負整數 | 在模糊比對中不列入考量的前置字元數。預設為 `0`。
-`slop` | `0`（預設）或正整數 | 控制查詢中的字詞可以錯序到什麼程度仍被視為相符。根據 [Lucene 文件](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/PhraseQuery.html#getSlop--)：「查詢片語中字詞之間允許出現的其他字詞數。例如，要互換兩個字詞的順序需要兩次移動（第一次移動會將兩個字詞疊在一起），因此若要允許片語重新排序，slop 至少必須為 2。值為零則要求完全相符。」支援 `phrase` 與 `phrase_prefix` 查詢類型。
-`tie_breaker` | 浮點數 | 介於 0 與 1.0 之間的係數，用於對符合多個查詢子句的文件給予更多權重。如需詳細資訊，請參閱 [`tie_breaker` 參數](#the-tie_breaker-parameter)。
+`slop` | `0`（預設）或正整數 | 控制查詢中的字詞可以錯排到什麼程度仍被視為相符。根據 [Lucene 文件](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/search/PhraseQuery.html#getSlop--)：「查詢片語中字詞之間允許的其他字詞數。例如，調換兩個字詞的順序需要兩次移動（第一次移動會將字詞疊在一起），因此若要允許片語重新排序，slop 必須至少為二。值為零則要求完全相符。」`phrase` 及 `phrase_prefix` 查詢類型支援。
+`tie_breaker` | 浮點數 | 介於 0 與 1.0 之間的因數，用於對符合多個查詢子句的文件賦予更高權重。如需詳細資訊，請參閱[`tie_breaker` 參數](#the-tie_breaker-parameter)。
 `type` | 字串 | 多重比對查詢類型。有效值為 `best_fields`、`most_fields`、`cross_fields`、`phrase`、`phrase_prefix`、`bool_prefix`。預設為 `best_fields`。
-`zero_terms_query` | 字串 | 在某些情況下，分析器會移除查詢字串中的所有詞元。例如，`stop` 分析器會從字串 `an but this` 中移除所有詞元。在這些情況下，`zero_terms_query` 會指定要不符合任何文件（`none`）或符合所有文件（`all`）。有效值為 `none` 與 `all`。預設為 `none`。
+`zero_terms_query` | 字串 | 在某些情況下，分析器會從查詢字串中移除所有詞元。例如，`stop` 分析器會從字串 `an but this` 中移除所有詞元。在這些情況下，`zero_terms_query` 會指定要不符合任何文件（`none`）或符合所有文件（`all`）。有效值為 `none` 及 `all`。預設為 `none`。
 
 ### 依查詢類型區分的參數支援
 

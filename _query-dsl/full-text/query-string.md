@@ -169,12 +169,12 @@ GET /testindex/_search
 ```
 {% include copy-curl.html %}
 
-萬用字元查詢可能會使用大量記憶體，進而降低效能。位於單字開頭的萬用字元 (例如 `*cal`) 成本最高，因為在該類萬用字元上比對文件需要檢查索引中的所有詞彙。若要停用前置萬用字元，請將 `allow_leading_wildcard` 設為 `false`。
+萬用字元查詢可能會使用大量記憶體，進而降低效能。位於單字開頭的萬用字元（例如 `*cal`）成本最高，因為在該類萬用字元上比對文件需要檢查索引中的所有詞彙。若要停用前置萬用字元，請將 `allow_leading_wildcard` 設為 `false`。
 {: .warning}
 
-為了提升效率，`*` 這類純萬用字元會改寫為 `exists` 查詢。因此，`description: *` 萬用字元會比對 `description` 欄位中包含空字串值的文件，但不會比對 `description` 欄位遺漏或具有 `null` 值的文件。
+為了提升效率，`*` 這類純萬用字元會改寫為 `exists` 查詢。因此，`description: *` 萬用字元會比對 `description` 欄位中包含空值的文件，但不會比對 `description` 欄位遺漏或具有 `null` 值的文件。
 
-如果您將 `analyze_wildcard` 設為 `true`，OpenSearch 會分析以 `*` 結尾的查詢 (例如 `hist*`)。因此，OpenSearch 會建立一個布林查詢，其中包含對前 n-1 個詞元進行完全相符，以及對最後一個詞元進行前置字元相符所產生的詞元。
+如果您將 `analyze_wildcard` 設為 `true`，OpenSearch 會分析以 `*` 結尾的查詢（例如 `hist*`）。因此，OpenSearch 會以產生的詞元建立布林查詢：對前 n-1 個詞元進行完全比對，並對最後一個詞元進行前置詞比對。
 
 ## 正規表示式
 
@@ -621,27 +621,27 @@ GET /testindex/_search
 
 參數 | 資料類型 | 說明
 :--- | :--- | :---
-`query` | 字串 | 可能包含 [查詢字串語法](#query-string-syntax) 中用於搜尋之運算式的文字。必要。
-`allow_leading_wildcard` | 布林值 | 指定是否允許 `*` 和 `?` 作為搜尋詞彙的第一個字元。預設為 `true`。
+`query` | 字串 | 可能包含[查詢字串語法](#query-string-syntax)運算式、用於搜尋的文字。必要。
+`allow_leading_wildcard` | 布林值 | 指定是否允許 `*` 與 `?` 作為搜尋詞彙的第一個字元。預設為 `true`。
 `analyze_wildcard` | 布林值 | 指定 OpenSearch 是否應嘗試分析萬用字元詞彙。預設為 `false`。
-`analyzer` | 字串 | 用來對查詢字串文字進行斷詞的[分析器]({{site.url}}{{site.baseurl}}/analyzers/index/)。預設為為 `default_field` 指定的索引時分析器。如果未為 `default_field` 指定分析器，則 `analyzer` 是索引的預設分析器。有關 `index.query.default_field` 的更多資訊，請參閱 [動態索引設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/#dynamic-index-settings)。
-`auto_generate_synonyms_phrase_query` | 布林值 | 指定是否為多詞彙同義詞自動建立 [片語比對查詢]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match-phrase/)。例如，如果您指定 `ba, batting average` 作為同義詞並搜尋 `ba`，則 OpenSearch 會搜尋 `ba OR "batting average"` (若此選項為 `true`) 或 `ba OR (batting AND average)` (若此選項為 `false`)。預設為 `true`。
-`boost` | 浮點數 | 以給定的倍數提升子句的權重。適合用於在複合查詢中為子句加權。[0, 1) 範圍內的值會降低相關性，大於 1 的值會提高相關性。預設為 `1`。
-`default_field` | 字串 | 當查詢字串中未指定欄位時要搜尋的欄位。支援萬用字元。預設為 `index.query. Default_field` 索引設定中指定的值。預設情況下，`index.query. Default_field` 為 `*`，表示擷取所有適合詞彙查詢的欄位並篩除中繼資料欄位。如果未指定 `prefix`，擷取的欄位會合併成一個查詢。適用欄位不包含巢狀文件。搜尋所有適用欄位可能是耗用大量資源的作業。`indices.query.bool.max_clause_count` 搜尋設定定義了一次可查詢的欄位數與詞彙數乘積的最大值。`indices.query.bool.max_clause_count` 的預設值為 1,024。
-`default_operator`| 字串 | 如果查詢字串包含多個搜尋詞彙，指定文件被視為符合時，是所有詞彙都必須符合 (`AND`) 還是只需一個詞彙符合 (`OR`)。有效值為：<br>- `OR`：字串 `to be` 會被解譯為 `to OR be`<br>- `AND`：字串 `to be` 會被解譯為 `to AND be`<br> 預設為 `OR`。
+`analyzer` | 字串 | 用於對查詢字串文字進行斷詞的[分析器]({{site.url}}{{site.baseurl}}/analyzers/index/)。預設為為 `default_field` 指定的索引期分析器。若未為 `default_field` 指定分析器，則 `analyzer` 為索引的預設分析器。如需 `index.query.default_field` 的更多資訊，請參閱[動態索引設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/#dynamic-index-settings)。
+`auto_generate_synonyms_phrase_query` | 布林值 | 指定是否為多詞彙同義詞自動建立[片語比對查詢]({{site.url}}{{site.baseurl}}/query-dsl/full-text/match-phrase/)。例如，若您指定 `ba, batting average` 作為同義詞並搜尋 `ba`，OpenSearch 會搜尋 `ba OR "batting average"`（若此選項為 `true`）或 `ba OR (batting AND average)`（若此選項為 `false`）。預設為 `true`。
+`boost` | 浮點數 | 依給定的倍數提升子句的權重。適合用於在複合查詢中衡量各子句的權重。[0, 1) 範圍內的值會降低相關性，大於 1 的值則會提高相關性。預設為 `1`。
+`default_field` | 字串 | 當查詢字串中未指定欄位時，用於搜尋的欄位。支援萬用字元。預設為 `index.query. Default_field` 索引設定中指定的值。預設情況下，`index.query. Default_field` 為 `*`，表示擷取所有適合詞彙查詢的欄位並篩除中繼資料欄位。若未指定 `prefix`，擷取的欄位會合併成一個查詢。適用欄位不包含巢狀文件。搜尋所有適用欄位可能是耗費資源的作業。`indices.query.bool.max_clause_count` 搜尋設定定義了一次可查詢的欄位數量與詞彙數量乘積的上限。`indices.query.bool.max_clause_count` 的預設值為 1,024。
+`default_operator`| 字串 | 若查詢字串包含多個搜尋詞彙，指定文件被視為符合時，是所有詞彙都必須符合（`AND`），還是只需一個詞彙符合（`OR`）。有效值為：<br>- `OR`：字串 `to be` 會被解譯為 `to OR be`<br>- `AND`：字串 `to be` 會被解譯為 `to AND be`<br> 預設為 `OR`。
 `enable_position_increments` | 布林值 | 當為 `true` 時，產生的查詢會感知位置增量。當移除停用詞後在詞彙之間留下不想要的「間隙」時，此設定很有用。預設為 `true`。
-`fields` | 字串陣列 | 要搜尋的欄位清單 (例如 `"fields": ["title^4", "description"]`)。支援萬用字元。若未指定，預設為 `index.query. Default_field` 設定，其預設值為 `["*"]`。
-`fuzziness` | 字串 | 在判斷詞彙是否符合某個值時，將一個單字變更為另一個單字所需的字元編輯次數 (插入、刪除、替換)。例如，`wined` 與 `wind` 之間的距離為 1。有效值為非負整數或 `AUTO`。預設值 `AUTO` 會根據搜尋詞彙的長度動態選擇編輯距離。您可以使用 `AUTO:[low],[high]` 語法自訂門檻，其中 `low` 和 `high` 定義字元長度邊界。若省略，OpenSearch 會使用 `AUTO:3,6` 作為預設值，套用下列規則：<br>- 包含 0--2 個字元的詞彙：需要完全符合 (0 次編輯)。<br>- 包含 3--5 個字元的詞彙：最多允許 1 次編輯。<br>- 包含 6 個以上字元的詞彙：最多允許 2 次編輯。<br>例如，`AUTO:4,7` 要求包含 0--3 個字元的詞彙完全符合，包含 4--6 個字元的詞彙最多允許 1 次編輯，包含 7 個以上字元的詞彙最多允許 2 次編輯。大多數情況建議使用 `AUTO`。
-`fuzzy_max_expansions` | 正整數 | 查詢可展開的最大詞彙數。模糊查詢會「展開至」`fuzziness` 指定距離內的多個符合詞彙，然後 OpenSearch 會嘗試比對這些詞彙。預設為 `50`。
-`fuzzy_transpositions` | 布林值 | 將 `fuzzy_transpositions` 設為 `true` (預設) 會在 `fuzziness` 選項的插入、刪除和替換作業中加入相鄰字元交換。例如，若 `fuzzy_transpositions` 為 true (交換 "n" 和 "i")，`wind` 與 `wnid` 之間的距離為 1；若為 false (刪除 "n"、插入 "n")，則距離為 2。若 `fuzzy_transpositions` 為 false，`rewind` 和 `wnid` 與 `wind` 的距離相同 (2)，儘管從以人為本的角度來看 `wnid` 顯然是拼字錯誤。預設值適合大多數使用情境。
-`lenient` | 布林值 | 將 `lenient` 設為 `true` 會忽略查詢與文件欄位之間的資料類型不符。例如，查詢字串 `"8.2"` 可以符合 `float` 類型的欄位。預設為 `false`。
-`max_determinized_states` | 正整數 | Lucene 可為包含正規表示式的查詢字串 (例如 `"query": "/wind.+?/"`) 建立的「[狀態](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/util/automaton/Operations.html#DEFAULT_MAX_DETERMINIZED_STATES)」數上限 (複雜度的度量)。數字越大，允許的查詢會使用越多記憶體。預設為 10,000。
-`minimum_should_match` | 正或負整數、正或負百分比、組合 | 如果查詢字串包含多個搜尋詞彙且您使用 `or` 運算子，此為文件被視為符合時需要符合的詞彙數。例如，若 `minimum_should_match` 為 2，`wind often rising` 不符合 `The Wind Rises.`；若 `minimum_should_match` 為 `1`，則符合。詳細資訊請參閱 [最低相符數量]({{site.url}}{{site.baseurl}}/query-dsl/minimum-should-match/)。
-`phrase_slop` | 整數 | 符合單字之間允許的最大單字數。若 `phrase_slop` 為 2，片語中符合單字之間最多允許兩個單字。調換順序的單字其 slop 為 2。預設為 `0` (完全片語符合，符合的單字必須相鄰)。
-`quote_analyzer` | 字串 | 用來對查詢字串中引號內文字進行斷詞的分析器。會針對引號內文字覆寫 `analyzer` 參數。預設為為 `default_field` 指定的 `search_quote_analyzer`。
-`quote_field_suffix` | 字串 | 此選項支援使用與非精確符合不同的分析方法來搜尋精確符合 (以引號包圍)。例如，若 `quote_field_suffix` 為 `.exact`，且您在 `title` 欄位中搜尋 `\"lightly\"`，OpenSearch 會在 `title.exact` 欄位中搜尋單字 `lightly`。此第二個欄位可能使用不同的類型 (例如 `keyword` 而非 `text`) 或不同的分析器。
-`rewrite` | 字串 | 決定 OpenSearch 如何改寫與評分多詞彙查詢。有效值為 `constant_score`、`scoring_boolean`、`constant_score_boolean`、`top_terms_N`、`top_terms_boost_N` 和 `top_terms_blended_freqs_N`。預設為 `constant_score`。
-`time_zone` | 字串 | 指定所需時區相對於 `UTC` 的偏移時數。如果查詢字串包含日期範圍，您需要指定時區偏移數。例如，對於包含 `"query": "wind rises release_date[2012-01-01 TO 2014-01-01]"` 之類日期範圍的查詢，請設定 `time_zone": "-08:00"`。用於指定偏移時數的預設時區格式為 `UTC`。
+`fields` | 字串陣列 | 要搜尋的欄位清單（例如 `"fields": ["title^4", "description"]`）。支援萬用字元。若未指定，預設為 `index.query. Default_field` 設定，其預設值為 `["*"]`。
+`fuzziness` | 字串 | `~` 運算子之後的詞彙允許的最大編輯次數，可指定為 `0`、`1`、`2`、`AUTO` 或 `AUTO:<low>,<high>`。預設為 `AUTO`。如需更多資訊，請參閱[模糊比對]({{site.url}}{{site.baseurl}}/query-dsl/fuzziness/)。
+`fuzzy_max_expansions` | 正整數 | 查詢可擴展到的最大詞彙數。模糊查詢會「擴展到」`fuzziness` 指定距離內的多個符合詞彙，然後 OpenSearch 會嘗試比對這些詞彙。預設為 `50`。
+`fuzzy_transpositions` | 布林值 | 將 `fuzzy_transpositions` 設為 `true`（預設）時，會在 `fuzziness` 選項的插入、刪除與取代作業之外，再加上相鄰字元互換。例如，若 `fuzzy_transpositions` 為 true（互換 "n" 與 "i"），`wind` 與 `wnid` 之間的距離為 1；若為 false（刪除 "n"、插入 "n"），則距離為 2。若 `fuzzy_transpositions` 為 false，`rewind` 與 `wnid` 與 `wind` 的距離相同（皆為 2），儘管從以人為本的角度來看 `wnid` 顯然是拼字錯誤。預設值適合大多數使用情境。
+`lenient` | 布林值 | 將 `lenient` 設為 `true` 會忽略查詢與文件欄位之間的資料類型不符。例如，查詢字串 `"8.2"` 可以比對類型為 `float` 的欄位。預設為 `false`。
+`max_determinized_states` | 正整數 | Lucene 可為包含正規表示式的查詢字串（例如 `"query": "/wind.+?/"`）建立的「[狀態](https://lucene.apache.org/core/{{site.lucene_version}}/core/org/apache/lucene/util/automaton/Operations.html#DEFAULT_MAX_DETERMINIZED_STATES)」數上限（複雜度的衡量指標）。數值越大，允許查詢使用越多記憶體。預設為 10,000。
+`minimum_should_match` | 正或負整數、正或負百分比、組合 | 若查詢字串包含多個搜尋詞彙且您使用 `or` 運算子，此為文件被視為符合時所需符合的詞彙數。例如，若 `minimum_should_match` 為 2，`wind often rising` 不符合 `The Wind Rises.`；若 `minimum_should_match` 為 `1`，則符合。如需詳細資訊，請參閱[最低相符數量]({{site.url}}{{site.baseurl}}/query-dsl/minimum-should-match/)。
+`phrase_slop` | 整數 | 符合詞彙之間允許的最大字數。若 `phrase_slop` 為 2，片語中符合詞彙之間最多允許兩個字。調換順序的詞彙其 slop 為 2。預設為 `0`（精確片語比對，符合的字詞必須相鄰）。
+`quote_analyzer` | 字串 | 用於對查詢字串中引號內文字進行斷詞的分析器。對引號內文字覆寫 `analyzer` 參數。預設為為 `default_field` 指定的 `search_quote_analyzer`。
+`quote_field_suffix` | 字串 | 此選項支援使用與非精確比對不同的分析方法來搜尋精確比對（以引號包圍）。例如，若 `quote_field_suffix` 為 `.exact`，且您在 `title` 欄位中搜尋 `\"lightly\"`，OpenSearch 會在 `title.exact` 欄位中搜尋單字 `lightly`。此第二個欄位可能使用不同的類型（例如 `keyword` 而非 `text`）或不同的分析器。
+`rewrite` | 字串 | 決定 OpenSearch 如何改寫與評分多詞彙查詢。有效值為 `constant_score`、`scoring_boolean`、`constant_score_boolean`、`top_terms_N`、`top_terms_boost_N` 與 `top_terms_blended_freqs_N`。預設為 `constant_score`。
+`time_zone` | 字串 | 指定所需時區與 `UTC` 之間的小時偏移數。若查詢字串包含日期範圍，您需要指定時區偏移數。例如，對於包含 `"query": "wind rises release_date[2012-01-01 TO 2014-01-01]"` 這類日期範圍的查詢，請設定 `time_zone": "-08:00"`）。用於指定偏移小時數的預設時區格式為 `UTC`。
 
-查詢字串查詢可能會在內部轉換為 [前綴查詢]({{site.url}}{{site.baseurl}}/query-dsl/term/prefix/)。如果 [`search.allow_expensive_queries`]({{site.url}}{{site.baseurl}}/query-dsl/index/#expensive-queries) 設為 `false`，則不會執行前綴查詢。如果啟用 `index_prefixes`，則會忽略 `search.allow_expensive_queries` 設定，並建立並執行最佳化的查詢。
+查詢字串查詢可能會在內部轉換為[前置詞查詢]({{site.url}}{{site.baseurl}}/query-dsl/term/prefix/)。若 [`search.allow_expensive_queries`]({{site.url}}{{site.baseurl}}/query-dsl/index/#expensive-queries) 設為 `false`，則不會執行前置詞查詢。若啟用 `index_prefixes`，則會忽略 `search.allow_expensive_queries` 設定，並建立與執行最佳化的查詢。
 {: .important}
