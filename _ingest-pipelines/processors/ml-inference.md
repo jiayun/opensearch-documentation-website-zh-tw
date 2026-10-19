@@ -18,7 +18,7 @@ redirect_from:
 
 ## 語法
 
-以下是 `ml-inference` 處理器的語法：
+以下是 `ml_inference` 處理器的語法：
 
 ```json
 {
@@ -48,29 +48,31 @@ redirect_from:
 
 ## 組態參數
 
-下表列出 `ml-inference` 處理器的必要與選用參數。
+下表列出 `ml_inference` 處理器的必要參數與選用參數。
 
 | 參數 | 資料類型 | 必要/選用 | 說明 |
 |:--- | :--- | :--- | :--- |
-| `model_id` | 字串 | 必要 | 處理器所使用的 ML 模型 ID。 |
-| `function_name` | 字串    | 外部裝載模型為選用<br/><br/>本機模型為必要 | 處理器中所設定 ML 模型的函式名稱。若為本機模型，有效值為 `sparse_encoding`、`sparse_tokenize`、`text_embedding` 和 `text_similarity`。若為外部裝載模型，有效值為 `remote`。預設為 `remote`。 |
-| `model_config` | 物件    | 選用   | ML 模型的自訂組態選項。若為外部裝載模型，設定此項會覆寫預設的連接器參數。若為本機模型，您可以將 `model_config` 新增至 `model_input`，以覆寫註冊期間所設定的模型組態。如需詳細資訊，請參閱[`model_config` 物件]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/#the-model_config-object)。 |
-| `model_input`  | 字串    | 外部裝載模型為選用<br/><br/>本機模型為必要 | 定義模型預期輸入欄位格式的範本。每個本機模型類型可能使用不同的輸入集。若為外部裝載模型，預設為 `"{ \"parameters\": ${ml_inference.parameters} }`。|
-| `input_map` | 陣列 | 外部裝載模型為選用<br/><br/>本機模型為必要 | 指定如何將匯入的文件欄位對應至模型輸入欄位的陣列。陣列的每個元素都是 `"<model_input_field>": "<document_field>"` 格式的對應，並對應至文件欄位的一次模型叫用。若未為外部裝載模型指定輸入對應，則文件中的所有欄位都會直接以輸入形式傳遞至模型。`input_map` 大小表示模型被叫用的次數 (Predict API 請求的次數)。 |
-| `<model_input_field>` | 字串    | 外部裝載模型為選用<br/><br/>本機模型為必要  | 模型輸入欄位名稱。 |
-| `<document_field>`   | 字串    | 外部裝載模型為選用<br/><br/>本機模型為必要 | 做為模型輸入之匯入文件欄位的名稱或 JSON 路徑。 |
-| `output_map` | 陣列 | 外部裝載模型為選用<br/><br/>本機模型為必要 | 指定如何將模型輸出欄位對應至匯入文件中新欄位的陣列。陣列的每個元素都是 `"<new_document_field>": "<model_output_field>"` 格式的對應。|
-| `<new_document_field>`   | 字串    | 外部裝載模型為選用<br/><br/>本機模型為必要 | 匯入文件中用來儲存模型輸出 (由 `model_output` 指定) 的新欄位名稱。若未為外部裝載模型指定輸出對應，則模型輸出中的所有欄位都會新增至新的文件欄位。 |
-| `<model_output_field>` | 字串    | 外部裝載模型為選用<br/><br/>本機模型為必要 | 模型輸出中要儲存至 `new_document_field` 之欄位的名稱或 JSON 路徑。 |
-| `full_response_path` | 布林值   | 選用   | 若 `model_output_field` 包含欄位的完整 JSON 路徑而非欄位名稱，請將此參數設為 `true`。接著會完整剖析模型輸出，以取得該欄位的值。本機模型的預設值為 `true`，外部裝載模型的預設值為 `false`。 |
-| `ignore_missing` | 布林值   | 選用  | 若 `true` 且 `input_map` 或 `output_map` 中定義的任何輸入欄位遺漏，則會忽略遺漏的欄位。否則，遺漏欄位會導致失敗。預設為 `false`。 |
-| `ignore_failure` | 布林值   | 選用  | 指定處理器即使遇到錯誤是否仍繼續執行。若為 `true`，則會忽略任何失敗並繼續匯入。若為 `false`，則任何失敗都會導致匯入取消。預設為 `false`。 |
-| `override` | 布林值   | 選用   | 若匯入的文件已包含 `<new_document_field>` 中所指定名稱的欄位，則此參數會相關。若 `override` 為 `false`，則會略過輸入欄位。若為 `true`，則現有欄位值會由新的模型輸出覆寫。預設為 `false`。 |
-| `max_prediction_tasks`  | 整數   | 選用  | 文件匯入期間可執行的並行模型叫用數上限。預設為 `10`。 |
+| `model_id` | 字串 | 必要 | 處理器所使用的機器學習模型 ID。 |
+| `function_name` | 字串    | 外部託管模型為選用<br/><br/>本機模型為必要 | 處理器中設定的機器學習模型函式名稱。對於本機模型，有效值為 `sparse_encoding`、`sparse_tokenize`、`text_embedding` 和 `text_similarity`。對於外部託管模型，有效值為 `remote`。預設為 `remote`。 |
+| `model_config` | 物件    | 選用   | 機器學習模型的自訂組態選項。對於外部託管模型，若有設定，此組態會覆寫預設的連接器參數。對於本機模型，您可以將 `model_config` 新增至 `model_input`，以覆寫註冊時設定的模型組態。如需更多資訊，請參閱 [`model_config` 物件]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/#the-model_config-object)。 |
+| `model_input`  | 字串    | 外部託管模型為選用<br/><br/>本機模型為必要 | 定義模型預期之輸入欄位格式的範本。每種本機模型類型可能使用不同的輸入集合。對於外部託管模型，預設為 `"{ \"parameters\": ${ml_inference.parameters} }`。|
+| `input_map` | 陣列 | 外部託管模型為選用<br/><br/>本機模型為必要 | 指定如何將匯入文件欄位對應至模型輸入欄位的陣列。陣列中的每個元素都是 `"<model_input_field>": "<document_field>"` 格式的對應表，並對應至針對一個文件欄位的一次模型呼叫。若未針對外部託管模型指定輸入對應，則文件中的所有欄位都會直接作為輸入傳遞給模型。`input_map` 的大小表示模型被呼叫的次數（即 Predict API 請求的數量）。 |
+| `<model_input_field>` | 字串    | 外部託管模型為選用<br/><br/>本機模型為必要  | 模型輸入欄位名稱。 |
+| `<document_field>`   | 字串    | 外部託管模型為選用<br/><br/>本機模型為必要 | 作為模型輸入之匯入文件欄位的名稱或 JSON 路徑。 |
+| `output_map` | 陣列 | 外部託管模型為選用<br/><br/>本機模型為必要 | 指定如何將模型輸出欄位對應至匯入文件中新欄位的陣列。陣列中的每個元素都是 `"<new_document_field>": "<model_output_field>"` 格式的對應表。|
+| `<new_document_field>`   | 字串    | 外部託管模型為選用<br/><br/>本機模型為必要 | 匯入文件中用於儲存模型輸出（由 `model_output` 指定）的新欄位名稱。若未針對外部託管模型指定輸出對應，則模型輸出中的所有欄位都會新增至新的文件欄位。 |
+| `<model_output_field>` | 字串    | 外部託管模型為選用<br/><br/>本機模型為必要 | 模型輸出中要儲存至 `new_document_field` 之欄位的名稱或 JSON 路徑。 |
+| `full_response_path` | 布林值   | 選用   | 若 `model_output_field` 包含欄位的完整 JSON 路徑而非欄位名稱，請將此參數設定為 `true`。如此一來，系統會完整剖析模型輸出以取得該欄位的值。本機模型的預設為 `true`，外部託管模型的預設為 `false`。 |
+| `ignore_missing` | 布林值   | 選用  | 若為 `true`，且 `input_map` 或 `output_map` 中定義的任何輸入欄位遺失，則會忽略遺失的欄位。否則，遺失的欄位會導致失敗。預設為 `false`。 |
+| `ignore_failure` | 布林值   | 選用  | 指定處理器在遇到錯誤時是否繼續執行。若為 `true`，則會忽略任何失敗並繼續匯入。若為 `false`，則任何失敗都會導致匯入取消。預設為 `false`。 |
+| `override` | 布林值   | 選用   | 適用於匯入文件中已包含名稱為 `<new_document_field>` 所指定之欄位的情況。若 `override` 為 `false`，則會略過該輸入欄位。若為 `true`，則現有的欄位值會被新的模型輸出覆寫。預設為 `false`。 |
+| `max_prediction_tasks`  | 整數   | 選用  | 文件匯入期間可同時執行的模型呼叫數量上限。預設為 `10`。 |
 | `description` | 字串    | 選用  | 處理器的簡短說明。 |
-| `tag` | 字串    | 選用 | 處理器的識別碼標籤。有助於偵錯時區分相同類型的處理器。 |
+| `if` | 包含布林運算式的字串 | 選用 | 執行處理器的條件。 |
+| `on_failure` | 清單 | 選用 | 處理器失敗時要執行的處理器清單。 |
+| `tag` | 字串    | 選用 | 處理器的識別標籤。有助於在偵錯時區分相同類型的處理器。如需更多資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
 
-`input_map` 和 `output_map` 對應支援標準 [JSON 路徑](https://github.com/json-path/JsonPath) 標記法，以指定複雜的資料結構。 
+`input_map` 和 `output_map` 對應支援標準 [JSON 路徑](https://github.com/json-path/JsonPath)表示法，可用於指定複雜的資料結構。
 {: .note}
 
 ## 使用處理器

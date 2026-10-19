@@ -4,7 +4,7 @@ This directory holds the state of the Taiwan Traditional Chinese (zh-TW)
 translation of the OpenSearch documentation on branch `3.9-zh-tw`. The
 pipeline is `scripts/translation.py`.
 
-The source inventory contains 1,874 pages. Translation and independent review run in batches; use
+The source inventory contains 1,875 pages. Translation and independent review run in batches; use
 `python3 scripts/translation.py status` for live completion, pending work and errors.
 
 ## Layout
@@ -20,7 +20,7 @@ The source inventory contains 1,874 pages. Translation and independent review ru
 | `translation/schemas/*.json` | yes | JSON Schemas for the model request/result formats |
 | `.translation-cache/` | no (ignored) | Validated chunk results, approved reviews, commit journal, run logs |
 
-Baseline commit: `b8c25e7e8a2c392c5bb3fe993fdbc4c5221afde3`. Pages are all
+Baseline commit: `e69586c77b8f2f2eeb7253b81ccd63270a1e4aea`. Pages are all
 `output: true` collections in the baseline `_config.yml` (files with front
 matter) plus `index.md`, `search.md` and `404.md`. `translation/` (including
 the inventory and source store) is excluded from the Jekyll build by
@@ -322,7 +322,9 @@ agy 的模型與配額分開管理，使用 `agy models` 查到的識別字，�
 
 三個群組各自管理：Gemini 4 Argon 僅有週配額；其他 Gemini 模型及 Claude／GPT 各有週配額與五小時配額。每個群組內的模型共享停用與 CLI 回報的重置時間，其他組仍可用；不把 agy 的 Claude／GPT 配額與獨立 Claude CLI 公司帳號配額混在一起。校對獨立性則看模型家族：Argon 與其他 Gemini 屬於同一家族，agy Claude 與獨立 Claude CLI 都屬於 `claude`，不得互相校對同一譯文。數字百分比不由本程式估算，實際配額不足以服務回覆判定。
 
-一般校對的輪替為 Gemini Argon、Gemini Argon、Sonnet、Codex；跳過冷卻中或與譯文同家族的來源。Gemini 群組可用時會實際分到工作，不必等 Codex 不可用才接手；Claude／GPT 群組冷卻時，Gemini Argon 約承擔三分之二的一般校對呼叫。
+一般校對的輪替為 Gemini Argon、Gemini Argon、Sonnet、Grok、Codex；跳過冷卻中或與譯文同家族的來源。Gemini 群組可用時會實際分到工作，不必等 Codex 不可用才接手；Claude／GPT 群組冷卻時，在 Grok 也可用時，Gemini Argon 約承擔一半的一般校對呼叫。
+
+Grok CLI 使用已登入的 grok.com 訂閱，指定 `grok-4.7-build-fast`／`--reasoning-effort low`，保留 CLI 實際回報的模型名稱（例如 `grok-4.7-build-fast`）與 token 用量。它已通過短篇翻譯及獨立校對資格試跑，加入一般校對輪替與翻譯備援；模型家族為 `xai:grok`，不得校對同家族譯文。Grok 的配額獨立於 agy 三個群組、Claude CLI 與 Codex。呼叫採單回合 JSON、隔離暫存提示檔，禁止工具、網頁搜尋及子代理；清除 `XAI_API_KEY`／`GROK_API_KEY`，不自動轉用額外付費 API。CLI 的費用估算與實際 token 計數分開記錄。
 
 Claude 的 `You've hit your session limit · resets 3am (Asia/Taipei)` 會歸類為配額耗盡，立即停用該次執行的 Claude，不做連線重試。其他執行緒也會跳過已停用來源。CLI 明確回報重置時間與時區時，批次會等到該時間後一分鐘再恢復 Claude 優先順序；未回報重置時間則不自行猜測。
 

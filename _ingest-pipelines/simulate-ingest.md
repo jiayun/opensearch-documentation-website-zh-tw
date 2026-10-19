@@ -8,54 +8,57 @@ redirect_from:
   - /api-reference/ingest-apis/simulate-ingest/
 ---
 
-# 模擬管線
-**推出於 1.0**
+# Simulate Pipeline API
+**1.0 版新增**
 {: .label .label-purple }
 
-使用模擬資料匯入管線 API 操作來執行或測試管線。
+Simulate Pipeline API 會對一組範例文件執行資料匯入管線，並回應轉換後的文件，而不會將它們編製索引。您可以在將管線套用至資料之前，先用它來測試管線。您可以模擬現有的管線，或在請求本文中提供管線定義。
 
 ## 端點
 
-下列請求會**模擬最新建立的資料匯入管線**：
+```json
+GET  /_ingest/pipeline/_simulate
+POST /_ingest/pipeline/_simulate
+GET  /_ingest/pipeline/{pipeline-id}/_simulate
+POST /_ingest/pipeline/{pipeline-id}/_simulate
+```
 
-```
-GET _ingest/pipeline/_simulate
-POST _ingest/pipeline/_simulate
-```
+## 路徑參數
 
-下列請求會**根據管線 ID 模擬單一管線**：
+下表列出可用的路徑參數。所有路徑參數皆為選用。
 
-```
-GET _ingest/pipeline/{pipeline-id}/_simulate
-POST _ingest/pipeline/{pipeline-id}/_simulate
-```
+參數 | 資料類型 | 說明
+:--- | :--- | :---
+`pipeline-id` | 字串 | 要模擬的現有管線 ID。若未指定，請在 `pipeline` 請求本文欄位中提供管線定義。
+
+## 查詢參數
+
+下表列出可用的查詢參數。所有查詢參數皆為選用。
+
+參數 | 資料類型 | 說明
+:--- | :--- | :---
+`verbose` | 布林值 | 若為 `true`，回應會包含管線中每個處理器的結果，包括每個處理器執行後的文件。預設值為 `false`。
 
 ## 請求本文欄位
 
-下表列出用來執行管線的請求本文欄位。
+下表列出可用的請求本文欄位。
 
-欄位 | 必要 | 類型 | 說明
-:--- | :--- | :--- | :---
-`docs` | 必要 | 陣列 | 用來測試管線的文件。
-`pipeline` | 選用 | 物件 | 要模擬的管線。若未包含管線識別碼，則回應會模擬最新建立的管線。
-
-`docs` 欄位可包含下表所列的子欄位。
-
-欄位 | 必要 | 類型 | 說明
-:--- | :--- | :--- | :---
-`source` | 必要 | 物件 | 文件的 JSON 本文。
-`id` | 選用 | 字串 | 唯一的文件識別碼。此識別碼不能在索引中的其他位置使用。
-`index` | 選用 | 字串 | 文件轉換後資料所在的索引。
-
-## 查詢參數 
-
-下表列出執行管線的查詢參數。 
-
-參數 | 類型 | 說明
+欄位 | 資料類型 | 說明
 :--- | :--- | :---
-`verbose` | 布林值 | 詳細模式。顯示所執行管線中每個處理器的資料輸出。
+`docs` | 物件陣列 | 要透過管線執行的文件。必要。
+`pipeline` | 物件 | 要模擬的管線定義。包含與 [Create or Update Pipeline API]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#request-body-fields) 請求本文相同的欄位。若路徑中未指定管線 ID，則為必要。
 
-#### 範例：在路徑中指定管線
+`docs` 陣列中的每個物件包含下列欄位。
+
+欄位 | 資料類型 | 說明
+:--- | :--- | :---
+`_source` | 物件 | 文件的 JSON 本文。必要。
+`_id` | 字串 | 文件 ID。處理器可使用 `_id` 中繼資料欄位讀取及修改 ID。選用。
+`_index` | 字串 | 索引名稱。處理器可使用 `_index` 中繼資料欄位讀取及修改索引名稱。選用。
+
+## 範例：模擬現有管線
+
+下列請求會讓兩份文件通過在[建立或更新管線 API 範例]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#example-request)中建立的 `my-pipeline` 管線：
 
 ```json
 POST /_ingest/pipeline/my-pipeline/_simulate
@@ -84,7 +87,7 @@ POST /_ingest/pipeline/my-pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-請求會傳回下列回應：
+回應會包含管線處理後的每份文件：
 
 ```json
 {
@@ -121,9 +124,29 @@ POST /_ingest/pipeline/my-pipeline/_simulate
 }
 ```
 
-#### 範例：詳細模式
+## 範例：檢視每個處理器的結果
 
-當先前的請求以 `verbose` 參數設為 `true` 執行時，回應會顯示每份文件的轉換順序。例如，對於 ID 為 `1` 的文件，回應會包含依序套用管線中每個處理器的結果：
+若要檢視每個處理器執行後的文件，請將 `verbose` 查詢參數設定為 `true`：
+
+```json
+POST /_ingest/pipeline/my-pipeline/_simulate?verbose=true
+{
+  "docs": [
+    {
+      "_index": "my-index",
+      "_id": "1",
+      "_source": {
+        "grad_year": 2024,
+        "graduated": false,
+        "name": "John Doe"
+      }
+    }
+  ]
+}
+```
+{% include copy-curl.html %}
+
+回應包含管線中依序套用每個處理器的結果：
 
 ```json
 {
@@ -151,7 +174,7 @@ POST /_ingest/pipeline/my-pipeline/_simulate
         {
           "processor_type": "set",
           "status": "success",
-          "description": "Sets 'graduated' to true",
+          "description": "Sets graduated to true",
           "doc": {
             "_index": "my-index",
             "_id": "1",
@@ -189,16 +212,16 @@ POST /_ingest/pipeline/my-pipeline/_simulate
 }
 ```
 
-#### 範例：在請求本文中指定管線
+## 範例：模擬請求本文中定義的管線
 
-或者，您可以直接在請求本文中指定管線，而不必先建立管線：
+若要在不建立管線的情況下測試管線，請在請求本文中提供管線定義：
 
 ```json
 POST /_ingest/pipeline/_simulate
 {
   "pipeline" :
   {
-    "description": "Splits text on white space characters",
+    "description": "Splits comma-separated text into fields",
     "processors": [
       {
         "csv" : {
@@ -235,9 +258,7 @@ POST /_ingest/pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
-請求會傳回下列回應：
+此請求會傳回下列回應：
 
 ```json
 {
@@ -273,3 +294,30 @@ POST /_ingest/pipeline/_simulate
   ]
 }
 ```
+
+## 回應本文欄位
+
+回應包含 `docs` 陣列，請求中的每份文件各有一個對應物件，順序與請求相同。如果處理器捨棄了文件，陣列中該文件的位置會包含 `null`。陣列中的每個物件都包含下列欄位。
+
+欄位 | 資料類型 | 說明
+:--- | :--- | :---
+`doc` | 物件 | 管線處理後的文件，包含其 `_index`、`_id`、`_source` 和 `_ingest` 中繼資料。當 `verbose` 為 `false` 且文件處理成功時傳回。
+`error` | 物件 | 導致管線處理此文件失敗的錯誤。處理失敗時傳回。在此情況下，不會傳回 `doc`。
+`processor_results` | 物件陣列 | 每個處理器的結果，依處理器執行的順序排列。僅當 `verbose` 為 `true` 時傳回。
+
+`processor_results` 陣列中的每個物件都包含下列欄位。
+
+欄位 | 資料類型 | 說明
+:--- | :--- | :---
+`processor_type` | 字串 | 處理器類型，例如 `set`。
+`status` | 字串 | 處理器結果。有效值為 `success`、`error`（處理器失敗；如果已定義 `on_failure`，則後面會接著列出 `on_failure` 處理器的結果）、`error_ignored`（處理器失敗，且 `ignore_failure` 為 `true`）、`skipped`（處理器的 `if` 條件傳回 `false`）和 `dropped`（處理器捨棄了文件）。
+`description` | 字串 | 處理器說明。僅當處理器有說明時傳回。
+`tag` | 字串 | 處理器標籤。僅當處理器有標籤時傳回。
+`if` | 物件 | 處理器的 `if` 條件（`condition`）及其結果（`result`）。僅當處理器有條件時傳回。
+`doc` | 物件 | 此處理器執行後的文件。
+`error` | 物件 | 處理器傳回的錯誤。狀態為 `error` 時傳回。
+`ignored_error` | 物件 | 處理器忽略的錯誤。狀態為 `error_ignored` 時傳回。
+
+## 必要權限
+
+如果您使用 Security 外掛程式，請確認您具備適當的權限：`cluster:admin/ingest/pipeline/simulate`。

@@ -8,7 +8,7 @@ nav_order: 100
 
 # Fail 處理器
 
-`fail` 處理器適合在編製索引的過程中執行資料轉換與擴充。`fail` 處理器的主要用途是在符合特定條件時讓編製索引作業失敗。
+`fail` 處理器會擲回例外狀況，停止管線並使編製索引的請求失敗。`fail` 處理器的主要使用情境，是在符合特定條件時使索引作業失敗，並向用戶端回傳自訂訊息。
 
 以下是 `fail` 處理器的語法：
 
@@ -24,14 +24,14 @@ nav_order: 100
 
 下表列出 `fail` 處理器的必要與選用參數。
 
-參數 | 必要／選用 | 說明 |
+參數 | 必要/選用 | 說明 |
 |-----------|-----------|-----------|
-`message` | 必要 | 要包含在失敗回應中的自訂錯誤訊息。
+`message` | 必要 | 要包含在失敗回應中的自訂錯誤訊息。支援[範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)，例如 `Order {% raw %}{{order_id}}{% endraw %} is missing a price`。
 `description`  | 選用  | 處理器的簡短說明。  |  
 `if` | 選用 | 執行處理器的條件。 |  
 `ignore_failure` | 選用 | 指定處理器即使遇到錯誤是否仍繼續執行。若設為 `true`，則會忽略失敗。預設為 `false`。 |  
 `on_failure` | 選用 | 處理器失敗時要執行的處理器清單。 |  
-`tag` | 選用 | 處理器的識別碼標籤。用於偵錯，以區分相同類型的處理器。 |  
+`tag` | 選用 | 處理器的識別標籤。有助於偵錯時區分同類型的處理器。如需詳細資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |  
 
 ## 使用處理器
 
@@ -80,7 +80,7 @@ POST _ingest/pipeline/fail-log-pipeline/_simulate
 
 #### 回應
 
-下列範例回應確認管線運作正常：
+下列範例回應確認管線如預期運作：
 
 ```json
 {
@@ -100,7 +100,6 @@ POST _ingest/pipeline/fail-log-pipeline/_simulate
   ]
 }
 ```
-{% include copy-curl.html %}
 
 ### 步驟 3：匯入文件
 
@@ -116,10 +115,10 @@ PUT testindex1/_doc/1?pipeline=fail-log-pipeline
 
 #### 回應
 
-由於 `user_info` 中出現字串 `credit card`，請求無法將記錄事件編製索引至索引 `testindex1`。下列回應包含在 fail 處理器中指定的自訂錯誤訊息：
+由於 `user_info` 中存在字串 `credit card`，請求無法將記錄事件編製索引至索引 `testindex1`。下列回應包含在 fail 處理器中指定的自訂錯誤訊息：
 
 ```json
-
+{
   "error": {
     "root_cause": [
       {
@@ -133,7 +132,6 @@ PUT testindex1/_doc/1?pipeline=fail-log-pipeline
   "status": 500
 }
 ```
-{% include copy-curl.html %}
 
 ### 步驟 4 (選用)：擷取文件
 

@@ -6,7 +6,7 @@ parent: Ingest processors
 nav_order: 250
 ---
 
-# Sort 資料匯入處理器
+# 排序資料匯入處理器
 
 `sort` 處理器會以遞增或遞減順序排序項目陣列。數值陣列會以數值方式排序，而字串或混合陣列（字串與數字）則會以字典順序排序。如果輸入不是陣列，處理器會擲回錯誤。
 
@@ -31,16 +31,16 @@ nav_order: 250
 
 下表列出 `sort` 處理器的必要與選用參數。
 
-| 參數  | 必要／選用  | 說明  |
+| 參數  | 必要/選用  | 說明  |
 |---|---|---|
 `field`  | 必要 | 要排序的欄位。必須是陣列。
 `order`  | 選用 | 要套用的排序順序。接受 `asc` 表示遞增，`desc` 表示遞減。預設為 `asc`。
-`target_field` | 選用 | 儲存排序後陣列的欄位名稱。若未指定，排序後的陣列會儲存在與原始陣列相同的欄位中（`field` 變數）。
+`target_field` | 選用 | 儲存排序後陣列的欄位名稱。若未指定，排序後的陣列會儲存在與原始陣列相同的欄位中（即 `field` 變數）。 
 `description`  | 選用  | 處理器用途或組態的描述。
 `if` | 選用 | 指定是否有條件地執行處理器。
 `ignore_failure` | 選用 | 指定忽略處理器失敗。請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。
 `on_failure` | 選用 | 指定處理器在執行期間失敗時要執行的處理器清單。這些處理器會依指定的順序執行。
-`tag` | 選用 | 處理器的識別標籤。在偵錯時有助於區分相同類型的處理器。
+`tag` | 選用 | 處理器的識別標籤。有助於除錯時區分相同類型的處理器。如需更多資訊，請參閱[使用處理器標籤進行監控與除錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。
 
 ## 使用處理器
 
@@ -90,7 +90,7 @@ POST _ingest/pipeline/sort-pipeline/_simulate
 
 #### 回應
 
-下列範例回應確認管線如預期運作：
+下列範例回應確認管線運作符合預期：
 
 ```json
 {
@@ -131,7 +131,6 @@ POST _ingest/pipeline/sort-pipeline/_simulate
   ]
 }
 ```
-{% include copy-curl.html %}
 
 ### 步驟 3：匯入文件
 
@@ -147,7 +146,7 @@ POST testindex1/_doc?pipeline=sort-pipeline
 
 #### 回應
 
-此請求會將文件編製索引至索引 `testindex1`，然後將所有文件以 `my_array_field` 遞減排序後編製索引，如下列回應所示：
+此請求會將文件編製索引至索引 `testindex1`，然後將所有文件依 `my_array_field` 以遞減順序排序編製索引，如下列回應所示：
 
 ```json
 {
@@ -164,7 +163,6 @@ POST testindex1/_doc?pipeline=sort-pipeline
   "_primary_term": 2
 }
 ```
-{% include copy-curl.html %}
 
 ### 步驟 4（選用）：擷取文件
 

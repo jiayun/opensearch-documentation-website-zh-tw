@@ -24,7 +24,7 @@ redirect_from:
 
 - 若不需要計算相關性分數，請依 `_doc` 排序，以達到最有效率的捲動。這會停用評分，並依文件在索引中的自然順序傳回文件，這是逐一處理索引中所有文件最快的方式。
 - 只有初始搜尋回應會包含彙總結果。後續捲動請求只會傳回下一批命中結果。
-- 每個開啟的捲動情境都會阻止相關分片上的區段合併，並消耗檔案控制代號和堆積記憶體。一旦不再需要捲動情境，請立即關閉。
+- 每個開啟的捲動情境都會阻止相關分片上的分段合併，並消耗檔案控制代號和堆積記憶體。一旦不再需要捲動情境，請立即關閉。
 - 開啟的捲動情境數量上限由 `search.max_open_scroll_context` 叢集設定控制，預設為 500。
 
 <!-- spec_insert_start
@@ -256,8 +256,7 @@ DELETE /_search/scroll/DXF1ZXJ5QW5kRmV0Y2gBAAAAAAAAAAcWdmpUZDhnRFBUcWFtV21nMmFwU
 
 
 response = client.clear_scroll(
-  scroll_id = "DXF1ZXJ5QW5kRmV0Y2gBAAAAAAAAAAcWdmpUZDhnRFBUcWFtV21nMmFwUGJEQQ==",
-  body = { "Insert body here" }
+  scroll_id = "DXF1ZXJ5QW5kRmV0Y2gBAAAAAAAAAAcWdmpUZDhnRFBUcWFtV21nMmFwUGJEQQ=="
 )
 
 {% endcapture %}
@@ -281,8 +280,7 @@ DELETE /_search/scroll/_all
 
 
 response = client.clear_scroll(
-  scroll_id = "_all",
-  body = { "Insert body here" }
+  scroll_id = "_all"
 )
 
 {% endcapture %}

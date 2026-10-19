@@ -6,9 +6,9 @@ parent: Ingest processors
 nav_order: 140
 ---
 
-# 移除 HTML 標籤處理器
+# HTML strip 處理器
 
-`html_strip` 處理器會從傳入文件的字串欄位中移除 HTML 標籤。當您為來自網頁或其他可能包含 HTML 標記的來源資料編製索引時，此處理器相當實用。HTML 標籤會以換行字元（`\n`）取代。
+`html_strip` 處理器會從傳入文件的字串欄位中移除 HTML 標籤。當您從網頁或其他可能包含 HTML 標記的來源編製索引資料時，此處理器非常實用。區塊層級標籤，例如 `<p>`、`<div>`、`<br>` 和 `<li>`，會被替換為換行字元 (`\n`)。行內標籤，例如 `<b>`、`<span>` 和 `<a>`，則會被移除。例如，`<p>Hello <b>world</b></p>` 會變成 `\nHello world\n`。對於陣列欄位，處理器會從每個字串元素中移除標籤。
 
 以下是 `html_strip` 處理器的語法：
 
@@ -25,16 +25,16 @@ nav_order: 140
 
 下表列出 `html_strip` 處理器的必要與選用參數。
 
-參數 | 必要／選用 | 說明 |
+參數 | 必要/選用 | 說明 |
 |-----------|-----------|-----------|
 `field` | 必要 | 要從中移除 HTML 標籤的字串欄位。
-`target_field` | 選用 | 在移除 HTML 標籤後，接收純文字版本的欄位。若未指定，則會就地更新該欄位。
-`ignore_missing` | 選用 | 指定處理器是否應忽略未包含所指定欄位的文件。預設為 `false`。
+`target_field` | 選用 | 接收移除 HTML 標籤後純文字版本的欄位。若未指定，則會就地更新該欄位。
+`ignore_missing` | 選用 | 指定處理器是否應忽略不含指定欄位，或該欄位為 `null` 的文件。預設值為 `false`。
 `description` | 選用 | 處理器用途或組態的說明。
-`if` | 選用 | 指定以條件方式執行處理器。
-`ignore_failure` | 選用 | 指定忽略處理器失敗。請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。
-`on_failure` | 選用 | 指定處理器在執行期間失敗時要執行的一組處理器。這些處理器會依指定的順序執行。請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。
-`tag` | 選用 | 處理器的識別碼標籤。有助於偵錯時區分相同類型的處理器。
+`if` | 選用 | 指定是否依條件執行處理器。
+`ignore_failure` | 選用 | 指定是否忽略處理器失敗。請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。
+`on_failure` | 選用 | 指定處理器執行期間失敗時要執行的處理器清單。這些處理器會依指定順序執行。請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。
+`tag` | 選用 | 處理器的識別碼標籤。有助於偵錯時區分相同類型的處理器。如需詳細資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。
 
 ## 使用處理器
 
@@ -83,7 +83,7 @@ POST _ingest/pipeline/strip-html-pipeline/_simulate
 
 #### 回應
 
-下列範例回應確認管線運作正常：
+下列範例回應確認管線如預期運作：
 
 ```json
 {
@@ -104,7 +104,6 @@ POST _ingest/pipeline/strip-html-pipeline/_simulate
   ]
 }
 ```
-{% include copy-curl.html %}
 
 ### 步驟 3：匯入文件 
 
@@ -121,7 +120,7 @@ PUT products/_doc/1?pipeline=strip-html-pipeline
 
 #### 回應
 
-回應顯示請求已將文件編製索引至索引 `products`，並會將所有含有 HTML 標籤之 `description` 欄位的文件編製索引，同時將純文字版本儲存在 `cleaned_description` 欄位中：
+回應顯示請求已將文件編製索引到索引 `products` 中，並會將所有 `description` 欄位包含 HTML 標籤的文件編製索引，同時將純文字版本儲存在 `cleaned_description` 欄位中：
 
 ```json
 {
@@ -138,7 +137,6 @@ PUT products/_doc/1?pipeline=strip-html-pipeline
   "_primary_term": 1
 }
 ```
-{% include copy-curl.html %}
 
 ### 步驟 4 (選用)：擷取文件
 

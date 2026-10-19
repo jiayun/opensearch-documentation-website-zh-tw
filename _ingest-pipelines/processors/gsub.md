@@ -27,17 +27,18 @@ nav_order: 125
 
 下表列出 `gsub` 處理器的必要與選用參數。
 
-參數 | 必要／選用 | 說明 |
+參數 | 必要/選用 | 說明 |
 |-----------|-----------|-----------|
-`field` | 必要 | 要套用取代作業的欄位。
+`field` | 必要 | 要套用取代的欄位。
 `pattern` | 必要 | 要被取代的模式。
-`replacement` | 必要 | 用來取代符合模式的字串。
-`target_field` | 選用 | 用來儲存解析資料的欄位名稱。如果未指定 `target_field`，解析後的資料會取代 `field` 欄位中的原始資料。預設為 `field`。
+`replacement` | 必要 | 用來取代相符模式的字串。
+`target_field` | 選用 | 用來儲存剖析後資料的欄位名稱。若未指定 `target_field`，剖析後的資料會取代 `field` 欄位中的原始資料。預設為 `field`。
+`description` | 選用 | 處理器的簡短說明。
 `if` | 選用 | 執行處理器的條件。
-`ignore_missing` | 選用 | 指定處理器是否應忽略不含指定欄位的文件。預設為 `false`。
-`ignore_failure` | 選用 | 指定處理器遇到錯誤時是否仍繼續執行。如果設定為 `true`，則會忽略失敗。預設為 `false`。
+`ignore_missing` | 選用 | 指定處理器是否應忽略不包含指定欄位或該欄位為 `null` 的文件。預設為 `false`。
+`ignore_failure` | 選用 | 指定處理器在遇到錯誤時是否繼續執行。若設為 `true`，則會忽略失敗。預設為 `false`。
 `on_failure` | 選用 | 處理器失敗時要執行的處理器清單。
-`tag` | 選用 | 處理器的識別標籤。有助於除錯時區分相同類型的處理器。
+`tag` | 選用 | 處理器的識別標籤。可用於偵錯，以區分相同類型的處理器。如需更多資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。
 
 ## 使用處理器
 
@@ -107,7 +108,6 @@ POST _ingest/pipeline/gsub_pipeline/_simulate
   ]
 }
 ```
-{% include copy-curl.html %}
 
 ### 步驟 3：匯入文件
 
@@ -123,7 +123,7 @@ PUT logs/_doc/1?pipeline=gsub_pipeline
 
 #### 回應
 
-下列回應顯示請求已將文件編製索引至名為 `logs` 的索引，且 `gsub` 處理器已將 `message` 欄位中所有出現的 `error` 一詞取代為 `warning`：
+下列回應顯示，請求已將文件編製索引至名為 `logs` 的索引，且 `gsub` 處理器已將 `message` 欄位中所有出現的單字 `error` 取代為單字 `warning`：
 
 ```json
 {
@@ -140,7 +140,6 @@ PUT logs/_doc/1?pipeline=gsub_pipeline
   "_primary_term": 1
 }
 ```
-{% include copy-curl.html %}
 
 ### 步驟 4（選用）：擷取文件
 
@@ -153,7 +152,7 @@ GET logs/_doc/1
 
 #### 回應
 
-下列回應顯示 `message` 欄位值已修改的文件：
+下列回應顯示修改後 `message` 欄位值的文件：
 
 ```json
 {
@@ -168,6 +167,5 @@ GET logs/_doc/1
   }
 }
 ```
-{% include copy-curl.html %}
 
 

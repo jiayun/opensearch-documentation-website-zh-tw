@@ -8,7 +8,7 @@ redirect_from:
    - /api-reference/ingest-apis/processors/convert/
 ---
 
-本文件說明如何在 OpenSearch 資料匯入管線中使用 `convert` 處理器。如果您的使用情境涉及大型或複雜的資料集，建議考慮使用在 OpenSearch 叢集上執行的 [Data Prepper `convert_entry_type` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/convert-entry-type/)。
+本文件說明如何在 OpenSearch 資料匯入管線中使用 `convert` 處理器。若您的使用情境涉及大型或複雜的資料集，建議改用 [Data Prepper `convert_entry_type` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/convert-entry-type/)，其於 OpenSearch 叢集外執行。
 {: .note}
 
 # Convert 處理器
@@ -33,25 +33,25 @@ redirect_from:
 
 下表列出 `convert` 處理器的必要與選用參數。   
 
-參數 | 必要／選用 | 說明 |
+Parameter | Required/Optional | Description |
 |-----------|-----------|-----------|
-`field`  | 必要  | 包含要轉換之資料的欄位名稱。支援[範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。 |
-`type`  | 必要  | 要將欄位值轉換成的類型。支援的類型為 `integer`、`long`、`float`、`double`、`string`、`boolean`、`ip` 與 `auto`。如果 `type` 設為 `boolean`，則當欄位值為字串 `true`（不分大小寫）時，值會設為 `true`；當欄位值為字串 `false`（不分大小寫）時，值會設為 `false`。如果類型設為 `ip`，則此處理器會驗證欄位值是否符合 IPv4 或 IPv6 位址的正確格式；如果值無效，將會產生錯誤。如果值不是允許的值之一，將會發生錯誤。  |
-`description`  | 選用  | 處理器的簡要描述。  |
+`field`  | 必要  | 包含待轉換資料之欄位的名稱。 |
+`type`  | 必要  | 欄位值要轉換成的資料類型。支援的類型為 `integer`、`long`、`float`、`double`、`string`、`boolean`、`ip` 與 `auto`。若 `type` 為 `boolean`，則當欄位值為字串 `true`（不分大小寫）時，值會設為 `true`；當欄位值為字串 `false`（不分大小寫）時，值會設為 `false`。其他任何字串值都會導致處理器失敗。若類型設為 `ip`，則處理器會驗證欄位值是否符合 IPv4 或 IPv6 位址的正確格式；若值無效，則會產生錯誤。若類型設為 `auto`，則處理器會將字串值轉換為下列順序中第一個符合的類型：`boolean`、`integer`、`long`、`float` 與 `double`。由於 `float` 會在 `double` 之前嘗試，十進位字串一律會轉換為 `float`，這可能會降低精確度。若字串不符合任何這些類型，或值不是字串，則值不會變更。若有指定 `target_field`，未變更的值仍會複製到 `target_field`。若 `type` 不是支援的類型之一，管線會被拒絕。  |
+`description`  | 選用  | 處理器的簡短描述。  |
 `if` | 選用 | 執行處理器的條件。 |
-`ignore_failure` | 選用 | 指定處理器是否即使遇到錯誤也繼續執行。如果設為 `true`，則會忽略失敗。預設值為 `false`。 |
-`ignore_missing`  | 選用  | 指定處理器是否應忽略不包含指定欄位的文件。如果設為 `true`，當欄位不存在或為 `null` 時，處理器不會修改文件。預設值為 `false`。 |
-`on_failure` | 選用 | 當處理器失敗時要執行的處理器清單。 |
-`tag` | 選用 | 處理器的識別標籤。有助於除錯，以區分相同類型的處理器。 |
-`target_field`  | 選用  | 用來儲存已剖析資料的欄位名稱。如果未指定，值將儲存在 `field` 欄位中。預設值為 `field`。  |
+`ignore_failure` | 選用 | 指定處理器即使遇到錯誤仍繼續執行。若設為 `true`，則會忽略失敗。預設為 `false`。 |
+`ignore_missing`  | 選用  | 指定處理器是否應忽略不含指定欄位的文件。若設為 `true`，當欄位不存在或為 `null` 時，處理器不會修改文件。預設為 `false`。 |
+`on_failure` | 選用 | 處理器失敗時要執行的處理器清單。 |
+`tag` | 選用 | 處理器的識別標籤。有助於除錯時區分相同類型的處理器。如需更多資訊，請參閱[使用處理器標籤進行監控與除錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
+`target_field`  | 選用  | 用來儲存已解析資料之欄位的名稱。若未指定，值將儲存在 `field` 欄位。預設為 `field`。  |
 
 ## 使用處理器
 
-依照下列步驟在管線中使用處理器。
+請依照下列步驟在管線中使用處理器。
 
-**步驟 1：建立管線**
+**步驟 1：建立管線** 
 
-下列查詢會建立一個名為 `convert-price` 的管線，將 `price` 轉換為浮點數，將轉換後的值儲存在 `price_float` 欄位中，並在值小於 `0` 時將其設為 `0`：
+下列查詢會建立名為 `convert-price` 的管線，將 `price` 轉換為浮點數，把轉換後的值存入 `price_float` 欄位，並在該值小於 `0` 時將其設為 `0`：
 
 ```json
 PUT _ingest/pipeline/convert-price
@@ -79,7 +79,7 @@ PUT _ingest/pipeline/convert-price
 
 **步驟 2（選用）：測試管線**
 
-建議您在匯入文件之前先測試管線。
+建議您在匯入文件前先測試管線。
 {: .tip}
 
 若要測試管線，請執行下列查詢：
@@ -102,7 +102,7 @@ POST _ingest/pipeline/convert-price/_simulate
 
 **回應**
 
-下列範例回應確認管線如預期運作：
+下列範例回應可確認管線運作正常： 
 
 ```json
 {
@@ -144,3 +144,56 @@ PUT testindex1/_doc/1?pipeline=convert-price
 GET testindex1/_doc/1
 ```
 {% include copy-curl.html %}
+
+## 自動轉換值
+
+下列請求使用 `auto` 類型來轉換數個字串欄位：
+
+```json
+POST _ingest/pipeline/_simulate
+{
+  "pipeline": {
+    "processors": [
+      { "convert": { "field": "in_stock", "type": "auto" } },
+      { "convert": { "field": "quantity", "type": "auto" } },
+      { "convert": { "field": "weight_kg", "type": "auto" } },
+      { "convert": { "field": "color", "type": "auto" } }
+    ]
+  },
+  "docs": [
+    {
+      "_source": {
+        "in_stock": "TRUE",
+        "quantity": "42",
+        "weight_kg": "1.23456789",
+        "color": "dark gray"
+      }
+    }
+  ]
+}
+```
+{% include copy-curl.html %}
+
+回應顯示 `in_stock` 已轉換為布林值，`quantity` 已轉換為整數。`weight_kg` 值已轉換為 `float`，因此其精確度降低了。`color` 值不符合任何類型，因此仍為字串：
+
+```json
+{
+  "docs": [
+    {
+      "doc": {
+        "_index": "_index",
+        "_id": "_id",
+        "_source": {
+          "in_stock": true,
+          "quantity": 42,
+          "weight_kg": 1.2345679,
+          "color": "dark gray"
+        },
+        "_ingest": {
+          "timestamp": "2026-10-14T19:42:37.458135758Z"
+        }
+      }
+    }
+  ]
+}
+```

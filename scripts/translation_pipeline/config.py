@@ -6,7 +6,7 @@ import os
 from pathlib import Path
 
 SCHEMA_VERSION = 1
-BASELINE_COMMIT = "b8c25e7e8a2c392c5bb3fe993fdbc4c5221afde3"
+BASELINE_COMMIT = "e69586c77b8f2f2eeb7253b81ccd63270a1e4aea"
 TARGET_LANGUAGE = "zh-TW"
 
 # Root-level pages rendered by Jekyll in addition to the output collections.
@@ -70,14 +70,16 @@ PILOT_PATHS = (
 
 # ollama-local is opt-in until a pilot run qualifies its output quality.
 DEFAULT_TRANSLATORS = ("ollama-cloud-glm", "ollama-cloud",
-                       "claude", "codex", "ollama-cloud-glm-backup", "ollama-cloud-gemma", "agy-gpt", "agy", "agy-flash")
-DEFAULT_REVIEWERS = ("agy-sonnet", "agy-opus", "codex-review", "agy", "claude")
+                       "claude", "codex", "ollama-cloud-glm-backup", "ollama-cloud-gemma", "grok", "agy-gpt", "agy", "agy-flash")
+DEFAULT_REVIEWERS = ("agy-sonnet", "agy-opus", "grok", "codex-review", "agy", "claude")
 # Providers whose reviews count as quality-approved for publishing.
-REVIEW_APPROVED_PROVIDERS = frozenset({"agy", "agy-sonnet", "agy-opus", "claude", "codex", "codex-review"})
+REVIEW_APPROVED_PROVIDERS = frozenset({"agy", "agy-sonnet", "agy-opus", "grok", "claude", "codex", "codex-review"})
 
 # Existing ChatGPT subscription; modest reasoning effort for bounded translation work.
 CODEX_TRANSLATION_MODEL = "gpt-6.1-sol"
 CODEX_REVIEW_MODEL = "gpt-6-sol"
+GROK_MODEL = "grok-4.7-build-fast"
+GROK_REASONING_EFFORT = "low"
 
 OLLAMA_URL = os.environ.get("TRANSLATION_OLLAMA_URL", "http://localhost:11434/api/chat")
 OLLAMA_CLOUD_MODEL = "deepseek-v4.1-flash:cloud"
@@ -107,7 +109,7 @@ AGY_MODELS = {
     "agy-opus": ("claude-opus-5-5-medium", "claude-gpt"),
     "agy-gpt": ("gpt-oss-120b-medium", "claude-gpt"),
 }
-REVIEW_WEIGHTS = ("agy", "agy", "agy-sonnet", "codex-review")
+REVIEW_WEIGHTS = ("agy", "agy", "agy-sonnet", "grok", "codex-review")
 
 # Environment variables removed before launching a model CLI so that the CLIs
 # authenticate with the signed-in account and never fall back to paid API keys.
@@ -125,6 +127,8 @@ SCRUBBED_ENV_VARS = (
     "GOOGLE_APPLICATION_CREDENTIALS",
     "OPENAI_API_KEY",
     "CODEX_API_KEY",
+    "XAI_API_KEY",
+    "GROK_API_KEY",
 )
 
 

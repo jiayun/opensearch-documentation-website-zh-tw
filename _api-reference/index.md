@@ -15,9 +15,11 @@ redirect_from:
 
 # API 參考
 
-OpenSearch 中的每個 API 操作都可以使用 [REST API](#rest-apis)。您也可以改用實驗性的 [gRPC API](#grpc-apis) 呼叫其中一部分操作。
+您可以使用 [REST API](#rest-apis) 執行 OpenSearch 中的每一項 API 操作。您也可以改用實驗性的 [gRPC API](#grpc-apis) 呼叫其中部分操作。
 
-本頁列出的是 API 系列而非個別操作。若要尋找特定操作，請開啟其所屬的系列，並使用該頁面上的 API 清單。
+本頁列出的是 API 系列，而非個別操作。若要尋找特定操作，請開啟該操作所屬的系列，並使用其頁面上的 API 清單。
+
+API 頁面上的請求範例省略了主機與憑證，因此您可以直接貼到 Dev Tools 中使用。若要瞭解如何使用 cURL 傳送相同的請求（包含主機 URL 與驗證），請參閱[與 OpenSearch 通訊]({{site.url}}{{site.baseurl}}/getting-started/communicate/)。
 
 ## REST API
 **於 1.0 版導入**

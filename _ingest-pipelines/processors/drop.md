@@ -6,7 +6,7 @@ parent: Ingest processors
 nav_order: 70
 ---
 
-本文件說明如何在 OpenSearch 資料匯入管線中使用 `drop` 處理器。如果您的使用情境涉及大型或複雜的資料集，請考慮使用在 OpenSearch 叢集上執行的 [Data Prepper `drop_events` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/drop-events/)。
+本文件說明在 OpenSearch 資料匯入管線中使用 `drop` 處理器的方法。如果您的使用案例涉及大型或複雜的資料集，建議考慮使用在 OpenSearch 叢集外部執行的 [Data Prepper `drop_events` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/drop-events/)。
 {: .note}
 
 # Drop 處理器
@@ -34,11 +34,11 @@ nav_order: 70
 
 參數 | 必要 | 說明 |
 |-----------|-----------|-----------|
-`description`  | 選用  | 處理器的簡短描述。  |
+`description`  | 選用  | 處理器的簡短說明。  |
 `if` | 選用 | 執行處理器的條件。 |
-`ignore_failure` | 選用 | 若設為 `true`，則忽略失敗。預設為 `false`。如需更多資訊，請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。 |
-`on_failure` | 選用 | 處理器失敗時要執行的處理器清單。如需更多資訊，請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。 |
-`tag` | 選用 | 處理器的識別標籤。在除錯時，有助於區分相同類型的處理器。 |
+`ignore_failure` | 選用 | 若設為 `true`，則會忽略失敗。預設為 `false`。如需詳細資訊，請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。 |
+`on_failure` | 選用 | 處理器失敗時要執行的處理器清單。如需詳細資訊，請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。 |
+`tag` | 選用 | 處理器的識別標籤。在偵錯時有助於區分同類型的處理器。如需詳細資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
 
 ## 使用處理器
 
@@ -88,7 +88,7 @@ POST _ingest/pipeline/drop-pii/_simulate
 
 #### 回應
 
-下列範例回應確認管線如預期運作 (文件已被捨棄)：
+下列範例回應確認管線如預期運作（文件已捨棄）：
 
 ```json
 {
@@ -97,7 +97,6 @@ POST _ingest/pipeline/drop-pii/_simulate
   ]
 }
 ```
-{% include copy-curl.html %}
 
 **步驟 3：匯入文件**
 
@@ -111,7 +110,7 @@ PUT testindex1/_doc/1?pipeline=drop-pii
 ```
 {% include copy-curl.html %}
 
-下列回應確認 ID 為 `1` 的文件未被編製索引：
+下列回應確認 ID 為 `1` 的文件未編製索引： 
 
 ```json
 {

@@ -8,7 +8,7 @@ redirect_from:
    - /api-reference/ingest-apis/processors/append/
 ---
 
-本文件說明如何在 OpenSearch 資料匯入管線中使用 `append` 處理器。如果您的使用情境涉及大型或複雜的資料集，建議考慮使用在 OpenSearch 叢集上執行的 [Data Prepper `add_entries` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/add-entries/)。
+本文件說明如何在 OpenSearch 資料匯入管線中使用 `append` 處理器。如果您的使用案例涉及大型或複雜的資料集，請考慮使用在 OpenSearch 叢集外部執行的 [Data Prepper `add_entries` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/add-entries/)。
 {: .note}
 
 # Append 處理器
@@ -39,14 +39,14 @@ redirect_from:
 
 參數 | 必要／選用 | 說明 |
 |-----------|-----------|-----------|
-`field`  | 必要  | 包含要附加資料的欄位名稱。支援[範本程式碼片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。|
-`value`  | 必要  | 要附加的值。可以是靜態值，或從現有欄位衍生的動態值。支援[範本程式碼片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。 | 
-`description`  | 選用  | 處理器的簡短描述。  |
+`field`  | 必要  | 包含要附加資料的欄位名稱。支援[範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。|
+`value`  | 必要  | 要附加的值。可以是靜態值，或從現有欄位衍生的動態值。支援[範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。 | 
+`description`  | 選用  | 處理器的簡要描述。  |
 `if` | 選用 | 執行處理器的條件。 |
-`ignore_failure` | 選用 | 指定處理器遇到錯誤時是否繼續執行。若設為 `true`，則會忽略失敗。預設值為 `false`。 |
+`ignore_failure` | 選用 | 指定處理器即使遇到錯誤仍繼續執行。若設為 `true`，則會忽略失敗。預設為 `false`。 |
 `allow_duplicates` | 選用 | 指定是否附加欄位中已存在的值。若為 `true`，則會附加重複的值；否則會略過。 |
 `on_failure` | 選用 | 當處理器失敗時要執行的處理器清單。 |
-`tag` | 選用 | 處理器的識別標籤。有助於除錯時區分相同類型的處理器。 |
+`tag` | 選用 | 處理器的識別標籤。有助於偵錯時區分相同類型的處理器。如需更多資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
 
 ## 使用處理器
 

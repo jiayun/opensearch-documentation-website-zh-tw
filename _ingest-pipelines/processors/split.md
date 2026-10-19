@@ -27,18 +27,18 @@ nav_order: 255
 
 下表列出 `split` 處理器的必要與選用參數。
 
-參數  | 必要／選用  | 說明 
+參數  | 必要/選用  | 說明 
 :--- | :--- | :--- 
-`field` | 必要 | 包含要分割字串的欄位。 
-`separator` | 必要 | 用來分割字串的分隔符。可以是正規表示式模式。 
-`preserve_trailing` | 選用 | 若設為 `true`，則會在結果陣列中保留空的結尾欄位 (例如 `''`)。若設為 `false`，則會從結果陣列中移除空的結尾欄位。預設為 `false`。 
+`field` | 必要 | 包含要分割之字串的欄位。 
+`separator` | 必要 | 符合用於分割字串之分隔符號的規則表達式。若要依在規則表達式中具有特殊意義的字元（例如 `.` 或 `+`）進行分割，請將其逸出，例如 `\\.`。 
+`preserve_trailing` | 選用 | 若設為 `true`，則在產生的陣列中保留結尾的空欄位（例如 `''`）。若設為 `false`，則會從產生的陣列中移除結尾的空欄位。預設為 `false`。 
 `target_field` | 選用 | 儲存子字串陣列的欄位。若未指定，則會就地更新該欄位。 
-`ignore_missing` | 選用	| 指定處理器是否應忽略不含指定欄位的文件。若設為 `true`，則處理器會忽略欄位中缺少的值，並保持 `target_field` 不變。預設為 `false`。  
-`description` | 選用 | 處理器的簡短描述。 
+`ignore_missing` | 選用	| 指定處理器是否應忽略不包含所指定欄位的文件。若設為 `true`，則處理器會忽略該欄位中缺少的值，並讓 `target_field` 保持不變。預設為 `false`。  
+`description` | 選用 | 處理器的簡短說明。 
 `if` | 選用 | 執行處理器的條件。 
-`ignore_failure` | 選用 | 指定處理器即使遇到錯誤也繼續執行。若設為 `true`，則會忽略失敗。預設為 `false`。 
+`ignore_failure` | 選用 | 指定處理器即使遇到錯誤是否仍繼續執行。若設為 `true`，則會忽略失敗。預設為 `false`。 
 `on_failure` | 選用 | 處理器失敗時要執行的處理器清單。 
-`tag` | 選用 | 處理器的識別標籤。有助於除錯時區分相同類型的處理器。 
+`tag` | 選用 | 處理器的識別碼標籤。有助於偵錯，以便區分相同類型的處理器。如需詳細資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。
 
 ## 使用處理器
 
@@ -113,7 +113,6 @@ POST _ingest/pipeline/split_pipeline/_simulate
   ]
 }
 ```
-{% include copy-curl.html %}
 
 ### 步驟 3：匯入文件
 
@@ -129,7 +128,7 @@ PUT testindex1/_doc/1?pipeline=split_pipeline
 
 #### 回應
 
-此請求會將文件編製索引到索引 `testindex1`，並在編製索引前依逗號分隔符分割 `log_message` 欄位，如下列回應所示：
+此請求會將文件編製索引至索引 `testindex1`，並在編製索引前，依逗號分隔符號分割 `log_message` 欄位，再將結果儲存於 `log_parts` 欄位，如下列回應所示：
 
 ```json
 {
@@ -156,9 +155,9 @@ GET testindex1/_doc/1
 ```
 {% include copy-curl.html %}
 
-#### 回應
+#### 回應 
 
-回應顯示 `log_message` 欄位為依逗號分隔符分割後的值陣列：
+回應會顯示 `log_parts` 欄位，其中包含 `log_message` 以逗號分隔後的值：
 
 ```json
 {
@@ -176,5 +175,63 @@ GET testindex1/_doc/1
       "info"
     ]
   }
+}
+```
+
+## 保留尾端空欄位
+
+根據預設，`split` 處理器會從產生的陣列中移除尾端的空元素。下列請求分別在有無 `preserve_trailing` 的情況下分割相同的值：
+
+```json
+POST _ingest/pipeline/_simulate
+{
+  "pipeline": {
+    "processors": [
+      {
+        "split": {
+          "field": "colors",
+          "separator": ","
+        }
+      },
+      {
+        "split": {
+          "field": "colors_preserved",
+          "separator": ",",
+          "preserve_trailing": true
+        }
+      }
+    ]
+  },
+  "docs": [
+    {
+      "_source": {
+        "colors": "red,green,,",
+        "colors_preserved": "red,green,,"
+      }
+    }
+  ]
+}
+```
+{% include copy-curl.html %}
+
+在回應中，`colors` 陣列只包含兩個非空元素，而 `colors_preserved` 陣列還包含兩個尾端空元素：
+
+```json
+{
+  "docs": [
+    {
+      "doc": {
+        "_index": "_index",
+        "_id": "_id",
+        "_source": {
+          "colors": ["red", "green"],
+          "colors_preserved": ["red", "green", "", ""]
+        },
+        "_ingest": {
+          "timestamp": "2026-10-14T19:44:03.298240422Z"
+        }
+      }
+    }
+  ]
 }
 ```

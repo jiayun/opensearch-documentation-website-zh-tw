@@ -6,7 +6,7 @@ parent: Ingest processors
 nav_order: 60
 ---
 
-本文件說明如何在 OpenSearch 資料匯入管線中使用 `dissect` 處理器。如果您的使用情境涉及大型或複雜的資料集，請考慮使用在 OpenSearch 叢集上執行的 [Data Prepper `dissect` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/dissect/)。
+本文件說明如何在 OpenSearch 資料匯入管線中使用 `dissect` 處理器。若您的使用情境涉及大型或複雜的資料集，建議改用 [Data Prepper `dissect` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/dissect/)，該處理器在 OpenSearch 叢集之外執行。
 {: .note}
 
 # Dissect
@@ -32,25 +32,25 @@ nav_order: 60
 
 下表列出 `dissect` 處理器的必要與選用參數。
 
-參數 | 必要／選用 | 說明 |
+參數 | 必要/選用 | 說明 |
 |-----------|-----------|-----------|
-`field`  | 必要  | 包含要剖析之資料的欄位名稱。 |
-`pattern` | 必要 | 用於從指定欄位擷取資料的 dissect 模式。 |
-`append_separator` | 選用 | 分隔附加欄位的分隔字元或字串。預設為 `""`（空字串）。
-`description`  | 選用  | 處理器的簡要描述。  |
+`field`  | 必要  | 包含待剖析資料的欄位名稱。 |
+`pattern` | 必要 | 用於從指定欄位擷取資料的剖析模式。 |
+`append_separator` | 選用 | 用於分隔附加欄位的分隔字元或字串。預設為 `""`（空字串）。
+`description`  | 選用  | 處理器的簡短說明。  |
 `if` | 選用 | 執行處理器的條件。 |
-`ignore_failure` | 選用 | 指定處理器即使遇到錯誤也繼續執行。若設為 `true`，則會忽略處理器失敗。預設為 `false`。 |
-`ignore_missing`  | 選用  | 指定處理器是否應忽略不含指定欄位的文件。若設為 `true`，當欄位不存在或為 `null` 時，處理器不會修改文件。預設為 `false`。 |
+`ignore_failure` | 選用 | 指定處理器是否在遇到錯誤時仍繼續執行。若設為 `true`，則忽略處理器失敗。預設為 `false`。 |
+`ignore_missing`  | 選用  | 指定處理器是否應忽略不含指定欄位的文件。若設為 `true`，則當欄位不存在或為 `null` 時，處理器不會修改文件。預設為 `false`。 |
 `on_failure` | 選用 | 處理器失敗時要執行的處理器清單。 |
-`tag` | 選用 | 處理器的識別標籤。在除錯時有助於區分相同類型的處理器。 |
+`tag` | 選用 | 處理器的識別標籤。可在偵錯時用來區分相同類型的處理器。如需詳細資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
 
 ## 使用處理器
 
-依照下列步驟在管線中使用處理器。
+請依照下列步驟在管線中使用處理器。
 
 **步驟 1：建立管線**
 
-下列查詢會建立名為 `dissect-test` 的管線，使用 `dissect` 處理器來剖析記錄行：
+下列查詢會建立名為 `dissect-test` 的管線，並使用 `dissect` 處理器剖析記錄檔行：
 
 ```json
 PUT /_ingest/pipeline/dissect-test
@@ -68,7 +68,7 @@ PUT /_ingest/pipeline/dissect-test
 ```
 {% include copy-curl.html %}
 
-**步驟 2 (選用)：測試管線**
+**步驟 2（選用）：測試管線**
 
 建議您在匯入文件之前先測試管線。
 {: .tip}
@@ -93,7 +93,7 @@ POST _ingest/pipeline/dissect-test/_simulate
 
 **回應**
 
-下列範例回應確認管線如預期運作：
+下列範例回應可確認管線運作正常：
 
 ```json
 {
@@ -107,7 +107,7 @@ POST _ingest/pipeline/dissect-test/_simulate
           "http_method": "POST",
           "http_version": "HTTP/1.1",
           "client_ip": "192.168.1.10",
-          "message": """192.168.1.10 - - [03/Nov/2023:15:20:45 +0000] "POST /login HTTP/1.1" 200 3456""",
+          "message": "192.168.1.10 - - [03/Nov/2023:15:20:45 +0000] \"POST /login HTTP/1.1\" 200 3456",
           "url": "/login",
           "response_size": "3456",
           "timestamp": "03/Nov/2023:15:20:45 +0000"
@@ -133,7 +133,7 @@ PUT testindex1/_doc/1?pipeline=dissect-test
 ```
 {% include copy-curl.html %}
 
-**步驟 4 (選用)：擷取文件**
+**步驟 4（選用）：擷取文件**
 
 若要擷取文件，請執行下列查詢：
 
@@ -185,26 +185,26 @@ Dissect 模式的運作方式是將字串與一組規則進行比對。例如，
 
 ### 右側填補修飾詞 (`->`)
 
-分割演算法相當精確，要求模式中的每個字元都必須與來源字串完全相符。舉例來說，模式 `%{hellokey} %{worldkey}` (1 個空格) 會符合字串 `Hello world` (1 個空格)，但不會符合字串 <code>Hello&nbsp;&nbsp;world</code> (2 個空格)，因為模式中只有 1 個空格，而來源字串有 2 個。
+剖析演算法相當精確，要求模式中的每個字元都必須與來源字串完全相符。舉例來說，模式 `%{hellokey} %{worldkey}` (1 個空格) 會符合字串 `Hello world` (1 個空格)，但不會符合字串 <code>Hello&nbsp;&nbsp;world</code> (2 個空格)，因為模式中只有 1 個空格，而來源字串有 2 個。
 
 _右側填補修飾詞_ 可用來解決這個問題。將右側填補修飾詞加入模式 `%{helloworldkey->} %{worldkey}` 後，它會符合 <code>Hello&nbsp;world</code> (1 個空格)、<code>Hello&nbsp;&nbsp;world</code> (2 個空格)，甚至 <code>Hello&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;world</code> (10 個空格)。
 
 右側填補修飾詞可用來允許 `%{keyname->}` 之後的字元重複。右側填補修飾詞可套用至任何鍵，並可搭配任何其他修飾詞。它一律應放在最右側，例如 `%{+keyname/1->}` 或 `%{}`。
 
-#### 使用範例
+#### 範例用法
 
-以下範例說明如何使用右側填補修飾詞：
+以下是如何使用右側填充修飾詞的範例：
 
 `%{city->}, %{state} %{zip}`
 
-在此模式中，右側填補修飾詞 `->` 會套用至 `%{city}` 鍵。這兩個地址包含相同的資訊，但第二筆項目的 `city` 欄位中多了一個字 `City`。右側填補修飾詞可讓模式同時符合這兩筆地址項目，即使它們的格式略有不同：
+在此模式中，右側填充修飾詞 `->` 套用於 `%{city}` 鍵。兩個地址包含相同的資訊，但第二個項目在 `city` 欄位中多了一個字 `City`。右側填充修飾詞讓模式能夠同時符合這兩個地址項目，即使它們的格式略有不同：
 
 ```bash
 New York, NY 10017
 New York City, NY 10017
 ```
 
-以下範例管線使用右側填補修飾詞搭配空鍵 `%{->}`：
+以下範例管線使用右側填充修飾詞搭配空鍵 `%{->}`：
 
 ```json
 PUT /_ingest/pipeline/dissect-test
@@ -222,7 +222,7 @@ PUT /_ingest/pipeline/dissect-test
 ```
 {% include copy-curl.html %}
 
-您可以使用以下範例管線來測試此管線：
+您可以使用下列範例管線來測試此管線：
 
 ```json
 POST _ingest/pipeline/dissect-test/_simulate
@@ -240,7 +240,7 @@ POST _ingest/pipeline/dissect-test/_simulate
 ```
 {% include copy-curl.html %}
 
-您的回應應類似於以下內容：
+您的回應應該會類似如下：
 
 ```json
 {
@@ -262,7 +262,6 @@ POST _ingest/pipeline/dissect-test/_simulate
   ]
 }
 ```
-{% include copy-curl.html %}
 
 ### 附加修飾詞 (`+`)
 
@@ -270,7 +269,7 @@ _附加修飾詞_ 會將兩個或多個值合併為單一輸出值。這些值�
 
 #### 使用範例
 
-以下範例管線使用附加修飾詞：
+以下是帶有附加修飾詞的範例管線：
 
 ```json
 PUT /_ingest/pipeline/dissect-test
@@ -289,7 +288,7 @@ PUT /_ingest/pipeline/dissect-test
 ```
 {% include copy-curl.html %}
 
-您可以使用以下範例管線來測試此管線：
+您可以使用下列範例管線來測試此管線：
 
 ```json
 POST _ingest/pipeline/dissect-test/_simulate
@@ -307,7 +306,7 @@ POST _ingest/pipeline/dissect-test/_simulate
 ```
 {% include copy-curl.html %}
 
-這些子字串會附加至 `address` 欄位，如下列回應所示：
+子字串會附加到 `address` 欄位，如下列回應所示：
 
 ```json
 {
@@ -328,7 +327,6 @@ POST _ingest/pipeline/dissect-test/_simulate
   ]
 }
 ```
-{% include copy-curl.html %}
 
 ### 附加並指定順序修飾詞 (`+` 和 `/n`)
 
@@ -336,7 +334,7 @@ _附加並指定順序修飾詞_ 會依據 `/` 之後指定的順序，將兩個
 
 #### 使用範例
 
-以下範例管線使用附加並指定順序修飾詞，將前一個管線中定義的模式順序反轉。此管線指定了要插入於附加欄位之間的分隔符號。如果您未指定分隔符號，所有值將會在沒有分隔符號的情況下附加。
+下列範例管線使用帶有順序修飾詞的附加功能，將前述管線中定義的模式順序反轉。此管線指定了要插入於附加欄位之間的分隔符號。若您未指定分隔符號，所有值都會直接附加，中間不含分隔符號。
 
 ```json
 PUT /_ingest/pipeline/dissect-test
@@ -355,7 +353,7 @@ PUT /_ingest/pipeline/dissect-test
 ```
 {% include copy-curl.html %}
 
-您可以使用以下範例管線來測試此管線：
+您可以使用下列範例管線來測試此管線：
 
 ```json
 POST _ingest/pipeline/dissect-test/_simulate
@@ -373,7 +371,7 @@ POST _ingest/pipeline/dissect-test/_simulate
 ```
 {% include copy-curl.html %}
 
-這些子字串會以反向順序附加至 `address` 欄位，如下列回應所示：
+子字串會以相反順序附加至 `address` 欄位，如下列回應所示：
 
 ```json
 {
@@ -394,15 +392,14 @@ POST _ingest/pipeline/dissect-test/_simulate
   ]
 }
 ```
-{% include copy-curl.html %}
 
 ### 具名略過鍵修飾詞
 
 _具名略過鍵修飾詞_ 會使用模式中的空鍵 `{}` 或 `?` 修飾詞，將特定相符項目排除於最終輸出之外。舉例來說，下列模式是等效的：`%{firstName} %{lastName} %{?ignore}` 和 `%{firstName} %{lastName} %{}`。具名略過鍵修飾詞適合用來將不相關或不必要的欄位排除於輸出之外。
 
-#### 使用範例
+#### 範例用法
 
-下列模式使用具名略過鍵，將某個欄位 (在此例中為 `ignore`) 排除於輸出之外。您可以為空鍵指派描述性名稱，例如 `%{?ignore}`，以清楚表示對應的值應排除於最終輸出之外：
+下列模式使用具名的略過鍵，將某個欄位（在此範例中為 `ignore`）從輸出中排除。您可以為空鍵指定一個描述性名稱，例如 `%{?ignore}`，以清楚表示對應的值應從最終輸出中排除：
 
 ```json
 PUT /_ingest/pipeline/dissect-test
@@ -420,7 +417,7 @@ PUT /_ingest/pipeline/dissect-test
 ```
 {% include copy-curl.html %}
 
-您可以使用以下範例管線來測試此管線：
+您可以使用下列範例管線來測試此管線：
 
 ```json
 POST _ingest/pipeline/dissect-test/_simulate
@@ -438,7 +435,7 @@ POST _ingest/pipeline/dissect-test/_simulate
 ```
 {% include copy-curl.html %}
 
-您的回應應類似於以下內容：
+您的回應應類似如下：
 
 ```json
 {
@@ -460,7 +457,6 @@ POST _ingest/pipeline/dissect-test/_simulate
   ]
 }
 ```
-{% include copy-curl.html %}
 
 ### 參考鍵 (`*` 與 `&`)
 
@@ -468,7 +464,7 @@ POST _ingest/pipeline/dissect-test/_simulate
 
 #### 使用範例
 
-下列模式使用參考鍵將資料擷取為結構化格式。在此範例中，模式會擷取 `client_ip`，並從後續內容擷取兩組鍵值對：
+下列模式使用參照鍵將資料擷取成結構化格式。在此範例中，會為後續的值擷取 `client_ip` 與兩個鍵值對：
 
 ```json
 PUT /_ingest/pipeline/dissect-test
@@ -504,7 +500,7 @@ POST _ingest/pipeline/dissect-test/_simulate
 ```
 {% include copy-curl.html %}
 
-兩個鍵值對已被擷取至欄位中，如下列回應所示：
+這兩個鍵值對已擷取至欄位中，如下列回應所示：
 
 ```json
 {
@@ -527,4 +523,3 @@ POST _ingest/pipeline/dissect-test/_simulate
   ]
 }
 ```
-{% include copy-curl.html %}

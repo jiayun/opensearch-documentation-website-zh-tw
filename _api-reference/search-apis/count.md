@@ -101,11 +101,7 @@ GET /_count
 
 {% capture step1_python %}
 
-
-response = client.count(
-  body = { "Insert body here" }
-)
-
+response = client.count()
 {% endcapture %}
 
 {% include code-block.html
@@ -129,8 +125,7 @@ GET /movies,tv_shows/_count
 
 
 response = client.count(
-  index = "movies,tv_shows",
-  body = { "Insert body here" }
+  index = "movies,tv_shows"
 )
 
 {% endcapture %}
@@ -205,8 +200,7 @@ GET /movies/_count?q=genre:drama
 
 response = client.count(
   index = "movies",
-  params = { "q": "genre:drama" },
-  body = { "Insert body here" }
+  params = { "q": "genre:drama" }
 )
 
 {% endcapture %}

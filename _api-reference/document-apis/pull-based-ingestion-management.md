@@ -30,7 +30,7 @@ POST /{index}/ingestion/_pause
 
 | 參數 | 資料類型 | 必要/選用 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `index` | String | 必要 | 要暫停的索引。可為以逗號分隔的多個索引名稱清單。 |
+| `index` | 字串 | 必要 | 要暫停的索引。可為以逗號分隔的多個索引名稱清單。 |
 
 ### 查詢參數
 
@@ -38,8 +38,8 @@ POST /{index}/ingestion/_pause
 
 | 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- | 
-| `cluster_manager_timeout` | Time units | 等待連線至叢集管理員節點的時間長度。預設為 `30s`。 |
-| `timeout` | Time units | 等待叢集回應的時間長度。預設為 `30s`。 |
+| `cluster_manager_timeout` | 時間單位 | 等待連線至叢集管理員節點的時間長度。預設為 `30s`。 |
+| `timeout` | 時間單位 | 等待叢集回應的時間長度。預設為 `30s`。 |
 
 ### 範例請求
 
@@ -69,7 +69,7 @@ response = client.ingestion.pause(
 
 繼續一或多個索引的資料匯入。繼續時，OpenSearch 會繼續從串流來源取用指定索引中所有分片的資料。
 
-在繼續作業中，您可以選擇性地重設串流消費者，使其從特定的位移量或時間戳記開始讀取。若指定了重設設定，則在對索引套用繼續作業之前，會先重設所選分片的所有消費者。重設消費者也會觸發內部重新整理，以保存變更。
+在繼續作業中，您可以選擇性地重設串流消費者，使其從特定的位移量或時間戳記開始讀取。若指定了重設設定，則在對索引套用繼續作業之前，會先重設所選分片的所有消費者。重設消費者也會觸發內部排清，以保存變更。
 
 ### 端點
 
@@ -83,7 +83,7 @@ POST /{index}/ingestion/_resume
 
 | 參數 | 資料類型 | 必要/選用 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `index` | String | 必要 | 要繼續資料匯入的索引。可為以逗號分隔的多個索引名稱清單。 |
+| `index` | 字串 | 必要 | 要繼續資料匯入的索引。可為以逗號分隔的多個索引名稱清單。 |
 
 ### 查詢參數
 
@@ -91,8 +91,8 @@ POST /{index}/ingestion/_resume
 
 | 參數 | 資料類型 |  說明 |
 | :--- | :--- | :--- | :--- |
-| `cluster_manager_timeout` | Time units | 等待連線至叢集管理員節點的時間長度。預設為 `30s`。 |
-| `timeout` | Time units | 等待叢集回應的時間長度。預設為 `30s`。 |
+| `cluster_manager_timeout` | 時間單位 | 等待連線至叢集管理員節點的時間長度。預設為 `30s`。 |
+| `timeout` | 時間單位 | 等待叢集回應的時間長度。預設為 `30s`。 |
 
 ### 請求本文欄位
 
@@ -100,10 +100,10 @@ POST /{index}/ingestion/_resume
 
 | 欄位 | 資料類型 | 必要/選用 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `reset_settings` | Array | 選用 | 每個分片的重設設定清單。若未提供，OpenSearch 會從指定索引中每個分片的目前位置繼續資料匯入。 |
-| `reset_settings.shard` | Integer | 必要 | 要重設的分片。 |
-| `reset_settings.mode` | String | 必要 | 重設模式。有效值為 `offset` (正整數位移量) 與 `timestamp` (以毫秒為單位的 Unix 時間戳記)。 |
-| `reset_settings.value` | String | 必要 | &ensp;&#x2022; `offset`：Apache Kafka 位移量或 Amazon Kinesis 序號<br>&ensp;&#x2022; `timestamp`：以毫秒為單位的 Unix 時間戳記。 |
+| `reset_settings` | 陣列 | 選用 | 每個分片的重設設定清單。若未提供，OpenSearch 會從指定索引中每個分片的目前位置繼續資料匯入。 |
+| `reset_settings.shard` | 整數 | 必要 | 要重設的分片。 |
+| `reset_settings.mode` | 字串 | 必要 | 重設模式。有效值為 `offset` (正整數位移量) 與 `timestamp` (以毫秒為單位的 Unix 時間戳記)。 |
+| `reset_settings.value` | 字串 | 必要 | &ensp;&#x2022; `offset`：Apache Kafka 位移量或 Amazon Kinesis 序號<br>&ensp;&#x2022; `timestamp`：以毫秒為單位的 Unix 時間戳記。 |
 
 ### 範例請求
 
@@ -121,8 +121,7 @@ POST /my-index/ingestion/_resume
 
 
 response = client.ingestion.resume(
-  index = "my-index",
-  body = { "Insert body here" }
+  index = "my-index"
 )
 
 {% endcapture %}
@@ -200,7 +199,7 @@ GET /{index}/ingestion/_state
 
 | 參數 | 資料類型 | 必要/選用 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `index` | String | 必要 | 要傳回資料匯入狀態的索引。可為以逗號分隔的多個索引名稱清單。 |
+| `index` | 字串 | 必要 | 要傳回資料匯入狀態的索引。可為以逗號分隔的多個索引名稱清單。 |
 
 ### 查詢參數
 
@@ -208,7 +207,7 @@ GET /{index}/ingestion/_state
 
 | 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `timeout` | Time units | 等待叢集回應的時間長度。預設為 `30s`。 |
+| `timeout` | 時間單位 | 等待叢集回應的時間長度。預設為 `30s`。 |
 
 ### 範例請求
 

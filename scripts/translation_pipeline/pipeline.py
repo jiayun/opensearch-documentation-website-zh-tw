@@ -677,6 +677,7 @@ class Runner:
         if current:
             batches.append(current)
         approved, issues, used = True, [], None
+        reported_model = None
         for n, batch in enumerate(batches, 1):
             metadata = {"page": work.page, "page_title": work.doc.data.get("title"),
                         "part": n, "parts": len(batches), "prompt_version": self.prompts.version}
@@ -698,9 +699,10 @@ class Runner:
             if result is None:
                 return None
             used = result.provider
+            reported_model = result.model
             approved = approved and result.approved
             issues += result.issues
-        final = ReviewResult(approved, issues, used, self.pool.providers[used].model)
+        final = ReviewResult(approved, issues, used, reported_model or self.pool.providers[used].model)
         if final.approved:   # rejections are not cached, so a retry is reviewed afresh
             self.cache.put("reviews", key, {"approved": final.approved, "issues": final.issues,
                                             "provider": final.provider, "model": final.model})

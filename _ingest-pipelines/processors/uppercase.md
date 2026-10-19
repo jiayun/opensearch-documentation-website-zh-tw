@@ -8,12 +8,12 @@ redirect_from:
    - /api-reference/ingest-apis/processors/uppercase/
 ---
 
-本文件說明如何在 OpenSearch 資料匯入管線中使用 `uppercase` 處理器。如果您的使用案例涉及大型或複雜的資料集，請考慮使用在 OpenSearch 叢集上執行的 [Data Prepper `uppercase_string` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/uppercase-string/)。
+本文件說明如何在 OpenSearch 資料匯入管線中使用 `uppercase` 處理器。如果您的使用情境涉及大型或複雜的資料集，建議考慮使用在 OpenSearch 叢集外部執行的 [Data Prepper `uppercase_string` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/uppercase-string/)。
 {: .note}
 
 # 大寫處理器
 
-`uppercase` 處理器會將特定欄位中的所有文字轉換為大寫字母。 
+`uppercase` 處理器會將特定欄位中的所有文字轉換為大寫字母。對於陣列欄位，處理器會轉換每個字串元素。
 
 ## 語法
 
@@ -32,16 +32,16 @@ redirect_from:
 
 下表列出 `uppercase` 處理器的必要與選用參數。
 
-| 參數  | 必要／選用  | 說明  |
+| 參數  | 必要/選用  | 說明  |
 |---|---|---|
-`field`  | 必要  | 包含要附加之資料的欄位名稱。支援[範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。 |
+`field`  | 必要  | 包含要轉換之資料的欄位名稱。 |
 `description`  | 選用  | 處理器的簡短說明。  |
 `if` | 選用 | 執行處理器的條件。 |
-`ignore_failure` | 選用 |  指定處理器是否在遇到錯誤時仍繼續執行。如果設為 `true`，則會忽略失敗。預設為 `false`。 |
-`ignore_missing`  | 選用  | 指定處理器是否應忽略不含指定欄位的文件。如果設為 `true`，當欄位不存在或為 `null` 時，處理器不會修改文件。預設為 `false`。  |
+`ignore_failure` | 選用 |  指定處理器在遇到錯誤時是否繼續執行。若設為 `true`，則會忽略失敗。預設為 `false`。 |
+`ignore_missing`  | 選用  | 指定處理器是否應忽略不包含指定欄位的文件。若設為 `true`，當欄位不存在或為 `null` 時，處理器不會修改該文件。預設為 `false`。  |
 `on_failure` | 選用 | 處理器失敗時要執行的處理器清單。 |
-`tag` | 選用 | 處理器的識別標籤。有助於在偵錯時區分相同類型的處理器。 |
-`target_field`  | 選用  | 儲存剖析後資料的欄位名稱。預設為 `field`。依預設，`field` 會就地更新。 |
+`tag` | 選用 | 處理器的識別標籤。可用於偵錯，以區分相同類型的處理器。如需更多資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
+`target_field`  | 選用  | 用於儲存剖析後資料的欄位名稱。預設為 `field`。根據預設，會直接就地更新 `field`。 |
 
 ## 使用處理器
 
@@ -49,7 +49,7 @@ redirect_from:
 
 **步驟 1：建立管線** 
 
-下列查詢會建立名為 `uppercase` 的管線，將 `field` 欄位中的文字轉換為大寫：
+下列查詢會建立名為 `uppercase` 的管線，將 `name` 欄位中的文字轉換為大寫：
 
 ```json
 PUT _ingest/pipeline/uppercase
@@ -68,7 +68,7 @@ PUT _ingest/pipeline/uppercase
 
 **步驟 2（選用）：測試管線**
 
-建議您在匯入文件之前測試管線。
+建議您在匯入文件之前先測試管線。
 {: .tip}
 
 若要測試管線，請執行下列查詢：
@@ -91,7 +91,7 @@ POST _ingest/pipeline/uppercase/_simulate
 
 **回應**
 
-下列範例回應確認管線如預期般運作：
+下列範例回應確認管線如預期運作：
 
 ```json
 {

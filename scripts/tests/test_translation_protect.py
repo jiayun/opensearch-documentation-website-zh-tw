@@ -112,9 +112,9 @@ class ProtectTests(unittest.TestCase):
         self.assertEqual(protected_inventory(translated), protected_inventory(text))
 
     def test_raw_with_code_literals_exposes_only_conjunction(self):
-        text = (REPO / config.SOURCE_STORE_DIR / "_ingest-pipelines/accessing-data.md").read_text(encoding="utf-8")
         line = ("Use triple curly braces ({% raw %}`{{{` and `}}}`{% endraw %}) for unescaped field values.")
-        self.assertIn(line, text)
+        # Keep this regression fixture independent of upstream prose edits.
+        text = line + "\n"
         p, protected = self.protect(text)
         self.assertEqual(p.restore(protected), text)
         self.assertRegex(protected, r"Use triple curly braces \(⟦P\d+⟧ and ⟦P\d+⟧\) for unescaped field values\.")

@@ -85,7 +85,7 @@ PUT _cluster/settings
 
 首先，您需要選擇一個語言模型，以便在匯入資料時和查詢時從文字欄位產生向量嵌入。
 
-在本教學中，您將使用 Hugging Face 的 [DistilBERT](https://huggingface.co/docs/transformers/model_doc/distilbert) 模型。它是 OpenSearch 中可用的預先訓練句子轉換器模型之一，在基準測試中展現了最佳的結果之一（如需更多資訊，請參閱[這篇網誌文章](https://opensearch.org/blog/semantic-science-benchmarks/)）。註冊模型時，您需要模型的名稱、版本與維度。您可以在[預先訓練模型表格]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/#sentence-transformers)中，選取模型 TorchScript 工件對應的 `config_url` 連結來找到這些資訊：
+在本教學中，您將使用 Hugging Face 的 [DistilBERT](https://huggingface.co/docs/transformers/model_doc/distilbert) 模型。它是 OpenSearch 中可用的預先訓練句子轉換器模型之一，在基準測試中展現了最佳的結果之一（如需更多資訊，請參閱[這篇網誌文章](https://opensearch.org/blog/semantic-science-benchmarks/)）。註冊模型時，您需要模型的名稱、版本與維度。您可以在[預先訓練模型表格]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/#sentence-transformers)中，選取該模型 TorchScript 成品對應的 `config_url` 連結來找到這些資訊：
 
 - 模型名稱為 `huggingface/sentence-transformers/msmarco-distilbert-base-tas-b`。
 - 模型版本為 `1.0.3`。
@@ -108,7 +108,7 @@ PUT _cluster/settings
 
 ### 步驟 2：註冊並部署模型
 
-若要註冊並部署模型，請在註冊請求中提供模型群組 ID：
+若要註冊並部署模型，請傳送下列請求：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -120,7 +120,7 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-註冊模型是一項非同步工作。OpenSearch 會傳回此工作的任務 ID：
+註冊模型是非同步工作。OpenSearch 會傳回此工作的任務 ID：
 
 ```json
 {
@@ -129,7 +129,7 @@ POST /_plugins/_ml/models/_register?deploy=true
 }
 ```
 
-OpenSearch 會從 URL 下載模型的組態檔與模型內容。由於模型大小超過 10 MB，OpenSearch 會將它分割成最大 10 MB 的區塊，並將這些區塊儲存在模型索引中。您可以使用 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 檢查工作的狀態：
+OpenSearch 會從 URL 下載模型的組態檔與模型內容。由於模型大小超過 10 MB，OpenSearch 會將其分割成最大 10 MB 的區塊，並將這些區塊儲存在模型索引中。您可以使用 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 查看工作狀態：
 
 ```json
 GET /_plugins/_ml/tasks/aFeif4oB5Vm0Tdw8yoN7
@@ -138,7 +138,7 @@ GET /_plugins/_ml/tasks/aFeif4oB5Vm0Tdw8yoN7
 
 OpenSearch 會將已註冊的模型儲存在模型索引中。部署模型會建立模型執行個體，並將模型快取在記憶體中。
 
-工作完成後，工作狀態會變更為 `COMPLETED`，且 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 的回應會包含已部署模型的 `model_id`（與最初的 `task_id` 不同）：
+工作完成後，工作狀態會變更為 `COMPLETED`，且 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 回應會包含已部署模型的 `model_id`（與最初的 `task_id` 不同）：
 
 ```json
 {
@@ -155,77 +155,25 @@ OpenSearch 會將已註冊的模型儲存在模型索引中。部署模型會建
 }
 ```
 
-在後續的多個步驟中，您需要 `model_id` 才能使用已部署的模型。
+您需要 `model_id`，才能在後續幾個步驟中使用已部署的模型。
 
 如需不同部署狀態下所有可能回應格式的詳細資訊，請參閱 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/#example-responses)。
 {: .tip}
 
 <details markdown="block">
   <summary>
-    測試
+    測試看看
   </summary>
   {: .text-delta}
 
-在請求中提供其 ID，以搜尋新建立的模型：
+在請求中提供模型 ID，即可搜尋已部署的模型：
 
 ```json
 GET /_plugins/_ml/models/aVeif4oB5Vm0Tdw8zYO2
 ```
 {% include copy-curl.html %}
 
-回應包含該模型：
-
-```json
-{
-  "name": "huggingface/sentence-transformers/msmarco-distilbert-base-tas-b",
-  "model_group_id": "Z1eQf4oB5Vm0Tdw8EIP2",
-  "algorithm": "TEXT_EMBEDDING",
-  "model_version": "1",
-  "model_format": "TORCH_SCRIPT",
-  "model_state": "REGISTERED",
-  "model_content_size_in_bytes": 266352827,
-  "model_content_hash_value": "acdc81b652b83121f914c5912ae27c0fca8fabf270e6f191ace6979a19830413",
-  "model_config": {
-    "model_type": "distilbert",
-    "embedding_dimension": 768,
-    "framework_type": "SENTENCE_TRANSFORMERS",
-    "all_config": """{"_name_or_path":"old_models/msmarco-distilbert-base-tas-b/0_Transformer","activation":"gelu","architectures":["DistilBertModel"],"attention_dropout":0.1,"dim":768,"dropout":0.1,"hidden_dim":3072,"initializer_range":0.02,"max_position_embeddings":512,"model_type":"distilbert","n_heads":12,"n_layers":6,"pad_token_id":0,"qa_dropout":0.1,"seq_classif_dropout":0.2,"sinusoidal_pos_embds":false,"tie_weights_":true,"transformers_version":"4.7.0","vocab_size":30522}"""
-  },
-  "created_time": 1694482261832,
-  "last_updated_time": 1694482324282,
-  "last_registered_time": 1694482270216,
-  "last_deployed_time": 1694482324282,
-  "total_chunks": 27,
-  "planning_worker_node_count": 1,
-  "current_worker_node_count": 1,
-  "planning_worker_nodes": [
-    "4p6FVOmJRtu3wehDD74hzQ"
-  ],
-  "deploy_to_all_nodes": true
-}
-```
-
-回應包含模型資訊。您可以看到 `model_state` 為 `REGISTERED`。此外，模型被分割成 27 個區塊，如 `total_chunks` 欄位所示。
-</details>
-
-#### 進階：註冊自訂模型
-
-若要註冊自訂模型，您必須在註冊請求中提供模型組態。如需更多資訊，請參閱[在 OpenSearch 中使用 ML 模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/)。
-
-<details markdown="block">
-  <summary>
-    測試它
-  </summary>
-  {: .text-delta}
-
-在請求中提供已部署模型的 ID 來搜尋該模型：
-
-```json
-GET /_plugins/_ml/models/aVeif4oB5Vm0Tdw8zYO2
-```
-{% include copy-curl.html %}
-
-回應會顯示模型狀態為 `DEPLOYED`：
+回應會包含模型資訊。`model_state` 為 `DEPLOYED`，且 `total_chunks` 欄位顯示該模型已分割成 27 個區塊。`model_group_id` 欄位包含您註冊模型時 OpenSearch 為該模型建立的模型群組 ID：
 
 ```json
 {
@@ -235,34 +183,45 @@ GET /_plugins/_ml/models/aVeif4oB5Vm0Tdw8zYO2
   "model_version": "1",
   "model_format": "TORCH_SCRIPT",
   "model_state": "DEPLOYED",
-  "model_content_size_in_bytes": 266352827,
-  "model_content_hash_value": "acdc81b652b83121f914c5912ae27c0fca8fabf270e6f191ace6979a19830413",
+  "model_content_size_in_bytes": 266357253,
+  "model_content_hash_value": "2fcc51bd52df9bd55f0d46007b80663dc6014687a321d23c00508a08d9c86d86",
   "model_config": {
     "model_type": "distilbert",
     "embedding_dimension": 768,
     "framework_type": "SENTENCE_TRANSFORMERS",
-    "all_config": """{"_name_or_path":"old_models/msmarco-distilbert-base-tas-b/0_Transformer","activation":"gelu","architectures":["DistilBertModel"],"attention_dropout":0.1,"dim":768,"dropout":0.1,"hidden_dim":3072,"initializer_range":0.02,"max_position_embeddings":512,"model_type":"distilbert","n_heads":12,"n_layers":6,"pad_token_id":0,"qa_dropout":0.1,"seq_classif_dropout":0.2,"sinusoidal_pos_embds":false,"tie_weights_":true,"transformers_version":"4.7.0","vocab_size":30522}"""
+    "all_config": """{"_name_or_path": "sentence-transformers/msmarco-distilbert-base-tas-b", "activation": "gelu", "architectures": ["DistilBertModel"], "attention_dropout": 0.1, "dim": 768, "dropout": 0.1, "hidden_dim": 3072, "initializer_range": 0.02, "max_position_embeddings": 512, "model_type": "distilbert", "n_heads": 12, "n_layers": 6, "pad_token_id": 0, "qa_dropout": 0.1, "seq_classif_dropout": 0.2, "sinusoidal_pos_embds": false, "tie_weights_": true, "torch_dtype": "float32", "transformers_version": "4.49.0", "vocab_size": 30522}""",
+    "additional_config": {
+      "space_type": "innerproduct"
+    },
+    "pooling_mode": "CLS"
   },
   "created_time": 1694482261832,
   "last_updated_time": 1694482324282,
   "last_registered_time": 1694482270216,
   "last_deployed_time": 1694482324282,
+  "auto_redeploy_retry_times": 0,
   "total_chunks": 27,
   "planning_worker_node_count": 1,
   "current_worker_node_count": 1,
   "planning_worker_nodes": [
     "4p6FVOmJRtu3wehDD74hzQ"
   ],
-  "deploy_to_all_nodes": true
+  "deploy_to_all_nodes": true,
+  "is_hidden": false
 }
 ```
 
-您也可以傳送 [Models Profile API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/profile/) 請求，以取得叢集中所有已部署模型的統計資料：
+若要取得叢集中所有已部署模型的統計資料，請傳送 [Models Profile API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/profile/) 請求：
 
 ```json
 GET /_plugins/_ml/profile/models
 ```
+{% include copy-curl.html %}
 </details>
+
+#### 進階：註冊自訂模型
+
+若要註冊自訂模型，您必須在註冊請求中提供模型組態。如需更多資訊，請參閱 [在 OpenSearch 中使用 ML 模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/)。
 
 ### 步驟 3：匯入資料
 
@@ -326,8 +285,7 @@ GET /_ingest/pipeline
 
 #### 步驟 3(b)：建立向量索引
 
-現在您將建立一個向量索引，其中包含名為 `text` 的欄位 (內含圖片描述)，以及名為 `passage_embedding` 的 [`knn_vector`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-vector/) 欄位 (內含文字的向量嵌入)。此外，將預設資料匯入管線設為您在上一個步驟中建立的 `nlp-ingest-pipeline`：
-
+現在您將建立一個向量索引，其中包含名為 `text` 的欄位（內含圖片描述），以及名為 `passage_embedding` 的 [`knn_vector`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-vector/) 欄位（內含文字的向量嵌入）。此外，請將預設資料匯入管線設為您在上一個步驟中建立的 `nlp-ingest-pipeline`：
 
 ```json
 PUT /my-nlp-index
@@ -355,15 +313,15 @@ PUT /my-nlp-index
 ```
 {% include copy-curl.html %}
 
-設定向量索引可讓您之後對 `passage_embedding` 欄位執行向量搜尋。
+設定向量索引後，您之後便能對 `passage_embedding` 欄位執行向量搜尋。
 
 <details markdown="block">
   <summary>
-    測試它
+    測試看看
   </summary>
   {: .text-delta}
 
-使用下列請求取得所建立索引的設定和對應：
+使用下列請求取得所建立索引的設定與對應：
 
 ```json
 GET /my-nlp-index/_settings
@@ -461,9 +419,9 @@ GET /my-nlp-index/_doc/1
 
 現在您將使用關鍵字搜尋、語意搜尋，以及兩者結合的方式來搜尋索引。
 
-### 使用關鍵字搜尋
+### 使用關鍵字搜尋進行搜尋
 
-若要使用關鍵字搜尋，請使用 `match` 查詢。您將從結果中排除嵌入：
+若要使用關鍵字搜尋進行搜尋，請使用 `match` 查詢。您將從結果中排除嵌入：
 
 ```json
 GET /my-nlp-index/_search
@@ -484,13 +442,13 @@ GET /my-nlp-index/_search
 ```
 {% include copy-curl.html %}
 
-文件 3 未被傳回，因為它不包含指定的關鍵字。包含 `rodeo` 與 `cowboy` 這兩個詞的文件得分較低，因為它們的語意未被納入考量：
+文件 3 未被傳回，因為其中不包含指定的關鍵字。包含 `rodeo` 和 `cowboy` 這些字詞的文件分數較低，因為系統並未考量其語意：
 
 <details markdown="block">
-  <summary>
+<summary>
     結果
-  </summary>
-  {: .text-delta}
+</summary>
+{: .text-delta}
 
 ```json
 {
@@ -507,12 +465,12 @@ GET /my-nlp-index/_search
       "value": 4,
       "relation": "eq"
     },
-    "max_score": 1.7878418,
+    "max_score": 0.8126553,
     "hits": [
       {
         "_index": "my-nlp-index",
         "_id": "1",
-        "_score": 1.7878418,
+        "_score": 0.8126553,
         "_source": {
           "text": "A West Virginia university women 's basketball team , officials , and a small gathering of fans are in a West Virginia arena .",
           "id": "4319130149.jpg"
@@ -521,7 +479,7 @@ GET /my-nlp-index/_search
       {
         "_index": "my-nlp-index",
         "_id": "2",
-        "_score": 0.58093566,
+        "_score": 0.2640617,
         "_source": {
           "text": "A wild animal races across an uncut field with a minimal amount of trees .",
           "id": "1775029934.jpg"
@@ -530,7 +488,7 @@ GET /my-nlp-index/_search
       {
         "_index": "my-nlp-index",
         "_id": "5",
-        "_score": 0.55228686,
+        "_score": 0.25103948,
         "_source": {
           "text": "A rodeo cowboy , wearing a cowboy hat , is being thrown off of a wild white horse .",
           "id": "2691147709.jpg"
@@ -539,7 +497,7 @@ GET /my-nlp-index/_search
       {
         "_index": "my-nlp-index",
         "_id": "4",
-        "_score": 0.53899646,
+        "_score": 0.2449984,
         "_source": {
           "text": "A man who is riding a wild horse in the rodeo is very near to falling off .",
           "id": "4427058951.jpg"
@@ -551,9 +509,9 @@ GET /my-nlp-index/_search
 ```
 </details>
 
-### 使用語意搜尋
+### 使用語意搜尋進行搜尋
 
-若要使用語意搜尋，請使用 `neural` 查詢，並提供您先前設定的模型 ID，讓查詢文字的向量嵌入以匯入時所使用的模型來產生：
+若要使用語意搜尋進行搜尋，請使用 `neural` 查詢，並提供您先前設定之模型的模型 ID，讓查詢文字的向量嵌入以匯入時所使用的模型產生：
 
 ```json
 GET /my-nlp-index/_search
@@ -615,7 +573,7 @@ GET /my-nlp-index/_search
         "_id": "2",
         "_score": 0.015748845,
         "_source": {
-          "text": "A wild animal races across an uncut field with a minimal amount of trees.",
+          "text": "A wild animal races across an uncut field with a minimal amount of trees .",
           "id": "1775029934.jpg"
         }
       },
@@ -686,15 +644,15 @@ PUT /_search/pipeline/nlp-search-pipeline
 ```
 {% include copy-curl.html %}
 
-#### 步驟 2：使用混合查詢搜尋
+#### 步驟 2：使用混合查詢進行搜尋
 
-您將使用 [`hybrid` 查詢]({{site.url}}{{site.baseurl}}/query-dsl/compound/hybrid/) 來結合 `match` 與 `neural` 查詢子句。請務必在查詢參數中將先前建立的 `nlp-search-pipeline` 套用至請求：
+您將使用 [`hybrid` 查詢]({{site.url}}{{site.baseurl}}/query-dsl/compound/hybrid/) 來合併 `match` 與 `neural` 查詢子句。請務必透過查詢參數，將先前建立的 `nlp-search-pipeline` 套用至請求：
 
 ```json
 GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
 {
   "_source": {
-    "exclude": [
+    "excludes": [
       "passage_embedding"
     ]
   },
@@ -724,7 +682,7 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
 ```
 {% include copy-curl.html %}
 
-OpenSearch 不僅會傳回符合 `wild west` 語意的文件，包含與西部荒野主題相關詞彙的文件，相對於其他文件也會獲得較高分數：
+OpenSearch 不僅會傳回符合 `wild west` 語意含義的文件，現在包含與西部荒野主題相關詞彙的文件，其分數也會相對其他文件更高：
 
 <details markdown="block">
   <summary>
@@ -772,7 +730,7 @@ OpenSearch 不僅會傳回符合 `wild west` 語意的文件，包含與西部�
         "_id": "2",
         "_score": 0.6839765,
         "_source": {
-          "text": "A wild animal races across an uncut field with a minimal amount of trees.",
+          "text": "A wild animal races across an uncut field with a minimal amount of trees .",
           "id": "1775029934.jpg"
         }
       },
@@ -800,7 +758,7 @@ OpenSearch 不僅會傳回符合 `wild west` 語意的文件，包含與西部�
 ```
 </details>
 
-除了在每個請求中指定搜尋管線之外，您也可以將它設定為索引的預設搜尋管線，如下所示：
+您不必在每個請求中指定搜尋管線，可以改為將它設為該索引的預設搜尋管線，如下所示：
 
 ```json
 PUT /my-nlp-index/_settings 
@@ -810,7 +768,7 @@ PUT /my-nlp-index/_settings
 ```
 {% include copy-curl.html %}
 
-現在您可以嘗試不同的權重、標準化技術與合併技術。如需更多資訊，請參閱 [`normalization-processor`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/normalization-processor/) 與 [`hybrid` 查詢]({{site.url}}{{site.baseurl}}/query-dsl/compound/hybrid/) 的說明文件。
+您現在可以嘗試不同的權重、正規化技術與組合技術。如需詳細資訊，請參閱 [`normalization-processor`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/normalization-processor/) 與 [`hybrid` 查詢]({{site.url}}{{site.baseurl}}/query-dsl/compound/hybrid/) 文件。
 
 #### 進階
 
@@ -822,24 +780,30 @@ PUT /my-nlp-index/_settings
 
 ### 自動化語意搜尋設定
 
-OpenSearch 提供一個[工作流程範本]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-templates/)，會自動註冊並部署預設的本機模型 (`huggingface/sentence-transformers/paraphrase-MiniLM-L3-v2`)，並建立資料匯入管線與向量索引：
-
-```json
-POST /_plugins/_flow_framework/workflow?use_case=semantic_search_with_local_model&provision=true
-```
-{% include copy-curl.html %}
-
-請檢閱語意搜尋工作流程範本的[預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/semantic-search-with-local-model-defaults.json)，以判斷您是否需要更新任何參數。例如，如果您想使用不同的模型，請在請求本文中指定模型名稱：
+OpenSearch 提供一個[工作流程範本]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-templates/)，可自動註冊並部署預設的本機模型 (`huggingface/sentence-transformers/paraphrase-MiniLM-L3-v2`)，並建立資料匯入管線與向量索引。預設情況下，資料匯入管線會從名為 `passage_text` 的欄位產生嵌入。本教學中的文件將文字儲存在 `text` 欄位，因此請在請求本文中指定 `text` 作為輸入欄位：
 
 ```json
 POST /_plugins/_flow_framework/workflow?use_case=semantic_search_with_local_model&provision=true
 {
-  "register_local_pretrained_model.name": "huggingface/sentence-transformers/msmarco-distilbert-base-tas-b"
+  "text_embedding.field_map.input": "text"
 }
 ```
 {% include copy-curl.html %}
 
-OpenSearch 會回應所建立工作流程的工作流程 ID：
+檢視語意搜尋工作流程範本的[預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/semantic-search-with-local-model-defaults.json)，以判斷是否需要更新其他參數。例如，若要使用本教學中的模型，請指定模型名稱與版本。索引維度必須與模型的嵌入維度相符，因此也請將維度設定為 `768`：
+
+```json
+POST /_plugins/_flow_framework/workflow?use_case=semantic_search_with_local_model&provision=true
+{
+  "register_local_pretrained_model.name": "huggingface/sentence-transformers/msmarco-distilbert-base-tas-b",
+  "register_local_pretrained_model.version": "1.0.3",
+  "text_embedding.field_map.input": "text",
+  "text_embedding.field_map.output.dimension": "768"
+}
+```
+{% include copy-curl.html %}
+
+OpenSearch 會以所建立工作流程的工作流程 ID 回應：
 
 ```json
 {
@@ -847,20 +811,20 @@ OpenSearch 會回應所建立工作流程的工作流程 ID：
 }
 ```
 
-若要檢查工作流程狀態，請傳送下列請求：
+若要檢查工作流程狀態，請傳送以下請求：
 
 ```json
 GET /_plugins/_flow_framework/workflow/U_nMXJUBq_4FYQzMOS4B/_status
 ```
 {% include copy-curl.html %}
 
-工作流程完成後，`state` 會變更為 `COMPLETED`。工作流程會執行下列步驟：
+工作流程完成後，`state` 會變更為 `COMPLETED`。該工作流程會執行以下步驟：
 
-1. [步驟 2](#step-2-register-and-deploy-the-model) 以註冊並部署模型。
-1. [步驟 3(a)](#step-3a-create-an-ingest-pipeline) 以建立資料匯入管線。
-1. [步驟 3(b)](#step-3b-create-a-vector-index) 以建立向量索引。
+1. [步驟 2](#step-2-register-and-deploy-the-model)：註冊並部署模型。
+1. [步驟 3(a)](#step-3a-create-an-ingest-pipeline)：建立資料匯入管線。
+1. [步驟 3(b)](#step-3b-create-a-vector-index)：建立向量索引。
 
-您現在可以繼續進行[步驟 3(c)](#step-3c-ingest-documents-into-the-index) 將文件匯入索引，以及[步驟 4](#step-4-search-the-data) 搜尋您的資料。
+您現在可以繼續進行[步驟 3(c)](#step-3c-ingest-documents-into-the-index)，將文件匯入索引，並進行[步驟 4](#step-4-search-the-data)以搜尋您的資料。
 
 ## 清理
 
@@ -890,6 +854,8 @@ POST /_plugins/_ml/models/aVeif4oB5Vm0Tdw8zYO2/_undeploy
 DELETE /_plugins/_ml/models/aVeif4oB5Vm0Tdw8zYO2
 ```
 {% include copy-curl.html %}
+
+若要刪除模型群組，請提供您在[步驟 2](#step-2-register-and-deploy-the-model)擷取模型時所傳回的 `model_group_id`：
 
 ```json
 DELETE /_plugins/_ml/model_groups/Z1eQf4oB5Vm0Tdw8EIP2

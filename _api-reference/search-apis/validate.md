@@ -108,8 +108,7 @@ GET /hamlet/_validate/query?q=user.id:hamlet
 
 response = client.indices.validate_query(
   index = "hamlet",
-  params = { "q": "user.id:hamlet" },
-  body = { "Insert body here" }
+  params = { "q": "user.id:hamlet" }
 )
 
 {% endcapture %}
@@ -268,9 +267,9 @@ OpenSearch 會傳回下列回應，其中 `valid` 參數為 `false`：
 }
 ```
 
-某些查詢參數也會影響回應中包含的內容。下列範例說明 [Explain](#explain)、[Rewrite](#rewrite) 和 [all_shards](#rewrite-and-all_shards) 查詢選項如何影響回應。
+某些查詢參數也會影響回應中包含的內容。下列範例說明 [說明](#explain)、[重寫](#rewrite) 和 [all_shards](#rewrite-and-all_shards) 查詢選項如何影響回應。
 
-### Explain 
+### 說明 
 
 `explain` 選項會在 `explanations` 欄位中傳回查詢失敗的相關資訊，如下列回應範例所示：
 
@@ -291,7 +290,7 @@ OpenSearch 會傳回下列回應，其中 `valid` 參數為 `false`：
 ```
 
 
-### Rewrite
+### 重寫
 
 當請求中的 `rewrite` 選項設定為 `true` 時，`explanations` 選項會以字串形式顯示所執行的 Lucene 查詢，如下列回應所示：
 
@@ -314,7 +313,7 @@ OpenSearch 會傳回下列回應，其中 `valid` 參數為 `false`：
 ```
 
 
-### Rewrite 和 all_shards
+### 重寫和 all_shards
 
 當 `rewrite` 和 `all_shards` 選項皆設定為 `true` 時，Validate Query API 會回應來自所有可用分片的詳細資訊，而非僅來自單一分片（預設），如下列回應所示：
 

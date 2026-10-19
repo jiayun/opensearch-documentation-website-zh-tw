@@ -31,18 +31,18 @@ nav_order: 105
 
 下表列出 `fingerprint` 處理器的必要與選用參數。
 
-參數 | 必要／選用 | 說明 |
+參數 | 必要/選用 | 說明 |
 |-----------|-----------|-----------|
 `fields`  | 選用  | 用於產生雜湊值的欄位清單。  |
-`exclude_fields`  | 選用  | 指定產生雜湊值時要排除的欄位。此參數與 `fields` 參數互斥；如果 `exclude_fields` 和 `fields` 皆為空或 null，則計算雜湊值時會納入所有欄位。 |
-`hash_method`  | 選用  | 指定要使用的雜湊演算法，可選擇 `MD5@2.16.0`、`SHA-1@2.16.0`、`SHA-256@2.16.0` 或 `SHA3-256@2.16.0`。預設為 `SHA-1@2.16.0`。附加版本號碼是為了確保各個 OpenSearch 版本的雜湊運算一致，而新版本將支援新的雜湊方法。 |
-`target_field`  | 選用  | 指定用於儲存所產生雜湊值的欄位名稱。如果未提供，則雜湊值預設會儲存在 `fingerprint` 欄位中。 |
-`ignore_missing`  | 選用  | 指定當其中一個必要欄位遺失時，處理器是否應無提示地結束。預設為 `false`。 |
+`exclude_fields`  | 選用  | 指定要從雜湊值產生中排除的欄位。此參數與 `fields` 參數互斥；若 `exclude_fields` 與 `fields` 皆為空或 null，則所有欄位都會納入雜湊值計算。 |
+`hash_method`  | 選用  | 指定要使用的雜湊演算法，選項為 `MD5@2.16.0`、`SHA-1@2.16.0`、`SHA-256@2.16.0` 或 `SHA3-256@2.16.0`。預設為 `SHA-1@2.16.0`。附加版本號碼是為了確保在不同 OpenSearch 版本之間的雜湊結果一致，且新版本將支援新的雜湊方法。 |
+`target_field`  | 選用  | 指定用來儲存所產生雜湊值的欄位名稱。若未提供，則雜湊值預設會儲存在 `fingerprint` 欄位中。 |
+`ignore_missing`  | 選用  | 指定當其中一個必要欄位遺失時，處理器是否應靜默結束。預設為 `false`。 |
 `description`  | 選用  | 處理器的簡短說明。  |
 `if` | 選用 | 執行處理器的條件。 |
-`ignore_failure` | 選用 | 如果設為 `true`，則會忽略失敗。預設為 `false`。 |
+`ignore_failure` | 選用 | 若設為 `true`，則會忽略失敗。預設為 `false`。 |
 `on_failure` | 選用 | 處理器失敗時要執行的處理器清單。 |
-`tag` | 選用 | 處理器的識別標籤。可在偵錯時用於區分相同類型的處理器。 |
+`tag` | 選用 | 處理器的識別標籤。有助於偵錯時區分相同類型的處理器。如需詳細資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
 
 ## 使用處理器
 

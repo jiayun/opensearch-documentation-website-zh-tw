@@ -131,6 +131,58 @@ POST _ingest/pipeline/service_router/_simulate
 }
 ```
 
+### 拒絕未符合條件的文件
+
+在前面的範例中，未符合任何條件的文件會在不經處理的情況下編製索引。若要拒絕這些文件，請新增一個 [`fail` 處理器]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/fail/)，其條件會在其他條件皆未符合時成立：
+
+```json
+PUT _ingest/pipeline/service_router
+{
+  "processors": [
+    {
+      "pipeline": {
+        "name": "webapp_logs",
+        "if": "ctx.service?.name == 'webapp'"
+      }
+    },
+    {
+      "pipeline": {
+        "name": "api_logs",
+        "if": "ctx.service?.name == 'api'"
+      }
+    },
+    {
+      "fail": {
+        "if": "!['webapp', 'api'].contains(ctx.service?.name)",
+        "message": "The service.name field must be webapp or api. Received: {% raw %}{{service.name}}{% endraw %}"
+      }
+    }
+  ]
+}
+```
+{% include copy-curl.html %}
+
+當您使用與前面範例相同的文件模擬管線時，前兩份文件會如先前一樣處理。第三份文件會失敗並顯示訊息 `The service.name field must be webapp or api. Received: worker`，且 OpenSearch 不會將其編製索引。若文件沒有 `service.name` 欄位，訊息結尾會是空值。
+
+### 將路由器套用至所有編製索引的請求
+
+若要將每個編製索引至索引的文件進行路由，而不用在每個請求中指定 `pipeline` 參數，請將該管線設為索引的預設管線。若要將它套用至所有符合某模式的索引，請在[索引範本]({{site.url}}{{site.baseurl}}/im-plugin/index-templates/)中設定 `index.default_pipeline`：
+
+```json
+PUT _index_template/service_logs
+{
+  "index_patterns": ["service-logs-*"],
+  "template": {
+    "settings": {
+      "index.default_pipeline": "service_router"
+    }
+  }
+}
+```
+{% include copy-curl.html %}
+
+如需更多資訊，請參閱[將管線套用至文件]({{site.url}}{{site.baseurl}}/ingest-pipelines/#applying-a-pipeline-to-documents)。
+
 ## 範例：依類型處理
 
 您也可以使用管線處理器來套用依類型區分的管線。下列管線會在 `code` 欄位是數字時，將記錄檔導向 `numeric_handler`；若該欄位為 `String` 類型，則導向 `string_handler`。

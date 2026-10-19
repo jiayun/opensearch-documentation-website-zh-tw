@@ -6,23 +6,26 @@ parent: Ingest processors
 nav_order: 200
 ---
 
-本文件說明如何在 OpenSearch 資料匯入管線中使用 `kv` 處理器。如果您的使用案例涉及大型或複雜的資料集，請考慮使用在 OpenSearch 叢集上執行的 [Data Prepper `key_value` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/key-value/)。
+本文件說明如何在 OpenSearch 資料匯入管線中使用 `kv` 處理器。若您的使用情境涉及大型或複雜的資料集，建議改用 [Data Prepper `key_value` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/key-value/)，該處理器在 OpenSearch 叢集之外執行。
 {: .note}
 
 # KV 處理器
 
-`kv` 處理器會自動擷取採用 `key=value` 格式的特定事件欄位或訊息。這種結構化格式會根據鍵和值將資料分組，以組織您的資料。這有助於分析、視覺化及運用資料，例如使用者行為分析、效能最佳化或安全性調查。 
+`kv` 處理器會自動擷取採用 `key=value` 格式的特定事件欄位或訊息。這種結構化格式會依據索引鍵和值將資料分組，以組織您的資料。這有助於分析、視覺化及運用資料，例如進行使用者行為分析、效能最佳化或安全性調查。
+
+`kv` 處理器會為每個擷取的索引鍵建立一個欄位，因此資料中的索引鍵會決定索引中的欄位名稱。如果索引鍵差異很大，對應中的欄位數量可能會快速增加。若要將所有擷取的索引鍵儲存在單一欄位中，請設定 `target_field`，並將該欄位對應為 [`flat_object`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/flat-object/)。
+{: .tip} 
 
 ## 範例
 
-以下是 `kv` 處理器的語法： 
+以下是 `kv` 處理器的語法：
 
 ```json
 {
   "kv": {
     "field": "message",
     "field_split": " ",
-    "value_split": " "
+    "value_split": "="
   }
 }
 ```
@@ -33,22 +36,23 @@ nav_order: 200
 下表列出 `kv` 處理器的必要與選用參數。
 
 | 參數  | 必要/選用  | 說明  |
-`field`  | 必要  | 包含待剖析資料的欄位名稱。 |
-`field_split` | 必要 | 用於分割鍵值組的正規表示式模式。 |
-`value_split` | 必要 | 用於在鍵值組內分隔鍵和值的正規表示式模式，例如等號 `=` 或冒號 `:`。
-`exclude_keys` | 選用 | 要從文件中排除的鍵。預設為 `null`。 |
-`include_keys` | 選用 | 用於篩選和插入的鍵。預設包含所有鍵。 |
-`prefix` | 選用 | 要新增至擷取之鍵的前綴。預設為 `null`。 |
-`strip_brackets` | 選用 | 若設為 `true`，會從擷取的值中移除括號（`()`、`<>,` 或 `[]`）和引號（`'` 或 `"`）。預設為 `false`。
-`trim_key` | 選用 | 要從擷取的鍵中修剪掉的字元字串。 | 
-`trim value` | 選用 | 要從擷取的值中修剪掉的字元字串。 |
+|-----------|-----------|-----------|
+`field`  | 必要  | 包含待剖析資料的欄位名稱。支援[範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。 |
+`field_split` | 必要 | 用於分割鍵值對的正規表達式模式。 |
+`value_split` | 必要 | 用於在鍵值對中將鍵與值分割的正規表達式模式，例如等號 `=` 或冒號 `:`。
+`exclude_keys` | 選用 | 要從文件中排除的鍵清單。預設為 `null`。 |
+`include_keys` | 選用 | 要擷取的鍵清單。其他鍵會被忽略。預設為包含所有鍵。 |
+`prefix` | 選用 | 要加到擷取鍵的前置字串。預設為 `null`。 |
+`strip_brackets` | 選用 | 若設為 `true`，會從擷取的值中移除括號（`()`、`<>,` 或 `[]`）與引號（`'` 或 `"`）。預設為 `false`。
+`trim_key` | 選用 | 要從擷取的鍵中修剪的字元字串。 | 
+`trim_value` | 選用 | 要從擷取的值中修剪的字元字串。 |
 `description`  | 選用  | 處理器的簡短說明。  |
 `if` | 選用 | 執行處理器的條件。 |
-`ignore_failure` | 選用 | 若設為 `true`，則會忽略失敗。預設為 `false`。 |
+`ignore_failure` | 選用 | 若設為 `true`，會忽略失敗。預設為 `false`。 |
 `on_failure` | 選用 | 處理器失敗時要執行的處理器清單。 |
-`ignore_missing`  | 選用  | 指定處理器是否應忽略不含指定欄位的文件。預設為 `false`。  |
-`tag` | 選用 | 處理器的識別標籤。有助於在偵錯時區分相同類型的處理器。 |
-`target_field`  | 選用  | 要插入擷取之鍵的欄位名稱。預設為 `null`。 |
+`ignore_missing`  | 選用  | 指定處理器是否應忽略不含指定欄位、或該欄位為 `null` 的文件。預設為 `false`。  |
+`tag` | 選用 | 處理器的識別標籤。有助於偵錯時區分同類型的處理器。如需詳細資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
+`target_field`  | 選用  | 要插入擷取鍵的欄位名稱。若未指定，鍵會加到文件的根層級。支援[範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。 |
 
 ## 使用處理器
 

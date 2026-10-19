@@ -40,8 +40,8 @@ PUT /_alias
 
 | 參數 | 類型 | 說明 |
 :--- | :--- | :---
-| `target` | String | 以逗號分隔的索引清單。支援萬用字元運算式（`*`）。若要以叢集中的所有索引為目標，請使用 `_all` 或 `*`。選用。 |
-| `alias-name` | String | 要建立或更新的別名名稱。選用。 |
+| `target` | 字串 | 以逗號分隔的索引清單。支援萬用字元運算式（`*`）。若要以叢集中的所有索引為目標，請使用 `_all` 或 `*`。選用。 |
+| `alias-name` | 字串 | 要建立或更新的別名名稱。選用。 |
 
 ## 查詢參數
 
@@ -49,8 +49,8 @@ PUT /_alias
 
 參數 | 類型 | 說明
 :--- | :--- | :---
-`cluster_manager_timeout` | Time | 等待叢集管理員節點回應的時間長度。預設為 `30s`。
-`timeout` | Time | 等待叢集回應的時間長度。預設為 `30s`。
+`cluster_manager_timeout` | 時間 | 等待叢集管理員節點回應的時間長度。預設為 `30s`。
+`timeout` | 時間 | 等待叢集回應的時間長度。預設為 `30s`。
 
 ## 請求本文
 
@@ -58,13 +58,13 @@ PUT /_alias
 
 欄位 | 類型 | 說明
 :--- | :--- | :--- | :---
-`index` | String | 以逗號分隔、要與別名建立關聯的索引清單。若設定此欄位，將會覆寫 URL 路徑中指定的索引名稱。
-`alias` | String | 別名的名稱。若設定此欄位，將會覆寫 URL 路徑中指定的別名名稱。
-`is_write_index` | Boolean | 指定索引是否應為寫入索引。一個別名同一時間只能有一個寫入索引。若將寫入請求提交至連結到多個索引的別名，OpenSearch 只會在寫入索引上執行該請求。
-`routing` | String | 為特定作業指派自訂值給分片。
-`index_routing` | String | 僅為索引作業指派自訂值給分片。
-`search_routing` | String | 僅為搜尋作業指派自訂值給分片。
-`filter` | Object | 搭配別名使用的篩選條件，讓別名指向索引中經篩選的部分。
+`index` | 字串 | 以逗號分隔、要與別名建立關聯的索引清單。若設定此欄位，將會覆寫 URL 路徑中指定的索引名稱。
+`alias` | 字串 | 別名的名稱。若設定此欄位，將會覆寫 URL 路徑中指定的別名名稱。
+`is_write_index` | 布林值 | 指定索引是否應為寫入索引。一個別名同一時間只能有一個寫入索引。若將寫入請求提交至連結到多個索引的別名，OpenSearch 只會在寫入索引上執行該請求。
+`routing` | 字串 | 為特定作業指派自訂值給分片。
+`index_routing` | 字串 | 僅針對編製索引作業，為分片指派自訂值。
+`search_routing` | 字串 | 僅為搜尋作業指派自訂值給分片。
+`filter` | 物件 | 搭配別名使用的篩選條件，讓別名指向索引中經篩選的部分。
 
 ## 範例請求：新增簡單別名
 
@@ -83,8 +83,7 @@ PUT /products-2024/_alias/current-products
 
 response = client.indices.put_alias(
   name = "current-products",
-  index = "products-2024",
-  body = { "Insert body here" }
+  index = "products-2024"
 )
 
 {% endcapture %}
@@ -111,8 +110,7 @@ PUT /sales-q1-2024/_alias/quarterly-2024
 
 response = client.indices.put_alias(
   name = "quarterly-2024",
-  index = "sales-q1-2024",
-  body = { "Insert body here" }
+  index = "sales-q1-2024"
 )
 
 {% endcapture %}

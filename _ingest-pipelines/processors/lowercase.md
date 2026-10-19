@@ -8,12 +8,12 @@ redirect_from:
    - /api-reference/ingest-apis/processors/lowercase/
 ---
 
-本文件說明如何在 OpenSearch 資料匯入管線中使用 `lowercase` 處理器。如果您的使用情境涉及大型或複雜的資料集，建議考慮使用在 OpenSearch 叢集上執行的 [Data Prepper `lowercase_string` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/lowercase-string/)。
+本文件說明如何在 OpenSearch 資料匯入管線中使用 `lowercase` 處理器。如果您的使用情境涉及大型或複雜的資料集，建議考慮使用在 OpenSearch 叢集外部執行的 [Data Prepper `lowercase_string` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/lowercase-string/)。
 {: .note}
 
 # Lowercase 處理器
 
-`lowercase` 處理器會將特定欄位中的所有文字轉換為小寫字母。
+`lowercase` 處理器會將特定欄位中的所有文字轉換為小寫字母。對於陣列欄位，處理器會轉換每個字串元素。
 
 ## 語法
 
@@ -32,16 +32,16 @@ redirect_from:
 
 下表列出 `lowercase` 處理器的必要與選用參數。
 
-| 參數  | 必要  | 說明  |
+| Parameter  | Required  | Description  |
 |---|---|---|
-`field`  | 必要  | 包含要轉換之資料的欄位名稱。支援[範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。 |
-`description`  | 選用  | 處理器的簡要說明。  |
+`field`  | 必要  | 包含要轉換之資料的欄位名稱。 |
+`description`  | 選用  | 處理器的簡要描述。  |
 `if` | 選用 | 執行處理器的條件。 |
-`ignore_failure` | 選用 |  指定處理器即使遇到錯誤仍繼續執行。若設為 `true`，則會忽略失敗。預設為 `false`。 |
+`ignore_failure` | 選用 |  指定處理器即使遇到錯誤仍繼續執行。若設為 `true`，則忽略失敗。預設為 `false`。 |
 `on_failure` | 選用 | 處理器失敗時要執行的處理器清單。 |
 `ignore_missing`  | 選用  | 指定處理器是否應忽略不含指定欄位的文件。若設為 `true`，當欄位不存在或為 `null` 時，處理器不會修改文件。預設為 `false`。  |
-`tag` | 選用 | 處理器的識別標籤。有助於除錯時區分相同類型的處理器。 |
-`target_field`  | 選用  | 儲存解析後資料的欄位名稱。預設為 `field`。預設情況下，`field` 會就地更新。 |
+`tag` | 選用 | 處理器的識別標籤。有助於除錯時區分相同類型的處理器。如需更多資訊，請參閱[使用處理器標籤進行監控與除錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
+`target_field`  | 選用  | 儲存已剖析資料的欄位名稱。預設為 `field`。預設情況下，`field` 會原地更新。 |
 
 ## 使用處理器
 

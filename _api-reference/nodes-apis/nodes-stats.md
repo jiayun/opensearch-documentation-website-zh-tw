@@ -1,7 +1,7 @@
 ---
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Nodes stats
+title: "節點統計資料"
 parent: Nodes APIs
 nav_order: 20
 ---
@@ -49,7 +49,7 @@ GET /_nodes/{node_id}/stats/{metric}/{index_metric}
 `script` | 指令碼的統計資訊，例如編譯與快取驅逐。
 `discovery` | 叢集狀態的統計資訊。
 `ingest` | 資料匯入管線的統計資訊。
-`adaptive_selection` | 自適應副本選擇的統計資訊，其使用分片配置感知來選取合適的節點。
+`adaptive_selection` | 調適性副本選擇的統計資訊，其使用分片配置感知來選取合適的節點。
 `script_cache` | 指令碼快取的統計資訊。
 `indexing_pressure` | 節點索引壓力的統計資訊。
 `shard_indexing_pressure` | 分片索引壓力的統計資訊。
@@ -59,7 +59,7 @@ GET /_nodes/{node_id}/stats/{metric}/{index_metric}
 `weighted_routing` | 與加權輪詢請求相關的統計資訊。
 `resource_usage_stats` | 節點層級的資源使用統計資訊，例如 CPU 與 JVM 記憶體。
 `admission_control` | 准入控制的統計資訊。
-`concurrency_limiter` | 自適應並行限制器的統計資訊。
+`concurrency_limiter` | 調適性並行限制器的統計資訊。
 `caches` | 快取的統計資訊。
 
 若要篩選 `indices` 指標傳回的資訊，您可以使用特定的 `index_metric` 值。這些值只能在您使用下列查詢類型時使用：
@@ -149,7 +149,7 @@ response = client.nodes.stats(
 
 參數 | 類型 | 說明
 :--- | :--- | :---
-`completion_fields` | 字串 | 要包含在完成統計中的欄位。支援以逗號分隔的清單與萬用字元運算式。
+`completion_fields` | 字串 | 要包含在 completion 統計資訊中的欄位。支援以逗號分隔的清單與萬用字元運算式。
 `fielddata_fields` | 字串 | 要包含在 `fielddata` 統計中的欄位。支援以逗號分隔的清單與萬用字元運算式。
 `fields` | 字串 | 要包含的欄位。支援以逗號分隔的清單與萬用字元運算式。
 `groups` | 字串 | 以逗號分隔、要包含在搜尋統計中的搜尋群組清單。
@@ -250,6 +250,7 @@ response = client.nodes.info(
           "query_total": 194,
           "query_time_in_millis": 467,
           "query_current": 0,
+          "query_failed": 0,
           "fetch_total": 194,
           "fetch_time_in_millis": 143,
           "fetch_current": 0,
@@ -415,6 +416,18 @@ response = client.nodes.info(
           "current_as_source" : 0,
           "current_as_target" : 0,
           "throttle_time_in_millis" : 0
+        },
+        "status_counter" : {
+          "doc_status" : {
+            "success" : 204,
+            "user_error" : 0,
+            "system_failure" : 0
+          },
+          "search_response_status" : {
+            "success" : 92,
+            "user_error" : 3,
+            "system_failure" : 0
+          }
         }
       },
       "os" : {
@@ -902,125 +915,125 @@ response = client.nodes.info(
 
 ### `indices`
 
-`indices` 物件包含此節點上具有分片的每個索引的索引統計資料。每個索引具有下列屬性。
+`indices` 物件包含此節點上每個具有分片之索引的索引統計資料。每個索引都有下列屬性。
 
 欄位 | 欄位類型 | 說明
 :--- | :--- | :---
-`docs` | `Object` | 節點上所有現存主要分片的文件統計資料。
-`docs.count` | `Integer` | Lucene 回報的文件數量。排除已刪除的文件，以及尚未指派至分段的最近編製索引文件。巢狀文件會分開計算。
-`docs.deleted` | `Integer` | Lucene 回報的已刪除文件數量。排除尚未影響分段的最近刪除作業。
+`docs` | `Object` | 節點上所有主要分片的文件統計資料。
+`docs.count` | `Integer` | Lucene 回報的文件數量。不包括已刪除的文件，以及最近已編製索引但尚未指派至分段的文件。巢狀文件會另外計數。
+`docs.deleted` | `Integer` | Lucene 回報的已刪除文件數量。不包括尚未影響分段的近期刪除作業。
 `store` | `Object` | 節點上各分片大小的統計資料。
 `store.size_in_bytes` | `Integer` | 節點上所有分片的總大小。
-`store.reserved_in_bytes` | `Integer` | 因還原快照與對等復原等活動，分片儲存空間預計將成長的位元組數。
+`store.reserved_in_bytes` | `Integer` | 因還原快照和對等復原等活動，分片儲存區預計將成長到的位元組數。
 `indexing` | `Object` | 節點的編製索引作業統計資料。
-`indexing.index_total` | `Integer` | 節點上編製索引作業的總數。
-`indexing.index_time_in_millis` | `Integer` | 所有編製索引作業的總時間，單位為毫秒。
+`indexing.index_total` | `Integer` | 節點上的編製索引作業總數。
+`indexing.index_time_in_millis` | `Integer` | 所有編製索引作業的總時間，以毫秒為單位。
 `indexing.index_current` | `Integer` | 目前正在執行的編製索引作業數量。
-`indexing.index_failed` | `Integer` | 已失敗的編製索引作業數量。
-`indexing.delete_total` | `Integer` | 刪除作業的總數。
-`indexing.delete_time_in_millis` | `Integer` | 所有刪除作業的總時間，單位為毫秒。
+`indexing.index_failed` | `Integer` | 失敗的編製索引作業數量。
+`indexing.delete_total` | `Integer` | 刪除總數。
+`indexing.delete_time_in_millis` | `Integer` | 所有刪除作業的總時間，以毫秒為單位。
 `indexing.delete_current` | `Integer` | 目前正在執行的刪除作業數量。
-`indexing.noop_update_total` | `Integer` | 無作業 (no-op) 的總數。
-`indexing.is_throttled` | `Boolean` | 指定是否有任何作業受到節流。
-`indexing.throttle_time_in_millis` | `Integer` | 節流作業的總時間，單位為毫秒。
+`indexing.noop_update_total` | `Integer` | no-op 作業總數。
+`indexing.is_throttled` | `Boolean` | 指定是否有任何作業遭到節流。
+`indexing.throttle_time_in_millis` | `Integer` | 節流作業的總時間，以毫秒為單位。
 `get` | `Object` | 節點的 get 作業統計資料。
-`get.total` | `Integer` | get 作業的總數。
-`get.time_in_millis` | `Integer` | 所有 get 作業的總時間，單位為毫秒。
+`get.total` | `Integer` | get 作業總數。
+`get.time_in_millis` | `Integer` | 所有 get 作業的總時間，以毫秒為單位。
 `get.exists_total` | `Integer` | 成功的 get 作業總數。
-`get.exists_time_in_millis` | `Integer` | 所有成功 get 作業的總時間，單位為毫秒。
+`get.exists_time_in_millis` | `Integer` | 所有成功 get 作業的總時間，以毫秒為單位。
 `get.missing_total` | `Integer` | 失敗的 get 作業數量。
-`get.missing_time_in_millis` | `Integer` | 所有失敗 get 作業的總時間，單位為毫秒。
+`get.missing_time_in_millis` | `Integer` | 所有失敗 get 作業的總時間，以毫秒為單位。
 `get.current` | `Integer` | 目前正在執行的 get 作業數量。
 `search` | `Object` | 節點的搜尋作業統計資料。
-`search.concurrent_avg_slice_count` | `Integer` | 所有搜尋請求的平均切片數。計算方式為切片總數除以並行搜尋請求的總數。
+`search.concurrent_avg_slice_count` | `Integer` | 所有搜尋請求的平均切片數。計算方式為切片總數除以並行搜尋請求總數。
 `search.concurrent_query_total` | `Integer` | 使用並行分段搜尋的查詢作業總數。
-`search.concurrent_query_time_in_millis` | `Integer` | 所有使用並行分段搜尋的查詢作業所花費的總時間，單位為毫秒。
+`search.concurrent_query_time_in_millis` | `Integer` | 所有使用並行分段搜尋的查詢作業所花費的總時間，以毫秒為單位。
 `search.concurrent_query_current` | `Integer` | 目前正在執行且使用並行分段搜尋的查詢作業數量。
-`search.startree_query_total` | `Integer` | 使用 star tree 進行搜尋的查詢作業總數。
-`search.startree_query_time_in_millis` | `Integer` | 所有使用 star tree 進行搜尋的查詢作業所花費的總時間，單位為毫秒。
-`search.startree_query_current` | `Integer` | 目前正在執行且使用 star tree 進行搜尋的查詢作業數量。
-`search.startree_query_failed` | `Integer` | 使用 star tree 進行搜尋且失敗的查詢作業數量。
+`search.startree_query_total` | `Integer` | 使用星狀樹進行搜尋的查詢作業總數。
+`search.startree_query_time_in_millis` | `Integer` | 所有使用星狀樹進行搜尋的查詢作業所花費的總時間，以毫秒為單位。
+`search.startree_query_current` | `Integer` | 目前正在執行且使用星狀樹進行搜尋的查詢作業數量。
+`search.startree_query_failed` | `Integer` | 使用星狀樹進行搜尋但失敗的查詢作業數量。
 `search.open_contexts` | `Integer` | 開啟中的搜尋情境數量。
-`search.query_total` | `Integer` | 分片查詢作業的總數。
-`search.query_time_in_millis` | `Integer` | 所有分片查詢作業的總時間，單位為毫秒。
+`search.query_total` | `Integer` | 分片查詢作業總數。
+`search.query_time_in_millis` | `Integer` | 所有分片查詢作業的總時間，以毫秒為單位。
 `search.query_current` | `Integer` | 目前正在執行的分片查詢作業數量。
 `search.query_failed` | `Integer` | 失敗的分片查詢作業總數。
-`search.fetch_total` | `Integer` | 分片擷取作業的總數。
-`search.fetch_time_in_millis` | `Integer` | 所有分片擷取作業的總時間，單位為毫秒。
+`search.fetch_total` | `Integer` | 分片擷取作業總數。
+`search.fetch_time_in_millis` | `Integer` | 所有分片擷取作業的總時間，以毫秒為單位。
 `search.fetch_current` | `Integer` | 目前正在執行的分片擷取作業數量。
-`search.scroll_total` | `Integer` | 分片捲動 (scroll) 作業的總數。
-`search.scroll_time_in_millis` | `Integer` | 所有分片捲動作業的總時間，單位為毫秒。
+`search.scroll_total` | `Integer` | 分片捲動作業總數。
+`search.scroll_time_in_millis` | `Integer` | 所有分片捲動作業的總時間，以毫秒為單位。
 `search.scroll_current` | `Integer` | 目前正在執行的分片捲動作業數量。
-`search.point_in_time_total` | `Integer` | 自節點上次重新啟動以來，已建立 (已完成與作用中) 的分片 Point in Time (PIT) 情境總數。
-`search.point_in_time_time_in_millis` | `Integer` | 自節點上次重新啟動以來，分片 PIT 情境保持開啟的時間長度，單位為毫秒。
+`search.point_in_time_total` | `Integer` | 自節點上次重新啟動以來，已建立 (包括已完成和作用中) 的分片時間點 (Point in Time，PIT) 情境總數。
+`search.point_in_time_time_in_millis` | `Integer` |  自節點上次重新啟動以來，分片 PIT 情境保持開啟的時間長度，以毫秒為單位。
 `search.point_in_time_current` | `Integer` | 目前開啟中的分片 PIT 情境數量。
-`search.suggest_total` | `Integer` | 分片建議 (suggest) 作業的總數。
-`search.suggest_time_in_millis` | `Integer` | 所有分片建議作業的總時間，單位為毫秒。
+`search.suggest_total` | `Integer` | 分片建議作業總數。
+`search.suggest_time_in_millis` | `Integer` | 所有分片建議作業的總時間，以毫秒為單位。
 `search.suggest_current` | `Integer` | 目前正在執行的分片建議作業數量。
-`search.search_idle_reactivate_count_total` | `Integer` | 所有分片從閒置狀態被啟用的總次數。
+`search.search_idle_reactivate_count_total` | `Integer` | 所有分片從閒置狀態被啟動的總次數。
 `search.request` | `Object` | 節點的協調器搜尋作業統計資料。
-`search.request.took.time_in_millis` | `Integer` | 所有搜尋請求所花費的總時間，單位為毫秒。
+`search.request.took.time_in_millis` | `Integer` | 所有搜尋請求所花費的總時間，以毫秒為單位。
 `search.request.took.current` | `Integer` | 目前正在執行的搜尋請求數量。
 `search.request.took.total` | `Integer` | 已完成的搜尋請求總數。
-`search.request.dfs_pre_query.time_in_millis` | `Integer` | 所有協調器深度優先搜尋 (DFS) 查詢前置作業的總時間，單位為毫秒。
-`search.request.dfs_pre_query.current` | `Integer` | 目前正在執行的協調器 DFS 查詢前置作業數量。
-`search.request.dfs_pre_query.total` | `Integer` | 已完成的協調器 DFS 查詢前置作業總數。
-`search.request.query.time_in_millis` | `Integer` | 所有協調器查詢作業的總時間，單位為毫秒。
+`search.request.dfs_pre_query.time_in_millis` | `Integer` | 所有協調器深度優先搜尋 (DFS) 預查詢作業的總時間，以毫秒為單位。
+`search.request.dfs_pre_query.current` | `Integer` | 目前正在執行的協調器 DFS 預查詢作業數量。
+`search.request.dfs_pre_query.total` | `Integer` | 已完成的協調器 DFS 預查詢作業總數。
+`search.request.query.time_in_millis` | `Integer` | 所有協調器查詢作業的總時間，以毫秒為單位。
 `search.request.query.current` | `Integer` | 目前正在執行的協調器查詢作業數量。
 `search.request.query.total` | `Integer` | 已完成的協調器查詢作業總數。
-`search.request.fetch.time_in_millis` | `Integer` | 所有協調器擷取作業的總時間，單位為毫秒。
+`search.request.fetch.time_in_millis` | `Integer` | 所有協調器擷取作業的總時間，以毫秒為單位。
 `search.request.fetch.current` | `Integer` | 目前正在執行的協調器擷取作業數量。
 `search.request.fetch.total` | `Integer` | 已完成的協調器擷取作業總數。
-`search.request.dfs_query.time_in_millis` | `Integer` | 所有協調器 DFS 查詢前置作業的總時間，單位為毫秒。
-`search.request.dfs_query.current` | `Integer` | 目前正在執行的協調器 DFS 查詢前置作業數量。
-`search.request.dfs_query.total` | `Integer` | 已完成的協調器 DFS 查詢前置作業總數。
-`search.request.expand.time_in_millis` | `Integer` | 所有協調器展開作業的總時間，單位為毫秒。
+`search.request.dfs_query.time_in_millis` | `Integer` | 所有協調器 DFS 預查詢作業的總時間，以毫秒為單位。
+`search.request.dfs_query.current` | `Integer` | 目前正在執行的協調器 DFS 預查詢作業數量。
+`search.request.dfs_query.total` | `Integer` | 已完成的協調器 DFS 預查詢作業總數。
+`search.request.expand.time_in_millis` | `Integer` | 所有協調器展開作業的總時間，以毫秒為單位。
 `search.request.expand.current` | `Integer` | 目前正在執行的協調器展開作業數量。
 `search.request.expand.total` | `Integer` | 已完成的協調器展開作業總數。
-`search.request.can_match.time_in_millis` | `Integer` | 所有協調器比對作業的總時間，單位為毫秒。
+`search.request.can_match.time_in_millis` | `Integer` | 所有協調器比對作業的總時間，以毫秒為單位。
 `search.request.can_match.current` | `Integer` | 目前正在執行的協調器比對作業數量。
 `search.request.can_match.total` | `Integer` | 已完成的協調器比對作業總數。
 `merges` | `Object` | 節點的合併作業統計資料。
 `merges.current` | `Integer` | 目前正在執行的合併作業數量。
 `merges.current_docs` | `Integer` | 目前正在執行的文件合併數量。
-`merges.current_size_in_bytes` | `Integer` | 用於執行目前合併作業的記憶體大小，單位為位元組。
-`merges.total` | `Integer` | 合併作業的總數。
-`merges.total_time_in_millis` | `Integer` | 合併的總時間，單位為毫秒。
+`merges.current_size_in_bytes` | `Integer` | 執行目前合併作業所使用的記憶體大小，以位元組為單位。
+`merges.total` | `Integer` | 合併作業總數。
+`merges.total_time_in_millis` | `Integer` | 合併的總時間，以毫秒為單位。
 `merges.total_docs` | `Integer` | 已合併的文件總數。
-`merges.total_size_in_bytes` | `Integer` | 所有已合併文件的總大小，單位為位元組。
-`merges.total_stopped_time_in_millis` | `Integer` | 花費在停止合併作業的總時間，單位為毫秒。
-`merges.total_throttled_time_in_millis` | `Integer` | 花費在節流合併作業的總時間，單位為毫秒。
-`merges.total_auto_throttle_in_bytes` | `Integer` | 自動節流的合併作業總大小，單位為位元組。
+`merges.total_size_in_bytes` | `Integer` | 所有已合併文件的總大小，以位元組為單位。
+`merges.total_stopped_time_in_millis` | `Integer` | 停止合併作業所花費的總時間，以毫秒為單位。
+`merges.total_throttled_time_in_millis` | `Integer` | 節流合併作業所花費的總時間，以毫秒為單位。
+`merges.total_auto_throttle_in_bytes` | `Integer` | 自動節流的合併作業總大小，以位元組為單位。
 `refresh` | `Object` | 節點的重新整理作業統計資料。
-`refresh.total` | `Integer` | 重新整理作業的總數。
-`refresh.total_time_in_millis` | `Integer` | 所有重新整理作業的總時間，單位為毫秒。
-`refresh.external_total` | `Integer` | 外部重新整理作業的總數。
-`refresh.external_total_time_in_millis` | `Integer` | 所有外部重新整理作業的總時間，單位為毫秒。
-`refresh.listeners` | `Integer` | 重新整理監聽器的數量。
+`refresh.total` | `Integer` | 重新整理作業總數。
+`refresh.total_time_in_millis` | `Integer` | 所有重新整理作業的總時間，以毫秒為單位。
+`refresh.external_total` | `Integer` | 外部重新整理作業總數。
+`refresh.external_total_time_in_millis` | `Integer` | 所有外部重新整理作業的總時間，以毫秒為單位。
+`refresh.listeners` | `Integer` | 重新整理接聽程式的數量。
 `flush` | `Object` | 節點的排清作業統計資料。
-`flush.total` | `Integer` | 排清作業的總數。
-`flush.periodic` | `Integer` | 週期性排清作業的總數。
-`flush.total_time_in_millis` | `Integer` | 所有排清作業的總時間，單位為毫秒。
-`warmer` | `Object` | 節點的索引預熱作業統計資料。
-`warmer.current` | `Integer` | 目前的索引預熱作業數量。
-`warmer.total` | `Integer` | 索引預熱作業的總數。
-`warmer.total_time_in_millis` | `Integer` | 所有索引預熱作業的總時間，單位為毫秒。
+`flush.total` | `Integer` | 排清作業總數。
+`flush.periodic` | `Integer` | 定期排清作業總數。
+`flush.total_time_in_millis` | `Integer` | 所有排清作業的總時間，以毫秒為單位。
+`warmer` | `Object` | 節點的索引暖機作業統計資料。
+`warmer.current` | `Integer` | 目前的索引暖機作業數量。
+`warmer.total` | `Integer` | 索引暖機作業總數。
+`warmer.total_time_in_millis` | `Integer` | 所有索引暖機作業的總時間，以毫秒為單位。
 `query_cache` | 節點的查詢快取作業統計資料。
 `query_cache.memory_size_in_bytes` | 整數 | 節點中所有分片的查詢快取所使用的記憶體量。
-`query_cache.total_count` | 整數 | 查詢快取中的命中與未命中總數。
+`query_cache.total_count` | 整數 | 查詢快取中命中與未命中的總數。
 `query_cache.hit_count` | 整數 | 查詢快取中的命中總數。
 `query_cache.miss_count` | 整數 | 查詢快取中的未命中總數。
-`query_cache.cache_size` | 整數 | 目前位於查詢快取中的查詢數量。
-`query_cache.cache_count` | 整數 | 已加入查詢快取的查詢總數，包括其後已被驅離的查詢。
-`query_cache.evictions` | 整數 | 從查詢快取驅離的數量。
+`query_cache.cache_size` | 整數 | 目前在查詢快取中的查詢數量。
+`query_cache.cache_count` | 整數 | 已新增至查詢快取的查詢總數，包括之後已被逐出的查詢。
+`query_cache.evictions` | 整數 | 從查詢快取逐出的次數。
 `fielddata` | 物件 | 節點中所有分片的欄位資料快取統計資料。
 `fielddata.memory_size_in_bytes` | 整數 | 節點中所有分片的欄位資料快取所使用的記憶體總量。
-`fielddata.evictions` | 整數 | 欄位資料快取中的驅離次數。
+`fielddata.evictions` | 整數 | 欄位資料快取中的逐出次數。
 `fielddata.item_count` | 整數 | 欄位資料快取中的項目數量。
 `fielddata.fields` | 物件 | 包含所有欄位資料欄位。
 `completion` | 物件 | 節點中所有分片的自動完成 (completion) 統計資料。
-`completion.size_in_bytes` | 整數 | 節點中所有分片的 completion 所使用的記憶體總量，單位為位元組。
-`completion.fields` | 物件 | 包含完成欄位。
+`completion.size_in_bytes` | 整數 | 節點中所有分片的自動完成所使用的記憶體總量，以位元組為單位。
+`completion.fields` | 物件 | 包含 completion 欄位。
 `segments` | 物件 | 節點中所有分片的分段統計資料。
 `segments.count` | 整數 | 分段總數。
 `segments.memory_in_bytes` | 整數 | 記憶體總量，以位元組為單位。
@@ -1028,61 +1041,70 @@ response = client.nodes.info(
 `segments.stored_fields_memory_in_bytes` | 整數 | 用於已儲存欄位的記憶體總量，以位元組為單位。
 `segments.term_vectors_memory_in_bytes` | 整數 | 用於詞彙向量的記憶體總量，以位元組為單位。
 `segments.norms_memory_in_bytes` | 整數 | 用於正規化因子的記憶體總量，以位元組為單位。
-`segments.points_memory_in_bytes` | 整數 | 用於 points 的記憶體總量，以位元組為單位。
-`segments.doc_values_memory_in_bytes` | 整數 | 用於 doc values 的記憶體總量，以位元組為單位。
+`segments.points_memory_in_bytes` | 整數 | 用於點資料的記憶體總量，以位元組為單位。
+`segments.doc_values_memory_in_bytes` | 整數 | 用於文件值的記憶體總量，以位元組為單位。
 `segments.index_writer_memory_in_bytes` | 整數 | 所有索引寫入器使用的記憶體總量，以位元組為單位。
 `segments.version_map_memory_in_bytes` | 整數 | 所有版本對應使用的記憶體總量，以位元組為單位。
-`segments.fixed_bit_set_memory_in_bytes` | 整數 | 固定位元集使用的記憶體總量，以位元組為單位。固定位元集用於巢狀物件與 join 欄位。
-`segments.max_unsafe_auto_id_timestamp` | 整數 | 最近一次退役的索引請求的時間戳記，以自 epoch 起算的毫秒數為單位。
-`segments.segment_replication` | 物件 | 當節點上啟用分段複寫時，所有主要分片的分段複寫統計資料。
-`segments.segment_replication.max_bytes_behind` | long | 落後主要分片的最大位元組數。
-`segments.segment_replication.total_bytes_behind` | long | 落後主要分片的總位元組數。
+`segments.fixed_bit_set_memory_in_bytes` | 整數 | 固定位元集使用的記憶體總量，以位元組為單位。固定位元集用於巢狀物件與聯結欄位。
+`segments.max_unsafe_auto_id_timestamp` | 整數 | 最近一次已淘汰的索引請求時間戳記，以自 epoch 起算的毫秒數表示。
+`segments.segment_replication` | 物件 | 當節點啟用分段複寫時，所有主要分片的分段複寫統計資料。
+`segments.segment_replication.max_bytes_behind` | long | 落後主要副本的最大位元組數。
+`segments.segment_replication.total_bytes_behind` | long | 落後主要副本的位元組總數。
 `segments.segment_replication.max_replication_lag` | long | 副本追上其主要分片所花費的最長時間，以毫秒為單位。 
-`segments.remote_store` | 物件 | 遠端分段存放區作業的統計資料。
-`segments.remote_store.upload` | 物件 | 與上傳至遠端分段存放區相關的統計資料。
-`segments.remote_store.upload.total_upload_size` | 物件 | 上傳至遠端分段存放區的資料量，以位元組為單位。
-`segments.remote_store.upload.total_upload_size.started_bytes` | 整數 | 上傳開始後，要上傳至遠端分段存放區的位元組數。
-`segments.remote_store.upload.total_upload_size.succeeded_bytes` | 整數 | 成功上傳至遠端分段存放區的位元組數。
-`segments.remote_store.upload.total_upload_size.failed_bytes` | 整數 | 上傳至遠端分段存放區失敗的位元組數。
-`segments.remote_store.upload.refresh_size_lag` | 物件 | 上傳期間，遠端分段存放區與本機存放區之間的延遲量。
-`segments.remote_store.upload.refresh_size_lag.total_bytes` | 整數 | 上傳重新整理期間，遠端分段存放區與本機存放區之間延遲的總位元組數。
-`segments.remote_store.upload.refresh_size_lag.max_bytes` | 整數 | 上傳重新整理期間，遠端分段存放區與本機存放區之間延遲的最大位元組數。
+`segments.remote_store` | 物件 | 遠端分段儲存區作業的統計資料。
+`segments.remote_store.upload` | 物件 | 上傳至遠端分段儲存區的相關統計資料。
+`segments.remote_store.upload.total_upload_size` | 物件 | 上傳至遠端分段儲存區的資料量，以位元組為單位。
+`segments.remote_store.upload.total_upload_size.started_bytes` | 整數 | 上傳開始後，待上傳至遠端分段儲存區的位元組數。
+`segments.remote_store.upload.total_upload_size.succeeded_bytes` | 整數 | 成功上傳至遠端分段儲存區的位元組數。
+`segments.remote_store.upload.total_upload_size.failed_bytes` | 整數 | 上傳至遠端分段儲存區失敗的位元組數。
+`segments.remote_store.upload.refresh_size_lag` | 物件 | 上傳期間遠端分段儲存區相對於本機儲存區的資料落後量。
+`segments.remote_store.upload.refresh_size_lag.total_bytes` | 整數 | 上傳重新整理期間，遠端分段儲存區相對於本機儲存區資料落後的位元組總數。
+`segments.remote_store.upload.refresh_size_lag.max_bytes` | 整數 | 上傳重新整理期間，遠端分段儲存區相對於本機儲存區的最大資料落後量，以位元組為單位。
 `segments.remote_store.upload.max_refresh_time_lag_in_millis` | 整數 | 遠端重新整理落後本機重新整理的最大持續時間，以毫秒為單位。
-`segments.remote_store.upload.total_time_spent_in_millis` | 整數 | 花費在上傳至遠端分段存放區的總時間，以毫秒為單位。
-`segments.remote_store.upload.pressure` | 物件 | 與分段存放區上傳背壓相關的統計資料。
-`segments.remote_store.upload.pressure.total_rejections` | 整數 | 因分段存放區上傳背壓而遭拒絕的請求總數。
-`segments.remote_store.download` | 物件 | 與從遠端分段存放區下載相關的統計資料。
-`segments.remote_store.download.total_download_size` | 物件 | 從遠端分段存放區下載的資料總量。
-`segments.remote_store.download.total_download_size.started_bytes` | 整數 | 下載開始後，從遠端分段存放區下載的位元組數。
-`segments.remote_store.download.total_download_size.succeeded_bytes` | 整數 | 成功從遠端分段存放區下載的位元組數。
-`segments.remote_store.download.total_download_size.failed_bytes` | 整數 | 從遠端分段存放區下載失敗的位元組數。
-`segments.remote_store.download.total_time_spent_in_millis` | 整數 | 花費在從遠端分段存放區下載的總持續時間，以毫秒為單位。
+`segments.remote_store.upload.total_time_spent_in_millis` | 整數 | 花費在上傳至遠端分段儲存區的總時間，以毫秒為單位。
+`segments.remote_store.upload.pressure` | 物件 | 分段儲存區上傳背壓的相關統計資料。
+`segments.remote_store.upload.pressure.total_rejections` | 整數 | 因分段儲存區上傳背壓而遭拒絕的請求總數。
+`segments.remote_store.download` | 物件 | 從遠端分段儲存區下載的相關統計資料。
+`segments.remote_store.download.total_download_size` | 物件 | 從遠端分段儲存區下載的資料總量。
+`segments.remote_store.download.total_download_size.started_bytes` | 整數 | 下載開始後，從遠端分段儲存區下載的位元組數。
+`segments.remote_store.download.total_download_size.succeeded_bytes` | 整數 | 成功從遠端分段儲存區下載的位元組數。
+`segments.remote_store.download.total_download_size.failed_bytes` | 整數 | 從遠端分段儲存區下載失敗的位元組數。
+`segments.remote_store.download.total_time_spent_in_millis` | 整數 | 花費在從遠端分段儲存區下載的總持續時間，以毫秒為單位。
 `segments.file_sizes` | 整數 | 分段檔案大小的統計資料。
-`translog` | 物件 | 節點的交易記錄檔作業統計資料。
+`translog` | 物件 | 節點的交易記錄作業統計資料。
 `translog.operations` | 整數 | translog 作業數。
 `translog.size_in_bytes` | 整數 | translog 的大小，以位元組為單位。
 `translog.uncommitted_operations` | 整數 | 未提交的 translog 作業數。
 `translog.uncommitted_size_in_bytes` | 整數 | 未提交的 translog 作業大小，以位元組為單位。
 `translog.earliest_last_modified_age` | 整數 | translog 最早的最後修改時間長度。
-`translog.remote_store` | 物件 | 與遠端 translog 存放區作業相關的統計資料。
-`translog.remote_store.upload` | 物件 | 與上傳至遠端 translog 存放區相關的統計資料。
-`translog.remote_store.upload.total_uploads` | 物件 | 與遠端 translog 存放區同步的次數。
-`translog.remote_store.upload.total_uploads.started` | 整數 | 已開始之遠端 translog 存放區上傳同步的次數。
-`translog.remote_store.upload.total_uploads.failed` | 整數 | 遠端 translog 存放區上傳同步失敗的次數。
-`translog.remote_store.upload.total_uploads.succeeded` | 整數 | 遠端 translog 存放區上傳同步成功的次數。
-`translog.remote_store.upload.total_upload_size` | 物件 | 上傳至遠端 translog 存放區的資料總量。
-`translog.remote_store.upload.total_upload_size.started_bytes` | 整數 | 上傳開始後，正主動上傳至遠端 translog 存放區的位元組數。
-`translog.remote_store.upload.total_upload_size.failed_bytes` | 整數 | 上傳至遠端 translog 存放區失敗的位元組數。
-`translog.remote_store.upload.total_upload_size.succeeded_bytes` | 整數 | 成功上傳至遠端 translog 存放區的位元組數。
-`request_cache` | 物件 | 節點之請求快取的統計資料。
+`translog.remote_store` | 物件 | 遠端 translog 儲存區作業的相關統計資料。
+`translog.remote_store.upload` | 物件 | 上傳至遠端 translog 儲存區的相關統計資料。
+`translog.remote_store.upload.total_uploads` | 物件 | 同步至遠端 translog 儲存區的次數。
+`translog.remote_store.upload.total_uploads.started` | 整數 | 已開始的上傳同步至遠端 translog 儲存區次數。
+`translog.remote_store.upload.total_uploads.failed` | 整數 | 上傳同步至遠端 translog 儲存區失敗的次數。
+`translog.remote_store.upload.total_uploads.succeeded` | 整數 | 上傳同步至遠端 translog 儲存區成功的次數。
+`translog.remote_store.upload.total_upload_size` | 物件 | 上傳至遠端 translog 儲存區的資料總量。
+`translog.remote_store.upload.total_upload_size.started_bytes` | 整數 | 上傳開始後，正在上傳至遠端 translog 儲存區的位元組數。
+`translog.remote_store.upload.total_upload_size.failed_bytes` | 整數 | 上傳至遠端 translog 儲存區失敗的位元組數。
+`translog.remote_store.upload.total_upload_size.succeeded_bytes` | 整數 | 成功上傳至遠端 translog 儲存區的位元組數。
+`request_cache` | 物件 | 節點請求快取的統計資料。
 `request_cache.memory_size_in_bytes` | 整數 | 請求快取使用的記憶體大小，以位元組為單位。
-`request_cache.evictions` | 整數 | 請求快取逐出的次數。
-`request_cache.hit_count` | 整數 | 請求快取命中的次數。
-`request_cache.miss_count` | 整數 | 請求快取未命中的次數。
-`recovery` | 物件 | 節點之復原作業的統計資料。
-`recovery.current_as_source` | 整數 | 已使用索引分片作為來源的復原作業數。
-`recovery.current_as_target` | 整數 | 已使用索引分片作為目標的復原作業數。
-`recovery.throttle_time_in_millis` | 整數 | 因節流而導致的復原作業延遲，以毫秒為單位。
+`request_cache.evictions` | 整數 | 請求快取逐出次數。
+`request_cache.hit_count` | 整數 | 請求快取命中次數。
+`request_cache.miss_count` | 整數 | 請求快取未命中次數。
+`recovery` | 物件 | 節點復原作業的統計資料。
+`recovery.current_as_source` | 整數 | 以索引分片作為來源的復原作業數。 |
+`recovery.current_as_target` | 整數 | 以索引分片作為目標的復原作業數。
+`recovery.throttle_time_in_millis` | 整數 | 因節流導致復原作業的總延遲，以毫秒為單位。
+`status_counter` | 物件 | 由本節點協調的請求所回傳之文件寫入與搜尋回應計數，依 HTTP 狀態類別分組。計數會保留在記憶體中，並在節點重新啟動時重設。
+`status_counter.doc_status` | 物件 | 文件寫入作業（index、create、update 與 delete，包含 bulk 項目）的計數，依 HTTP 狀態類別分組。
+`status_counter.doc_status.success` | 整數 | 回傳 `1xx`、`2xx` 或 `3xx` 狀態的文件寫入作業數。
+`status_counter.doc_status.user_error` | 整數 | 回傳 `4xx` 狀態的文件寫入作業數。
+`status_counter.doc_status.system_failure` | 整數 | 回傳 `5xx` 狀態的文件寫入作業數。
+`status_counter.search_response_status` | 物件 | 搜尋請求的計數，依回應的 HTTP 狀態類別分組。
+`status_counter.search_response_status.success` | 整數 | 回傳 `1xx`、`2xx` 或 `3xx` 狀態的搜尋請求數。包含因部分分片失敗而回傳部分結果的請求。
+`status_counter.search_response_status.user_error` | 整數 | 回傳 `4xx` 狀態的搜尋請求數，例如對不存在的索引提出的請求或遭拒絕的請求。
+`status_counter.search_response_status.system_failure` | 整數 | 回傳 `5xx` 狀態的搜尋請求數。
 
 ### `os`
 
@@ -1157,10 +1179,10 @@ response = client.nodes.info(
 `gc.collectors.old.collection_count` | `Integer` | 回收老年代物件的垃圾回收器數量。
 `gc.collectors.old.collection_time_in_millis` | `Integer` | 對老年代物件進行垃圾回收所花費的總時間，以毫秒為單位。
 `buffer_pools` | `Object` | 節點的 JVM 緩衝區集區統計資料。
-`buffer_pools.mapped` | `Object` | 節點的 JVM 對應緩衝區集區統計資料。
-`buffer_pools.mapped.count` | `Integer` | 對應緩衝區集區的數量。
-`buffer_pools.mapped.used_in_bytes` | `Integer` | 對應緩衝區集區使用的記憶體量，以位元組為單位。
-`buffer_pools.mapped.total_capacity_in_bytes` | `Integer` | 對應緩衝區集區的總容量，以位元組為單位。
+`buffer_pools.mapped` | `Object` | 節點的 JVM 記憶體對映緩衝區集區統計資料。
+`buffer_pools.mapped.count` | `Integer` | 記憶體對映緩衝區集區的數量。
+`buffer_pools.mapped.used_in_bytes` | `Integer` | 記憶體對映緩衝區集區使用的記憶體量，以位元組為單位。
+`buffer_pools.mapped.total_capacity_in_bytes` | `Integer` | 記憶體對映緩衝區集區的總容量，以位元組為單位。
 `buffer_pools.direct` | `Object` | 節點的 JVM 直接緩衝區集區統計資料。
 `buffer_pools.direct.count` | `Integer` | 直接緩衝區集區的數量。
 `buffer_pools.direct.used_in_bytes` | `Integer` | 直接緩衝區集區使用的記憶體量，以位元組為單位。
@@ -1383,7 +1405,7 @@ response = client.nodes.info(
 
 ### `weighted_routing`
 
-`weighted_routing` 物件包含加權輪詢請求的統計資料。具體來說，它包含此節點在「被劃出區域 (zoned out)」時仍處理請求的次數計數。
+`weighted_routing` 物件包含加權輪詢請求的統計資料。具體而言，它會計算此節點的路由權重設為零（zoned out）時，仍處理請求的次數。
 
 欄位 | 欄位類型 | 說明
 :--- |:-----------| :---

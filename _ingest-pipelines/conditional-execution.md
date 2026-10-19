@@ -10,9 +10,11 @@ nav_order: 40
 
 在資料匯入管線中，您可以使用選用的 `if` 參數來控制處理器是否執行。這可讓處理器根據傳入文件的內容進行條件式執行。條件以 Painless 指令碼撰寫，並根據文件上下文（`ctx`）進行評估。如需更多資訊，請參閱 [Painless 指令碼語言]({{site.url}}{{site.baseurl}}/scripting/painless/)。
 
-## 基本條件式執行
+## 基本條件執行
 
-每個處理器都可以包含 `if` 子句。如果條件評估為 `true`，處理器就會執行；否則會被略過。
+每個處理器都可以包含一個 `if` 子句。如果條件評估為 `true`，則執行該處理器；否則會略過。
+
+在條件中，`ctx` 是唯讀的。條件可以讀取文件欄位，但無法新增、變更或移除欄位。若要有條件地修改文件，請將修改動作放在處理器中，並僅使用條件來決定是否執行該處理器。
 
 ### 範例：捨棄偵錯層級的記錄檔
 
@@ -81,7 +83,7 @@ PUT _ingest/pipeline/drop_debug_env
 ```
 {% include copy-curl.html %}
 
-如果未設定 null 安全的 `?.` 運算子，對任何不含 `app.env` 欄位的文件編製索引時，將會觸發下列 null 指標例外：
+若未設定可安全處理 null 的 `?.` 運算子，則對任何不含 `app` 物件的文件編製索引時，會觸發下列空指標例外：
 
 ```json
 {
@@ -115,7 +117,19 @@ PUT _ingest/pipeline/drop_debug_env
 
 ## 條件中的安全方法呼叫
 
-避免在可能為 null 的值上呼叫方法。請改用常數或 null 檢查：
+如果物件為 `null`，`?.` 運算子會傳回 `null`，而 `==` 運算子會處理 `null` 值，因此 `ctx.app?.env == 'debug'` 這類條件可安全處理 null。然而，對 `null` 值呼叫方法會導致空指標例外。例如，對於不包含 `app.env` 欄位的文件，`ctx.app?.env.equalsIgnoreCase('debug')` 會失敗，因為 `ctx.app?.env` 會傳回 `null`。
+
+若要讓方法呼叫可安全處理 null，請對絕不會是 `null` 的常數呼叫方法，並將欄位作為引數傳入：
+
+```json
+{
+  "drop": {
+    "if": "'debug'.equalsIgnoreCase(ctx.app?.env)"
+  }
+}
+```
+
+如果無法對常數呼叫任何方法，請在呼叫方法之前明確檢查是否為 `null`：
 
 ```json
 {
@@ -125,12 +139,12 @@ PUT _ingest/pipeline/drop_debug_env
 }
 ```
 
-## 完整範例：多步驟條件式管線
+## 完整範例：多步驟條件管線
 
 下列資料匯入管線使用三個處理器：
 
 1. `set`：如果 `user` 欄位未提供值，則將 `user` 欄位設為 `guest`。
-2. `set`：如果提供了 `status_code` 且高於 `400`，則將 `error` 欄位設為 `true`。
+2. `set`：如果提供了 `status_code` 且大於或等於 `400`，則將 `error` 欄位設為 `true`。
 3. `drop`：如果 `app.env` 欄位等於 `debug`，則捨棄整份文件。
 
 ```json

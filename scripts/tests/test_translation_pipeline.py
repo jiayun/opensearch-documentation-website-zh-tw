@@ -397,6 +397,16 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(opus.calls, [])
         self.assertTrue(gemini.calls)
 
+    def test_review_provenance_keeps_reported_model_instead_of_cli_alias(self):
+        class AliasedReviewer(FakeProvider):
+            def complete(self, system, prompt):
+                reply = super().complete(system, prompt)
+                reply.model = 'grok-4.7-build'
+                return reply
+        reviewer = AliasedReviewer('grok', 'xai:grok', lambda p, n: approve(p))
+        self.assertEqual(self.runner([self.claude()], [reviewer]).run([MATCH]), {'reviewed': 1})
+        self.assertEqual(self.entry(MATCH)['reviewer']['model'], 'grok-4.7-build')
+
     def test_drifted_file_is_never_overwritten(self):
         (self.root / MATCH).write_text(MATCH_PAGE + "\nHand edit.\n", encoding="utf-8")
         claude = self.claude()

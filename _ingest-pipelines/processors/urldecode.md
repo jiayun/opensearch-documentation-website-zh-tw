@@ -8,7 +8,7 @@ nav_order: 320
 
 # URL 解碼處理器
 
-`urldecode` 處理器可用於解碼記錄資料或其他文字欄位中經過 URL 編碼的字串。這能讓資料更易讀、更容易分析，尤其是在處理包含特殊字元或空格的 URL 或查詢參數時。
+`urldecode` 處理器適合用來解碼記錄資料或其他文字欄位中經 URL 編碼的字串。這能讓資料更易讀、更容易分析，尤其是在處理含有特殊字元或空格的 URL 或查詢參數時。對於陣列欄位，處理器會逐一解碼每個字串元素。百分比編碼字元和加號都會被解碼；例如 `wireless+mouse%21` 會變成 `wireless mouse!`。
 
 以下是 `urldecode` 處理器的語法：
 
@@ -26,16 +26,16 @@ nav_order: 320
 
 下表列出 `urldecode` 處理器的必要與選用參數。
 
-參數 | 必要／選用 | 說明 |
+參數 | 必要/選用 | 說明 |
 |-----------|-----------|-----------|
-`field`  | 必要  | 包含要解碼之 URL 編碼字串的欄位。 |
-`target_field`  | 選用  | 儲存解碼後字串的欄位。若未指定，解碼後的字串會儲存在與原始編碼字串相同的欄位中。 |
-`ignore_missing`  | 選用  | 指定處理器是否應忽略不含指定 `field` 的文件。若設為 `true`，處理器會忽略 `field` 中缺少的值，並保持 `target_field` 不變。預設為 `false`。 |
-`description`  | 選用  | 處理器的簡短描述。  |
+`field`  | 必要  | 包含待解碼 URL 編碼字串的欄位。 |
+`target_field`  | 選用  | 儲存解碼後字串的欄位。若未指定，則解碼後的字串會儲存在與原始編碼字串相同的欄位中。 |
+`ignore_missing`  | 選用  | 指定處理器是否應忽略未包含所指定 `field` 的文件。若設為 `true`，則處理器會忽略 `field` 中缺少的值，並讓 `target_field` 保持不變。預設值為 `false`。 |
+`description`  | 選用  | 處理器的簡短說明。  |
 `if` | 選用 | 執行處理器的條件。 |
-`ignore_failure` | 選用 | 指定處理器即使遇到錯誤仍繼續執行。若設為 `true`，則會忽略失敗。預設為 `false`。 |
-`on_failure` | 選用 | 當處理器失敗時要執行的處理器清單。 |
-`tag` | 選用 | 處理器的識別標籤。有助於除錯時區分相同類型的處理器。 |
+`ignore_failure` | 選用 | 指定處理器即使遇到錯誤是否仍繼續執行。若設為 `true`，則會忽略失敗。預設值為 `false`。 |
+`on_failure` | 選用 | 處理器失敗時要執行的處理器清單。 |
+`tag` | 選用 | 處理器的識別標籤。有助於偵錯時區分相同類型的處理器。如需詳細資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
 
 ## 使用處理器
 
@@ -105,14 +105,13 @@ POST _ingest/pipeline/urldecode_pipeline/_simulate
   ]
 }
 ```
-{% include copy-curl.html %}
 
 ### 步驟 3：匯入文件
 
 下列查詢會將文件匯入名為 `testindex1` 的索引：
 
 ```json
-PUT testindex1/_doc/1?pipeline=url_decode_pipeline
+PUT testindex1/_doc/1?pipeline=urldecode_pipeline
 {
   "encoded_url": "https://example.com/search?q=url%20decode%20test"
 }
@@ -121,7 +120,7 @@ PUT testindex1/_doc/1?pipeline=url_decode_pipeline
 
 #### 回應
 
-上述請求會將文件編製索引至索引 `testindex1`，並為所有包含 `encoded_url` 欄位的文件編製索引，該欄位由 `urldecode_pipeline` 處理以填入 `decoded_url` 欄位，如下列回應所示：
+上述請求會將文件編製索引到 `testindex1` 索引中。`urldecode_pipeline` 會解碼 `encoded_url` 值，並將結果儲存在 `decoded_url` 欄位中，如下列回應所示：
 
 ```json
 {
@@ -138,7 +137,6 @@ PUT testindex1/_doc/1?pipeline=url_decode_pipeline
   "_primary_term": 47
 }
 ```
-{% include copy-curl.html %}
 
 ### 步驟 4（選用）：擷取文件
 
@@ -151,7 +149,7 @@ GET testindex1/_doc/1
 
 #### 回應
 
-回應包含原始的 `encoded_url` 欄位與 `decoded_url` 欄位：
+回應包含原始 `encoded_url` 欄位與 `decoded_url` 欄位：
 
 ```json
 {
@@ -167,4 +165,3 @@ GET testindex1/_doc/1
   }
 }
 ```
-{% include copy-curl.html %}

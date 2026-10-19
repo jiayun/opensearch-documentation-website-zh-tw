@@ -7,15 +7,18 @@ nav_order: 20
 
 # 在管線中存取資料
 
-在資料匯入管線中，您可以使用 `ctx` 物件來存取文件資料。此物件代表正在處理的文件，並允許您讀取、修改或擴充文件欄位。管線處理器對文件的 `_source` 欄位及其中介資料欄位皆具有讀取和寫入權限。
+管線處理器對文件的 `_source` 欄位及其中繼資料欄位皆具有讀取與寫入權限。您如何參照欄位取決於參照的位置：
+
+- 在處理器參數（例如 `field` 和 `target_field`）中，請使用欄位名稱。
+- 在 [`script` 處理器]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/script/) 和 `if` 條件中，請使用 `ctx` 物件，該物件代表正在處理的文件，例如 `ctx.user`。
 
 ## 存取文件欄位
 
-`ctx` 物件會公開所有文件欄位。您可以使用點標記法直接存取這些欄位。
+在處理器參數中，請以名稱參照頂層欄位。請使用點標記法參照巢狀欄位。
 
-### 範例：存取最上層欄位
+### 範例：存取頂層欄位
 
-給定以下範例文件：
+假設有下列範例文件：
 
 ```json
 {
@@ -23,11 +26,13 @@ nav_order: 20
 }
 ```
 
-您可以如下方式存取 `user`：
+您可以依照下列方式存取 `user`：
 
 ```json
-"field": "ctx.user"
+"field": "user"
 ```
+
+在指令碼或條件中，請使用 `ctx.user`。
 
 ### 範例：存取巢狀欄位
 
@@ -41,11 +46,13 @@ nav_order: 20
 }
 ```
 
-您可以如下方式存取 `user.name`：
+您可以如下所示存取 `user.name`：
 
 ```json
-"field": "ctx.user.name"
+"field": "user.name"
 ```
+
+在指令碼或條件中，請使用 `ctx.user.name`。如果 `user` 物件可能不存在，請使用空值安全運算子：`ctx.user?.name`。
 
 ## 存取來源中的欄位
 
@@ -71,14 +78,17 @@ nav_order: 20
 }
 ```
 
-## 存取中介資料欄位
+## 存取中繼資料欄位
 
-您可以讀取或寫入下列中介資料欄位：
+文件的 `_source` 不能包含名稱與中繼資料欄位相同的欄位，因此您可以像參照來源欄位一樣，直接以名稱參照中繼資料欄位。處理器可以讀取和寫入下列中繼資料欄位：
 
 - `_index`
-- `_type`
 - `_id`
 - `_routing`
+- `_version`
+- `_version_type`
+- `_if_seq_no`
+- `_if_primary_term`
 
 ### 範例：動態設定 `_routing`
 
@@ -92,7 +102,7 @@ nav_order: 20
 ```
 
 
-## 存取匯入中介資料欄位
+## 存取匯入中繼資料欄位
 
 `_ingest.timestamp` 欄位代表匯入節點收到文件的時間。若要保存此時間戳記，請使用 `set` 處理器：
 
@@ -105,9 +115,24 @@ nav_order: 20
 }
 ```
 
-## 在 Mustache 範本中使用 `ctx`
+匯入中繼資料僅在管線處理文件期間存在。OpenSearch 不會將 `_ingest` 欄位編製索引，因此若要保留某個值，請將其複製到文件欄位中，如前述範例所示。
 
-使用 Mustache 範本將欄位值插入處理器設定中。使用三個大括號（{% raw %}`{{{` 和 `}}}`{% endraw %}）來表示未逸出的欄位值。
+文件的 `_source` 可以包含名為 `_ingest` 的欄位。若要存取此欄位，請使用 `_source._ingest` 前綴。若沒有前綴，`_ingest` 會指向匯入中繼資料。下列處理器會將 `_ingest` 來源欄位的值複製到 `ingest_source` 欄位：
+
+```json
+{
+  "set": {
+    "field": "ingest_source",
+    "value": "{% raw %}{{_source._ingest}}{% endraw %}"
+  }
+}
+```
+
+## 在 Mustache 範本中使用欄位值
+
+使用 Mustache 範本將欄位值插入處理器設定中。只有部分處理器參數支援範本；各處理器的參數表會說明哪些參數支援範本。如需詳細資訊，請參閱[範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。範本以名稱參照欄位，不加上 `ctx`。
+
+雙大括號（{% raw %}`{{` 和 `}}`{% endraw %}）會在值中的特殊字元（例如引號和反斜線）前加上反斜線，以進行逸出。三重大括號（{% raw %}`{{{` 和 `}}}`{% endraw %}）則直接插入值，不進行逸出。例如，若 `title` 欄位包含 `say "hi"`，則 {% raw %}`{{title}}`{% endraw %} 會產生 `say \"hi\"`，而 {% raw %}`{{{title}}}`{% endraw %} 會產生 `say "hi"`。
 
 ### 範例：合併來源欄位
 
@@ -193,12 +218,12 @@ nav_order: 20
 
 ## 完整管線範例
 
-下列範例定義了一個完整的資料匯入管線，其使用 `source` 欄位設定標語、從 `date` 欄位擷取 `year`，並將文件的匯入時間戳記記錄在 `received_at` 欄位中：
+下列範例定義一個完整的資料匯入管線，使用 `user.first` 與 `department` 欄位設定標語、從 `date` 欄位擷取 `year`，並將文件的匯入時間戳記記錄在 `received_at` 欄位：
 
 ```json
 PUT _ingest/pipeline/example-pipeline
 {
-  "description": "Sets tags, log label, and defaults error message",
+  "description": "Sets a tagline, extracts the year, and records the ingest time",
   "processors": [
     {
       "set": {
@@ -241,7 +266,7 @@ POST _ingest/pipeline/example-pipeline/_simulate
 }
 ```
 
-回應會顯示處理後經過擴充的文件，包括新增的 `tagline`、擷取出的 `year`，以及由資料匯入管線產生的 `received_at` 時間戳記：
+回應會顯示經處理充實後的文件，包括新增的 `tagline`、擷取的 `year`，以及由資料匯入管線產生的 `received_at` 時間戳記：
 
 ```json
 {

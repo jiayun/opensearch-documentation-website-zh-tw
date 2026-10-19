@@ -8,7 +8,7 @@ redirect_from:
    - /api-reference/ingest-apis/processors/csv/
 ---
 
-本文件說明如何在 OpenSearch 資料匯入管線中使用 `csv` 處理器。如果您的使用案例涉及大型或複雜的資料集，請考慮使用在 OpenSearch 叢集上執行的 [Data Prepper `csv` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/csv/)。
+本文件說明如何在 OpenSearch 資料匯入管線中使用 `csv` 處理器。如果您的使用情境涉及大型或複雜的資料集，建議考慮使用在 OpenSearch 叢集外部執行的 [Data Prepper `csv` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/csv/)。
 {: .note}
 
 # CSV 處理器
@@ -33,20 +33,20 @@ redirect_from:
 
 下表列出 `csv` 處理器的必要與選用參數。
 
-參數 | 必要／選用 | 說明 |
+參數 | 必要/選用 | 說明 |
 |-----------|-----------|-----------|
-`field`  | 必要  | 包含待轉換資料的欄位名稱。支援範本片段。 |
-`target_fields`  | 必要  | 用於儲存剖析後資料的欄位名稱。 |
+`field`  | 必要  | 包含待剖析 CSV 資料的欄位名稱。 |
+`target_fields`  | 必要  | 用來儲存剖析值的欄位名稱陣列，每個 CSV 資料欄對應一個欄位。不可為空。 |
 `description`  | 選用  | 處理器的簡短說明。  |
-`empty_value`  | 選用  | 表示非必要或不適用的選用參數。  |
+`empty_value`  | 選用  | 空 CSV 欄位要儲存的值。若未指定，則會略過空欄位，且不會將對應的目標欄位加入文件。空的引號值（`""`）也會視為空值。例如，給定 `1,,3` 這一行，且 `empty_value` 為 `N/A`，則第二個目標欄位會設為 `N/A`。  |
 `if` | 選用 | 執行處理器的條件。 |
-`ignore_failure` | 選用 | 指定處理器是否在遇到錯誤時仍繼續執行。如果設為 `true`，則會忽略失敗。預設為 `false`。 |
-`ignore_missing`  | 選用 | 指定處理器是否應忽略不含指定欄位的文件。如果設為 `true`，當欄位不存在或為 `null` 時，處理器不會修改文件。預設為 `false`。  | 
+`ignore_failure` | 選用 | 指定處理器即使遇到錯誤是否仍繼續執行。若設為 `true`，則會忽略失敗。預設為 `false`。 |
+`ignore_missing`  | 選用 | 指定處理器是否應忽略不包含所指定欄位的文件。若設為 `true`，則當欄位不存在或為 `null` 時，處理器不會修改文件。預設為 `false`。  | 
 `on_failure` | 選用 | 處理器失敗時要執行的處理器清單。 |
-`quote`  | 選用  | 用於括住 CSV 資料中欄位的引號字元。預設為 `"`。 |
-`separator`  | 選用  | 用於分隔 CSV 資料中欄位的分隔符號。預設為 `,`。  |
-`tag` | 選用 | 處理器的識別標籤。有助於在偵錯時區分相同類型的處理器。 |
-`trim`  | 選用  | 如果設為 `true`，處理器會移除文字開頭與結尾的空白字元。預設為 `false`。  |
+`quote`  | 選用  | CSV 資料中用來括住欄位的字元。必須是單一字元。預設為 `"`。 |
+`separator`  | 選用  | CSV 資料中用來分隔欄位的分隔符號。必須是單一字元。預設為 `,`。  |
+`tag` | 選用 | 處理器的識別標籤。有助於偵錯時區分同類型的處理器。如需詳細資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
+`trim`  | 選用  | 若設為 `true`，處理器會移除文字開頭與結尾的空白字元。引號內的空白字元會保留，因此處理器不會移除引號值的空白。例如，給定 `Wireless mouse, "  dark gray  "` 這一行，處理器會傳回 `Wireless mouse` 與 `  dark gray  `。預設為 `false`。  |
 
 ## 使用處理器
 

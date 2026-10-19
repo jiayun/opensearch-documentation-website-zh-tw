@@ -2,7 +2,8 @@
 
 Every provider only returns text. CLIs run with ``shell=False`` in a fresh
 temporary working directory outside the repository, with the prompt passed
-on stdin (claude) or as the single ``--print=<prompt>`` argv element (agy),
+on stdin (claude), a temporary file (grok), or the single
+``--print=<prompt>`` argv element (agy),
 and with API-key environment variables removed so the CLIs use the signed-in
 account rather than paid API keys.
 
@@ -349,6 +350,33 @@ def parse_ollama_response(body: str, provider: str = "ollama") -> tuple[str, dic
                         if isinstance(data.get(k), int) and not isinstance(data.get(k), bool)})
 
 
+def parse_grok_envelope(stdout: str, stderr: str = "", returncode: int = 0) -> tuple[str, dict]:
+    try:
+        env = load_json_lenient(stdout)
+    except ValueError:
+        message = stderr or stdout or f"exit {returncode}: empty output"
+        raise ProviderError(classify_failure(message), message, "grok")
+    if not isinstance(env, dict):
+        raise ProviderError(TRANSPORT, "Grok returned a non-object envelope", "grok")
+    error = _find_error(env)
+    if error or returncode:
+        message = error or stderr or stdout
+        raise ProviderError(classify_failure(message), message, "grok")
+    if any(s in _TRUNCATED_STOPS for s in _find_stop_reasons(env)):
+        raise ProviderError(TRUNCATED, "Grok stopped before completing its answer", "grok")
+    if env.get("stopReason") not in (None, "end_turn", "stop"):
+        raise ProviderError(TRANSPORT, "Grok did not finish normally: " + str(env["stopReason"]), "grok")
+    text = env.get("text")
+    if not isinstance(text, str) or not text.strip():
+        raise ProviderError(TRANSPORT, "Grok returned no final text", "grok")
+    if not text.lstrip().startswith(("{", "[", "```")) and _QUOTA_RE.search(text):
+        raise ProviderError(QUOTA, text, "grok")
+    cost = env.get("total_cost_usd")
+    return text, _meta(reported_usage(env),
+                       {"cost_usd": cost} if isinstance(cost, (int, float)) else None,
+                       reported_model=env.get("model") or next(iter(env.get("modelUsage") or {}), None))
+
+
 # -- process execution ----------------------------------------------------------
 
 def scrubbed_env() -> dict[str, str]:
@@ -441,6 +469,37 @@ class AgyProvider(Provider):
         rc, out, err = self.runner(self.argv(f"{system}\n\n{prompt}"), "", self.timeout, self.name)
         text, meta = parse_agy_envelope(out, err, rc)
         return ModelReply(text, self.name, self.model, meta)
+
+
+class GrokProvider(Provider):
+    """Signed-in Grok CLI, one response without tools or subagents."""
+    name = "grok"
+    family = "xai:grok"
+
+    def __init__(self, model: str = config.GROK_MODEL, timeout: float = 900,
+                 runner: Callable = run_cli, effort: str = config.GROK_REASONING_EFFORT) -> None:
+        self.model = model
+        self.effort = effort
+        self.timeout = timeout
+        self.runner = runner
+
+    def argv(self, system: str, prompt_file: str) -> list[str]:
+        return ["grok", "--model", self.model, "--reasoning-effort", self.effort,
+                "--tools", "", "--deny", "*",
+                "--no-subagents", "--disable-web-search", "--permission-mode", "plan",
+                "--max-turns", "1", "--output-format", "json", "--verbatim",
+                "--system-prompt-override", system, "--prompt-file", prompt_file]
+
+    def complete(self, system: str, prompt: str) -> ModelReply:
+        # A file avoids per-argument OS limits on long whole-page reviews.
+        with tempfile.TemporaryDirectory(prefix="zhtw-grok-prompt-") as cwd:
+            path = os.path.join(cwd, "prompt.txt")
+            with open(path, "w", encoding="utf-8") as handle:
+                handle.write(prompt)
+            code, stdout, stderr = self.runner(self.argv(system, path), "", self.timeout, self.name)
+        text, meta = parse_grok_envelope(stdout, stderr, code)
+        meta["requested_reasoning_effort"] = self.effort
+        return ModelReply(text, self.name, meta.get("reported_model") or self.model, meta)
 
 
 def parse_codex_events(stdout: str, stderr: str = "", returncode: int = 0) -> tuple[str, dict]:
@@ -571,6 +630,7 @@ class OllamaProvider(Provider):
 def build_providers(claude_model: str | None = None) -> dict[str, Provider]:
     return {
         "claude": ClaudeProvider(model=claude_model),
+        "grok": GrokProvider(),
         **{name: AgyProvider(model=model, name=name) for name, (model, group) in config.AGY_MODELS.items()},
         **{name: OllamaProvider(name, model) for name, model in config.OLLAMA_CLOUD_MODELS.items()},
         "ollama-local": OllamaProvider("ollama-local", config.OLLAMA_LOCAL_MODEL),
@@ -703,7 +763,8 @@ class ProviderPool:
                 try:
                     reply = provider.complete(system, prompt)
                     self._record_usage(name, reply)
-                    extra = {k: reply.meta[k] for k in ("usage", "estimated") if reply.meta.get(k)}
+                    extra = {k: reply.meta[k] for k in ("usage", "estimated", "requested_reasoning_effort")
+                             if reply.meta.get(k)}
                     self._log("model_call", provider=name, model=provider.model, purpose=purpose,
                               ok=True, seconds=round(time.monotonic() - started, 1),
                               prompt_chars=len(prompt), reply_chars=len(reply.text), **extra)

@@ -29,7 +29,8 @@ from translation_pipeline.providers import ProviderPool, build_providers  # noqa
 from translation_pipeline.store import Cache, Manifest, RunLog, sha256_bytes  # noqa: E402
 from translation_pipeline.terms import TermRules  # noqa: E402
 
-KNOWN_PROVIDERS = ("claude", "agy", "ollama-cloud", "ollama-local", "codex", "codex-review")
+KNOWN_PROVIDERS = ("claude", "grok", *config.AGY_MODELS, *config.OLLAMA_CLOUD_MODELS,
+                   "ollama-local", "codex", "codex-review")
 
 
 def _provider_list(value: str) -> list[str]:

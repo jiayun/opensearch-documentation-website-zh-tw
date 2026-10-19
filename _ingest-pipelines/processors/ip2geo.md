@@ -116,14 +116,14 @@ GET /_plugins/geospatial/ip2geo/datasource/my-datasource
 
 ### 更新 IP2Geo 資料來源
 
-如需端點清單與請求欄位說明，請參閱「建立 IP2Geo 資料來源」一節。 
+端點與請求欄位說明請參閱「建立 IP2Geo 資料來源」一節。
 
-若要更新資料來源，請執行下列查詢：
+若要更新資料來源，請執行以下查詢：
 
 ```json
 PUT /_plugins/geospatial/ip2geo/datasource/my-datasource/_settings
 {
-    "endpoint": https://geoip.maps.opensearch.org/v1/geolite2-city/manifest.json,
+    "endpoint": "https://geoip.maps.opensearch.org/v1/geolite2-city/manifest.json",
     "update_interval_in_days": 10
 }
 ```
@@ -144,7 +144,7 @@ DELETE /_plugins/geospatial/ip2geo/datasource/my-datasource
 
 建立資料來源後，您就可以建立管線。 
 
-## 語法 
+## 語法
 
 以下是 `ip2geo` 處理器的語法：
 
@@ -156,24 +156,23 @@ DELETE /_plugins/geospatial/ip2geo/datasource/my-datasource
   }
 }
 ```
-{% include copy-curl.html %}
 
 ## 組態參數
 
 下表列出 `ip2geo` 處理器的必要與選用參數。
 
-| 參數 | 必要／選用 | 說明 |
+| 參數 | 必要/選用 | 說明 |
 |------|----------|---------|-------------|
-| `datasource` | 必要 | 要用來擷取地理位置資訊的資料來源名稱。 |
-| `field` | 必要 | 包含要進行地理位置查詢之 IP 位址的欄位。 |
-| `ignore_missing` | 選用 | 指定處理器是否應忽略未包含指定欄位的文件。若設為 `true`，當欄位不存在或為 `null` 時，處理器不會修改文件。預設為 `false`。 |
-| `properties` | 選用 | 控制要從 `datasource` 新增哪些屬性至 `target_field` 的欄位。預設為 `datasource` 中的所有欄位。 |
-| `target_field` | 選用 | 包含從資料來源擷取之地理位置資訊的欄位。預設為 `ip2geo`。 |
+| `datasource` | 必要 | 用於擷取地理資訊的資料來源名稱。 |
+| `field` | 必要 | 包含要進行地理查詢之 IP 位址的欄位。 |
+| `ignore_missing` | 選用 | 指定處理器是否應忽略不包含指定欄位的文件。若設為 `true`，當欄位不存在或為 `null` 時，處理器不會修改文件。預設為 `false`。 |
+| `properties` | 選用 | 控制要從 `datasource` 將哪些屬性新增至 `target_field` 的欄位。預設為 `datasource` 中的所有欄位。 |
+| `target_field` | 選用 | 包含從資料來源擷取之地理資訊的欄位。預設為 `ip2geo`。 |
 | `description` | 選用 | 處理器的簡短說明。 |
 | `if` | 選用 | 執行處理器的條件。 |
-| `ignore_failure` | 選用 | 指定處理器即使遇到錯誤是否仍繼續執行。若設為 `true`，則會忽略失敗。預設為 `false`。 |
+| `ignore_failure` | 選用 | 指定處理器在遇到錯誤時是否繼續執行。若設為 `true`，則會忽略失敗。預設為 `false`。 |
 | `on_failure` | 選用 | 處理器失敗時要執行的處理器清單。 |
-| `tag` | 選用 | 處理器的識別標籤。有助於偵錯時區分相同類型的處理器。 |
+| `tag` | 選用 | 處理器的識別標籤。可用於偵錯，以區分相同類型的處理器。如需更多資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
 
 ## 使用處理器
 
@@ -181,7 +180,7 @@ DELETE /_plugins/geospatial/ip2geo/datasource/my-datasource
 
 **步驟 1：建立管線**
 
-下列查詢會建立名為 `my-pipeline` 的管線，將 IP 位址轉換為地理位置資訊：
+下列查詢會建立名為 `my-pipeline` 的管線，將 IP 位址轉換為地理資訊：
 
 ```json
 PUT /_ingest/pipeline/my-pipeline
@@ -199,7 +198,7 @@ PUT /_ingest/pipeline/my-pipeline
 ```
 {% include copy-curl.html %}
 
-**步驟 2 (選用)：測試管線**
+**步驟 2（選用）：測試管線**
 
 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/info-icon.png" class="inline-icon" alt="info icon"/>{:/} **注意**<br>建議您在匯入文件之前先測試管線。
 {: .note}
@@ -248,7 +247,6 @@ POST _ingest/pipeline/my-pipeline/_simulate
   ]
 }
 ```
-{% include copy-curl.html %}
 
 **步驟 3：匯入文件**
 
@@ -262,7 +260,7 @@ PUT /my-index/_doc/my-id?pipeline=my-pipeline
 ```
 {% include copy-curl.html %}
 
-**步驟 4 (選用)：擷取文件** 
+**步驟 4（選用）：擷取文件**
 
 若要擷取文件，請執行下列查詢：
 

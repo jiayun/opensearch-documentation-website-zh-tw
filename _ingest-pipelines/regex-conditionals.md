@@ -8,11 +8,13 @@ nav_order: 70
 
 # Regex 條件式
 
-資料匯入管線支援搭配 Painless 指令碼語言使用正規表示式 (regex) 的條件邏輯。如需更多資訊，請參閱 [Painless 指令碼語言]({{site.url}}{{site.baseurl}}/scripting/painless/)。這可讓您根據文字欄位的結構與內容，精細控制哪些文件會被處理。Regex 可在 `if` 參數中用於評估字串模式。這對於比對 IP 格式、驗證電子郵件地址、識別 UUID，或處理包含特定關鍵字的記錄檔特別有用。
+資料匯入管線支援在 Painless 指令碼語言中使用正規表示式 (regex) 的條件邏輯。如需更多資訊，請參閱 [Painless 指令碼語言]({{site.url}}{{site.baseurl}}/scripting/painless/)。這可讓您根據文字欄位的結構與內容，精細控制哪些文件會被處理。Regex 可在 `if` 參數中使用，以評估字串模式。這對於比對 IP 格式、驗證電子郵件地址、識別 UUID，或處理包含特定關鍵字的記錄檔特別有用。
+
+評估正規表示式可能相當耗費資源。為了限制其 CPU 消耗，OpenSearch 會根據 `script.painless.regex.enabled` 與 `script.painless.regex.limit-factor` 設定，限制 Painless 正規表示式可讀取的字元數。如需更多資訊，請參閱[控制正規表示式]({{site.url}}{{site.baseurl}}/scripting/painless/#controlling-regular-expressions)。
 
 ## 範例：電子郵件網域篩選
 
-下列管線使用 regex 識別來自 `@example.com` 電子郵件網域的使用者，並據此為這些文件加上標記：
+下列管線使用 regex 識別來自 `@example.com` 電子郵件網域的使用者，並據此為這些文件加上標籤：
 
 ```json
 PUT _ingest/pipeline/tag_example_com_users
@@ -22,7 +24,7 @@ PUT _ingest/pipeline/tag_example_com_users
       "set": {
         "field": "user_domain",
         "value": "example.com",
-        "if": "ctx.email != null && ctx.email =~ /@example.com$/"
+        "if": "ctx.email != null && ctx.email =~ /@example\\.com$/"
       }
     }
   ]
@@ -157,7 +159,7 @@ POST _ingest/pipeline/uuid_checker/_simulate
 ```
 {% include copy-curl.html %}
 
-第一份文件會以新的 `valid_uuid` 欄位加上標記：
+第一份文件會被標上新的 `valid_uuid` 欄位：
 
 ```json
 {
@@ -180,3 +182,25 @@ POST _ingest/pipeline/uuid_checker/_simulate
   ]
 }
 ```
+
+## 使用字串方法進行簡單比對
+
+評估字串方法的成本比正規表示式低。當字串方法可以執行相同的比對時，請使用字串方法。例如，下列條件等同於[電子郵件網域範例](#example-email-domain-filtering)，但使用 `endsWith` 方法：
+
+```json
+PUT _ingest/pipeline/tag_example_com_users
+{
+  "processors": [
+    {
+      "set": {
+        "field": "user_domain",
+        "value": "example.com",
+        "if": "ctx.email != null && ctx.email.endsWith('@example.com')"
+      }
+    }
+  ]
+}
+```
+{% include copy-curl.html %}
+
+其他可以取代常見正規表示式的字串方法包括 `startsWith` 和 `contains`。

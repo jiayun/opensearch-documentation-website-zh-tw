@@ -8,7 +8,7 @@ nav_order: 300
 
 # Trim 處理器
 
-`trim` 處理器可用來移除指定欄位開頭與結尾的空白字元。
+`trim` 處理器可用來移除指定欄位開頭與結尾的空白字元。值內部的空白不會被移除。對於陣列欄位，處理器會修剪每個字串元素。
 
 以下是 `trim` 處理器的語法：
 
@@ -26,16 +26,16 @@ nav_order: 300
 
 下表列出 `trim` 處理器的必要與選用參數。
 
-參數 | 必要/選用 | 說明 
+Parameter | Required/Optional | Description 
 :---|:---|:---
-`field` | 必要 | 包含要修剪之文字的欄位。
-`target_field` | 必要 | 儲存修剪後文字的欄位。若未指定，則會就地更新該欄位。
-`ignore_missing` | 選用 | 指定處理器是否應忽略未包含指定欄位的文件。若設為 `true`，則處理器會忽略欄位中缺少的值，並保持 `target_field` 不變。預設為 `false`。
-`description` | 選用 | 處理器的簡短說明。
+`field` | 必要 | 包含要修剪文字的欄位。
+`target_field` | 選用 | 儲存修剪後文字的欄位。若未指定，則會就地更新該欄位。
+`ignore_missing` | 選用 | 指定處理器是否應忽略不含指定欄位的文件。若設為 `true`，處理器會忽略欄位中缺少的值，並保持 `target_field` 不變。預設為 `false`。
+`description` | 選用 | 處理器的簡短描述。
 `if` | 選用 | 執行處理器的條件。
-`ignore_failure` | 選用 | 指定處理器即使遇到錯誤是否仍繼續執行。若設為 `true`，則會忽略失敗。預設為 `false`。
+`ignore_failure` | 選用 | 指定處理器即使遇到錯誤仍繼續執行。若設為 `true`，則會忽略失敗。預設為 `false`。
 `on_failure` | 選用 | 處理器失敗時要執行的處理器清單。
-`tag` | 選用 | 處理器的識別碼標籤。可用於偵錯，以區分相同類型的處理器。
+`tag` | 選用 | 處理器的識別標籤。有助於除錯時區分相同類型的處理器。如需更多資訊，請參閱[使用處理器標籤進行監控與除錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。
 
 ## 使用處理器
 
@@ -106,23 +106,24 @@ POST _ingest/pipeline/trim_pipeline/_simulate
 }
 ```
 
-### 步驟 3：匯入文件 
+### 步驟 3：匯入文件
 
 下列查詢會將文件匯入名為 `testindex1` 的索引：
 
 ```json
 PUT testindex1/_doc/1?pipeline=trim_pipeline
 {
-  "message": "   This is a test document.   "
+  "raw_text": "   This is a test document.   "
 }
 ```
 {% include copy-curl.html %}
 
 #### 回應
 
-此請求會將文件編製索引至索引 `testindex1`，並將所有具有 `raw_text` 欄位的文件編製索引，該欄位由 `trim_pipeline` 處理，以填入 `trimmed_text` 欄位，如下列回應所示：
+此請求會將文件編製索引至 `testindex1` 索引。`trim_pipeline` 會去除 `raw_text` 值前後的空白，並將結果儲存在 `trimmed_text` 欄位中，如下列回應所示：
 
 ```json
+{
   "_index": "testindex1",
   "_id": "1",
   "_version": 68,
@@ -136,7 +137,6 @@ PUT testindex1/_doc/1?pipeline=trim_pipeline
   "_primary_term": 47
 }
 ```
-{% include copy-curl.html %}
 
 ### 步驟 4 (選用)：擷取文件
 

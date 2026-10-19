@@ -33,39 +33,42 @@ nav_order: 258
 
 下表列出 `text_chunking` 處理器的必要與選用參數。
 
-| 參數                   | 資料類型 | 必要／選用  | 說明                                                                                                                                                                          |
+| 參數                   | 資料類型 | 必要/選用  | 說明                                                                                                                                                                          |
 |:----------------------------|:----------|:---|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `field_map`                 | 物件    | 必要	 | 包含鍵值對，用於指定文字欄位到輸出欄位的對應。	                                                                                              |
-| `field_map.<input_field>`	  | 字串	   | 必要	 | 從中取得文字以產生分段段落的欄位名稱。	                                                                                                    |
-| `field_map.<output_field>`	 | 字串	   | 必要	 | 儲存分段結果的欄位名稱。	                                                                                                                        |
-| `algorithm`	                | 物件	   | 必要	 | 包含最多一個鍵值對，用於指定分段演算法與參數。                                                                                            |
-| `algorithm.<name>`          | 字串	   | 選用	 | 分段演算法的名稱。有效值為 [`fixed_token_length`](#the-fixed-token-length-algorithm)、[`fixed_char_length`](#the-fixed-character-length-algorithm) 及 [`delimiter`](#the-delimiter-algorithm)。預設為 `fixed_token_length`。	 |
-| `algorithm.<parameters>`	   | 物件	   | 選用	 | 分段演算法的參數。依預設，包含 `fixed_token_length` 演算法的預設參數。	                                                       |
-| `ignore_missing`	           | 布林值	  | 選用	 | 若為 `true`，空欄位會從輸出中排除。若為 `false`，輸出會為每個空欄位包含空清單。預設為 `false`。	                                                        |
-| `description`	              | 字串	   | 選用	 | 處理器的簡短描述。                                                                                                                                                |
-| `tag`	                      | 字串	   | 選用	 | 處理器的識別標籤。在偵錯時可用來區分同類型的處理器。	                                                             |
+| `field_map`                 | 物件    | 必要	 | 包含鍵值對，指定文字欄位到輸出欄位的對應。	                                                                                              |
+| `field_map.<input_field>`	  | 字串	   | 必要	 | 用於取得文字以產生分塊段落的來源欄位名稱。	                                                                                                    |
+| `field_map.<output_field>`	 | 字串	   | 必要	 | 用於儲存分塊結果的欄位名稱。	                                                                                                                        |
+| `algorithm`	                | 物件	   | 必要	 | 最多包含一組鍵值對，指定分塊演算法及其參數。                                                                                            |
+| `algorithm.<name>`          | 字串	   | 選用	 | 分塊演算法的名稱。有效值為 [`fixed_token_length`](#the-fixed-token-length-algorithm)、[`fixed_char_length`](#the-fixed-character-length-algorithm) 與 [`delimiter`](#the-delimiter-algorithm)。預設為 `fixed_token_length`。	 |
+| `algorithm.<parameters>`	   | 物件	   | 選用	 | 分塊演算法的參數。預設包含 `fixed_token_length` 演算法的預設參數。	                                                       |
+| `ignore_missing`	           | 布林值	  | 選用	 | 若為 `true`，空欄位將從輸出中排除。若為 `false`，輸出會為每個空欄位包含一個空清單。預設為 `false`。	                                                        |
+| `description`	              | 字串	   | 選用	 | 處理器的簡要說明。                                                                                                                                                |
+| `tag`	                      | 字串	   | 選用	 | 處理器的識別標籤。在除錯時有助於區分相同類型的處理器。如需更多資訊，請參閱[使用處理器標籤進行監控與除錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。	                                                             |
+| `if` | 包含布林運算式的字串 | 選用 | 執行處理器的條件。 |
+| `ignore_failure` | 布林值 | 選用 | 指定處理器即使遇到錯誤仍繼續執行。若設為 `true`，處理器失敗將被忽略。預設為 `false`。 |
+| `on_failure` | 清單 | 選用 | 處理器失敗時要執行的處理器清單。 |
 
-若要對巢狀欄位執行分段，請將 `input_field` 與 `output_field` 值指定為 JSON 物件。不支援巢狀欄位的點路徑。例如，請使用 `"field_map": { "foo": { "bar": "bar_chunk"} }` 而非 `"field_map": { "foo.bar": "foo.bar_chunk"}`。
+若要對巢狀欄位執行分塊，請將 `input_field` 與 `output_field` 的值指定為 JSON 物件。不支援巢狀欄位的點路徑。例如，請使用 `"field_map": { "foo": { "bar": "bar_chunk"} }` 而非 `"field_map": { "foo.bar": "foo.bar_chunk"}`。
 {: .note}
 
 ### 固定詞元長度演算法
 
 下表列出 `fixed_token_length` 演算法的選用參數。
 
-| 參數  | 資料類型 | 必要／選用  | 說明  |
+| 參數  | 資料類型 | 必要/選用  | 說明  |
 |:---|:----------|:---|:---|
-| `token_limit`	     | 整數	  | 選用	 | 分段演算法的詞元上限。有效值為至少 `1` 的整數。預設為 `384`。	                                                  |
-| `tokenizer`	       | 字串	   | 選用	 | [單字斷詞器]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/index/#word-tokenizers) 名稱。預設為 `standard`。	 |
+| `token_limit`	     | 整數	  | 選用	 | 分塊演算法的詞元上限。有效值為至少 `1` 的整數。預設為 `384`。	                                                  |
+| `tokenizer`	       | 字串	   | 選用	 | [單字斷詞器]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/index/#word-tokenizers)名稱。預設為 `standard`。	 |
 | `overlap_rate`	    | 浮點數     | 選用	 | 詞元演算法中的重疊程度。有效值為介於 `0` 與 `0.5` 之間（含）的浮點數。預設為 `0`。	                                              |
-| `max_chunk_limit`	 | 整數   | 選用	 | 分段演算法的分段上限。預設為 `100`。若要停用此參數，請將其設為 `-1`。	|
+| `max_chunk_limit`	 | 整數   | 選用	 | 分塊演算法的分塊數量上限。預設為 `100`。若要停用此參數，請將其設為 `-1`。	|
 
-`token_limit` 的預設值計算方式為 `512 (tokens) * 0.75 = 384`，使輸出段落不會超過下游文字嵌入模型的詞元上限限制。對於 [OpenSearch 支援的預先訓練模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/#supported-pretrained-models)，例如 `msmarco-distilbert-base-tas-b` 與 `opensearch-neural-sparse-encoding-v1`，輸入詞元上限為 `512`。`standard` 斷詞器會將文字斷詞為詞。根據 [OpenAI](https://platform.openai.com/docs/introduction)，1 個詞元約等於 0.75 個英文單字。
+`token_limit` 的預設值計算方式為 `512 (tokens) * 0.75 = 384`，使輸出段落不會超過下游文字嵌入模型的詞元上限限制。對於 [OpenSearch 支援的預先訓練模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/#supported-pretrained-models)，例如 `msmarco-distilbert-base-tas-b` 與 `opensearch-neural-sparse-encoding-v1`，輸入詞元上限為 `512`。`standard` 斷詞器會將文字斷詞為單字。根據 [OpenAI](https://platform.openai.com/docs/introduction)，1 個詞元約等於 0.75 個英文單字。
 {: .note}
 
 您可以將 `overlap_rate` 設為 0--0.5 範圍（含）內的小數百分比值。如 [Amazon Bedrock](https://aws.amazon.com/blogs/aws/knowledge-bases-now-delivers-fully-managed-rag-experience-in-amazon-bedrock/) 所建議，我們建議將此參數設為 0–0.2 以提升準確度。
 {: .note}
 
-`max_chunk_limit` 參數會限制分段段落的數量。若處理器產生的段落數超過上限，多出的文字會加入最後一個分段。
+`max_chunk_limit` 參數會限制分塊段落的數量。若處理器產生的段落數超過上限，多出的文字會加入最後一個分塊。
 {: .note}
 
 ### 固定字元長度演算法
@@ -156,7 +159,7 @@ POST _ingest/pipeline/text-chunking-ingest-pipeline/_simulate
 
 #### 回應
 
-回應確認除了 `passage_text` 欄位之外，處理器已在 `passage_chunk` 欄位中產生分段結果。處理器將段落分割為 10 個詞的分段。由於 `overlap` 設定為 0.2，每個分段的最後 2 個詞會在下一個分段中重複出現：
+回應確認除了 `passage_text` 欄位之外，處理器已在 `passage_chunk` 欄位中產生分塊結果。處理器將段落分割為每塊 10 個詞的分塊。由於 `overlap` 設定為 0.2，每個分塊的最後 2 個詞會在下一個分塊中重複出現：
 
 ```json
 {
@@ -182,11 +185,11 @@ POST _ingest/pipeline/text-chunking-ingest-pipeline/_simulate
 }
 ```
 
-建立資料匯入管線後，您需要建立一個索引來匯入文件。若要了解更多，請參閱 [文字分段]({{site.url}}{{site.baseurl}}/search-plugins/text-chunking/)。
+建立資料匯入管線後，您需要建立一個索引來匯入文件。若要了解更多，請參閱[文字分塊]({{site.url}}{{site.baseurl}}/search-plugins/text-chunking/)。
 
-## 級聯文字分塊處理器
+## 串接文字分塊處理器
 
-您可以將多個文字分塊處理器串連在一起。例如，若要將文件分割為段落，請套用 `delimiter` 演算法並將參數指定為 `\n\n`。為了防止段落超過詞元上限，可以附加另一個使用 `fixed_token_length` 演算法的文字分塊處理器。您可以如下設定此範例的資料匯入管線：
+您可以將多個文字分塊處理器串接在一起。例如，若要將文件分割為段落，請套用 `delimiter` 演算法並將參數指定為 `\n\n`。為了防止段落超過詞元上限，可以附加另一個使用 `fixed_token_length` 演算法的文字分塊處理器。您可以如下設定此範例的資料匯入管線：
 
 ```json
 PUT _ingest/pipeline/text-chunking-cascade-ingest-pipeline

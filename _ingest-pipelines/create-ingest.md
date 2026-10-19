@@ -9,22 +9,49 @@ redirect_from:
   - /api-reference/ingest-apis/create-update-ingest/
 ---
 
-# 建立或更新管線
-**1.0 版新增**
+# Create or Update Pipeline API
+**1.0 版推出**
 {: .label .label-purple }
 
-使用 create pipeline API 操作，在 OpenSearch 中建立或更新管線。請注意，管線需要您至少定義一個處理器，以指定如何變更文件。
+Create or Update Pipeline API 會建立資料匯入管線，或取代現有管線的定義。請求本文必須包含 `processors` 欄位。更新現有管線時，新定義會取代舊定義，並立即套用至編製索引請求。
 
-## 路徑與 HTTP 方法
-
-將 `<pipeline-id>` 替換為您的管線 ID：
+## 端點
 
 ```json
-PUT _ingest/pipeline/{pipeline-id}
+PUT /_ingest/pipeline/{pipeline-id}
 ```
-#### 範例請求
 
-以下是一個 JSON 格式的範例，建立一個包含兩個 `set` 處理器和一個 `uppercase` 處理器的資料匯入管線。第一個 `set` 處理器將 `grad_year` 設定為 `2023`，第二個 `set` 處理器將 `graduated` 設定為 `true`。`uppercase` 處理器將 `name` 欄位轉換為大寫。
+## 路徑參數
+
+下表列出可用的路徑參數。
+
+參數 | 必要 | 資料類型 | 說明
+:--- | :--- | :--- | :---
+`pipeline-id` | 必要 | 字串 | 要建立或更新的管線 ID。以 UTF-8 編碼時最長可達 512 位元組。
+
+## 查詢參數
+
+下表列出可用的查詢參數。所有查詢參數皆為選用。
+
+參數 | 資料類型 | 說明
+:--- | :--- | :---
+`cluster_manager_timeout` | 時間 | 等待連線至叢集管理員節點的時間量。預設為 `30s`。
+`timeout` | 時間 | 等待回應的時間量。預設為 `30s`。
+
+## 請求本文欄位
+
+下表列出可用的請求本文欄位。
+
+欄位 | 資料類型 | 說明
+:--- | :--- | :---
+`processors` | 物件陣列 | 用來轉換文件的處理器，依其執行順序排列。處理器清單請參閱[資料匯入處理器]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/index-processors/)。必要。
+`description` | 字串 | 管線的描述。選用。
+`on_failure` | 物件陣列 | 當管線中的處理器失敗時要執行的處理器。詳細資訊請參閱[在管線層級處理失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/#handling-failures-at-the-pipeline-level)。選用。
+`version` | 整數 | 管線的版本編號。OpenSearch 不使用此版本編號，外部系統可用它來管理管線。詳細資訊請參閱[管線版本控制](#pipeline-versioning)。選用。
+
+## 範例請求
+
+下列請求會建立一個管線，其中包含兩個 `set` 處理器和一個 `uppercase` 處理器。第一個 `set` 處理器會將 `grad_year` 設為 `2023`，第二個 `set` 處理器會將 `graduated` 設為 `true`，而 `uppercase` 處理器會將 `name` 欄位轉換為大寫：
 
 ```json
 PUT _ingest/pipeline/my-pipeline
@@ -55,6 +82,16 @@ PUT _ingest/pipeline/my-pipeline
 ```
 {% include copy-curl.html %}
 
+## 回應範例
+
+```json
+{
+  "acknowledged": true
+}
+```
+
+## 使用管線
+
 若要透過管線將文件編製索引，請在 `pipeline` 查詢參數中指定管線名稱：
 
 ```json
@@ -65,14 +102,14 @@ POST students/_doc/1?pipeline=my-pipeline
 ```
 {% include copy-curl.html %}
 
-若要驗證管線已處理該文件，請擷取該文件：
+若要確認管線已處理該文件，請擷取該文件：
 
 ```json
 GET students/_doc/1
 ```
 {% include copy-curl.html %}
 
-回應顯示管線已設定 `grad_year` 和 `graduated`，並將 `name` 轉換為大寫：
+回應顯示管線設定了 `grad_year` 和 `graduated`，並將 `name` 轉換為大寫：
 
 ```json
 {
@@ -90,29 +127,46 @@ GET students/_doc/1
 }
 ```
 
-若要進一步了解錯誤處理，請參閱 [處理管線失敗]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/pipeline-failures/)。
+如需處理處理器錯誤的更多資訊，請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。
 
-## 請求本文欄位
+## 管線版本控制
 
-下表列出用於建立或更新管線的請求本文欄位。
+如果您使用部署指令碼或組態管理工具來管理管線，可以記錄叢集上安裝的是哪個版本的管線。例如，部署工具可以將已安裝的版本與原始碼控制中的版本進行比對，只有在兩者不同時才更新管線。若要記錄版本，請在建立或更新管線時於 `version` 欄位指定一個整數：
 
-參數 | 必要 | 類型 | 說明
-:--- | :--- | :--- | :---
-`processors` | 必要 | 處理器物件陣列 | 處理器陣列，每個處理器都會轉換文件。處理器會依指定的順序依序執行。
-`description` | 選用 | 字串 | 資料匯入管線的說明。
+```json
+PUT _ingest/pipeline/students-pipeline
+{
+  "description": "Processes student data",
+  "version": 2,
+  "processors": [
+    {
+      "uppercase": {
+        "field": "name"
+      }
+    }
+  ]
+}
+```
+{% include copy-curl.html %}
 
-## 路徑參數
+若要檢查管線目前的版本，請依 `version` 欄位篩選 [Get Pipeline API]({{site.url}}{{site.baseurl}}/ingest-pipelines/get-ingest/) 的回應：
 
-參數 | 必要 | 類型 | 說明
-:--- | :--- | :--- | :---
-`pipeline-id` | 必要 | 字串 | 指派給資料匯入管線的唯一識別碼，即管線 ID。
+```json
+GET _ingest/pipeline/students-pipeline?filter_path=*.version
+```
+{% include copy-curl.html %}
 
-## 查詢參數
+回應中會包含管線版本：
 
-參數 | 必要 | 類型 | 說明
-:--- | :--- | :--- | :---
-`cluster_manager_timeout` | 選用 | 時間 | 等待連線至叢集管理員節點的期間。預設為 30 秒。
-`timeout` | 選用 | 時間 | 等待回應的期間。預設為 30 秒。
+```json
+{
+  "students-pipeline": {
+    "version": 2
+  }
+}
+```
+
+更新管線會取代其完整定義。若要移除版本號，請在不指定 `version` 欄位的情況下更新管線。
 
 ## 範本片段
 
@@ -175,13 +229,13 @@ GET students/_doc/2
 }
 ```
 
-## 用於監控與除錯的處理器標籤
+## 使用處理器標籤進行監控與除錯
 
-使用 `GET /_nodes/stats/ingest` API 監控資料匯入管線效能時，沒有標籤的處理器會在統計輸出中以一般名稱顯示。這使得在複雜的管線中，難以識別哪個特定處理器階段可能造成效能瓶頸。所有資料匯入處理器都支援選用的 `tag` 參數，可為每個處理器指派有意義的識別碼。此參數對於監控管線效能以及在正式環境中除錯非常有用。
+使用 `GET /_nodes/stats/ingest` API 監控資料匯入管線的效能時，沒有標籤的處理器會以一般名稱出現在統計輸出中。這使得在複雜的管線中，難以識別哪個特定的處理器階段可能造成效能瓶頸。所有資料匯入處理器都支援選用的 `tag` 參數，可為每個處理器指派一個有意義的識別碼。此參數對於監控管線效能以及在正式環境中除錯非常有用。
 
-下列範例示範在監控管線效能時，使用有標籤與無標籤處理器的差異。
+以下範例示範在監控管線效能時，使用與不使用標籤的處理器之間的差異。
 
-建立沒有處理器標籤的管線：
+建立不含處理器標籤的管線：
 
 ```json
 PUT _ingest/pipeline/log-processing-without-tags
@@ -211,7 +265,7 @@ PUT _ingest/pipeline/log-processing-without-tags
 ```
 {% include copy-curl.html %}
 
-建立有處理器標籤的管線：
+建立含處理器標籤的管線：
 
 ```json
 PUT _ingest/pipeline/log-processing-with-tags
@@ -269,7 +323,7 @@ GET _nodes/stats/ingest
 ```
 {% include copy-curl.html %}
 
-沒有標籤的管線包含一般處理器名稱：
+不含標籤的管線包含一般處理器名稱：
 
 ```json
 "log-processing-without-tags": {
@@ -315,7 +369,7 @@ GET _nodes/stats/ingest
 }
 ```
 
-有標籤的管線包含描述性的處理器名稱：
+含標籤的管線包含描述性的處理器名稱：
 
 ```json
 "log-processing-with-tags": {
@@ -360,3 +414,7 @@ GET _nodes/stats/ingest
   ]
 }
 ```
+
+## 必要權限
+
+如果您使用 Security 外掛程式，請確認您具備適當的權限：`cluster:admin/ingest/pipeline/put`。

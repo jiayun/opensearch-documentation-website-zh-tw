@@ -6,9 +6,103 @@ parent: Conditional execution
 nav_order: 50
 ---
 
-# 複雜條件式
+# 複雜條件
 
-在資料匯入管線中，處理器的 `if` 參數可使用 Painless 指令碼評估複雜條件。這些條件式有助於微調文件處理，可實現型別檢查、正規表達式及合併多項準則等進階邏輯。如需更多資訊，請參閱 [Painless 指令碼語言]({{site.url}}{{site.baseurl}}/scripting/painless/)。
+在資料匯入管線中，處理器的 `if` 參數可以使用 Painless 指令碼評估複雜條件。這些條件有助於微調文件處理，允許型別檢查、正規表示式及結合多項準則等進階邏輯。如需詳細資訊，請參閱 [Painless 指令碼語言]({{site.url}}{{site.baseurl}}/scripting/painless/)。
+
+OpenSearch 會針對通過處理器的每份文件評估條件，因此成本高昂的條件會拖慢匯入速度。請盡可能保持條件簡單。
+{: .tip}
+
+## 撰寫多重陳述式條件
+
+條件可以包含多個 Painless 陳述式，例如變數宣告與迴圈，只要其回傳布林值即可。由於 JSON 字串無法包含換行符號，請將整個指令碼寫在同一行，並使用分號分隔各陳述式。在 OpenSearch Dashboards 的 Dev Tools 中，您也可以改用三引號（`"""`）包住多行指令碼。如需更多資訊，請參閱[在查詢中使用三引號]({{site.url}}{{site.baseurl}}/dashboards/dev-tools/console/#using-triple-quotation-marks-in-queries)。
+
+下列管線會從訂單的 `items` 陣列計算訂單總金額，並標記總金額超過 `1000` 的訂單以供審核。沒有 `items` 欄位的訂單不會被標記：
+
+```json
+PUT _ingest/pipeline/flag_large_orders
+{
+  "processors": [
+    {
+      "set": {
+        "field": "review_required",
+        "value": true,
+        "if": "if (ctx.items == null) { return false; } double total = 0; for (def item : ctx.items) { total += item.price * item.quantity; } return total > 1000;"
+      }
+    }
+  ]
+}
+```
+{% include copy-curl.html %}
+
+使用下列 `_simulate` 請求測試此管線：
+
+```json
+POST _ingest/pipeline/flag_large_orders/_simulate
+{
+  "docs": [
+    {
+      "_source": {
+        "order_id": "A-2001",
+        "items": [
+          { "name": "Laptop stand", "price": 45.0, "quantity": 2 },
+          { "name": "Monitor", "price": 329.0, "quantity": 1 }
+        ]
+      }
+    },
+    {
+      "_source": {
+        "order_id": "A-2002",
+        "items": [
+          { "name": "Monitor", "price": 329.0, "quantity": 4 }
+        ]
+      }
+    }
+  ]
+}
+```
+{% include copy-curl.html %}
+
+第一筆訂單總金額為 `419`，不會被標記。第二筆訂單總金額為 `1316`，因此會新增 `review_required` 欄位：
+
+```json
+{
+  "docs": [
+    {
+      "doc": {
+        "_index": "_index",
+        "_id": "_id",
+        "_source": {
+          "order_id": "A-2001",
+          "items": [
+            { "name": "Laptop stand", "price": 45.0, "quantity": 2 },
+            { "name": "Monitor", "price": 329.0, "quantity": 1 }
+          ]
+        },
+        "_ingest": {
+          "timestamp": "2026-10-14T20:23:18.723081887Z"
+        }
+      }
+    },
+    {
+      "doc": {
+        "_index": "_index",
+        "_id": "_id",
+        "_source": {
+          "review_required": true,
+          "order_id": "A-2002",
+          "items": [
+            { "name": "Monitor", "price": 329.0, "quantity": 4 }
+          ]
+        },
+        "_ingest": {
+          "timestamp": "2026-10-14T20:23:18.723092429Z"
+        }
+      }
+    }
+  ]
+}
+```
 
 ## 多條件檢查
 
@@ -169,9 +263,9 @@ POST _ingest/pipeline/string_message_check/_simulate
 ```
 
 
-## 使用正規表達式
+## 使用正規表示式
 
-Painless 指令碼支援 `=~` 運算子以評估正規表達式。下列管線會標記以 `192.168.` 開頭的可疑 IP 模式：
+Painless 指令碼支援 `=~` 運算子來評估正規表示式。如需更多範例以及正規表示式的限制，請參閱[正規表示式條件式]({{site.url}}{{site.baseurl}}/ingest-pipelines/regex-conditionals/)。下列管線會標記以 `192.168.` 開頭的可疑 IP 模式：
 
 ```json
 PUT _ingest/pipeline/flag_suspicious_ips
@@ -181,7 +275,7 @@ PUT _ingest/pipeline/flag_suspicious_ips
       "set": {
         "field": "alert",
         "value": "suspicious_ip",
-        "if": "ctx.ip != null && ctx.ip =~ /^192\.168\.\d+\.\d+$/"
+        "if": "ctx.ip != null && ctx.ip =~ /^192\\.168\\.\\d+\\.\\d+$/"
       }
     }
   ]
@@ -202,7 +296,7 @@ POST _ingest/pipeline/flag_suspicious_ips/_simulate
 ```
 {% include copy-curl.html %}
 
-第一份文件會新增 `alert` 欄位：
+第一份文件新增了 `alert` 欄位：
 
 ```json
 {
@@ -320,11 +414,11 @@ POST _ingest/pipeline/critical_log_handler/_simulate
 
 ## 多條件處理
 
-下列管線：
+下列管線會：
 
-- 若 `env` 欄位尚不存在，則新增設為 `production` 的該欄位。
-- 若 `status` 欄位中的值大於或等於 `500`，則新增設為 `major` 的 `severity` 欄位。
-- 若 `env` 欄位設為 `test` 且 `message` 欄位包含 `debug`，則捨棄該文件。
+- 若 `env` 欄位尚不存在，則新增該欄位並將其設為 `production`。
+- 若 `status` 欄位中的值大於或等於 `500`，則新增 `severity` 欄位並將其設為 `major`。
+- 若 `env` 欄位設為 `test`，且 `message` 欄位包含 `debug`，則捨棄該文件。
 
 ```json
 PUT _ingest/pipeline/advanced_log_pipeline
@@ -346,7 +440,7 @@ PUT _ingest/pipeline/advanced_log_pipeline
     },
     {
       "drop": {
-        "if": "ctx.env == 'test' && ctx.message?.contains('debug')"
+        "if": "ctx.env == 'test' && ctx.message != null && ctx.message.contains('debug')"
       }
     }
   ]
@@ -354,7 +448,7 @@ PUT _ingest/pipeline/advanced_log_pipeline
 ```
 {% include copy-curl.html %}
 
-使用下列 `_simulate` 請求測試此管線：
+使用下列 `_simulate` 請求來測試管線：
 
 ```json
 POST _ingest/pipeline/advanced_log_pipeline/_simulate
@@ -383,7 +477,7 @@ POST _ingest/pipeline/advanced_log_pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-在回應中，請注意第一份文件新增了 `env: production` 及 `severity: major` 欄位。第二份文件遭到捨棄。第三份文件新增了 `env: production` 欄位：
+在回應中，請注意第一份文件新增了 `env: production` 和 `severity: major` 欄位。第二份文件已被捨棄。第三份文件新增了 `env: production` 欄位：
 
 ```json
 {
@@ -422,9 +516,9 @@ POST _ingest/pipeline/advanced_log_pipeline/_simulate
 }
 ```
 
-## 空值安全標記法
+## 空值安全表示法
 
-使用空值安全導覽標記法 (`?.`) 檢查欄位是否為 `null`。請注意，此標記法可能會無訊息地傳回 `null`；因此，我們建議先檢查傳回的值是否為 `null`，再使用 `.contains` 或 `==` 等作業。
+使用空值安全巡覽表示法（`?.`）來檢查欄位是否為 `null`。請注意，此表示法可能會無聲地傳回 `null`；因此，建議先檢查傳回的值是否為 `null`，然後再使用 `.contains` 或 `==` 等運算。
 
 不安全的語法：
 
@@ -432,10 +526,58 @@ POST _ingest/pipeline/advanced_log_pipeline/_simulate
 "if": "ctx.message?.contains('debug')"
 ```
 
-若文件中不存在 `message` 欄位，此請求會傳回 `null_pointer_exception`，並附帶訊息 `Cannot invoke "Object.getClass()" because "value" is null`。
+如果文件中不存在 `message` 欄位，此請求會傳回 `null_pointer_exception`，並附帶訊息 `Cannot invoke "Object.getClass()" because "value" is null`。
 
 安全的語法：
 
 ```
 "if": "ctx.message != null && ctx.message.contains('debug')"
+```
+
+## 偵錯條件
+
+若要檢查每個條件是如何評估的，請執行 [Simulate Pipeline API]({{site.url}}{{site.baseurl}}/ingest-pipelines/simulate-ingest/)，並將 `verbose` 參數設為 `true`。對每個處理器而言，回應中會包含 `status` 欄位。若處理器的條件評估為 `false`，則 `status` 為 `skipped`，且 `if` 物件會顯示該條件及其結果。
+
+下列請求會模擬一個處理器，其條件對所提供的文件評估為 `false`：
+
+```json
+POST _ingest/pipeline/_simulate?verbose=true
+{
+  "pipeline": {
+    "processors": [
+      {
+        "set": {
+          "field": "severity",
+          "value": "major",
+          "if": "ctx.status != null && ctx.status >= 500"
+        }
+      }
+    ]
+  },
+  "docs": [
+    { "_source": { "status": 200 } }
+  ]
+}
+```
+{% include copy-curl.html %}
+
+回應顯示 `set` 處理器遭到略過，因為條件傳回 `false`：
+
+```json
+{
+  "docs": [
+    {
+      "processor_results": [
+        {
+          "processor_type": "set",
+          "status": "skipped",
+          "if": {
+            "condition": "ctx.status != null && ctx.status >= 500",
+            "result": false
+          }
+        }
+      ]
+    }
+  ]
+}
 ```

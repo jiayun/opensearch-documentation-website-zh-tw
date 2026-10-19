@@ -61,8 +61,7 @@ POST /_index_template/_simulate_index/logs-sim-1
 
 
 response = client.indices.simulate_index_template(
-  name = "logs-sim-1",
-  body = { "Insert body here" }
+  name = "logs-sim-1"
 )
 
 {% endcapture %}
@@ -85,8 +84,7 @@ POST /_index_template/_simulate/template_for_simulation
 
 
 response = client.indices.simulate_template(
-  name = "template_for_simulation",
-  body = { "Insert body here" }
+  name = "template_for_simulation"
 )
 
 {% endcapture %}
@@ -224,8 +222,7 @@ POST /_index_template/_simulate/template_for_simulation
 
 
 response = client.indices.simulate_template(
-  name = "template_for_simulation",
-  body = { "Insert body here" }
+  name = "template_for_simulation"
 )
 
 {% endcapture %}
@@ -252,8 +249,7 @@ POST /_index_template/_simulate_index/logs-sim-1
 
 
 response = client.indices.simulate_index_template(
-  name = "logs-sim-1",
-  body = { "Insert body here" }
+  name = "logs-sim-1"
 )
 
 {% endcapture %}

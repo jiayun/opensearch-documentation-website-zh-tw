@@ -26,16 +26,16 @@ nav_order: 160
 
 下表列出 `join` 處理器的必要與選用參數。
 
-參數 | 必要／選用 | 說明 |
+參數 | 必要/選用 | 說明 |
 |-----------|-----------|-----------|
-`field` | 必要 | 要套用 join 運算子的欄位名稱。必須是陣列。
-`separator` | 必要 | 串接欄位值時使用的字串分隔符。若未指定，則值會在沒有分隔符的情況下直接串接。
-`target_field` | 選用 | 要指派清理後值的欄位。若未指定，則會就地更新該欄位。
-`description` | 選用 | 處理器用途或組態的描述。
-`if` | 選用 | 指定要有條件地執行處理器。
+`field` | 必要 | 要套用 join 運算子的欄位名稱。必須為陣列。
+`separator` | 必要 | 串接欄位值時使用的字串分隔符號。若未指定，則串接各值時不使用分隔符號。
+`target_field` | 選用 | 要指派清理後的值的欄位。若未指定，則就地更新該欄位。
+`description` | 選用 | 處理器用途或組態的說明。
+`if` | 選用 | 指定依條件執行處理器。
 `ignore_failure` | 選用 | 指定忽略處理器的失敗。請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。
 `on_failure` | 選用 | 指定處理處理器的失敗。請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。
-`tag` | 選用 | 處理器的識別碼。對偵錯與指標很有用。
+`tag` | 選用 | 處理器的識別碼。適用於偵錯與指標。如需詳細資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。
 
 ## 使用處理器
 
@@ -88,7 +88,7 @@ POST _ingest/pipeline/example-join-pipeline/_simulate
 
 #### 回應
 
-下列範例回應確認管線如預期運作：
+下列範例回應確認管線運作符合預期：
 
 ```json
 {  
@@ -108,7 +108,6 @@ POST _ingest/pipeline/example-join-pipeline/_simulate
   ]  
 }  
 ```
-{% include copy-curl.html %}
 
 ### 步驟 3：匯入文件
 
