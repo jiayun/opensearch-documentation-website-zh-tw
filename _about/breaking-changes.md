@@ -173,7 +173,7 @@ NMSLIB 引擎現已淘汰。建議您改用 Faiss 或 Lucene 引擎。
 
 ### SQL 外掛程式
 
-- OpenSearch 查詢領域特定語言 (DSL) 回應格式已移除。
+- OpenSearch Query DSL 回應格式已移除。
 - `DELETE` 陳述式支援已移除。
 - `plugins.sql.delete.enabled` 設定已移除。
 - 舊版 Spark Connector 模組已淘汰。如需連線至 Spark 的相關資訊，請參閱 [`async-query-core`](https://github.com/opensearch-project/sql/blob/main/async-query-core/README.md)。
@@ -230,7 +230,8 @@ NMSLIB 引擎現已淘汰。建議您改用 Faiss 或 Lucene 引擎。
 
 ### ML Commons 外掛程式
 
-- `CatIndexTool` 已移除，改用 `ListIndexTool`。
+- 已移除 `CatIndexTool`，改用 `ListIndexTool`。
+- 已移除非同步批次匯入 API（`POST /_plugins/_ml/_batch_ingestion`）。如需類似功能，請使用 [OpenSearch Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/)。如需詳細資訊，請參閱提取請求 [#3688](https://github.com/opensearch-project/ml-commons/pull/3688)。
 
 ### 羅馬尼亞文分析
 

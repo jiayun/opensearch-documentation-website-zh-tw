@@ -154,7 +154,7 @@ POST /_plugins/_flow_framework/workflow?provision=true
 
 ### 步驟 3：建立根代理程式
 
-接下來，為上一個步驟中建立的代理程式建立[根代理程式]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-tutorial/#root_agent)。
+接下來，為上一個步驟中建立的代理程式建立[根代理程式]({{site.url}}{{site.baseurl}}/vector-search/ai-search/workflows/workflow-tutorial/#root_agent)。
 
 為警示摘要代理程式建立根代理程式：
 
@@ -203,7 +203,7 @@ POST /.plugins-ml-config/_doc/os_insight
 
 ### 步驟 4：測試代理程式
 
-您可以使用範例承載呼叫代理程式，以確認代理程式已成功建立。
+您可以使用範例酬載呼叫代理程式，確認代理程式是否已成功建立。
 
 若要測試警示摘要代理程式，請傳送以下請求：
 

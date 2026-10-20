@@ -4,7 +4,7 @@ This directory holds the state of the Taiwan Traditional Chinese (zh-TW)
 translation of the OpenSearch documentation on branch `3.9-zh-tw`. The
 pipeline is `scripts/translation.py`.
 
-The source inventory contains 1,875 pages. Translation and independent review run in batches; use
+The source inventory contains 1,873 pages. Translation and independent review run in batches; use
 `python3 scripts/translation.py status` for live completion, pending work and errors.
 
 ## Layout
@@ -20,7 +20,7 @@ The source inventory contains 1,875 pages. Translation and independent review ru
 | `translation/schemas/*.json` | yes | JSON Schemas for the model request/result formats |
 | `.translation-cache/` | no (ignored) | Validated chunk results, approved reviews, commit journal, run logs |
 
-Baseline commit: `e69586c77b8f2f2eeb7253b81ccd63270a1e4aea`. Pages are all
+Baseline commit: `390f28e96b3de986e5cd7abcdd79ada0501bc840`. Pages are all
 `output: true` collections in the baseline `_config.yml` (files with front
 matter) plus `index.md`, `search.md` and `404.md`. `translation/` (including
 the inventory and source store) is excluded from the Jekyll build by

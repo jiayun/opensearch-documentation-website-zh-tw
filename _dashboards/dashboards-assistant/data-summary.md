@@ -150,7 +150,7 @@ POST /_plugins/_flow_framework/workflow?provision=true
 
 ### 步驟 3：建立根代理程式
 
-接著，為上一個步驟中建立的資料摘要代理程式建立一個[根代理程式]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-tutorial/#root_agent)：
+接著，為上一個步驟中建立的資料摘要代理程式建立一個[根代理程式]({{site.url}}{{site.baseurl}}/vector-search/ai-search/workflows/workflow-tutorial/#root_agent)：
 
 ```json
 POST /.plugins-ml-config/_doc/os_data2summary

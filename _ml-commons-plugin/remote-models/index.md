@@ -342,6 +342,7 @@ POST /_plugins/_ml/models/cleMb4kBJ1eYAeTMFFg4/_predict
 
 - 如需連接器的更多資訊（包括範例連接器），請參閱[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
 - 如需連接器欄位的更多資訊，請參閱[連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/)。
-- 如需在 OpenSearch 中管理 ML 模型的更多資訊，請參閱[在 OpenSearch 中使用 ML 模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-serving-framework/)。
-- 如需在 OpenSearch 中與 ML 模型互動的更多資訊，請參閱[在 OpenSearch Dashboards 中管理 ML 模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/ml-dashboard/)
+- 若要在單一請求中建立連接器並註冊和部署模型，請使用工作流程範本。如需更多資訊，請參閱[模型部署範本]({{site.url}}{{site.baseurl}}/vector-search/ai-search/workflows/workflow-templates/#model-deployment-templates)。
+- 如需在 OpenSearch 中管理機器學習模型的更多資訊，請參閱[在 OpenSearch 中使用機器學習模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-serving-framework/)。
+- 如需在 OpenSearch 中與機器學習模型互動的更多資訊，請參閱[在 OpenSearch Dashboards 中管理機器學習模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/ml-dashboard/)
 如需如何設定模型防護機制的說明，請參閱[防護機制]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/guardrails/)。

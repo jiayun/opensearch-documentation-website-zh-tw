@@ -16,7 +16,7 @@ redirect_from:
 
 代理程式搜尋 (agentic search) 讓您能以自然語言提問，並由 OpenSearch 自動規劃與執行擷取作業。預先設定的代理程式會讀取問題、規劃搜尋，並傳回相關結果。
 
-您可以透過 API 或 OpenSearch Dashboards 設定代理程式搜尋。本指南說明如何使用 API 設定代理程式搜尋。若要了解如何在 OpenSearch Dashboards 中設定，請參閱 [建立代理程式搜尋流程]({{site.url}}{{site.baseurl}}/vector-search/ai-search/building-agentic-search-flows/)。
+您可以透過 API 或 OpenSearch Dashboards 設定代理程式搜尋。本指南說明如何使用 API 設定代理程式搜尋。若要了解如何在 OpenSearch Dashboards 中設定，請參閱 [建立代理程式搜尋流程]({{site.url}}{{site.baseurl}}/vector-search/ai-search/workflows/building-agentic-search-flows/)。
 
 ## 代理程式類型
 
@@ -290,7 +290,7 @@ GET iris-index/_search?search_pipeline=agentic-pipeline
 
 - [連接外部 MCP 伺服器]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/mcp-server/) -- 透過 Model Context Protocol (MCP) 伺服器擴充代理程式搜尋的外部工具與資料來源，以強化功能並即時存取資訊。
 
-- [建立代理程式搜尋流程]({{site.url}}{{site.baseurl}}/vector-search/ai-search/building-agentic-search-flows/) -- 使用 OpenSearch Dashboards 中的 AI 搜尋流程來設定代理程式並執行代理程式搜尋。
+- [建立代理程式搜尋流程]({{site.url}}{{site.baseurl}}/vector-search/ai-search/workflows/building-agentic-search-flows/) -- 使用 OpenSearch Dashboards 中的 AI 搜尋流程來設定代理程式並執行代理程式搜尋。
 
 - [重新排序代理程式搜尋結果]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/rerank-agentic-search-results/) -- 在您的代理程式搜尋管線中新增 rerank 搜尋回應處理器，以進一步重新排序搜尋結果。
 

@@ -76,8 +76,8 @@ Assistant:"""
 
 ## 後續步驟
 
-- 若要進一步了解如何註冊代理程式，請參閱 [Register Agent API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/)。
+- 如要進一步了解如何註冊代理程式，請參閱 [Register Agent API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/)。
 - 如需支援的工具清單，請參閱[工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/)。
 - 如需逐步教學，請參閱[代理程式與工具教學]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents-tools-tutorial/)。
-- 如需支援的 API，請參閱[代理程式 API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/)。
-- 若要在組態自動化中使用代理程式與工具，請參閱[自動化組態]({{site.url}}{{site.baseurl}}/automating-configurations/index/)。
+- 如需支援的 API，請參閱 [Agent APIs]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/)。
+- 如要使用工作流程範本建立代理程式與工具，請參閱[AI 搜尋工作流程]({{site.url}}{{site.baseurl}}/vector-search/ai-search/workflows/index/)。

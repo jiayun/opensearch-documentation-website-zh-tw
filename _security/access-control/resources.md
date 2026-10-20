@@ -13,7 +13,7 @@ has_toc: false
 **於 3.3 版導入**
 {: .label .label-purple }
 
-OpenSearch Security 外掛程式中的資源共享與存取控制框架，為外掛程式定義的資源提供*文件層級*的細微存取管理。它擴充了 OpenSearch 現有的角色型存取控制，讓資源擁有者能夠明確地將個別資源與其他主體共享。
+OpenSearch Security 外掛程式中的資源共享與存取控制框架，為外掛程式定義的資源提供*文件層級*的細粒度存取管理。它擴充了 OpenSearch 現有的角色型存取控制，讓資源擁有者能夠明確地將個別資源與其他主體共享。
 
 _資源_是儲存在外掛程式系統索引中的文件。資源共享資訊儲存在由安全性功能集中管理的系統索引中。
 
@@ -82,8 +82,8 @@ plugins.security.resource_sharing.protected_types: ["sample-resource", "ml-model
 | Alerting | `monitor`, `alerting-workflow` | [Alerting 資源存取控制]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/alerting-access-control/) |
 | Anomaly Detection | `anomaly-detector` | [異常偵測器存取控制]({{site.url}}{{site.baseurl}}/observing-your-data/ad/detector-access-control/) |
 | Anomaly Detection | `forecaster` | [Forecaster 存取控制]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/forecaster-access-control/) |
-| Flow Framework | `workflow` | [工作流程存取控制]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-access-control/) |
-| Flow Framework | `workflow-state` | [工作流程狀態存取控制]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-state-access-control/) |
+| Flow Framework | `workflow` | [工作流程存取控制]({{site.url}}{{site.baseurl}}/vector-search/ai-search/workflows/workflow-access-control/) |
+| Flow Framework | `workflow-state` | [工作流程狀態存取控制]({{site.url}}{{site.baseurl}}/vector-search/ai-search/workflows/workflow-state-access-control/) |
 | ML Commons | `ml-model-group` | [透過資源共享進行模型存取控制]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-sharing-access-control/) |
 | Notifications | `notification_config` | [通知存取控制]({{site.url}}{{site.baseurl}}/observing-your-data/notifications/notification-access-control/) |
 | Reporting | `report-definition` | [報告定義存取控制]({{site.url}}{{site.baseurl}}/reporting/report-definition-access-control/) |

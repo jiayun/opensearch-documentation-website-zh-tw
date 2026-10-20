@@ -2,11 +2,14 @@
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: "批次匯入"
-has_children: true
+has_children: false
 has_toc: false
 nav_order: 80
 parent: Connecting to externally hosted models 
 grand_parent: Integrating ML models
+redirect_from:
+  - /ml-commons-plugin/remote-models/async-batch-ingestion/
+  - /ml-commons-plugin/api/async-batch-ingest/
 ---
 
 # 使用外部託管的 ML 模型進行批次匯入

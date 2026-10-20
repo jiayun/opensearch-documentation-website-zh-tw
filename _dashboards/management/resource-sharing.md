@@ -77,7 +77,7 @@ OpenSearch Dashboards 中的資源共用功能，可針對外掛程式所定義�
 |---|---|
 | Alerting | [監視器和工作流程]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/alerting-access-control/) |
 | Anomaly Detection | [偵測器]({{site.url}}{{site.baseurl}}/observing-your-data/ad/detector-access-control/)和[預測器]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/forecaster-access-control/) |
-| Flow Framework | [工作流程]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-access-control/) |
+| Flow Framework | [工作流程]({{site.url}}{{site.baseurl}}/vector-search/ai-search/workflows/workflow-access-control/) |
 | ML Commons | [模型群組]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-sharing-access-control/) |
 | Notifications | [通道]({{site.url}}{{site.baseurl}}/observing-your-data/notifications/notification-access-control/) |
 | Reporting | [報表定義]({{site.url}}{{site.baseurl}}/reporting/report-definition-access-control/)和[報表]({{site.url}}{{site.baseurl}}/reporting/report-instance-access-control/) |

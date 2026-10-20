@@ -30,7 +30,7 @@ nav_order: 140
 
 ## Flow Framework 外掛程式設定
 
-如需自動化工作流程設定的相關資訊，請參閱[工作流程設定]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-settings/)。
+如需自動化工作流程設定的相關資訊，請參閱[工作流程設定]({{site.url}}{{site.baseurl}}/vector-search/ai-search/workflows/workflow-settings/)。
 
 ## Geospatial 外掛程式設定
 

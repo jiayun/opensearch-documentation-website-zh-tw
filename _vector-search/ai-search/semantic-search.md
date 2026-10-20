@@ -28,7 +28,7 @@ redirect_from:
 
 ## 自動化工作流程
 
-OpenSearch 提供 [工作流程範本]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-templates/#semantic-search)，會自動建立資料匯入管線與索引。建立工作流程時，您必須提供已設定模型的模型 ID。請檢閱語意搜尋工作流程範本的[預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/semantic-search-defaults.json)，以判斷是否需要更新任何參數。例如，若模型維度與預設值（`1024`）不同，請在 `output_dimension` 參數中指定模型的維度。若要建立預設的語意搜尋工作流程，請傳送下列請求：
+OpenSearch 提供 [工作流程範本]({{site.url}}{{site.baseurl}}/vector-search/ai-search/workflows/workflow-templates/#semantic-search)，會自動建立資料匯入管線與索引。建立工作流程時，您必須提供已設定模型的模型 ID。請檢閱語意搜尋工作流程範本的[預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/semantic-search-defaults.json)，以判斷是否需要更新任何參數。例如，若模型維度與預設值（`1024`）不同，請在 `output_dimension` 參數中指定模型的維度。若要建立預設的語意搜尋工作流程，請傳送下列請求：
 
 ```json
 POST /_plugins/_flow_framework/workflow?use_case=semantic_search&provision=true

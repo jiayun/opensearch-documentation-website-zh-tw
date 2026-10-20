@@ -207,15 +207,15 @@ PUT {index}/_settings
 
 ## 索引遭到封鎖
 
-一般而言，索引被封鎖是因為磁碟使用量已超過洪水階段浮水印，且索引有 `read-only-allow-delete` 封鎖。若要解決此問題，您可以：
+一般而言，索引遭到封鎖是因為磁碟使用量已超過洪水階段（flood-stage）水位線，且索引具有 `read-only-allow-delete` 封鎖。若要解決此問題，您可以：
 
 1. 移除 `index.blocks.read_only_allow_delete` 參數。
-1. 暫時提高磁碟浮水印。
-1. 暫時停用磁碟分配閾值。
+1. 暫時提高磁碟水位線。
+1. 暫時停用磁碟配置閾值。
 
-若要防止此問題再次發生，建議透過增加磁碟空間、新增節點，或移除不再需要的資料或索引，來降低磁碟使用量。
+為了避免此問題再次發生，建議您透過增加磁碟空間、新增節點，或移除不再需要的資料或索引來降低磁碟使用量。
 
-請執行以下請求移除 `index.blocks.read_only_allow_delete`：
+執行下列請求以移除 `index.blocks.read_only_allow_delete`：
 
 ```json
 PUT {index}/_settings
@@ -225,7 +225,9 @@ PUT {index}/_settings
 ```
 {% include copy-curl.html %}
 
-請執行以下請求提高低磁碟浮水印：
+`read-only-allow-delete` 封鎖會在磁碟使用量超過 `flood_stage` 水位線時套用，因此僅提高 `low` 水位線並不會移除該封鎖。請同時設定 `low`、`high` 和 `flood_stage` 水位線，並將三者全部指定為百分比，或全部指定為位元組值。
+
+百分比設定的是最大磁碟使用量，因此 `low` 水位線必須是最小的值。若要使用百分比提高水位線，請傳送下列請求：
 
 ```json
 PUT _cluster/settings
@@ -236,7 +238,9 @@ PUT _cluster/settings
         "allocation": {
           "disk": {
             "watermark": {
-              "low": "25.0gb"
+              "low": "90%",
+              "high": "95%",
+              "flood_stage": "97%"
             }
           }
         }
@@ -247,7 +251,33 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-請執行以下請求停用磁碟分配閾值：
+位元組值設定的是最小可用磁碟空間，因此 `low` 水位線必須是最大的值。請使用整數，因為 OpenSearch 會拒絕小數形式的位元組值。若要使用位元組值設定水位線，請傳送下列請求：
+
+```json
+PUT _cluster/settings
+{
+  "transient": {
+    "cluster": {
+      "routing": {
+        "allocation": {
+          "disk": {
+            "watermark": {
+              "low": "50gb",
+              "high": "25gb",
+              "flood_stage": "10gb"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+{% include copy-curl.html %}
+
+當節點上的磁碟使用量降至 `high` 水位線以下時，OpenSearch 會自動移除 `read-only-allow-delete` 封鎖。釋出磁碟空間後，請將水位線設為 `null`，以重設為其預設值。
+
+執行下列請求以停用磁碟配置閾值：
 
 ```json
 PUT _cluster/settings

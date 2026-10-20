@@ -28,7 +28,7 @@ has_children: false
 
 ## 自動化工作流程
 
-OpenSearch 提供一個[工作流程範本]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-templates#agentic-search-with-a-flow-agent)，會自動建立 Amazon Bedrock 連接器、遠端聊天模型、`QueryPlanningTool`、流程代理程式及搜尋管線。請檢閱工作流程範本的[預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/agentic-search-with-flow-agent-defaults.json)，以判斷您是否需要更新任何參數。若要使用流程代理程式建立預設的代理式搜尋工作流程，請傳送下列請求：
+OpenSearch 提供一個[工作流程範本]({{site.url}}{{site.baseurl}}/vector-search/ai-search/workflows/workflow-templates#agentic-search-with-a-flow-agent)，會自動建立 Amazon Bedrock 連接器、遠端聊天模型、`QueryPlanningTool`、流程代理程式及搜尋管線。請檢閱工作流程範本的[預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/agentic-search-with-flow-agent-defaults.json)，以判斷您是否需要更新任何參數。若要使用流程代理程式建立預設的代理式搜尋工作流程，請傳送下列請求：
 
 ```json
 POST /_plugins/_flow_framework/workflow?use_case=agentic_search_with_flow_agent&provision=true

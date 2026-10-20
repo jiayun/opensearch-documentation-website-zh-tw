@@ -13,15 +13,15 @@ grand_parent: Agents and tools
 **3.0 版新增**
 {: .label .label-purple }
 
-Plan-execute-reflect 代理程式專為解決需要反覆推理與逐步執行的複雜任務而設計。這類代理程式使用一個大型語言模型 (LLM)——即 _planner_——來建立與更新計畫，並使用另一個 LLM（預設為同一個模型）透過內建的對話代理程式執行每個步驟。
+Plan-execute-reflect 代理程式專為解決需要反覆推理與逐步執行的複雜任務而設計。這類代理程式使用一個大型語言模型 (LLM)——即 _規劃器_——來建立與更新計畫，並使用另一個 LLM（預設為同一個模型）透過內建的對話代理程式執行每個步驟。
 
 Plan-execute-reflect 代理程式的運作分為三個階段：
 
-- **規劃** – Planner LLM 使用可用的工具產生初始的逐步計畫。
+- **規劃** – 規劃器 LLM 使用可用的工具產生初始的逐步計畫。
 - **執行** – 使用對話代理程式與可用的工具依序執行每個步驟。
-- **重新評估** – 執行每個步驟後，Planner LLM 會使用中間結果重新評估計畫。LLM 可以根據新的情境動態調整計畫，以跳過、新增或變更步驟。
+- **重新評估** – 執行每個步驟後，規劃器 LLM 會使用中間結果重新評估計畫。LLM 可以根據新的情境動態調整計畫，以跳過、新增或變更步驟。
 
-與對話代理程式類似，plan-execute-reflect 代理程式會將 LLM 與代理程式之間的互動儲存在記憶索引中。在以下範例中，代理程式使用 `conversation_index` 來保存執行歷程，包括使用者的問題、中間結果與最終輸出。
+與對話代理程式類似，plan-execute-reflect 代理程式會將 LLM 與代理程式之間的互動儲存在記憶體索引中。在以下範例中，代理程式使用 `conversation_index` 來保存執行歷程，包括使用者的問題、中間結果與最終輸出。
 
 代理程式會根據工具描述與目前情境，自動為每個步驟選擇最合適的工具。
 
@@ -438,5 +438,5 @@ Plan-execute-reflect 代理程式支援詞元使用量追蹤，可提供代理�
 - 若要進一步了解如何註冊代理程式，請參閱 [Register Agent API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/)。
 - 如需支援的工具清單，請參閱 [工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/)。
 - 如需使用 plan-execute-reflect 代理程式的逐步教學，請參閱 [建立 plan-execute-reflect 代理程式]({{site.url}}{{site.baseurl}}/tutorials/gen-ai/agents/build-plan-execute-reflect-agent/)。
-- 如需支援的 API，請參閱 [代理程式 API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/)。
-- 若要在組態自動化中使用代理程式與工具，請參閱 [組態自動化]({{site.url}}{{site.baseurl}}/automating-configurations/index/)。
+- 如需支援的 API，請參閱 [Agent APIs]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/)。
+- 若要使用工作流程範本建立代理程式和工具，請參閱 [AI 搜尋工作流程]({{site.url}}{{site.baseurl}}/vector-search/ai-search/workflows/index/)。

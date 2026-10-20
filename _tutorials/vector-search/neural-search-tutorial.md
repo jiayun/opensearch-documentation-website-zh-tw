@@ -77,7 +77,7 @@ PUT _cluster/settings
 
 您可以使用命令列或 OpenSearch Dashboards 的 [Dev Tools 主控台]({{site.url}}{{site.baseurl}}/dashboards/dev-tools/run-queries/)來跟隨本教學。
 
-教學中的某些步驟包含選用的 <span>測試</span>{: .text-delta} 章節。您可以執行這些章節中的請求，確認該步驟已成功完成。
+教學中的某些步驟包含選用的 <span>測試看看</span>{: .text-delta} 章節。您可以執行這些章節中的請求，確認該步驟已成功完成。
 
 完成後，請依照 [清理](#clean-up) 章節中的步驟刪除所有已建立的元件。
 
@@ -251,7 +251,7 @@ PUT /_ingest/pipeline/nlp-ingest-pipeline
 
 <details markdown="block">
   <summary>
-    測試它
+    測試看看
   </summary>
   {: .text-delta}
 
@@ -768,63 +768,11 @@ PUT /my-nlp-index/_settings
 ```
 {% include copy-curl.html %}
 
-您現在可以嘗試不同的權重、正規化技術與組合技術。如需詳細資訊，請參閱 [`normalization-processor`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/normalization-processor/) 與 [`hybrid` 查詢]({{site.url}}{{site.baseurl}}/query-dsl/compound/hybrid/) 文件。
+您現在可以嘗試不同的權重、標準化技術與合併技術。如需詳細資訊，請參閱 [`normalization-processor`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/normalization-processor/) 與 [`hybrid` 查詢]({{site.url}}{{site.baseurl}}/query-dsl/compound/hybrid/) 文件。
 
 #### 進階
 
 您可以使用搜尋範本將搜尋參數化。搜尋範本會隱藏實作細節，減少巢狀層級數量，進而降低查詢複雜度。如需更多資訊，請參閱[搜尋範本]({{site.url}}{{site.baseurl}}/search-plugins/search-template/)。
-
-## 使用自動化工作流程
-
-您可以使用[_自動化工作流程_]({{site.url}}{{site.baseurl}}/automating-configurations/)快速設定語意或混合搜尋。此方法會自動建立並佈建所有必要的資源。如需更多資訊，請參閱[工作流程範本]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-templates/)。
-
-### 自動化語意搜尋設定
-
-OpenSearch 提供一個[工作流程範本]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-templates/)，可自動註冊並部署預設的本機模型 (`huggingface/sentence-transformers/paraphrase-MiniLM-L3-v2`)，並建立資料匯入管線與向量索引。預設情況下，資料匯入管線會從名為 `passage_text` 的欄位產生嵌入。本教學中的文件將文字儲存在 `text` 欄位，因此請在請求本文中指定 `text` 作為輸入欄位：
-
-```json
-POST /_plugins/_flow_framework/workflow?use_case=semantic_search_with_local_model&provision=true
-{
-  "text_embedding.field_map.input": "text"
-}
-```
-{% include copy-curl.html %}
-
-檢視語意搜尋工作流程範本的[預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/semantic-search-with-local-model-defaults.json)，以判斷是否需要更新其他參數。例如，若要使用本教學中的模型，請指定模型名稱與版本。索引維度必須與模型的嵌入維度相符，因此也請將維度設定為 `768`：
-
-```json
-POST /_plugins/_flow_framework/workflow?use_case=semantic_search_with_local_model&provision=true
-{
-  "register_local_pretrained_model.name": "huggingface/sentence-transformers/msmarco-distilbert-base-tas-b",
-  "register_local_pretrained_model.version": "1.0.3",
-  "text_embedding.field_map.input": "text",
-  "text_embedding.field_map.output.dimension": "768"
-}
-```
-{% include copy-curl.html %}
-
-OpenSearch 會以所建立工作流程的工作流程 ID 回應：
-
-```json
-{
-  "workflow_id" : "U_nMXJUBq_4FYQzMOS4B"
-}
-```
-
-若要檢查工作流程狀態，請傳送以下請求：
-
-```json
-GET /_plugins/_flow_framework/workflow/U_nMXJUBq_4FYQzMOS4B/_status
-```
-{% include copy-curl.html %}
-
-工作流程完成後，`state` 會變更為 `COMPLETED`。該工作流程會執行以下步驟：
-
-1. [步驟 2](#step-2-register-and-deploy-the-model)：註冊並部署模型。
-1. [步驟 3(a)](#step-3a-create-an-ingest-pipeline)：建立資料匯入管線。
-1. [步驟 3(b)](#step-3b-create-a-vector-index)：建立向量索引。
-
-您現在可以繼續進行[步驟 3(c)](#step-3c-ingest-documents-into-the-index)，將文件匯入索引，並進行[步驟 4](#step-4-search-the-data)以搜尋您的資料。
 
 ## 清理
 
@@ -864,9 +812,10 @@ DELETE /_plugins/_ml/model_groups/Z1eQf4oB5Vm0Tdw8EIP2
 
 ## 延伸閱讀
 
-- 在[在 OpenSearch 中建置語意搜尋引擎](https://opensearch.org/blog/semantic-search-solutions/)中閱讀 OpenSearch 語意搜尋的基礎知識。
-- 在[OpenSearch 語意搜尋的 ABC：架構、基準測試與組合策略](https://opensearch.org/blog/semantic-science-benchmarks/)中閱讀關於結合關鍵字與語意搜尋、正規化與組合技術選項，以及基準測試的內容。
+- 閱讀[在 OpenSearch 中建置語意搜尋引擎](https://opensearch.org/blog/semantic-search-solutions/)，了解 OpenSearch 語意搜尋的基礎知識。
+- 在[OpenSearch 語意搜尋的 ABC：架構、基準測試與合併策略](https://opensearch.org/blog/semantic-science-benchmarks/)中閱讀關於結合關鍵字與語意搜尋、標準化與合併技術選項，以及基準測試的內容。
 
 ## 後續步驟
 
-- 探索 OpenSearch 中的 [AI 搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/index/)。
+- 在 OpenSearch 中探索 [AI 搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/index/)。
+- 若要在單一請求中建立模型、資料匯入管線與向量索引，請使用工作流程範本。如需詳細資訊，請參閱[工作流程範本]({{site.url}}{{site.baseurl}}/vector-search/ai-search/workflows/workflow-templates/#semantic-search-using-a-local-model)。

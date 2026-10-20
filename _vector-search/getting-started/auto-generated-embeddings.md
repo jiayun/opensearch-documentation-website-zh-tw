@@ -258,13 +258,13 @@ GET /my-nlp-index/_search
 
 ## 使用自動化工作流程
 
-您可以使用[_自動化工作流程_]({{site.url}}{{site.baseurl}}/automating-configurations/)快速設定自動嵌入生成。此方法會自動建立並佈建所有必要的資源。如需更多資訊，請參閱[工作流程範本]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-templates/)。
+您可以使用[_自動化工作流程_]({{site.url}}{{site.baseurl}}/vector-search/ai-search/workflows/)快速設定自動嵌入生成。此方法會自動建立並佈建所有必要的資源。如需更多資訊，請參閱[工作流程範本]({{site.url}}{{site.baseurl}}/vector-search/ai-search/workflows/workflow-templates/)。
 
 您可以使用自動化工作流程來建立及部署外部託管的模型，並為各種 AI 搜尋類型建立資源。在此範例中，您將建立與您依照手動步驟所建立的相同搜尋。
 
 ### 步驟 1：註冊並部署模型
 
-若要註冊並部署模型，請選取該模型供應商的內建工作流程範本。如需更多資訊，請參閱[支援的工作流程範本]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-templates/#supported-workflow-templates)。或者，若要設定自訂模型，請使用[手動設定的步驟 1](#step-1-register-and-deploy-the-model)。請記下模型 ID；您將在下一個步驟中使用它。
+若要註冊並部署模型，請選取該模型供應商的內建工作流程範本。如需更多資訊，請參閱[支援的工作流程範本]({{site.url}}{{site.baseurl}}/vector-search/ai-search/workflows/workflow-templates/#supported-workflow-templates)。或者，若要設定自訂模型，請使用[手動設定的步驟 1](#step-1-register-and-deploy-the-model)。請記下模型 ID；您將在下一個步驟中使用它。
 
 ### 步驟 2：設定工作流程
 

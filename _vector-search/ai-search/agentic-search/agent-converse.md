@@ -10,7 +10,7 @@ has_children: false
 
 # 將對話式代理程式用於代理程式搜尋
 
-對話式代理程式提供進階的代理程式搜尋功能，包含詳細的推理追蹤與對話記憶。不同於依序執行工具、且只傳回產生的查詢領域特定語言 (DSL) 查詢的流程代理程式，對話式代理程式會透過 `agentic_context` 回應處理器提供額外的內容，包括逐步推理摘要，以及用於跨多個查詢延續對話的記憶 ID。
+對話式代理程式提供進階的代理程式搜尋功能，包含詳細的推理追蹤與對話記憶。流程代理程式會依序執行工具，且僅傳回所產生的領域特定語言 (DSL) 查詢；相較之下，對話式代理程式會透過 `agentic_context` 回應處理器提供額外的情境資訊，包括逐步推理摘要，以及可跨多次查詢延續對話的記憶 ID。
 
 本指南示範如何設定具備多個工具的對話式代理程式，並在複雜的搜尋情境中使用其進階功能。
 
@@ -21,7 +21,7 @@ has_children: false
 
 ## 自動化工作流程
 
-OpenSearch 提供一個[工作流程範本]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-templates#agentic-search-with-a-conversational-agent)，會自動建立 Amazon Bedrock 連接器、遠端聊天模型、`QueryPlanningTool`、`ListIndexTool`、`IndexMappingTool`、具備對話記憶的對話式代理程式，以及搜尋管線。請檢視工作流程範本的[預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/agentic-search-with-conversational-agent-defaults.json)，以判斷是否需要更新任何參數。若要建立使用對話式代理程式的預設代理程式搜尋工作流程，請傳送以下請求：
+OpenSearch 提供一個[工作流程範本]({{site.url}}{{site.baseurl}}/vector-search/ai-search/workflows/workflow-templates#agentic-search-with-a-conversational-agent)，會自動建立 Amazon Bedrock 連接器、遠端聊天模型、`QueryPlanningTool`、`ListIndexTool`、`IndexMappingTool`、具備對話記憶的對話式代理程式，以及搜尋管線。請檢視工作流程範本的[預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/agentic-search-with-conversational-agent-defaults.json)，以判斷是否需要更新任何參數。若要建立使用對話式代理程式的預設代理程式搜尋工作流程，請傳送以下請求：
 
 ```json
 POST /_plugins/_flow_framework/workflow?use_case=agentic_search_with_conversational_agent&provision=true
@@ -48,7 +48,7 @@ GET /_plugins/_flow_framework/workflow/abc123/_status
 ```
 {% include copy-curl.html %}
 
-工作流程完成後，`state` 會變更為 `COMPLETED`。此工作流程會建立代理程式搜尋資源，但不會建立索引。您可以使用已佈建的搜尋管線查詢任何現有的索引。查詢範例請參閱[步驟 6](#step-6-run-an-agentic-search)。
+工作流程完成後，`state` 會變更為 `COMPLETED`。此工作流程會建立代理程式搜尋資源，但不會建立索引。您可以使用已建立的搜尋管線查詢任何現有的索引。查詢範例請參閱[步驟 6](#step-6-run-an-agentic-search)。
 
 ## 手動設定
 
@@ -215,7 +215,7 @@ PUT _search/pipeline/agentic-pipeline
 ```
 {% include copy-curl.html %}
 
-## 步驟 6：執行代理式搜尋
+## 步驟 6：執行代理程式搜尋
 
 若要執行搜尋，請傳送自然語言搜尋查詢。代理程式會分析請求、探索適當的索引，並產生最佳化的 DSL 查詢：
 

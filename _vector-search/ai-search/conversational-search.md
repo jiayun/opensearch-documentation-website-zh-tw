@@ -57,7 +57,7 @@ PUT /_cluster/settings
 
 ## 自動化工作流程
 
-OpenSearch 提供一個[工作流程範本]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-templates#conversational-search-using-an-llm)，會自動為 LLM 建立連接器、註冊並部署 LLM，以及設定搜尋管線。建立工作流程時，您必須提供所設定 LLM 的 API 金鑰。請檢視對話式搜尋工作流程範本的[預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/conversational-search-defaults.json)，判斷是否需要更新任何參數。例如，若模型端點與預設值（`https://api.cohere.ai/v1/chat`）不同，請在 `create_connector.actions.url` 參數中指定您模型的端點。若要建立預設的對話式搜尋工作流程，請傳送下列請求：
+OpenSearch 提供一個[工作流程範本]({{site.url}}{{site.baseurl}}/vector-search/ai-search/workflows/workflow-templates#conversational-search-using-an-llm)，會自動為 LLM 建立連接器、註冊並部署 LLM，以及設定搜尋管線。建立工作流程時，您必須提供所設定 LLM 的 API 金鑰。請檢視對話式搜尋工作流程範本的[預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/conversational-search-defaults.json)，判斷是否需要更新任何參數。例如，若模型端點與預設值（`https://api.cohere.ai/v1/chat`）不同，請在 `create_connector.actions.url` 參數中指定您模型的端點。若要建立預設的對話式搜尋工作流程，請傳送下列請求：
 
 ```json
 POST /_plugins/_flow_framework/workflow?use_case=conversational_search_with_llm_deploy&provision=true
@@ -349,7 +349,7 @@ GET /my_rag_test_data/_search
 ```
 {% include copy-curl.html %}
 
-由於上下文中包含一份含有紐約市人口資訊的文件，LLM 能夠正確回答問題（不過由於它是以前幾年的資料訓練而成，因此回答中包含「預計」一詞）。回應中包含補充 RAG 資料中的相符文件以及 LLM 回應：
+由於上下文中包含一份含有紐約市人口資訊的文件，LLM 能夠正確回答問題（不過因為它是以前幾年的資料訓練而成，回答中包含「projected」一詞）。回應中包含補充 RAG 資料裡相符的文件以及 LLM 回應：
 
 <details open markdown="block">
 <summary>

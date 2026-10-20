@@ -8,14 +8,14 @@ nav_order: 50
 ---
 
 # OpenSearch Assistant Toolkit
-**於 2.13 版推出**
+**2.13 版推出**
 {: .label .label-purple }
 
 OpenSearch Assistant Toolkit 可協助您為 OpenSearch Dashboards 建立 AI 驅動的助理。此工具組包含下列元素：
 
-- [**代理程式與工具**]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/index/)：_代理程式_ 會與大型語言模型 (LLM) 互動，並執行高階工作，例如摘要，或從自然語言產生 Piped Processing Language (PPL) 查詢。代理程式的高階工作由稱為_工具_的低階工作組成，這些工具可供多個代理程式重複使用。
-- [**組態自動化**]({{site.url}}{{site.baseurl}}/automating-configurations/index/)：使用範本為人工智慧與機器學習 (AI/ML) 應用程式設定基礎架構。例如，您可以自動設定要用於聊天或從自然語言產生 PPL 查詢的代理程式。
-- [**OpenSearch Dashboards 的 OpenSearch Assistant**]({{site.url}}{{site.baseurl}}/dashboards/dashboards-assistant/index/)：這是 AI 驅動助理的 OpenSearch Dashboards 網頁式介面。助理的工作流程會以各種代理程式與工具進行設定。
+- [**代理程式與工具**]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/index/)：_代理程式_會與大型語言模型 (LLM) 互動，並執行高階任務，例如摘要，或從自然語言產生 Piped Processing Language (PPL) 查詢。代理程式的高階任務由稱為_工具_的低階任務組成，這些工具可供多個代理程式重複使用。
+- [**AI 搜尋工作流程**]({{site.url}}{{site.baseurl}}/vector-search/ai-search/workflows/index/)：使用範本為人工智慧與機器學習 (AI/ML) 應用程式設定基礎架構。例如，您可以在單一請求中建立用於語意搜尋的模型、資料匯入管線和向量索引。
+- [**適用於 OpenSearch Dashboards 的 OpenSearch Assistant**]({{site.url}}{{site.baseurl}}/dashboards/dashboards-assistant/index/)：這是 AI 驅動助理的 OpenSearch Dashboards 網頁介面。助理的工作流程是透過各種代理程式與工具進行設定。
  
 ## 啟用 OpenSearch Assistant
 

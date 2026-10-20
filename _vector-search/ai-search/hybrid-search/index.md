@@ -36,7 +36,7 @@ redirect_from:
 
 ## 自動化工作流程
 
-OpenSearch 提供[工作流程範本]({{site.url}}{{site.baseurl}}/automating-configurations/workflow-templates/#hybrid-search)，可自動建立資料匯入管線、索引及搜尋管線。建立工作流程時，您必須提供所設定模型的模型 ID。請檢閱混合搜尋工作流程範本的[預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/hybrid-search-defaults.json)，以判斷是否需要更新任何參數。例如，如果模型維度與預設值 (`1024`) 不同，請在 `output_dimension` 參數中指定模型的維度。若要建立預設的混合搜尋工作流程，請傳送下列請求：
+OpenSearch 提供[工作流程範本]({{site.url}}{{site.baseurl}}/vector-search/ai-search/workflows/workflow-templates/#hybrid-search)，可自動建立資料匯入管線、索引及搜尋管線。建立工作流程時，您必須提供所設定模型的模型 ID。請檢閱混合搜尋工作流程範本的[預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/hybrid-search-defaults.json)，以判斷是否需要更新任何參數。例如，如果模型維度與預設值 (`1024`) 不同，請在 `output_dimension` 參數中指定模型的維度。若要建立預設的混合搜尋工作流程，請傳送下列請求：
 
 ```json
 POST /_plugins/_flow_framework/workflow?use_case=hybrid_search&provision=true
