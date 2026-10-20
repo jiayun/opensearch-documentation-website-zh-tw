@@ -45,8 +45,6 @@ opensearch_collection:
       name: "機器學習"
     ai-agent-integrations:
       name: "AI 代理程式整合"
-    automating-configurations:
-      name: "自動化設定"
     dashboards:
       name: "OpenSearch Dashboards"
     observing-your-data:
