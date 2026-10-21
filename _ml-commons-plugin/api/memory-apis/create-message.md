@@ -13,14 +13,14 @@ nav_order: 40
 
 使用此 API 在[對話式搜尋]({{site.url}}{{site.baseurl}}/search-plugins/conversational-search/)的對話記憶中建立或更新訊息。記憶會儲存目前對話的對話歷程。訊息代表對話中的一組問答。
 
-建立訊息後，您會將其 `message_id` 提供給其他 API。
+建立訊息後，您需要將其 `message_id` 提供給其他 API。
 
 POST 方法會建立新訊息。PUT 方法會更新現有訊息。
 
-您只能更新訊息的 `additional_info` 欄位。
+您只能更新訊息的 `response` 和 `additional_info` 欄位。PUT 請求中的其他欄位會被忽略。
 {: .note}
 
-啟用 Security 外掛程式時，所有記憶都處於 `private` 安全性模式。只有建立記憶的使用者可以與該記憶及其訊息互動。
+啟用 Security 外掛程式時，所有記憶都處於 `private` 安全性模式。只有建立記憶的使用者才能與該記憶及其訊息互動。
 {: .important}
 
 ## 端點
@@ -43,15 +43,17 @@ PUT /_plugins/_ml/memory/message/{message_id}
 
 下表列出可用的請求欄位。
 
-欄位 | 資料類型 | 必要／選用 | 可更新 | 說明
+欄位 | 資料類型 | 必要/選用 | 可更新 | 說明
 :--- | :--- | :--- | :--- | :---
-`input` | 字串 | 選用 | 否 | 訊息中的問題 (人類輸入)。 |
+`input` | 字串 | 選用 | 否 | 訊息中的問題（人類輸入）。 |
 `prompt_template` | 字串 | 選用 | 否 | 用於該訊息的提示範本。範本可能包含傳送給大型語言模型的指示或範例。 |
-`response` | 字串 | 選用 | 否 | 問題的答案 (生成式 AI 輸出)。 |
-`origin` | 字串 | 選用 | 否 | 產生回應的 AI 或其他系統名稱。 |
-`additional_info` | 物件 | 選用 | 是 | 傳送給 `origin` 的任何其他資訊。 |
+`response` | 字串 | 選用 | 是 | 問題的答案（生成式 AI 輸出）。 |
+`origin` | 字串 | 選用 | 否 | 產生回應的 AI 或其他系統的名稱。 |
+`additional_info` | 物件 | 選用 | 是 | 傳送給 `origin` 的任何其他資訊。更新訊息時，指定的鍵會新增至現有鍵或取代現有鍵。 |
+`parent_message_id` | 字串 | 選用 | 否 | 上層訊息的 ID。指定此欄位可為上層訊息建立追蹤訊息。 |
+`trace_number` | 整數 | 選用 | 否 | 追蹤訊息在上層訊息各項追蹤中的順序。與 `parent_message_id` 搭配使用。 |
 
-若要成功建立或更新訊息，您必須至少提供上述其中一個欄位。提供的欄位不能為 null 或空白。
+若要成功建立或更新訊息，您必須至少提供 `input`、`prompt_template`、`response`、`origin` 或 `additional_info` 欄位其中之一。所提供的欄位不可為 null 或空值。
 {: .note}
 
 ## 回應本文欄位

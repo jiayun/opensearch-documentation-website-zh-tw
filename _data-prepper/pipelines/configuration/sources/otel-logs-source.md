@@ -22,12 +22,12 @@ nav_order: 60
 | 選項 | 類型 | 說明 |
 | :--- | :--- | :--- |
 | port | 整數 | 代表 `otel_logs_source` 來源執行所在的連接埠。預設值為 `21892`。 |
-| path | 字串 | 代表傳送未框架 HTTP 請求的路徑。您可以使用此選項，透過 HTTP 慣用路徑將未框架的 gRPC 請求支援到可設定的路徑。路徑應以 `/` 開頭，且長度至少為 1。若已設定路徑，則 `/opentelemetry.proto.collector.logs.v1.LogsService/Export` 端點對 gRPC 與 HTTP 請求皆停用。路徑可包含 `${pipelineName}` 佔位符，該佔位符會被替換為管線名稱。若值為空且 `unframed_requests` 為 `true`，則來源會提供路徑 `/opentelemetry.proto.collector.logs.v1.LogsService/Export`。 |
+| path | 字串 | 代表傳送未加 gRPC 訊框的 HTTP 請求所用的路徑。您可以使用此選項，以符合 HTTP 慣例的路徑支援未加 gRPC 訊框的 gRPC 請求，並將其對應到可設定的路徑。路徑應以 `/` 開頭，且長度至少為 1。若已設定路徑，則 `/opentelemetry.proto.collector.logs.v1.LogsService/Export` 端點對 gRPC 與 HTTP 請求皆停用。路徑可包含 `${pipelineName}` 佔位符，該佔位符會被替換為管線名稱。若值為空且 `unframed_requests` 為 `true`，則來源會提供路徑 `/opentelemetry.proto.collector.logs.v1.LogsService/Export`。 |
 | max_request_length | 字串 | 單一 gRPC 或 HTTP 請求的酬載所允許的最大位元組數。預設值為 `10mb`。 |
 | request_timeout | 整數 | 代表請求逾時時間長度（毫秒）。預設值為 `10000`。 |
 | health_check_service | 布林值 | 在 `grpc.health.v1/Health/Check` 下啟用 gRPC 健康狀態檢查服務。預設值為 `false`。 |
-| proto_reflection_service | 布林值 | 為 Protobuf 服務啟用反映服務（請參閱 [ProtoReflectionService](https://grpc.github.io/grpc-java/javadoc/io/grpc/protobuf/services/ProtoReflectionService.html) 與 [gRPC 反映](https://github.com/grpc/grpc-java/blob/master/documentation/server-reflection-tutorial.md)）。預設值為 `false`。 |
-| unframed_requests | 布林值 | 啟用未使用 gRPC 線路協定框架化的請求。預設值為 `false`。 |
+| proto_reflection_service | 布林值 | 為 Protobuf 服務啟用反射服務（請參閱 [ProtoReflectionService](https://grpc.github.io/grpc-java/javadoc/io/grpc/protobuf/services/ProtoReflectionService.html) 與 [gRPC 反射](https://github.com/grpc/grpc-java/blob/master/documentation/server-reflection-tutorial.md)）。預設值為 `false`。 |
+| unframed_requests | 布林值 | 啟用未使用 gRPC 線路協定加上訊框的請求。預設值為 `false`。 |
 | thread_count  | 整數 | `ScheduledThreadPool` 中保留的執行緒數量。預設值為 `500`。 |
 | max_connection_count | 整數 | 允許的開啟連線數量上限。預設值為 `500`。 |
 | compression | 字串 | 套用至用戶端請求酬載的壓縮類型。有效值為 `none` 或 `gzip`。使用 `gzip` 可對傳入的請求套用 gzip 解壓縮。預設為 `none`（無壓縮）。 |
@@ -44,7 +44,7 @@ nav_order: 60
 | `sslKeyFile` | 字串 | 代表 SSL 金鑰檔案路徑或 Amazon S3 路徑。例如，請參閱 Amazon S3 路徑 `s3://<bucketName>/<path>`。當 `ssl` 設定為 `true` 時為必要。 |
 | `useAcmCertForSSL` | 布林值 | 使用 AWS Certificate Manager (ACM) 的憑證與私密金鑰來啟用 TLS/SSL。預設值為 `false`。 |
 | `acmCertificateArn` | 字串 | 代表 ACM 憑證的 Amazon Resource Name (ARN)。ACM 憑證的優先順序高於 Amazon S3 或本機檔案系統憑證。當 `useAcmCertForSSL` 設定為 `true` 時為必要。 |
-| `awsRegion` | 字串 | 代表 ACM 或 Amazon S3 所使用的 AWS 區域。當 `useAcmCertForSSL` 設定為 `true` 或 `sslKeyCertChainFile`，或 `sslKeyFile` 為 Amazon S3 路徑時為必要。 |
+| `awsRegion` | 字串 | 代表 ACM 或 Amazon S3 所使用的 AWS 區域。當 `useAcmCertForSSL` 設定為 `true`，或 `sslKeyCertChainFile` 或 `sslKeyFile` 為 Amazon S3 路徑時為必要。 |
 
 ## 用法
 
@@ -67,7 +67,7 @@ source:
 
 ## 範例
 
-下列管線顯示 Data Prepper 使用 PEM 憑證與金鑰透過 HTTPS 接收 OTLP 記錄檔，在自訂路徑上使用未框架 HTTP，接受 gzip 壓縮的酬載，並使用 OpenTelemetry 欄位結構描述將其編製索引至 OpenSearch：
+下列管線顯示 Data Prepper 使用 PEM 憑證與金鑰，透過 HTTPS 接收 OTLP 記錄檔，在自訂路徑上接收未加 gRPC 訊框的 HTTP 請求，接受 gzip 壓縮的酬載，並使用 OpenTelemetry 欄位結構描述將其編製索引至 OpenSearch：
 
 ```yaml
 otel-logs-otel-output:
@@ -88,7 +88,7 @@ otel-logs-otel-output:
         hosts: ["https://opensearch:9200"]
         index: otel-logs-otel-output
         username: admin
-        password: admin_pass
+        password: "<custom-admin-password>"
         insecure: true
 ```
 {% include copy.html %}

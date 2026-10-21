@@ -43,7 +43,7 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %} 
 
-參數說明請參閱 [Register parameters](#register-parameters)。
+參數說明請參閱[註冊參數](#register-parameters)。
 
 OpenSearch 會回應代理程式 ID：
 
@@ -55,9 +55,9 @@ OpenSearch 會回應代理程式 ID：
 
 ## 步驟 2：執行代理程式
 
-在執行代理程式之前，請確認您已新增 OpenSearch Dashboards 的 `Sample eCommerce orders` 範例資料集。若要了解更多，請參閱 [Adding sample data]({{site.url}}{{site.baseurl}}/dashboards/getting-started/data-setup/#add-sample-data)。
+執行代理程式之前，請確認您已新增範例 OpenSearch Dashboards `Sample eCommerce orders` 資料集。如需詳細資訊，請參閱[新增範例資料]({{site.url}}{{site.baseurl}}/dashboards/getting-started/data-setup/#add-sample-data)。
 
-接著，傳送下列請求來執行代理程式：
+接著，傳送下列請求以執行代理程式：
 
 ```json
 POST /_plugins/_ml/agents/9X7xWI0Bpc3sThaJdY9i/_execute
@@ -78,35 +78,13 @@ OpenSearch 會傳回索引資訊：
       "output": [
         {
           "name": "response",
-          "result": """health    status    index    uuid    pri    rep    docs.count    docs.deleted    store.size    pri.store.size
-green    open    .plugins-ml-model-group    lHgGEgJhT_mpADyOZoXl2g    1    1    9    2    33.4kb    16.7kb
-green    open    .plugins-ml-memory-meta    b2LEpv0QS8K60QBjXtRm6g    1    1    13    0    95.1kb    47.5kb
-green    open    .ql-datasources    9NXm_tMXQc6s_4uRToSNkQ    1    1    0    0    416b    208b
-green    open    sample-ecommerce    UPYOQcAfRGqFAlSxcZlRjw    1    1    40320    0    4.1mb    2mb
-green    open    .plugins-ml-task    xYTlprYCQnaaYici69SOjA    1    1    117    0    115.5kb    57.6kb
-green    open    .opendistro_security    7DAqhm9QQmeEsQYhA40cJg    1    1    10    0    117kb    58.5kb
-green    open    sample-host-health    Na5tq6UiTt6r_qYME1vV-w    1    1    40320    0    2.6mb    1.3mb
-green    open    .opensearch-observability    6PthtLluSKyYCdZR3Mw0iw    1    1    0    0    416b    208b
-green    open    .plugins-ml-model    WYcjBHcnRuSDHeVWPVupoA    1    1    191    45    4.2gb    2.1gb
-green    open    index_for_neural_sparse    GQswGabQRIazM_trnqaDrw    1    1    5    0    28.4kb    14.2kb
-green    open    security-auditlog-2024.01.30    BhXR7Nd3QVOVGxJNpR0-jw    1    1    27768    0    13.8mb    7mb
-green    open    sample-http-responses    0gmYYYdOTiCbVUvl_uDL0w    1    1    40320    0    2.5mb    1.2mb
-green    open    security-auditlog-2024.02.01    2VD1ieDGS5m-TfjIdfT8Eg    1    1    39305    0    39mb    18.6mb
-green    open    opensearch_dashboards_sample_data_ecommerce    wnE6r7OvSPqc5YHj8wHSLA    1    1    4675    0    8.8mb    4.4mb
-green    open    security-auditlog-2024.01.31    cNRK5-2eTwes0SRlXTl0RQ    1    1    34520    0    20.5mb    9.8mb
-green    open    .plugins-ml-memory-message    wTNBU4BBQVSFcFhNlUdfBQ    1    1    93    0    358.2kb    181.9kb
-green    open    .plugins-flow-framework-state    dJUNDv9MSJ2jjwKbzXPlrw    1    1    39    0    114.1kb    57kb
-green    open    .plugins-ml-agent    7X1IzoLuSGmIujOh9i5mmg    1    1    30    0    170.7kb    85.3kb
-green    open    .plugins-flow-framework-templates    _ecC0KahTlmG_3tFUst7Uw    1    1    18    0    175.8kb    87.9kb
-green    open    .plugins-ml-connector    q45iJfVjQ5KgxeNC65DLSw    1    1    11    0    313.1kb    156.5kb
-green    open    .kibana_1    vRjXK4bHSUueB_4iXiQ8yw    1    1    257    0    264kb    132kb
-green    open    .plugins-ml-config    G7gxGQB7TZeQzBasHd5PUg    1    1    1    0    7.8kb    3.9kb
-green    open    .plugins-ml-controller    NQTZPREZRhWoDdjCglRLFg    1    1    0    0    50.1kb    49.9kb
-green    open    opensearch_dashboards_sample_data_logs    9gpOTB3rRgqBLvqis_k5LQ    1    1    14074    0    18mb    9mb
-green    open    .plugins-flow-framework-config    JlKPsCh6SEq-Jh6rPL_x9Q    1    1    1    0    7.8kb    3.9kb
-green    open    opensearch_dashboards_sample_data_flights    pJde0irnTce4-uobHwYmMQ    1    1    13059    0    11.9mb    5.9mb
-green    open    my_test_data    T4hwNs7CTJGIfw2QpCqQ_Q    1    1    6    0    91.7kb    45.8kb
-green    open    .opendistro-job-scheduler-lock    XjgmXAVKQ4e8Y-ac54VBzg    1    1    3    3    36.2kb    21.3kb
+          "result": """row,health,status,index,uuid,pri(number of primary shards),rep(number of replica shards),docs.count(number of available documents),docs.deleted(number of deleted documents),store.size(store size of primary and replica shards),pri.store.size(store size of primary shards)
+1,green,open,.plugins-ml-model-group,lHgGEgJhT_mpADyOZoXl2g,1,0,9,2,16.7kb,16.7kb
+2,green,open,.plugins-ml-config,G7gxGQB7TZeQzBasHd5PUg,1,0,1,0,3.9kb,3.9kb
+3,green,open,sample-ecommerce,UPYOQcAfRGqFAlSxcZlRjw,1,0,40320,0,2mb,2mb
+4,green,open,.plugins-ml-model,WYcjBHcnRuSDHeVWPVupoA,1,0,191,45,2.1gb,2.1gb
+5,green,open,opensearch_dashboards_sample_data_ecommerce,wnE6r7OvSPqc5YHj8wHSLA,1,0,4675,0,4.9mb,4.9mb
+...
 """
         }
       ]
@@ -122,9 +100,10 @@ green    open    .opendistro-job-scheduler-lock    XjgmXAVKQ4e8Y-ac54VBzg    1  
 <!-- vale off -->
 參數 | 類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`indices` | 字串 | 選用 | 以逗號分隔的一或多個索引清單，用於執行列出索引操作。預設為空清單，表示所有索引。
-`local` | 布林值 | 選用 | 當為 `true` 時，僅從本機節點擷取資訊，而不是從叢集管理員節點擷取。預設為 `false`。
-`page_size` | 整數 | 選用 | 指定使用 List Indices API 時每頁傳回的索引結果數量。此 API 以分頁方式擷取索引狀態。預設為 `100`。
+`indices` | 陣列 | 選用 | 要執行列出索引操作的一或多個索引，以 JSON 陣列指定（例如 `["index1", "index2"]`）。預設為空陣列，表示所有索引。
+`local` | 布林值 | 選用 | 當為 `true` 時，僅從本機節點而非叢集管理員節點擷取資訊。預設為 `false`。
+`page_size` | 整數 | 選用 | 指定使用 List Indices API 時每頁傳回的索引結果數量。該 API 以分頁方式擷取索引狀態。預設為 `100`。
+`include_unloaded_segments` | 布林值 | 選用 | 當為 `true` 時，索引統計資料會包含未載入記憶體之分段的資訊。預設為 `false`。
 <!-- vale on -->
 
 ## 執行參數

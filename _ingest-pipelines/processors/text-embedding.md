@@ -164,6 +164,7 @@ PUT /_ingest/pipeline/nlp-nested-ingest-pipeline
 ## 後續步驟
 
 - 若要了解如何使用 `neural` 查詢進行文字搜尋，請參閱[神經查詢]({{site.url}}{{site.baseurl}}/query-dsl/specialized/neural/)。
-- 若要深入了解語意搜尋，請參閱[語意搜尋]({{site.url}}{{site.baseurl}}/search-plugins/semantic-search/)。
-- 若要深入了解在 OpenSearch 中使用模型，請參閱[選擇模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/#choosing-a-model)。
-- 如需完整的範例，請參閱[語意與混合搜尋入門]({{site.url}}{{site.baseurl}}/search-plugins/neural-search-tutorial/)。
+- 若要進一步了解語意搜尋，請參閱[語意搜尋]({{site.url}}{{site.baseurl}}/search-plugins/semantic-search/)。
+- 若要進一步了解在 OpenSearch 中使用模型，請參閱[選擇模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/#choosing-a-model)。
+- 如需完整範例，請參閱[語意搜尋與混合搜尋入門]({{site.url}}{{site.baseurl}}/search-plugins/neural-search-tutorial/)。
+- 如需為物件陣列產生嵌入的範例，請參閱[從物件陣列產生嵌入]({{site.url}}{{site.baseurl}}/tutorials/vector-search/vector-operations/generate-embeddings/)。

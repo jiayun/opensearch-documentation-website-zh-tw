@@ -36,7 +36,7 @@ GET /_plugins/_ml/memory_containers/_search
 ```
 {% include copy-curl.html %}
 
-## 回應範例
+## 範例回應
 
 ```json
 {
@@ -56,28 +56,39 @@ GET /_plugins/_ml/memory_containers/_search
     "max_score": 1.0,
     "hits": [
       {
-        "_index": ".plugins-ml-memory-meta",
+        "_index": ".plugins-ml-am-memory-container",
         "_id": "HudqiJkB1SltqOcZusVU",
+        "_version": 1,
+        "_seq_no": 0,
+        "_primary_term": 1,
         "_score": 1.0,
         "_source": {
-          "name": "agentic memory test",
-          "description": "Store conversations with semantic search and summarization",
+          "created_time": 1757956737699,
+          "last_updated_time": 1757956737699,
           "configuration": {
-            "embedding_model_type": "TEXT_EMBEDDING",
             "embedding_model_id": "uXZAtJkBvHNmcp1JAROh",
-            "embedding_dimension": 1024,
-            "llm_id": "aFouy5kBrfmzAZ6R6wo-",
             "strategies": [
               {
+                "namespace": ["user_id"],
+                "id": "semantic_53d1751c",
                 "type": "SEMANTIC",
-                "namespace": ["user_id"]
+                "enabled": true
               }
-            ]
+            ],
+            "max_infer_size": 5,
+            "embedding_dimension": 1024,
+            "index_prefix": "default",
+            "use_system_index": true,
+            "llm_id": "aFouy5kBrfmzAZ6R6wo-",
+            "disable_history": false,
+            "embedding_model_type": "TEXT_EMBEDDING",
+            "disable_session": false
           },
-          "created_time": 1757956737699,
-          "last_updated_time": 1757956737699
+          "name": "agentic memory test",
+          "description": "Store conversations with semantic search and summarization"
         }
-      }
+      },
+      ...
     ]
   }
 }
@@ -85,12 +96,13 @@ GET /_plugins/_ml/memory_containers/_search
 
 ## 回應欄位
 
-下表列出所有回應本文欄位。
+回應使用標準的 OpenSearch 搜尋回應格式。下表列出 `hits` 陣列中每個元素的 `_source` 物件內的欄位。
 
 | 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
 | `name` | 字串 | 記憶容器的名稱。 |
-| `description` | 字串 | 記憶容器的描述。 |
+| `description` | 字串 | 記憶容器的說明。 |
 | `configuration` | 物件 | 記憶容器的組態，包括模型與策略。 |
 | `created_time` | Long | 容器建立的時間戳記。 |
 | `last_updated_time` | Long | 容器最後更新的時間戳記。 |
+| `backend_roles` | 陣列 | 可存取該容器的後端角色。僅在已設定後端角色時才會顯示。 |

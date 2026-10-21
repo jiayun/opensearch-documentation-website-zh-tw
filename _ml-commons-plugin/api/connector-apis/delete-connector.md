@@ -9,7 +9,10 @@ nav_order: 30
 
 # 刪除連接器 API
 
-刪除獨立連接器。如需更多資訊，請參閱[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
+刪除獨立的連接器。如需更多資訊，請參閱[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
+
+您無法刪除模型正在使用的連接器。請先刪除使用該連接器的模型，或將其更新為使用其他連接器，然後再刪除該連接器。
+{: .important}
 
 ## 端點
 
@@ -24,7 +27,7 @@ DELETE /_plugins/_ml/connectors/KsAo1YsB0jLkkocY6j4U
 ```
 {% include copy-curl.html %}
 
-## 範例回應
+## 回應範例
 
 ```json
 {
@@ -32,9 +35,10 @@ DELETE /_plugins/_ml/connectors/KsAo1YsB0jLkkocY6j4U
   "_id" : "KsAo1YsB0jLkkocY6j4U",
   "_version" : 1,
   "result" : "deleted",
+  "forced_refresh" : true,
   "_shards" : {
-    "total" : 2,
-    "successful" : 2,
+    "total" : 1,
+    "successful" : 1,
     "failed" : 0
   },
   "_seq_no" : 27,

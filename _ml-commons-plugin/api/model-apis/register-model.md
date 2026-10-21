@@ -7,7 +7,7 @@ grand_parent: ML Commons APIs
 nav_order: 10
 ---
 
-# Register Model API
+# 註冊模型 API
 
 特定模型的所有版本都存放在一個模型群組中。您可以先[註冊模型群組]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-group-apis/register-model-group/)，再將模型註冊到該群組；或者直接註冊模型的第一個版本，藉此建立群組。叢集中的每個模型群組名稱都必須是全域唯一的。
 
@@ -54,56 +54,56 @@ OpenSearch 提供數個預先訓練模型。如需更多資訊，請參閱 [Open
 下表列出可用的請求欄位。
 
 欄位 | 資料類型 | 必要/選用 | 說明
-:---  | :--- | :--- 
+:---  | :--- | :--- | :---
 `name`| 字串 | 必要 | 模型名稱。 |
-`model_id` | 字串 | 選用 | 模型的唯一識別碼。若省略，OpenSearch 會自動產生一個。 |
+`model_id` | 字串 | 選用 | 模型的唯一識別碼。若省略，OpenSearch 會自動產生。 |
 `version` | 字串 | 必要 | 模型版本。 |
 `model_format` | 字串 | 必要 | 模型檔案的可攜式格式。有效值為 `TORCH_SCRIPT` 和 `ONNX`。 |
-`description` | 字串 | 選用| 模型說明。 |
-`model_group_id` | 字串 | 選用 | 要將模型註冊到的模型群組 ID。
-`provisioned_by` | 字串 | 選用 | 選用的歸屬標籤，用於識別註冊此模型的外掛程式或用戶端 (例如 `flow-framework`)。會包含在 ML 統計指標中。
+`description` | 字串 | 選用| 模型描述。 |
+`model_group_id` | 字串 | 選用 | 要註冊模型的模型群組 ID。
+`provisioned_by` | 字串 | 選用 | 選用的歸屬標籤，用於識別註冊模型的外掛程式或用戶端（例如 `flow-framework`）。會包含在 ML 統計指標中。
 
 #### 註冊預先訓練的稀疏編碼模型
 
-若要註冊預先訓練的稀疏編碼模型，您必須將函式名稱設定為 `SPARSE_ENCODING` 或 `SPARSE_TOKENIZE`。
+若要註冊預先訓練的稀疏編碼模型，您必須將函式名稱設為 `SPARSE_ENCODING` 或 `SPARSE_TOKENIZE`。
 
 下表列出可用的請求欄位。
 
 欄位 | 資料類型 | 必要/選用 | 說明
-:---  | :--- | :--- 
+:---  | :--- | :--- | :---
 `name`| 字串 | 必要 | 模型名稱。 |
 `model_id` | 字串 | 選用 | 模型的唯一識別碼。若省略，OpenSearch 會自動產生一個。 |
 `version` | 字串 | 必要 | 模型版本。 |
 `model_format` | 字串 | 必要 | 模型檔案的可攜式格式。有效值為 `TORCH_SCRIPT` 和 `ONNX`。 |
-`function_name` | 字串 | 必要 | 對於文字嵌入模型，請將此參數設定為 `TEXT_EMBEDDING`。對於稀疏編碼模型，請將此參數設定為 `SPARSE_ENCODING` 或 `SPARSE_TOKENIZE`。對於交叉編碼器模型，請將此參數設定為 `TEXT_SIMILARITY`。對於問答模型，請將此參數設定為 `QUESTION_ANSWERING`。
+`function_name` | 字串 | 必要 | 若是文字嵌入模型，請將此參數設為 `TEXT_EMBEDDING`。若是稀疏編碼模型，請將此參數設為 `SPARSE_ENCODING` 或 `SPARSE_TOKENIZE`。若是交叉編碼器模型，請將此參數設為 `TEXT_SIMILARITY`。若是問答模型，請將此參數設為 `QUESTION_ANSWERING`。
 `model_content_hash_value` | 字串 | 必要 | 使用 SHA-256 雜湊演算法產生的模型內容雜湊值。
 `url` | 字串 | 必要 | 包含模型的 URL。 |
 `description` | 字串 | 選用| 模型說明。 |
-`model_group_id` | 字串 | 選用 | 要將此模型註冊到的模型群組 ID。
-`provisioned_by` | 字串 | 選用 | 選用的歸屬標籤，用於識別註冊此模型的外掛程式或用戶端 (例如 `flow-framework`)。會包含在 ML 統計指標中。
+`model_group_id` | 字串 | 選用 | 要註冊此模型之目標模型群組的 ID。
+`provisioned_by` | 字串 | 選用 | 選用的歸屬標籤，用於識別註冊該模型的外掛程式或用戶端（例如 `flow-framework`）。會納入 ML 統計指標。
 
 ### 註冊自訂模型 
 
-若要在 OpenSearch 叢集內於本機使用自訂模型，您需要為該模型提供 URL 和組態物件。如需更多資訊，請參閱[自訂本機模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/custom-local-models/)。
+若要在 OpenSearch 叢集內本機使用自訂模型，您需要提供該模型的 URL 與組態物件。如需更多資訊，請參閱[自訂本機模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/custom-local-models/)。
 
 下表列出可用的請求欄位。
 
 欄位 | 資料類型 | 必要/選用 | 說明
-:---  | :--- | :--- 
+:---  | :--- | :--- | :---
 `name`| 字串 | 必要 | 模型名稱。 |
-`model_id` | 字串 | 選用 | 模型的唯一識別碼。若省略，OpenSearch 會自動產生一個。 |
+`model_id` | 字串 | 選用 | 模型的唯一識別碼。若省略，OpenSearch 會自動產生。 |
 `version` | 字串 | 必要 | 模型版本。 |
-`model_format` | 字串 | 必要 | 模型檔案的可攜式格式。有效值為 `TORCH_SCRIPT` 和 `ONNX`。 |
+`model_format` | 字串 | 必要 | 模型檔案的可攜式格式。有效值為 `TORCH_SCRIPT` 與 `ONNX`。 |
 `function_name` | 字串 | 必要 | 將此參數設定為 `TEXT_EMBEDDING`、`SPARSE_ENCODING`、`SPARSE_TOKENIZE`、`TEXT_SIMILARITY` 或 `QUESTION_ANSWERING`。
 `model_content_hash_value` | 字串 | 必要 | 使用 SHA-256 雜湊演算法產生的模型內容雜湊值。
-[`model_config`](#the-model_config-object)  | 物件 | 必要 | 模型的組態，包括 `model_type`、`embedding_dimension` 和 `framework_type`。選用的 `all_config` JSON 字串包含所有模型組態。`additional_config` 物件包含預先訓練模型對應的 `space_type`，或自訂模型所指定的 `space_type`。請參閱[空間類型]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-spaces/#distance-calculation)。 |
-`url` | 字串 | 必要 | 包含模型的 URL。 |
-`description` | 字串 | 選用| 模型說明。 |
-`model_group_id` | 字串 | 選用 | 要將此模型註冊到的模型群組之 ID。 
-`is_enabled`| 布林值 | 選用 | 指定是否啟用模型。停用模型後，無論模型的部署狀態為何，Predict API 請求都無法使用該模型。預設為 `true`。
-`rate_limiter` | 物件 | 選用 | 限制任何使用者可對該模型呼叫 Predict API 的次數。如需更多資訊，請參閱[限制推論呼叫的速率]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/#rate-limiting-inference-calls)。
+[`model_config`](#the-model_config-object)  | 物件 | 必要 | 模型的組態，包括 `model_type`、`embedding_dimension` 與 `framework_type`。選用的 `all_config` JSON 字串包含所有模型組態。`additional_config` 物件包含預先訓練模型的對應 `space_type`，或自訂模型的指定 `space_type`。請參閱[空間類型]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-spaces/#distance-calculation)。 |
+`url` | 字串 | 必要 | 包含該模型的 URL。 |
+`description` | 字串 | 選用| 模型描述。 |
+`model_group_id` | 字串 | 選用 | 要註冊此模型之模型群組的模型群組 ID。
+`is_enabled`| 布林值 | 選用 | 指定模型是否已啟用。停用模型會使其無法用於 Predict API 請求，無論模型的部署狀態為何。預設為 `true`。
+`rate_limiter` | 物件 | 選用 | 限制任何使用者可對該模型呼叫 Predict API 的次數。如需更多資訊，請參閱[限制推論呼叫速率]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/#rate-limiting-inference-calls)。
 `interface`| 物件 | 選用 | 模型的介面。如需更多資訊，請參閱[介面](#the-interface-parameter)。|
-`provisioned_by` | 字串 | 選用 | 選用的歸屬標籤，用於識別註冊此模型的外掛程式或用戶端 (例如 `flow-framework`)。會包含在 ML 統計指標中。
+`provisioned_by` | 字串 | 選用 | 選用的歸屬標籤，用於識別註冊該模型的外掛程式或用戶端（例如 `flow-framework`）。會包含在 ML 統計指標中。
 
 #### `model_config` 物件
 
@@ -119,30 +119,42 @@ OpenSearch 提供數個預先訓練模型。如需更多資訊，請參閱 [Open
 
 | 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `pooling_mode` | 字串 | 後處理模型輸出，可為 `mean`、`mean_sqrt_len`、`max`、`weightedmean`、`cls`、`lasttoken` 或 `none`。對於僅解碼器模型（例如 Qwen3-Embedding），請使用 `lasttoken`，此類模型的最後一個非填充詞元會透過因果注意力擷取累積上下文。對於已提供預先池化輸出的模型（例如 `sentence_embedding` 或 `pooler_output`），請使用 `none` 以略過額外的池化。|
+| `pooling_mode` | 字串 | 後處理模型輸出，可為 `mean`、`mean_sqrt_len`、`max`、`weightedmean`、`cls`、`lasttoken` 或 `none`。對於僅解碼器模型（例如 Qwen3-Embedding），請使用 `lasttoken`，此類模型的最後一個非填充詞元會透過因果注意力擷取累積脈絡。對於已提供預先池化輸出的模型（例如 `sentence_embedding` 或 `pooler_output`），請使用 `none` 以略過額外的池化。|
 | `normalize_result` | 布林值 | 設定為 `true` 時，會將模型輸出標準化，以縮放至模型的標準範圍。 |
 
 ### 註冊託管於第三方平台的模型
 
-若要註冊託管於第三方平台的模型，您可以先建立獨立連接器並提供該連接器的 ID，或為模型指定內部連接器。更多資訊請參閱[為第三方 ML 平台建立連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
+若要註冊託管於第三方平台的模型，您可以先建立獨立連接器並提供該連接器的 ID，或為模型指定內部連接器。如需更多資訊，請參閱[為第三方 ML 平台建立連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
 
 下表列出可用的請求欄位。
 
 欄位 | 資料類型 | 必要/選用 | 說明
-:---  | :--- | :--- 
+:---  | :--- | :--- | :---
 `name`| 字串 | 必要 | 模型名稱。 |
 `function_name` | 字串 | 必要 | 將此參數設定為 `remote`。
-`connector_id` | 字串 | 必要 | 託管於第三方平台之模型的獨立連接器 ID。更多資訊請參閱[獨立連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/#creating-a-standalone-connector)。您必須提供 `connector_id` 或 `connector` 其中之一。
-`connector` | 物件 | 必要 | 包含託管於第三方平台之模型連接器的規格。更多資訊請參閱[為特定模型建立連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/#creating-a-connector-for-a-specific-model)。您必須提供 `connector_id` 或 `connector` 其中之一。
+`connector_id` | 字串 | 必要 | 託管於第三方平台之模型的獨立連接器 ID。如需更多資訊，請參閱[獨立連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/#creating-a-standalone-connector)。您必須提供 `connector_id` 或 `connector` 其中之一。
+`connector` | 物件 | 必要 | 包含託管於第三方平台之模型連接器的規格。如需更多資訊，請參閱[為特定模型建立連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/#creating-a-connector-for-a-specific-model)。您必須提供 `connector_id` 或 `connector` 其中之一。
 `model_id` | 字串 | 選用 | 模型的唯一識別碼。若省略，OpenSearch 會自動產生。 |
 `description` | 字串 | 選用| 模型描述。 |
-`model_group_id` | 字串 | 選用 | 要註冊此模型之模型群組的模型群組 ID。 
-`is_enabled`| 布林值 | 選用 | 指定模型是否啟用。停用模型會使其無法用於 Predict API 請求，無論模型的部署狀態為何。預設為 `true`。
-`rate_limiter` | 物件 | 選用 | 限制任何使用者可對模型呼叫 Predict API 的次數。更多資訊請參閱[推論呼叫的速率限制]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/#rate-limiting-inference-calls)。
-`guardrails`| 物件 | 選用 | 模型輸入的防護機制。更多資訊請參閱[防護機制](#the-guardrails-parameter)。|
-`interface`| 物件 | 選用 | 模型的介面。更多資訊請參閱[介面](#the-interface-parameter)。|
-`batch_inference_config` | 物件 | 選用 | 為外部託管模型設定批次推論。更多資訊請參閱[`batch_inference_config` 參數](#the-batch_inference_config-parameter)。 |
+`model_group_id` | 字串 | 選用 | 要將此模型註冊至的模型群組之模型群組 ID。
+`is_enabled`| 布林值 | 選用 | 指定模型是否已啟用。停用模型會使其無法用於 Predict API 請求，無論模型的部署狀態為何。預設為 `true`。
+`rate_limiter` | 物件 | 選用 | 限制任何使用者可以對模型呼叫 Predict API 的次數。如需更多資訊，請參閱[限制推論呼叫速率]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/#rate-limiting-inference-calls)。
+`guardrails`| 物件 | 選用 | 模型輸入的防護機制。如需更多資訊，請參閱[防護機制](#the-guardrails-parameter)。|
+`interface`| 物件 | 選用 | 模型的介面。如需更多資訊，請參閱[介面](#the-interface-parameter)。|
+`batch_inference_config` | 物件 | 選用 | 為外部託管的模型設定批次推論。如需更多資訊，請參閱[`batch_inference_config` 參數](#the-batch_inference_config-parameter)。 |
 `provisioned_by` | 字串 | 選用 | 選用的歸屬標籤，用於識別註冊模型的外掛程式或用戶端（例如 `flow-framework`）。會包含在 ML 統計指標中。
+
+### 存取控制與部署欄位
+
+下列選用欄位適用於所有模型類型。
+
+欄位 | 資料類型 | 必要/選用 | 說明
+:---  | :--- | :--- | :---
+`access_mode` | 字串 | 選用 | 為此模型建立的模型群組的存取模式。有效值為 `public`、`private` 和 `restricted`。僅在您註冊模型的第一個版本且未提供 `model_group_id` 時適用。如需詳細資訊，請參閱 [Register Model Group API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-group-apis/register-model-group/)。
+`backend_roles` | 陣列 | 選用 | 要新增至為此模型建立之模型群組的模型擁有者後端角色清單。僅在未提供 `model_group_id` 時適用。不能與 `add_all_backend_roles` 同時指定。
+`add_all_backend_roles` | 布林值 | 選用 | 若為 `true`，則會將模型擁有者的所有後端角色新增至為此模型建立的模型群組。僅在未提供 `model_group_id` 時適用。不能與 `backend_roles` 同時指定。管理員使用者無法將此參數設為 `true`。
+`deploy_setting` | 物件 | 選用 | 模型的部署設定。支援 `model_ttl_minutes` 欄位（Long），其指定部署的模型在幾分鐘後自動取消部署（預設為 `-1`，表示模型不會自動取消部署），以及 `is_auto_deploy_enabled` 欄位（布林值），其指定已取消部署的模型在收到 Predict API 請求時是否自動部署（預設為 `true`）。
+`model_node_ids` | 陣列 | 選用 | 在註冊後部署模型時（`deploy=true`），要在其上部署模型的節點 ID 清單。
 
 ### `guardrails` 參數
 
@@ -355,17 +367,17 @@ POST /_plugins/_ml/models/_register
 
 完整範例請參閱[使用停用詞與正規表示式驗證輸入/輸出]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/guardrails/#validating-inputoutput-using-stopwords-and-regex)。
 
-### 範例請求：防護模型驗證
+### 範例請求：防護機制模型驗證
 
-下列範例使用防護模型來驗證 LLM 回應：
+下列範例使用防護機制模型來驗證 LLM 回應：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
 {
-    "name": "Bedrock Claude V2 model with guardrails model",
+    "name": "Bedrock Claude Sonnet 4.6 model with guardrails model",
     "function_name": "remote",
     "model_group_id": "ppSmpo8Bi-GZ0tf1i7cD",
-    "description": "Bedrock Claude V2 model with guardrails model",
+    "description": "Bedrock Claude Sonnet 4.6 model with guardrails model",
     "connector_id": "xnJjDZABNFJeYR3IPvTO",
     "guardrails": {
         "input_guardrail": {
@@ -382,7 +394,7 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-完整範例請參閱[使用防護模型驗證輸入/輸出]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/guardrails/#validating-inputoutput-using-a-guardrail-model)。
+如需完整範例，請參閱[使用防護機制模型驗證輸入/輸出]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/guardrails/#validating-inputoutput-using-a-guardrail-model)。
 
 ### 範例請求：具有介面的外部託管模型
 
@@ -470,7 +482,7 @@ POST /_plugins/_ml/models/_register
 
 ## 範例回應
 
-OpenSearch 會回應 `task_id`、任務 `status` 以及 `model_id`：
+OpenSearch 會以 `task_id` 和任務 `status` 回應。對於外部託管的模型，回應也會包含 `model_id`。對於本機模型，模型 ID 會在註冊完成後於任務中傳回：
 
 ```json
 {
@@ -482,7 +494,7 @@ OpenSearch 會回應 `task_id`、任務 `status` 以及 `model_id`：
 
 ## 檢查模型註冊狀態
 
-若要查看模型註冊狀態並擷取為新模型版本建立的模型 ID，請將 `task_id` 作為路徑參數傳遞給 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/)：
+若要查看模型註冊的狀態，並取得為新模型版本建立的模型 ID，請將 `task_id` 作為路徑參數傳遞給 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/)：
 
 ```json
 GET /_plugins/_ml/tasks/{task_id}
@@ -494,7 +506,7 @@ GET /_plugins/_ml/tasks/{task_id}
 ```json
 {
   "model_id": "Qr1YbogBYOqeeqR7sI9L",
-  "task_type": "DEPLOY_MODEL",
+  "task_type": "REGISTER_MODEL",
   "function_name": "TEXT_EMBEDDING",
   "state": "COMPLETED",
   "worker_node": [

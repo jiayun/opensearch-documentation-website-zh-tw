@@ -216,7 +216,7 @@ GET /_plugins/_ml/tasks/KYZSv5EBqL2d0mFvs80C
 ## 請求範例
 
 ```json
-POST /_plugins/_ml/tasks/KYZSv5EBqL2d0mFvs80C/_cancel_batch
+POST /_plugins/_ml/tasks/KYZSv5EBqL2d0mFvs80C/_cancel
 ```
 {% include copy-curl.html %}
 

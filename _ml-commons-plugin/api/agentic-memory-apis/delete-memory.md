@@ -1,13 +1,13 @@
 ---
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: "刪除代理程式記憶"
+title: "刪除代理記憶（agentic memory）"
 parent: Agentic memory APIs
 grand_parent: ML Commons APIs
 nav_order: 53
 ---
 
-# 刪除代理程式記憶 API
+# 刪除代理記憶 API
 **3.3 版新增**
 {: .label .label-purple }
 
@@ -65,20 +65,23 @@ DELETE /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/history/eMx
 
 ```json
 {
-  "result": "deleted",
+  "_index": ".plugins-ml-am-default-memory-working",
   "_id": "XyEuiJkBeh2gPPwzjYWM",
   "_version": 2,
+  "result": "deleted",
   "_shards": {
-    "total": 2,
+    "total": 1,
     "successful": 1,
     "failed": 0
-  }
+  },
+  "_seq_no": 6,
+  "_primary_term": 1
 }
 ```
 
 ### 錯誤回應
 
-如果您嘗試從不存在的容器刪除記憶，OpenSearch 會傳回 404 Not Found 錯誤：
+如果您嘗試從不存在的記憶容器刪除記憶，OpenSearch 會傳回 404 Not Found 錯誤。如果記憶不存在，OpenSearch 也會傳回 404 錯誤。以下為記憶容器不存在時傳回的回應：
 
 ```json
 {
@@ -102,10 +105,13 @@ DELETE /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/history/eMx
 
 | 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
+| `_index` | 字串 | 刪除記憶所在的索引名稱。 |
 | `result` | 字串 | 刪除作業的結果。 |
 | `_id` | 字串 | 已刪除記憶的 ID。 |
 | `_version` | 整數 | 刪除後的版本號。 |
 | `_shards` | 物件 | 此作業所涉及分片的相關資訊。 |
+| `_seq_no` | 長整數 | 指派給此刪除作業的序號。 |
+| `_primary_term` | 長整數 | 索引的主要分片任期。 |
 
 ## 依查詢刪除記憶
 

@@ -49,10 +49,10 @@ POST /_plugins/_ml/agents/_search
 ```
 {% include copy-curl.html %}
 
-#### 範例：依描述搜尋代理程式
+## 範例請求：依描述搜尋代理程式
 
 ```json
-GET _plugins/_ml/agents/_search
+GET /_plugins/_ml/agents/_search
 {
   "query": {
     "bool": {
@@ -100,6 +100,7 @@ GET _plugins/_ml/agents/_search
           "created_time": 1707532959502,
           "last_updated_time": 1707532959502,
           "name": "Test_Agent_For_RagTool",
+          "is_hidden": false,
           "description": "this is a test flow agent",
           "type": "flow",
           "tools": [
@@ -115,16 +116,12 @@ GET _plugins/_ml/agents/_search
                 "embedding_field": "embedding",
                 "index": "my_test_data",
                 "query_type": "neural",
-                "prompt": """
+                "prompt": """You are a professional data analyst. You will always answer question based on the given context first. If the answer is not directly shown in the context, you will analyze the data and find the answer. If you don't know the answer, just say don't know. 
 
-Human:You are a professional data analyst. You will always answer question based on the given context first. If the answer is not directly shown in the context, you will analyze the data and find the answer. If you don't know the answer, just say don't know. 
-
- Context:
+Context:
 ${parameters.output_field}
 
-Human:${parameters.question}
-
-Assistant:"""
+Question: ${parameters.question}"""
               }
             }
           ]

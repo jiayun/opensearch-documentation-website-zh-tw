@@ -33,8 +33,10 @@ Execute Tool API 適合以下用途：
 POST /_plugins/_ml/tools/_execute/{tool_name}
 ```
 
-`<tool_name>` 參數是指預先定義的工具類型名稱，例如 `PPLTool`、`SearchIndexTool` 或 `VectorDBTool`，而非您定義的自訂工具名稱。
+`<tool_name>` 參數指的是預先定義的工具類型名稱，例如 `PPLTool`、`SearchIndexTool` 或 `VectorDBTool`，而不是您自訂的工具名稱。
 {: .note}
+
+Execute Tool API 預設為啟用。若要停用，請將 `plugins.ml_commons.execute_tools_enabled` 設為 `false`。
 
 ## 請求本文欄位
 
@@ -116,9 +118,7 @@ POST /_plugins/_ml/tools/_execute/PPLTool
             "output": [
                 {
                     "name": "response",
-                    "dataAsMap": {
-                        "result":"{\"ppl\":\"source\=test-population | where QUERY_STRING([\'population_description\'], \'Seattle\') AND QUERY_STRING([\'population_description\'], \'2021\')\",\"executionResult\":\"{\\n  \\\"schema\\\": [\\n    {\\n      \\\"name\\\": \\\"population_description\\\",\\n      \\\"type\\\": \\\"string\\\"\\n    }\\n  ],\\n  \\\"datarows\\\": [],\\n  \\\"total\\\": 0,\\n  \\\"size\\\": 0\\n}\"}"
-                    }
+                    "result": "{\"ppl\":\"source=test-population | where QUERY_STRING(['population_description'], 'Seattle') AND QUERY_STRING(['population_description'], '2021')\",\"executionResult\":\"{\\n  \\\"schema\\\": [\\n    {\\n      \\\"name\\\": \\\"population_description\\\",\\n      \\\"type\\\": \\\"string\\\"\\n    }\\n  ],\\n  \\\"datarows\\\": [],\\n  \\\"total\\\": 0,\\n  \\\"size\\\": 0\\n}\"}"
                 }
             ]
         }

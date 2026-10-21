@@ -14,7 +14,7 @@ redirect_from:
 
 # 建立您自己的聊天機器人
 
-有時大型語言模型 (LLM) 無法立即回答問題。例如，LLM 無法告訴您上週記錄索引中有多少錯誤，因為其知識庫不包含您的專有資料。在這種情況下，您需要在後續呼叫中向 LLM 提供額外資訊。您可以使用代理程式來解決這類複雜問題。代理程式可以執行工具，從設定的資料來源取得更多資訊，並將額外資訊作為上下文傳送給 LLM。
+有時大型語言模型 (LLM) 無法立即回答問題。例如，LLM 無法告訴您上週記錄索引中有多少錯誤，因為其知識庫不包含您的專有資料。在這種情況下，您需要在後續呼叫中向 LLM 提供額外資訊。您可以使用代理程式來解決這類複雜問題。代理程式可以執行工具，從設定的資料來源取得更多資訊，並將額外資訊作為脈絡傳送給 LLM。
 
 本教學說明如何使用 `conversational` 代理程式在 OpenSearch 中建立您自己的聊天機器人。如需代理程式的更多資訊，請參閱 [代理程式與工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/index/)。
 
@@ -27,7 +27,7 @@ redirect_from:
 
 ## 步驟 1：設定知識庫
 
-完成必要條件，並依照 [使用對話流程代理程式的 RAG 教學]({{site.url}}{{site.baseurl}}/ml-commons-plugin/tutorials/rag-conversational-agent/) 的步驟 1 設定 `test_population_data` 知識庫索引，其中包含美國城市人口資料。
+請符合先決條件，並依照[使用對話式流程代理程式的 RAG 教學]({{site.url}}{{site.baseurl}}/ml-commons-plugin/tutorials/rag-conversational-agent/)的步驟 1，設定包含美國城市人口資料的 `test_population_data` 知識庫索引。
 
 建立資料匯入管線：
 
@@ -61,13 +61,13 @@ PUT test_stock_price_data
       },
       "stock_price_history_embedding": {
         "type": "knn_vector",
-        "dimension": 384
+        "dimension": 384,
+        "space_type": "cosinesimil"
       }
     }
   },
   "settings": {
     "index": {
-      "knn.space_type": "cosinesimil",
       "default_pipeline": "test_stock_price_data_pipeline",
       "knn": "true"
     }
@@ -104,14 +104,14 @@ POST _bulk
 ```json
 POST /_plugins/_ml/connectors/_create
 {
-  "name": "Bedrock Claude Sonnet 5",
+  "name": "Bedrock Claude Sonnet 4.6",
   "description": "The connector to BedRock service for claude model",
   "version": 1,
   "protocol": "aws_sigv4",
   "parameters": {
     "region": "us-east-1",
     "service_name": "bedrock",
-    "model": "us.anthropic.claude-sonnet-5",
+    "model": "us.anthropic.claude-sonnet-4-6",
     "response_filter": "$.output.message.content[0].text"
   },
   "credential": {
@@ -124,28 +124,28 @@ POST /_plugins/_ml/connectors/_create
     "method": "POST",
     "url": "https://bedrock-runtime.${parameters.region}.amazonaws.com/model/${parameters.model}/converse",
     "headers": { "content-type": "application/json" },
-    "request_body": "{\"messages\": [${parameters._chat_history:-}{\"role\":\"user\",\"content\":[{\"text\":\"${parameters.prompt:-}\"}]}${parameters._interactions:-}]${parameters.tool_configs:-}}"
+    "request_body": "{\"system\": [{\"text\": \"${parameters.system_prompt:-You are a helpful assistant.}\"}], \"messages\": [${parameters._chat_history:-}{\"role\":\"user\",\"content\":[{\"text\":\"${parameters.prompt:-}\"}]}${parameters._interactions:-}]${parameters.tool_configs:-}}"
   }]
 }
 ```
 {% include copy-curl.html %}
 
-請記下連接器 ID；您將使用它來註冊模型。
+請記下連接器 ID，您將使用它來註冊模型。
 
 註冊模型：
 
 ```json
 POST /_plugins/_ml/models/_register
 {
-    "name": "Bedrock Claude Instant model",
+    "name": "Bedrock Claude Sonnet 4.6 model",
     "function_name": "remote",
-    "description": "Bedrock Claude instant-v1 model",
+    "description": "Bedrock Claude Sonnet 4.6 model",
     "connector_id": "your_connector_id"
 }
 ```
 {% include copy-curl.html %}
 
-請記下 LLM 模型 ID；您將在後續步驟中使用它。
+請記下 LLM 模型 ID，您將在後續步驟中使用它。
 
 部署模型：
 
@@ -160,7 +160,7 @@ POST /_plugins/_ml/models/your_LLM_model_id/_deploy
 POST /_plugins/_ml/models/your_LLM_model_id/_predict
 {
   "parameters": {
-    "prompt": "\n\nHuman: how are you? \n\nAssistant:"
+    "prompt": "how are you?"
   }
 }
 ```
@@ -174,32 +174,36 @@ POST /_plugins/_ml/models/your_LLM_model_id/_predict
 
 建立 `conversational` 類型的代理程式。
 
-代理程式會使用下列資訊進行設定：
+此代理程式設定如下資訊：
 
-- 中繼資訊：`name`、`type`、`description`。
-- LLM 資訊：代理程式使用 LLM 進行推理並選擇下一個步驟，包括選擇合適的工具及準備工具輸入。
-- 工具：工具是代理程式可執行的函式。每個工具都可以定義自己的 `name`、`description` 和 `parameters`。
-- 記憶體：儲存聊天訊息。OpenSearch 支援一種記憶體類型：`conversation_index`。
+- 元資料：`name`、`type`、`description`。
+- LLM 資訊：代理程式使用 LLM 進行推理並選擇下一步，包括選擇適當的工具以及準備工具輸入。
+- 工具：工具是可由代理程式執行的函式。每個工具都可以定義自己的 `name`、`description` 與 `parameters`。
+- 記憶：儲存聊天訊息。OpenSearch 支援一種記憶類型：`conversation_index`。
 
 代理程式包含下列參數：
 
-- `conversational`：此代理程式類型具有內建的提示。若要使用您自己的提示加以覆寫，請參閱[步驟 4](#step-4-optional-create-an-agent-with-a-custom-prompt)。
-- `app_type`：指定此參數以供參照之用，以便區分多個代理程式。
+- `conversational`：此代理程式類型有內建提示。若要以您自己的提示覆寫，請參閱[步驟 4](#step-4-optional-create-an-agent-with-a-custom-prompt)。
+- `app_type`：指定此參數以供參考之用，用來區分多個代理程式。
 - `llm`：定義 LLM 組態：
    - `"max_iteration": 5`：代理程式最多執行 LLM 五次。
-   - `"response_filter": "$.completion"`：從 Bedrock Claude 模型回應中擷取 LLM 答案時所需。
-   - `"message_history_limit": 5`：代理程式最多擷取五則最近的歷史訊息，並將其加入 LLM 內容。將此參數設為 `0` 以在內容中省略訊息歷史記錄。
-   - `disable_trace`：若為 `true`，則代理程式不會將追蹤資料儲存在記憶體中。追蹤資料會包含在每則訊息中，並詳細說明產生訊息時所執行的步驟。
-- `memory`：定義如何儲存訊息。OpenSearch 僅支援 `conversation_index` 記憶體，其會將訊息儲存在記憶體索引中。
+   - `"response_filter": "$"`：將完整的模型回應傳給代理程式，讓代理程式能讀取其中的工具呼叫。此設定會覆寫連接器的 `response_filter`，Predict API 與 `PPLTool` 使用該設定只取得答案文字。
+   - `"prompt": "${parameters.question}"`：將使用者問題作為使用者訊息傳送給 LLM。
+   - `"message_history_limit": 5`：代理程式最多擷取最近五則歷史訊息，並將其加入 LLM 脈絡。將此參數設為 `0` 可在脈絡中省略訊息歷程。
+   - `disable_trace`：若為 `true`，代理程式就不會將追蹤資料儲存在記憶中。追蹤資料包含在每則訊息中，詳細記錄產生該訊息時執行的步驟。
+- `memory`：定義如何儲存訊息。OpenSearch 僅支援 `conversation_index` 記憶，它會將訊息儲存在記憶索引中。
+- `parameters`：定義代理程式參數：
+   - `"_llm_interface": "bedrock/converse/claude"`：對 Claude 模型使用 Amazon Bedrock Converse API 的工具呼叫 (function calling) 介面。代理程式在請求的 `toolConfig` 欄位中將工具定義傳送給 LLM，並從 LLM 回應中讀取工具呼叫。
 - 工具：
-   - LLM 會進行推理以決定要執行哪個工具，並準備工具的輸入。
-   - 若要在回應中包含工具的輸出，請指定 `"include_output_in_agent_response": true`。在本教學中，您將在回應中包含 `PPLTool` 輸出（請參閱[測試代理程式](#test-the-agent)中的範例回應）。
-   - 依預設，工具的 `name` 與工具的 `type` 相同，且每個工具都有預設描述。您可以覆寫工具的 `name` 和 `description`。
-   - `tools` 清單中的每個工具都必須有唯一的名稱。例如，下列示範代理程式定義了兩個 `VectorDBTool` 類型且名稱不同的工具（`population_data_knowledge_base` 和 `stock_price_data_knowledge_base`）。每個工具都有自訂描述，以便 LLM 輕鬆理解該工具的功能。
+   - LLM 會進行推理以決定要執行哪個工具，並準備該工具的輸入。
+   - 若要將工具的輸出包含在回應中，請指定 `"include_output_in_agent_response": true`。在本教學中，您會將 `PPLTool` 的輸出包含在回應中（請參閱[測試代理程式](#test-the-agent)中的範例回應）。
+   - 預設情況下，工具的 `name` 與工具的 `type` 相同，且每個工具都有預設描述。您可以覆寫工具的 `name` 與 `description`。
+   - LLM 會使用每個工具的輸入結構描述來準備工具輸入。若工具未定義預設輸入結構描述，請在 `attributes.input_schema` 中提供一個。在本教學中，請求為 `PPLTool` 以及異常偵測與警示搜尋工具提供了輸入結構描述。
+   - `tools` 清單中的每個工具都必須有唯一的名稱。例如，下列示範代理程式定義了兩個 `VectorDBTool` 類型但名稱不同的工具（`population_data_knowledge_base` 與 `stock_price_data_knowledge_base`）。每個工具都有自訂描述，讓 LLM 能輕易了解該工具的功能。
    
    如需工具的詳細資訊，請參閱[工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/)。
 
-此範例請求會在代理程式中設定數個範例工具。您可以視需要設定與您的使用案例相關的其他工具。
+此範例請求在代理程式中設定數個範例工具。您可以視需要設定與您的使用案例相關的其他工具。
 {: .note}
 
 註冊代理程式：
@@ -215,13 +219,17 @@ POST _plugins/_ml/agents/_register
     "model_id": "your_llm_model_id_from_step2",
     "parameters": {
       "max_iteration": 5,
-      "response_filter": "$.completion",
+      "response_filter": "$",
+      "prompt": "${parameters.question}",
       "message_history_limit": 5,
       "disable_trace": false
     }
   },
   "memory": {
     "type": "conversation_index"
+  },
+  "parameters": {
+    "_llm_interface": "bedrock/converse/claude"
   },
   "tools": [
     {
@@ -230,6 +238,22 @@ POST _plugins/_ml/agents/_register
         "model_id": "your_llm_model_id_from_step2",
         "model_type": "CLAUDE",
         "execute": true
+      },
+      "attributes": {
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "question": {
+              "type": "string",
+              "description": "The natural language question to translate into PPL"
+            },
+            "index": {
+              "type": "string",
+              "description": "The index to query"
+            }
+          },
+          "required": ["question", "index"]
+        }
       },
       "include_output_in_agent_response": true
     },
@@ -275,13 +299,54 @@ POST _plugins/_ml/agents/_register
       "description": "Use this tool to get OpenSearch index information: (health, status, index, uuid, primary count, replica count, docs.count, docs.deleted, store.size, primary.store.size). \nIt takes 2 optional arguments named `index` which is a comma-delimited list of one or more indices to get information from (default is an empty list meaning all indices), and `local` which means whether to return information from the local node only instead of the cluster manager node (default is false)."
     },
     {
-      "type": "SearchAnomalyDetectorsTool"
+      "type": "SearchAnomalyDetectorsTool",
+      "attributes": {
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "detectorName": {
+              "type": "string",
+              "description": "The detector name"
+            },
+            "indices": {
+              "type": "string",
+              "description": "The index that the detector monitors"
+            }
+          }
+        }
+      }
     },
     {
-      "type": "SearchAnomalyResultsTool"
+      "type": "SearchAnomalyResultsTool",
+      "attributes": {
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "detectorId": {
+              "type": "string",
+              "description": "The detector ID"
+            }
+          }
+        }
+      }
     },
     {
-      "type": "SearchMonitorsTool"
+      "type": "SearchMonitorsTool",
+      "attributes": {
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "monitorName": {
+              "type": "string",
+              "description": "The monitor name"
+            },
+            "indices": {
+              "type": "string",
+              "description": "The index that the monitor monitors"
+            }
+          }
+        }
+      }
     },
     {
       "type": "SearchAlertsTool"
@@ -291,7 +356,7 @@ POST _plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-請記下代理程式 ID；您將在下一個步驟中使用它。
+記下代理程式 ID；您會在下一步使用它。
 
 ### 測試代理程式
 
@@ -336,7 +401,7 @@ POST _plugins/_ml/agents/your_agent_id/_execute
 ```
 {% include copy-curl.html %}
 
-因為您為 `PPLTool` 指定了 `"include_output_in_agent_response": true`，所以回應在 `additional_info` 物件中包含 `PPLTool.output`：
+因為您為 `PPLTool` 指定了 `"include_output_in_agent_response": true`，所以回應會在 `additional_info` 物件中包含 `PPLTool.output`：
 
 ```json
 {
@@ -354,10 +419,10 @@ POST _plugins/_ml/agents/your_agent_id/_execute
         {
           "name": "response",
           "dataAsMap": {
-            "response": "The tool response from the PPLTool shows that there were 3812 orders in the opensearch_dashboards_sample_data_ecommerce index within the last week.",
+            "response": "There were **3,536 orders** placed in the last week in the `opensearch_dashboards_sample_data_ecommerce` index.\n\nThe query filtered records where the `order_date` falls within the last 7 days and then counted the total number of matching orders.",
             "additional_info": {
               "PPLTool.output": [
-                """{"ppl":"source\u003dopensearch_dashboards_sample_data_ecommerce| where order_date \u003e DATE_SUB(NOW(), INTERVAL 1 WEEK) | stats COUNT() AS count","executionResult":"{\n  \"schema\": [\n    {\n      \"name\": \"count\",\n      \"type\": \"integer\"\n    }\n  ],\n  \"datarows\": [\n    [\n      3812\n    ]\n  ],\n  \"total\": 1,\n  \"size\": 1\n}"}"""
+                """{"ppl":"source=opensearch_dashboards_sample_data_ecommerce | where order_date > DATE_SUB(NOW(), INTERVAL 1 WEEK) | stats COUNT() AS count","executionResult":"{\n  \"schema\": [\n    {\n      \"name\": \"count\",\n      \"type\": \"bigint\"\n    }\n  ],\n  \"datarows\": [\n    [\n      3536\n    ]\n  ],\n  \"total\": 1,\n  \"size\": 1\n}"}"""
               ]
             }
           }
@@ -410,22 +475,16 @@ POST _plugins/_ml/agents/your_agent_id/_execute
         },
         {
           "name": "response",
-          "result": """{
-  "thought": "Let me check the population data tool",
-  "action": "population_data_knowledge_base",
-  "action_input": "{'question': 'What is the population increase of Seattle from 2021 to 2023?', 'cities': ['Seattle']}"
-}"""
+          "result": """{"metrics":{"latencyMs":1351},"output":{"message":{"content":[{"text":"I'll look up the population data for Seattle for both 2021 and 2023 simultaneously!"},{"toolUse":{"input":{"input":"Seattle population 2021"},"name":"population_data_knowledge_base","toolUseId":"tooluse_Otp7WQDMey0VbuxrfcncmJ","type":"tool_use"}},{"toolUse":{"input":{"input":"Seattle population 2023"},"name":"population_data_knowledge_base","toolUseId":"tooluse_UshSIkOhmmek3dD1Xv2jcl","type":"tool_use"}}],"role":"assistant"}},"stopReason":"tool_use","usage":{...}}"""
         },
         {
           "name": "response",
-          "result": """{"_index":"test_population_data","_source":{"population_description":"Chart and table of population level and growth rate for the Seattle metro area from 1950 to 2023. United Nations population projections are also included through the year 2035.\\nThe current metro area population of Seattle in 2023 is 3,519,000, a 0.86% increase from 2022.\\nThe metro area population of Seattle in 2022 was 3,489,000, a 0.81% increase from 2021.\\nThe metro area population of Seattle in 2021 was 3,461,000, a 0.82% increase from 2020.\\nThe metro area population of Seattle in 2020 was 3,433,000, a 0.79% increase from 2019."},"_id":"9EJsyI0Bn3OCesyvU-B7","_score":0.75154537}
-{"_index":"test_population_data","_source":{"population_description":"Chart and table of population level and growth rate for the Austin metro area from 1950 to 2023. United Nations population projections are also included through the year 2035.\\nThe current metro area population of Austin in 2023 is 2,228,000, a 2.39% increase from 2022.\\nThe metro area population of Austin in 2022 was 2,176,000, a 2.79% increase from 2021.\\nThe metro area population of Austin in 2021 was 2,117,000, a 3.12% increase from 2020.\\nThe metro area population of Austin in 2020 was 2,053,000, a 3.43% increase from 2019."},"_id":"80JsyI0Bn3OCesyvU-B7","_score":0.6689899}
-{"_index":"test_population_data","_source":{"population_description":"Chart and table of population level and growth rate for the New York City metro area from 1950 to 2023. United Nations population projections are also included through the year 2035.\\nThe current metro area population of New York City in 2023 is 18,937,000, a 0.37% increase from 2022.\\nThe metro area population of New York City in 2022 was 18,867,000, a 0.23% increase from 2021.\\nThe metro area population of New York City in 2021 was 18,823,000, a 0.1% increase from 2020.\\nThe metro area population of New York City in 2020 was 18,804,000, a 0.01% decline from 2019."},"_id":"8EJsyI0Bn3OCesyvU-B7","_score":0.66782206}
-"""
+          "result": """{"_index":"test_population_data","_source":{"population_description":"Chart and table of population level and growth rate for the Seattle metro area from 1950 to 2023. United Nations population projections are also included through the year 2035.\\nThe current metro area population of Seattle in 2023 is 3,519,000, a 0.86% increase from 2022.\\nThe metro area population of Seattle in 2022 was 3,489,000, a 0.81% increase from 2021.\\nThe metro area population of Seattle in 2021 was 3,461,000, a 0.82% increase from 2020.\\nThe metro area population of Seattle in 2020 was 3,433,000, a 0.79% increase from 2019."},"_id":"9EJsyI0Bn3OCesyvU-B7","_score":0.87160504}
+..."""
         },
         {
           "name": "response",
-          "result": "According to the population data tool, the population of Seattle increased by approximately 28,000 people from 2021 to 2023, which is a 0.82% increase from 2021 to 2022 and a 0.86% increase from 2022 to 2023."
+          "result": "Based on the data retrieved, here is the population information for the **Seattle metro area**:\n\n| Year | Population |\n|------|------------|\n| 2021 | 3,461,000  |\n| 2023 | 3,519,000  |\n\n**Population Increase from 2021 to 2023:**\n- **Absolute Increase:** 3,519,000 − 3,461,000 = **58,000 people**\n- **Percentage Increase:** approximately **1.68%** over two years\n\nThis growth was driven by a consistent annual increase of roughly 0.81–0.86% per year during that period."
         }
       ]
     }
@@ -442,7 +501,7 @@ GET _plugins/_ml/memory/message/L0JuyI0Bn3OCesyv3-Er/traces
 
 #### 測試對話記憶
 
-若要延續相同的對話，請在執行代理程式時指定該對話的 `memory_id`：
+若要繼續同一段對話，請在執行代理程式時指定該對話的 `memory_id`：
 
 ```json
 POST _plugins/_ml/agents/your_agent_id/_execute
@@ -456,7 +515,7 @@ POST _plugins/_ml/agents/your_agent_id/_execute
 ```
 {% include copy-curl.html %}
 
-在回應中，請注意 `population_data_knowledge_base` 並未傳回西雅圖的人口數。代理程式是透過參考歷史訊息得知西雅圖的人口數：
+代理程式會將記憶中的先前問題與答案作為聊天歷程傳送給 LLM。回應會包含新問題的執行步驟：
 
 ```json
 {
@@ -473,22 +532,16 @@ POST _plugins/_ml/agents/your_agent_id/_execute
         },
         {
           "name": "response",
-          "result": """{
-  "thought": "Let me check the population data tool first",
-  "action": "population_data_knowledge_base",
-  "action_input": "{\"city\":\"Austin\",\"year\":2023}"
-}"""
+          "result": """{"metrics":{"latencyMs":1307},"output":{"message":{"content":[{"text":"I'll fetch the population data for both Austin and Seattle in 2023 at the same time!"},{"toolUse":{"input":{"input":"Austin population 2023"},"name":"population_data_knowledge_base","toolUseId":"tooluse_MOjGyUAKYgL2o9LjKcCxAu","type":"tool_use"}},{"toolUse":{"input":{"input":"Seattle population 2023"},"name":"population_data_knowledge_base","toolUseId":"tooluse_Iwa8FuZPB0Uy1U0kH97Gms","type":"tool_use"}}],"role":"assistant"}},"stopReason":"tool_use","usage":{...}}"""
         },
         {
           "name": "response",
-          "result": """{"_index":"test_population_data","_source":{"population_description":"Chart and table of population level and growth rate for the Austin metro area from 1950 to 2023. United Nations population projections are also included through the year 2035.\\nThe current metro area population of Austin in 2023 is 2,228,000, a 2.39% increase from 2022.\\nThe metro area population of Austin in 2022 was 2,176,000, a 2.79% increase from 2021.\\nThe metro area population of Austin in 2021 was 2,117,000, a 3.12% increase from 2020.\\nThe metro area population of Austin in 2020 was 2,053,000, a 3.43% increase from 2019."},"_id":"BhF5vo0BubpYKX5ER0fT","_score":0.69129956}
-{"_index":"test_population_data","_source":{"population_description":"Chart and table of population level and growth rate for the Austin metro area from 1950 to 2023. United Nations population projections are also included through the year 2035.\\nThe current metro area population of Austin in 2023 is 2,228,000, a 2.39% increase from 2022.\\nThe metro area population of Austin in 2022 was 2,176,000, a 2.79% increase from 2021.\\nThe metro area population of Austin in 2021 was 2,117,000, a 3.12% increase from 2020.\\nThe metro area population of Austin in 2020 was 2,053,000, a 3.43% increase from 2019."},"_id":"6zrZvo0BVR2NrurbRIAE","_score":0.69129956}
-{"_index":"test_population_data","_source":{"population_description":"Chart and table of population level and growth rate for the New York City metro area from 1950 to 2023. United Nations population projections are also included through the year 2035.\\nThe current metro area population of New York City in 2023 is 18,937,000, a 0.37% increase from 2022.\\nThe metro area population of New York City in 2022 was 18,867,000, a 0.23% increase from 2021.\\nThe metro area population of New York City in 2021 was 18,823,000, a 0.1% increase from 2020.\\nThe metro area population of New York City in 2020 was 18,804,000, a 0.01% decline from 2019."},"_id":"AxF5vo0BubpYKX5ER0fT","_score":0.61015373}
-"""
+          "result": """{"_index":"test_population_data","_source":{"population_description":"Chart and table of population level and growth rate for the Austin metro area from 1950 to 2023. United Nations population projections are also included through the year 2035.\\nThe current metro area population of Austin in 2023 is 2,228,000, a 2.39% increase from 2022.\\nThe metro area population of Austin in 2022 was 2,176,000, a 2.79% increase from 2021.\\nThe metro area population of Austin in 2021 was 2,117,000, a 3.12% increase from 2020.\\nThe metro area population of Austin in 2020 was 2,053,000, a 3.43% increase from 2019."},"_id":"BhF5vo0BubpYKX5ER0fT","_score":0.85916364}
+..."""
         },
         {
           "name": "response",
-          "result": "According to the population data tool, the population of Austin in 2023 is approximately 2,228,000 people, a 2.39% increase from 2022. This is lower than the population of Seattle in 2023 which is approximately 3,519,000 people, a 0.86% increase from 2022."
+          "result": "Here's a comparison of **Austin vs. Seattle** metro area populations in 2023:\n\n| City | Population (2023) |\n|------|------------------|\n| Seattle | 3,519,000 |\n| Austin | 2,228,000 |\n| **Difference** | **1,291,000** |\n\n### Key Takeaways:\n- **Seattle** is significantly larger than Austin, with a population **~57.9% higher** than Austin's in 2023.\n- However, **Austin** is growing at a much faster rate — **2.39% growth** in 2023 compared to Seattle's more modest growth rate.\n- If Austin maintains its strong growth trajectory, it could continue to close the gap with Seattle over the coming years."
         }
       ]
     }
@@ -510,9 +563,11 @@ GET _plugins/_ml/memory/message/00J6yI0Bn3OCesyvIuGZ/traces
 ```
 {% include copy-curl.html %}
 
-## 步驟 4 (選用)：使用自訂提示建立代理程式
+## 步驟 4（選用）：使用自訂提示建立代理程式 
 
-所有代理程式都有下列預設提示：
+步驟 3 中的代理程式使用工具呼叫，因此會將使用者問題以使用者訊息的形式傳送至 LLM，並將其指示以系統提示的形式傳送。若要自訂指示，請在 `llm.parameters` 中設定 `system_prompt` 參數。連接器會透過請求本文的 `system` 欄位，將 `system_prompt` 傳遞至 LLM。若您未設定 `system_prompt`，代理程式會使用 `You are a helpful assistant.` 如需範例，請參閱[範例 1](#example-1-customize-system_prompt)。
+
+未設定 `_llm_interface` 的代理程式會根據範本建構文字提示，如[範例 2](#example-2-openai-model-with-a-custom-prompt) 所示。預設提示範本如下：
 
 ```json
 "prompt": """
@@ -528,8 +583,8 @@ Assistant:"""
 
 提示由兩個部分組成：
 
-- `${parameters.prompt.prefix}`：描述 AI 助理能做什麼的提示前置詞。您可以根據使用案例變更此參數，例如 `You are a professional data analyst. You will always answer questions based on the tool response first. If you don't know the answer, just say you don't know.`
-- `${parameters.prompt.suffix}`：提示的主要部分，定義工具、聊天記錄、提示格式指示、問題和暫存區。
+- `${parameters.prompt.prefix}`：提示前綴，描述 AI 助理能執行的工作。您可以根據使用案例變更此參數，例如 `You are a professional data analyst. You will always answer questions based on the tool response first. If you don't know the answer, just say you don't know.`
+- `${parameters.prompt.suffix}`：提示的主要部分，定義工具、聊天歷程記錄、提示格式指示、問題及暫存區。 
 
 預設的 `prompt.suffix` 如下：
 
@@ -555,21 +610,21 @@ ${parameters.question}
 ${parameters.scratchpad}"""
 ```
 
-`prompt.suffix` 由下列預留位置組成：
+`prompt.suffix` 包含下列預留位置：
 
-- `${parameters.tool_descriptions}`：此預留位置會填入代理程式的工具資訊：工具名稱和描述。如果您省略此預留位置，代理程式將不會使用任何工具。
-- `${parameters.prompt.format_instruction}`：此預留位置定義 LLM 回應格式。此預留位置至關重要，我們不建議移除它。
-- `${parameters.chat_history}`：此預留位置會填入目前記憶體的訊息記錄。如果您在執行代理程式時未設定 `memory_id`，或沒有歷史訊息，則此預留位置會是空的。如果您不需要聊天記錄，可以移除此預留位置。
+- `${parameters.tool_descriptions}`：此預留位置會填入代理程式的工具資訊：工具名稱與說明。若您省略此預留位置，代理程式將不會使用任何工具。
+- `${parameters.prompt.format_instruction}`：此預留位置定義 LLM 回應格式。此預留位置至關重要，我們不建議將其移除。
+- `${parameters.chat_history}`：此預留位置會填入目前記憶的訊息歷程記錄。若您執行代理程式時未設定 `memory_id`，或沒有歷史訊息，此預留位置就會留空。若您不需要聊天歷程記錄，可以移除此預留位置。
 - `${parameters.question}`：此預留位置會填入使用者問題。
-- `${parameters.scratchpad}`：此預留位置會填入詳細的代理程式執行步驟。這些步驟與您指定詳細模式或取得追蹤資料時所看到的步驟相同 (請參閱[測試代理程式](#test-the-agent)中的範例)。此預留位置至關重要，可讓 LLM 根據先前步驟的結果進行推理並選取下一個步驟。我們不建議移除此預留位置。
+- `${parameters.scratchpad}`：此預留位置會填入代理程式的詳細執行步驟。這些步驟與您透過指定詳細模式或取得追蹤資料所能檢視的步驟相同（請參閱[測試代理程式](#test-the-agent) 中的範例）。此預留位置對於讓 LLM 根據先前步驟的結果進行推理並選擇下一個步驟至關重要。我們不建議移除此預留位置。
 
 ### 自訂提示範例
 
 下列範例示範如何自訂提示。
 
-#### 範例 1：自訂 `prompt.prefix`
+#### 範例 1：自訂 `system_prompt`
 
-使用自訂 `prompt.prefix` 註冊代理程式：
+註冊一個具有自訂 `system_prompt` 的代理程式：
 
 ```json
 POST _plugins/_ml/agents/_register
@@ -582,12 +637,16 @@ POST _plugins/_ml/agents/_register
     "model_id": "P0L8xI0Bn3OCesyvPsif",
     "parameters": {
       "max_iteration": 3,
-      "response_filter": "$.completion",
-      "prompt.prefix": "Assistant is a professional data analyst. You will always answer question based on the tool response first. If you don't know the answer, just say don't know.\n"
+      "response_filter": "$",
+      "prompt": "${parameters.question}",
+      "system_prompt": "You are a professional data analyst. You will always answer questions based on the tool response first. If you don't know the answer, just say you don't know."
     }
   },
   "memory": {
     "type": "conversation_index"
+  },
+  "parameters": {
+    "_llm_interface": "bedrock/converse/claude"
   },
   "tools": [
     {
@@ -840,12 +899,12 @@ POST _plugins/_ml/agents/your_agent_id/_execute
 
 ## 步驟 5：在 OpenSearch Dashboards 中設定根聊天機器人代理程式
 
-若要使用 [OpenSearch Assistant for OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/dashboards/dashboards-assistant/index/)，您需要設定一個根聊天機器人代理程式。
+如要使用 [OpenSearch Dashboards 的 OpenSearch Assistant]({{site.url}}{{site.baseurl}}/dashboards/dashboards-assistant/index/)，您需要設定根聊天機器人代理程式。
 
-根聊天機器人代理程式由以下幾個部分組成：
+根聊天機器人代理程式由下列部分組成：
 
-- 一個 `conversational` 代理程式：在 `AgentTool` 中，您可以使用先前步驟中建立的任何 `conversational` 代理程式。
-- 一個 `MLModelTool`：此工具用於根據您目前的問題與模型回應建議新問題。
+- 一個 `conversational` 代理程式：在 `AgentTool` 中，您可以使用先前步驟建立的任何 `conversational` 代理程式。
+- 一個 `MLModelTool`：此工具會根據您目前的問題與模型回應，建議新的問題。
 
 設定根代理程式：
 
@@ -882,7 +941,7 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-記下根聊天機器人代理程式 ID，登入您的 OpenSearch 伺服器，前往 OpenSearch 組態資料夾 (`$OS_HOME/config`)，然後執行以下命令：
+記下根聊天機器人代理程式 ID，登入您的 OpenSearch 伺服器，前往 OpenSearch 組態資料夾（`$OS_HOME/config`），然後執行下列命令：
 
 ```bashx
  curl -k --cert ./kirk.pem --key ./kirk-key.pem -X PUT https://localhost:9200/.plugins-ml-config/_doc/os_chat -H 'Content-Type: application/json' -d'
@@ -895,12 +954,19 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy.html %}
 
-前往您的 OpenSearch Dashboards 組態資料夾 (`$OSD_HOME/config`)，並編輯 `opensearch_dashboards.yml`，在檔案結尾加入以下這一行：`assistant.chat.enabled: true`。
+前往您的 OpenSearch Dashboards 組態資料夾（`$OSD_HOME/config`），並在檔案結尾新增下列這一行來編輯 `opensearch_dashboards.yml`：`assistant.chat.enabled: true`。
 
 重新啟動 OpenSearch Dashboards，然後選取右上角的聊天圖示，如下圖所示。
 
 ![OpenSearch Assistant 圖示]({{site.url}}{{site.baseurl}}/images/dashboards/os-assistant-icon.png){: width="300" }
 
-現在您可以在 OpenSearch Dashboards 中進行聊天，如下圖所示。
+您現在可以在 OpenSearch Dashboards 中聊天，如下圖所示。
 
-![OpenSearch Assistant 聊天畫面]({{site.url}}{{site.baseurl}}/images/dashboards/os-assistant-chat.png)
+![OpenSearch Assistant 聊天]({{site.url}}{{site.baseurl}}/images/dashboards/os-assistant-chat.png)
+
+## 相關文件
+
+- [OpenSearch Dashboards 的 OpenSearch Assistant]({{site.url}}{{site.baseurl}}/dashboards/dashboards-assistant/)
+- [對話式代理程式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/conversational/)
+- [Register Agent API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/)
+- [Vector DB 工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/vector-db-tool/)

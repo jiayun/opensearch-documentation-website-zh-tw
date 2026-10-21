@@ -15,10 +15,10 @@ nav_order: 10
 
 代理程式可能為下列類型：
 
-- _流程_代理程式
-- _對話式流程_代理程式
+- _流程代理程式_（flow agent）
+- _對話式流程代理程式_（conversational flow agent）
 - _對話式代理程式_
-- _規劃、執行與反思_代理程式
+- _規劃-執行-反思_代理程式
 - _AG-UI_ 代理程式
 
 如需代理程式的詳細資訊，請參閱[代理程式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/)。
@@ -39,35 +39,37 @@ POST /_plugins/_ml/agents/_register
 欄位 | 資料類型 | 必要/選用 | 代理程式類型 | 說明
 :---  | :--- | :--- | :--- | :---
 `name`| 字串 | 必要 | 全部 | 代理程式名稱。 |
-`type` | 字串 | 必要 | 全部 | 代理程式類型。有效值為 [`flow`]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/flow/)、[`conversational_flow`]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/conversational-flow/)、[`conversational`]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/conversational/#the-conversational-agent-v1)、[`conversational_v2`]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/conversational/#the-conversational_v2-agent-with-full-multimodal-support)、[`plan_execute_and_reflect`]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/plan-execute-reflect/) 及 [`ag_ui`]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/ag-ui/)。如需詳細資訊，請參閱[代理程式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/)。 |
+`type` | 字串 | 必要 | 全部 | 代理程式類型。有效值為 [`flow`]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/flow/)、[`conversational_flow`]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/conversational-flow/)、[`conversational`]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/conversational/#the-conversational-agent-v1)、[`conversational_v2`]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/conversational/#the-conversational_v2-agent-with-full-multimodal-support)、[`plan_execute_and_reflect`]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/plan-execute-reflect/) 和 [`ag_ui`]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/ag-ui/)。如需更多資訊，請參閱[代理程式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/)。 |
 `agent_id` | 字串 | 選用 | 全部 | 代理程式的唯一識別碼。若省略，OpenSearch 會自動產生一個。 |
-`description` | 字串 | 選用| 全部 | 代理程式的描述。 |
-`tools` | 陣列 | 選用 | 全部 | 代理程式可執行的一組工具。
-`app_type` | 字串 | 選用 | 全部 | 指定選用的代理程式類別。您接著可以對該類別中的所有代理程式執行操作。例如，您可以刪除 RAG 代理程式的所有訊息。
-`memory.type` | 字串 | 選用 | `conversational_flow`, `conversational`, `plan_execute_and_reflect` | 指定對話記憶的儲存位置。支援的值為 `conversation_index`（將記憶儲存在對話索引中）及 `agentic_memory`（將記憶儲存在記憶容器中）。
-`memory.memory_container_id` | 字串 | 選用 | `conversational_flow`, `conversational`, `plan_execute_and_reflect` | `agentic_memory` 的預設記憶容器 ID。若省略，您在執行代理程式時必須提供 `parameters.memory_container_id`。若兩者皆未提供，請求會失敗。
-`llm.model_id` | 字串 | 必要 | `conversational` | 要傳送問題的 LLM 模型 ID。
-`llm.parameters.response_filter` | 字串 | 必要 | `conversational` | 用於解析 LLM 回應的模式。對於每個 LLM，您需要提供回應所在的欄位。例如，對於 Anthropic Claude 模型，回應位於 `completion` 欄位，因此模式為 `$.completion`。對於 OpenAI 模型，模式為 `$.choices[0].message.content`。
-`llm.parameters.max_iteration` | 整數 | 選用 | `conversational` | 傳送給 LLM 的訊息數量上限。預設為 `10`。
+`description` | 字串 | 選用| 全部 | 代理程式的說明。 |
+`tools` | 陣列 | 選用 | 全部 | 代理程式要執行的工具清單。 
+`app_type` | 字串 | 選用 | 全部 | 指定選用的代理程式類別。之後您即可對該類別中的所有代理程式執行操作。例如，您可以刪除 RAG 代理程式的所有訊息。
+`memory.type` | 字串 | 選用 | `conversational_flow`, `conversational`, `plan_execute_and_reflect` | 指定儲存對話記憶的位置。支援的值為 `conversation_index`（將記憶儲存在對話索引中）和 `agentic_memory`（將記憶儲存在記憶容器中）。
+`memory.memory_container_id` | 字串 | 選用 | `conversational_flow`, `conversational`, `plan_execute_and_reflect` | `agentic_memory` 的預設記憶容器 ID。若省略，執行代理程式時必須提供 `parameters.memory_container_id`。若兩者皆未提供，請求將會失敗。
+`llm.model_id` | 字串 | 必要 | `conversational` | 要傳送問題的目標 LLM 的模型 ID。
+`llm.parameters.response_filter` | 字串 | 必要 | `conversational` | 用於剖析 LLM 回應的模式。對於每個 LLM，您需要提供回應所在的欄位。例如，對於使用 Messages API 的 Anthropic Claude 模型，回應位於 `content[0].text` 欄位中，因此模式為 `$.content[0].text`。對於 OpenAI 模型，模式為 `$.choices[0].message.content`。
+`llm.parameters.max_iteration` | 整數 | 選用 | `conversational` | 傳送給 LLM 的最大訊息數。預設為 `10`。
 `parameters` | 物件 | 選用 | 全部 | 代理程式參數，可用於控制代理程式執行的 `max_steps`、修改預設提示等。
-`parameters.executor_agent_id`| 整數 | 選用 | `plan_execute_and_reflect` | `plan_execute_and_reflect` 代理程式內部會使用 `conversational` 代理程式來執行每個步驟。根據預設，此執行程式代理程式會使用與 `llm` 組態中指定的規劃模型相同的模型。若要使用不同的模型來執行步驟，請使用另一個模型建立 `conversational` 代理程式，並在此欄位中傳入該代理程式 ID。若您想針對規劃和執行使用不同的模型，這會很有用。
-`parameters.max_steps` | 整數 | 選用 | `plan_execute_and_reflect` | LLM 執行的步驟數量上限。預設為 `20`。
-`parameters.executor_max_iterations` | 整數 | 選用 | `plan_execute_and_reflect` | 執行程式代理程式傳送給 LLM 的訊息數量上限。預設為 `20`。
-`parameters.message_history_limit` | 整數 | 選用 | `plan_execute_and_reflect` | 要從對話記憶納入作為規劃程式內容的近期訊息數量。預設為 `10`。
-`parameters.executor_message_history_limit` | 整數 | 選用 | `plan_execute_and_reflect` | 要從對話記憶納入作為執行程式內容的近期訊息數量。預設為 `10`。
-`parameters._llm_interface` | 字串 | 必要 | `plan_execute_and_reflect`, `conversational` | 指定使用函式呼叫時如何解析 LLM 輸出。有效值為：<br> - `bedrock/converse/claude`：託管於 Amazon Bedrock 的 Anthropic Claude 對話模型 <br> - `bedrock/converse/deepseek_r1`：託管於 Amazon Bedrock 的 DeepSeek-R1 模型 <br> - `openai/v1/chat/completions`：託管於 OpenAI 的 OpenAI 聊天完成模型。每個介面都會定義預設的回應結構描述和函式呼叫解析器。
-`inject_datetime` | 布林值 | 選用 | `conversational`, `plan_execute_and_reflect` | 是否自動將目前日期注入系統提示。預設為 `false`。
-`datetime_format` | 字串 | 選用 | `conversational`, `plan_execute_and_reflect` | 啟用 `inject_datetime` 時所使用的日期格式字串。預設為 `"yyyy-MM-dd'T'HH:mm:ss'Z'"`（ISO 格式）。
-`model` | 物件 | 選用 | `conversational`, `plan_execute_and_reflect` | **僅限統一註冊方法（3.5 以上版本）**：自動建立連接器和模型的模型組態。請參閱[統一註冊方法]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#unified-registration-method)。
-`model.model_id` | 字串 | 必要（若使用 `model`） | `conversational`, `plan_execute_and_reflect` | 模型識別碼（例如，Amazon Bedrock 為 `us.anthropic.claude-3-7-sonnet-20250219-v1:0`，Google Gemini 為 `gemini-2.5-pro`）。
-`model.model_provider` | 字串 | 必要（若使用 `model`） | `conversational`, `plan_execute_and_reflect` | 模型供應商。支援的值：`bedrock/converse`、`gemini/v1beta/generatecontent`、`openai/v1/chat/completions`。
-`model.credential` | 物件 | 必要（若使用 `model`） | `conversational`, `plan_execute_and_reflect` | 存取模型的憑證。接受連接器支援的任何憑證格式。如需詳細資訊，請參閱[連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints#request-body-fields)。
-`model.model_parameters` | 物件 | 選用（若使用 `model`） | `conversational`, `plan_execute_and_reflect` | 模型特定參數，例如系統提示和其他組態選項。
-`provisioned_by` | 字串 | 選用 | 全部 | 選用的歸屬標籤，用於識別註冊代理程式的外掛程式或用戶端（例如 `flow-framework`）。包含在 ML 統計指標中。
+`parameters.executor_agent_id`| 字串 | 選用 | `plan_execute_and_reflect` | `plan_execute_and_reflect` 代理程式在內部使用 `conversational` 代理程式執行每個步驟。根據預設，此執行器代理程式使用的模型與 `llm` 組態中指定的規劃模型相同。若要使用不同的模型執行步驟，請使用其他模型建立 `conversational` 代理程式，並在此欄位中傳入該代理程式 ID。若您想針對規劃與執行使用不同的模型，此功能會很有用。
+`parameters.max_steps` | 整數 | 選用 | `plan_execute_and_reflect` | LLM 執行的最大步驟數。預設為 `20`。
+`parameters.executor_max_iterations` | 整數 | 選用 | `plan_execute_and_reflect` | 執行器代理程式傳送給 LLM 的最大訊息數。預設為 `20`。
+`parameters.message_history_limit` | 整數 | 選用 | `plan_execute_and_reflect` | 要從對話記憶中納入作為規劃器脈絡的最近訊息數量。預設為 `10`。 
+`parameters.executor_message_history_limit` | 整數 | 選用 | `plan_execute_and_reflect` | 要從對話記憶中納入作為執行器脈絡的最近訊息數量。預設為 `10`。
+`parameters._llm_interface` | 字串 | 必要 | `plan_execute_and_reflect`, `conversational` | 指定使用函式呼叫時如何剖析 LLM 輸出。有效值為：<br> - `bedrock/converse/claude`：託管於 Amazon Bedrock 的 Anthropic Claude 對話模型  <br> - `bedrock/converse/deepseek_r1`：託管於 Amazon Bedrock 的 DeepSeek-R1 模型 <br> - `openai/v1/chat/completions`：託管於 OpenAI 的 OpenAI 聊天完成模型。每個介面都會定義預設的回應結構描述和函式呼叫剖析器。
+`parameters.inject_datetime` | 布林值 | 選用 | `conversational`, `plan_execute_and_reflect` | 是否自動將目前日期插入系統提示中。預設為 `false`。
+`parameters.datetime_format` | 字串 | 選用 | `conversational`, `plan_execute_and_reflect` | 啟用 `inject_datetime` 時所使用的日期格式字串。預設為 `"yyyy-MM-dd'T'HH:mm:ss'Z'"`（ISO 格式）。
+`model` | 物件 | 選用 | `conversational`, `conversational_v2`, `plan_execute_and_reflect`, `ag_ui` | **僅限統一註冊方法（3.5+）**：自動建立連接器和模型的模型組態。請參閱[統一註冊方法]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#unified-registration-method)。
+`model.model_id` | 字串 | 必要（若使用 `model`） | `conversational`, `conversational_v2`, `plan_execute_and_reflect`, `ag_ui` | 模型識別碼（例如，Amazon Bedrock 為 `us.anthropic.claude-sonnet-4-6`，Google Gemini 為 `gemini-2.5-pro`）。
+`model.model_provider` | 字串 | 必要（若使用 `model`） | `conversational`, `conversational_v2`, `plan_execute_and_reflect`, `ag_ui` | 模型提供者。支援的值：`bedrock/converse`、`gemini/v1beta/generatecontent`、`openai/v1/chat/completions`。
+`model.credential` | 物件 | 必要（若使用 `model`） | `conversational`, `conversational_v2`, `plan_execute_and_reflect`, `ag_ui` | 用於存取模型的認證資訊。接受連接器支援的任何認證資訊格式。如需詳細資訊，請參閱[連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints#request-body-fields)。
+`model.model_parameters` | 物件 | 選用（若使用 `model`） | `conversational`, `conversational_v2`, `plan_execute_and_reflect`, `ag_ui` | 模型特定參數，例如系統提示和其他組態選項。
+`context_management_name` | 字串 | 選用 | `conversational`, `plan_execute_and_reflect` | 要套用至代理程式的脈絡管理組態名稱。不能與 `context_management` 同時指定。如需更多資訊，請參閱[脈絡管理]({{site.url}}{{site.baseurl}}/ml-commons-plugin/context-management/)。
+`context_management` | 物件 | 選用 | `conversational`, `plan_execute_and_reflect` | 內嵌的脈絡管理組態，包含 `name` 以及將掛鉤名稱對應至脈絡管理器清單的 `hooks` 物件。`name` 為必要項目。內嵌掛鉤名稱必須為大寫：`PRE_LLM`、`POST_LLM`、`PRE_TOOL`、`POST_TOOL` 或 `POST_MEMORY`。不能與 `context_management_name` 同時指定。如需更多資訊，請參閱[脈絡管理]({{site.url}}{{site.baseurl}}/ml-commons-plugin/context-management/)。
+`provisioned_by` | 字串 | 選用 | 全部 | 選用的歸屬標籤，用於識別註冊該代理程式的外掛程式或用戶端（例如 `flow-framework`）。會包含在 ML 統計指標中。
 
-### 使用代理式記憶
+### 使用代理記憶（agentic memory）
 
-若要使用代理式記憶，請使用 [Create Memory Container API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/create-memory-container/) 建立記憶容器，並依下列方式設定記憶組態：
+若要使用代理記憶，請使用 [Create Memory Container API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/create-memory-container/) 建立記憶容器，並依下列方式設定記憶組態：
 
 ```json
 "memory": {
@@ -83,17 +85,19 @@ POST /_plugins/_ml/agents/_register
 
 `tools` 陣列包含代理程式的工具清單。每個工具包含下列欄位。
 
-欄位 | 資料類型 | 必要／選用 | 說明
-:---  | :--- | :---
-`type` | 字串 | 必要 | 工具類型。如需支援的工具清單，請參閱[工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/)。
-`name`| 字串 | 選用 | 工具名稱。工具名稱預設為 `type` 參數值。若您需要在代理程式中包含多個相同類型的工具，請為這些工具指定不同的名稱。 |
-`description`| 字串 | 選用 | 工具說明。預設為指定類型的內建說明。 | 
-`parameters` | 物件 | 選用 | 此工具的參數。參數高度取決於工具類型。您可以在[工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/)中找到特定工具類型的資訊。
-`parameters.output_processors` | 陣列 | 選用 | 用於轉換工具輸出的處理器清單。如需詳細資訊，請參閱[處理器鏈]({{site.url}}{{site.baseurl}}/ml-commons-plugin/processor-chain/)。
-`attributes.input_schema` | 物件 | 選用 | 以 [JSON 結構描述](https://json-schema.org/)定義的此工具預期輸入格式。用於定義 LLM 呼叫工具時應遵循的結構。
+欄位 | 資料類型 | 必要/選用 | 說明
+:---  | :--- | :--- | :---
+`type` | 字串 | 必要 | 工具類型。支援的工具清單請參閱[工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/)。
+`name`| 字串 | 選用 | 工具名稱。工具名稱預設為 `type` 參數的值。如果您需要在代理程式中加入多個相同類型的工具，請為這些工具指定不同的名稱。 |
+`description`| 字串 | 選用 | 工具描述。預設為指定類型的內建描述。 | 
+`parameters` | 物件 | 選用 | 此工具的參數。這些參數高度取決於工具類型。您可以在[工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/)中找到特定工具類型的相關資訊。
+`parameters.output_processors` | 陣列 | 選用 | 用於轉換工具輸出的處理器清單。如需更多資訊，請參閱[處理器鏈]({{site.url}}{{site.baseurl}}/ml-commons-plugin/processor-chain/)。
+`attributes.input_schema` | 物件 | 選用 | 此工具的預期輸入格式，以 [JSON 結構描述](https://json-schema.org/)定義。用於定義 LLM 呼叫工具時應遵循的結構。
 `attributes.strict` | 布林值 | 選用 | 函式呼叫是否確實遵循輸入結構描述。
+`include_output_in_agent_response` | 布林值 | 選用 | 是否在代理程式回應中包含工具輸出。預設情況下，流程代理程式或對話式流程代理程式只會回傳最後一個工具的輸出。預設值為 `false`。
+`config` | 物件 | 選用 | 適用於 `conversational` 與 `plan_execute_and_reflect` 代理程式。LLM 呼叫工具時套用的工具參數。`config` 中的值會覆寫 `parameters` 中的值。如果 `config` 包含 `input` 鍵，代理程式會使用其值作為工具輸入，取代 LLM 產生的輸入。該值可以包含預留位置，例如 `"input": "${parameters.question}"`。
 
-## 請求範例：流程代理程式
+## 範例請求：流程代理程式
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -120,7 +124,7 @@ POST /_plugins/_ml/agents/_register
       "description": "A general tool to answer any question",
       "parameters": {
         "model_id": "NWR9YIsBUysqmzBdifVJ",
-        "prompt": "\n\nHuman:You are a professional data analyst. You will always answer question based on the given context first. If the answer is not directly shown in the context, you will analyze the data and find the answer. If you don't know the answer, just say don't know. \n\n Context:\n${parameters.vector_tool.output}\n\nHuman:${parameters.question}\n\nAssistant:"
+        "prompt": "You are a professional data analyst. You will always answer question based on the given context first. If the answer is not directly shown in the context, you will analyze the data and find the answer. If you don't know the answer, just say don't know. \n\nContext:\n${parameters.vector_tool.output}\n\nQuestion: ${parameters.question}"
       }
     }
   ]
@@ -128,7 +132,7 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-## 請求範例：對話式流程代理程式
+## 請求範例：對話式流程代理程式（conversational flow agent）
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -160,18 +164,14 @@ POST /_plugins/_ml/agents/_register
       "description": "A general tool to answer any question",
       "parameters": {
         "model_id": "your_LLM_model_id",
-        "prompt": """
-
-Human:You are a professional data analysist. You will always answer question based on the given context first. If the answer is not directly shown in the context, you will analyze the data and find the answer. If you don't know the answer, just say don't know. 
+        "prompt": """You are a professional data analyst. You will always answer question based on the given context first. If the answer is not directly shown in the context, you will analyze the data and find the answer. If you don't know the answer, just say don't know. 
 
 Context:
 ${parameters.population_knowledge_base.output:-}
 
 ${parameters.chat_history:-}
 
-Human:${parameters.question}
-
-Assistant:"""
+Question: ${parameters.question}"""
       }
     }
   ]
@@ -179,12 +179,12 @@ Assistant:"""
 ```
 {% include copy-curl.html %}
 
-## 請求範例：對話式代理程式
+## 範例請求：對話式代理程式
 
 ```json
 POST /_plugins/_ml/agents/_register
 {
-  "name": "Test_Agent_For_ReAct_ClaudeV2",
+  "name": "Test_Agent_For_ReAct_Claude",
   "type": "conversational",
   "description": "this is a test agent",
   "app_type": "my chatbot",
@@ -193,7 +193,7 @@ POST /_plugins/_ml/agents/_register
     "parameters": {
       "max_iteration": 5,
       "stop_when_no_tool_found": true,
-      "response_filter": "$.completion"
+      "response_filter": "$.content[0].text"
     }
   },
   "memory": {
@@ -224,7 +224,7 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-## 請求範例：規劃、執行與反思代理程式
+## 請求範例：規劃-執行-反思代理程式
 **於 3.0 版引入**
 {: .label .label-purple }
 
@@ -332,43 +332,43 @@ OpenSearch 會回應一個代理程式 ID，您可以使用它來參照該代理
 | `type` | 字串 | 必要 | 代理程式類型。支援的值：`conversational`、`conversational_v2`、`plan_execute_and_reflect` 與 `AG_UI`。 |
 | `agent_id` | 字串 | 選用 | 代理程式的唯一識別碼。若省略，OpenSearch 會自動產生。 |
 | `description` | 字串 | 選用 | 代理程式的描述。 |
-| `model` | 物件 | 必要 | 使用統一註冊方法之 LLM 模型的組態。取代一般的 `llm` 物件，並自動建立模型資源。 |
-| `model.model_id` | 字串 | 必要 | 供應商的模型識別碼。對於 Amazon Bedrock，請使用完整的模型 ID（例如 `us.anthropic.claude-3-7-sonnet-20250219-v1:0`）。對於 Google Gemini，請使用模型名稱（例如 `gemini-2.5-pro`）。對於 OpenAI，請使用 `gpt-4o-mini` 之類的模型名稱。 |
+| `model` | 物件 | 必要 | 使用統一註冊方式之 LLM 模型的組態。取代一般的 `llm` 物件，並自動建立模型資源。 |
+| `model.model_id` | 字串 | 必要 | 供應商的模型識別碼。對於 Amazon Bedrock，請使用完整的模型 ID（例如 `us.anthropic.claude-sonnet-4-6`）。對於 Google Gemini，請使用模型名稱（例如 `gemini-2.5-pro`）。對於 OpenAI，請使用 `gpt-4o-mini` 之類的模型名稱。 |
 | `model.model_provider` | 字串 | 必要 | 模型供應商類型。有效值：`bedrock/converse`、`gemini/v1beta/generatecontent`、`openai/v1/chat/completions`。 |
-| `model.credential` | 物件 | 必要 | 模型供應商的憑證。結構取決於供應商。 |
+| `model.credential` | 物件 | 必要 | 模型供應商的認證資訊。結構依供應商而定。 |
 | `model.credential.access_key` | 字串 | 必要 (Amazon Bedrock) | Amazon Bedrock 模型的 AWS 存取金鑰。 |
 | `model.credential.secret_key` | 字串 | 必要 (Amazon Bedrock) | Amazon Bedrock 模型的 AWS 私密金鑰。 |
-| `model.credential.session_token` | 字串 | 選用 (Amazon Bedrock) | 使用暫時性憑證時，Amazon Bedrock 模型的 AWS 工作階段權杖。 |
+| `model.credential.session_token` | 字串 | 選用 (Amazon Bedrock) | 使用臨時認證資訊時，Amazon Bedrock 模型的 AWS 工作階段權杖。 |
 | `model.credential.openai_api_key` | 字串 | 必要 (OpenAI) | OpenAI 模型的 API 金鑰。 |
 | `model.credential.gemini_api_key` | 字串 | 必要 (Google Gemini) | Google Gemini 模型的 API 金鑰。 |
 | `model.model_parameters` | 物件 | 選用 | 模型專屬的參數與組態。 |
 | `model.model_parameters.system_prompt` | 字串 | 選用 | 定義代理程式角色與行為的系統提示。 |
-| `model.model_parameters.temperature` | 浮點數 | 選用 | 控制模型回應的隨機性 (0.0 至 1.0)。預設值依模型而異。 |
-| `model.model_parameters.max_tokens` | 整數 | 選用 | 模型回應中的詞元數上限。預設值依模型而異。 |
+| `model.model_parameters.temperature` | 浮點數 | 選用 | 控制模型回應的隨機性（0.0 至 1.0）。預設值依模型而異。 |
+| `model.model_parameters.max_tokens` | 整數 | 選用 | 模型回應中的詞元數量上限。預設值依模型而異。 |
 | `parameters` | 物件 | 選用 | 用於控制行為的其他代理程式參數。 |
 | `parameters.max_iteration` | 整數 | 選用 | 代理程式可執行的推理迭代次數上限。預設為 10。 |
-| `parameters.mcp_connectors` | 陣列 | 選用 | 用於擴充代理程式能力的 Model Context Protocol (MCP) 連接器組態陣列。對於 `conversational` 與 `plan_execute_and_reflect` 代理程式，MCP 工具會自動探索。對於 `flow` 與 `conversational_flow` 代理程式，請在 `tools` 陣列中明確列出 MCP 工具。請參閱[連接至外部 MCP 伺服器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/mcp/mcp-connector/#step-3-register-an-agent-for-accessing-mcp-tools)。 |
+| `parameters.mcp_connectors` | 陣列 | 選用 | 一組 Model Context Protocol (MCP) 連接器組態的陣列，可擴充代理程式的能力。對於 `conversational` 與 `plan_execute_and_reflect` 代理程式，MCP 工具會自動探索。對於 `flow` 與 `conversational_flow` 代理程式，請在 `tools` 陣列中明確列出 MCP 工具。請參閱[連線至外部 MCP 伺服器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/mcp/mcp-connector/#step-3-register-an-agent-for-accessing-mcp-tools)。 |
 | `parameters.mcp_connectors[].mcp_connector_id` | 字串 | 必要 | 已註冊 MCP 連接器的 ID。 |
-| `parameters.mcp_connectors[].tool_filters` | 陣列 | 選用 | 指定代理程式可用 MCP 工具的 Java 規則運算式。 |
+| `parameters.mcp_connectors[].tool_filters` | 陣列 | 選用 | 指定代理程式可用之 MCP 工具的 Java 正規表示式。 |
 | `parameters.mcp_connectors[].tool_descriptions` | 陣列 | 選用 | 覆寫呈現給 LLM 之 MCP 工具描述的物件。 |
-| `tools` | 陣列 | 選用 | 代理程式可用工具的陣列。如需支援的工具，請參閱[工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/)。 |
-| `memory` | 物件 | 選用 | 對話記憶儲存空間的組態。 |
-| `memory.type` | 字串 | 選用 | 記憶的儲存類型。支援的值：`conversation_index`、`agentic_memory`。 |
+| `tools` | 陣列 | 選用 | 代理程式可用工具的陣列。支援的工具請參閱[工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/)。 |
+| `memory` | 物件 | 選用 | 對話記憶儲存的組態。 |
+| `memory.type` | 字串 | 選用 | 記憶儲存類型。支援的值：`conversation_index`、`agentic_memory`。 |
 
-`tools` 陣列中的每個工具包含下列欄位。
+`tools` 陣列中的每個工具都包含下列欄位。
 
 | 欄位 | 資料類型 | 必要/選用 | 說明 |
 | :--- | :--- | :--- | :--- |
 | `type` | 字串 | 必要 | 工具類型（例如 `ListIndexTool`、`SearchIndexTool`、`McpStreamableHttpTool`、`McpSseTool`）。對於 `flow` 與 `conversational_flow` 代理程式中的 MCP 工具，請搭配 `mcp_streamable_http` 連接器使用 `McpStreamableHttpTool`，或搭配 `mcp_sse` 連接器使用 `McpSseTool`。 |
-| `name` | 字串 | 選用 | 工具的自訂名稱。預設為 `type` 值。使用多個相同類型的工具時為必要。對於流程代理程式中的 MCP 工具，請將 `name` 設定為 MCP 伺服器工具名稱。 |
-| `description` | 字串 | 選用 | 工具描述，協助 LLM 了解何時以及如何使用該工具。 |
+| `name` | 字串 | 選用 | 工具的自訂名稱。預設為 `type` 值。使用多個相同類型的工具時為必要。對於流程代理程式中的 MCP 工具，請將 `name` 設為 MCP 伺服器的工具名稱。 |
+| `description` | 字串 | 選用 | 工具描述，協助 LLM 瞭解何時以及如何使用該工具。 |
 | `parameters` | 物件 | 選用 | 工具專屬的參數。結構依工具類型而異。 |
 
 <!-- vale off -->
-### 範例請求：Amazon Bedrock Claude
+### 請求範例：Amazon Bedrock Claude
 <!-- vale on -->
 
-此範例使用託管於 Amazon Bedrock 上的 Anthropic Claude 模型建立代理程式：
+此範例使用託管於 Amazon Bedrock 的 Anthropic Claude 模型建立代理程式：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -377,7 +377,7 @@ POST /_plugins/_ml/agents/_register
   "type": "conversational",
   "description": "An agent using Claude for research tasks",
   "model": {
-    "model_id": "us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    "model_id": "us.anthropic.claude-sonnet-4-6",
     "model_provider": "bedrock/converse",
     "credential": {
       "access_key": "YOUR_AWS_ACCESS_KEY",
@@ -487,9 +487,9 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-### 範例請求：規劃、執行與反思代理程式
+### 範例請求：規劃-執行-反思代理程式
 
-此範例建立用於複雜多步驟工作的規劃、執行與反思代理程式：
+此範例為複雜的多步驟任務建立規劃-執行-反思代理程式 (plan-execute-reflect agent)：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -498,7 +498,7 @@ POST /_plugins/_ml/agents/_register
   "type": "plan_execute_and_reflect",
   "description": "An agent that can plan and execute complex research tasks",
   "model": {
-    "model_id": "us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    "model_id": "us.anthropic.claude-sonnet-4-6",
     "model_provider": "bedrock/converse",
     "credential": {
       "access_key": "YOUR_AWS_ACCESS_KEY",

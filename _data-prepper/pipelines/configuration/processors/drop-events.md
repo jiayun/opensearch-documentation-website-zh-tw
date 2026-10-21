@@ -44,7 +44,7 @@ filter-debug-logs-pipeline:
         hosts: ["https://opensearch:9200"]
         insecure: true
         username: admin
-        password: admin_pass
+        password: "<custom-admin-password>"
         index_type: custom
         index: filtered-logs-%{yyyy.MM.dd}
 ```
@@ -139,7 +139,7 @@ multi-condition-filter-pipeline:
         hosts: ["https://opensearch:9200"]
         insecure: true
         username: admin
-        password: admin_pass
+        password: "<custom-admin-password>"
         index_type: custom
         index: filtered-events-%{yyyy.MM.dd}
 ```
@@ -229,7 +229,7 @@ sampling-pipeline:
         hosts: ["https://opensearch:9200"]
         insecure: true
         username: admin
-        password: admin_pass
+        password: "<custom-admin-password>"
         index_type: custom
         index: sampled-events-%{yyyy.MM.dd}
 ```

@@ -41,7 +41,7 @@ nav_order: 20
 - Python 3.11 或更新版本。
 - [`uv`](https://docs.astral.sh/uv/getting-started/installation/)。
 - 已在本機安裝並執行 Docker。技能會使用 Docker 啟動 OpenSearch 以進行本機實驗。
-- AWS 認證資料，如果您打算使用 `aws-setup` 將 OpenSearch 部署至 Amazon OpenSearch Service 或 Amazon OpenSearch Serverless。
+- AWS 認證資訊，如果您打算使用 `aws-setup` 將 OpenSearch 部署至 Amazon OpenSearch Service 或 Amazon OpenSearch Serverless。
 
 ## 安裝技能
 
@@ -188,4 +188,3 @@ uv run python scripts/opensearch_ops.py launch-ui --index ecommerce-hybrid
 - [`opensearch-agent-skills`](https://github.com/opensearch-project/opensearch-agent-skills) -- GitHub 上的代理程式技能儲存庫。
 - [Agent Skills 規格](https://agentskills.io/specification) -- 規格文件。
 - [OpenSearch MCP Server]({{site.url}}{{site.baseurl}}/ai-agent-integrations/mcp-server/) -- 從 AI 用戶端直接存取 API。
-- [使用 MCP 工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/mcp/) -- 從 OpenSearch 代理程式整合外部 MCP 伺服器。

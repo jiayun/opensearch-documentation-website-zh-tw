@@ -11,28 +11,28 @@ redirect_from:
 
 # OpenSearch MCP Server
 
-[OpenSearch MCP Server](https://github.com/opensearch-project/opensearch-mcp-server-py) 是開放原始碼的 [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) 伺服器，可將 OpenSearch 提供給 Claude Desktop、Cursor、Kiro 或任何其他與 MCP 相容的用戶端等 AI 助理使用。連線後，AI 助理可以透過 MCP 工具呼叫 OpenSearch API 來搜尋索引、讀取對應、檢查叢集健康狀態，以及執行其他操作，而不需產生原始的 REST 請求。
+[OpenSearch MCP Server](https://github.com/opensearch-project/opensearch-mcp-server-py) 是一個開放原始碼的 [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) 伺服器，可將 OpenSearch 提供給 Claude Desktop、Cursor、Kiro 等 AI 助理，或任何其他相容於 MCP 的用戶端使用。連線後，AI 助理即可透過 MCP 工具呼叫 OpenSearch API，來搜尋索引、讀取對應、檢查叢集健康狀態及執行其他操作，而不必自行產生原始 REST 請求。
 
-OpenSearch 也提供叢集內的 MCP 連接器，可讓 OpenSearch 代理程式呼叫託管於外部 MCP 伺服器上的工具。如需詳細資訊，請參閱[使用 MCP 工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/mcp/)。
+OpenSearch 也支援叢集內的 MCP：MCP 連接器可讓 OpenSearch 代理程式呼叫託管於外部 MCP 伺服器的工具，而叢集內的 MCP 伺服器則可讓外部 MCP 用戶端呼叫您叢集中註冊的工具。如需詳細資訊，請參閱 [MCP 伺服器與用戶端]({{site.url}}{{site.baseurl}}/ml-commons-plugin/mcp/)。
 {: .note}
 
-在下列情況下，請使用 OpenSearch MCP Server：
+當您想要執行下列事項時，請使用 OpenSearch MCP Server：
 
 - 讓 AI 助理以自然語言查詢及探索您的 OpenSearch 叢集。
-- 建置內部 AI 工具（聊天機器人、可觀測性輔助程式或資料助理），而不需實作 OpenSearch 用戶端層。
+- 建置內部 AI 工具（聊天機器人、可觀測性副駕駛或資料助理），而不必自行實作 OpenSearch 用戶端層。
 - 從單一助理工作階段連線至多個叢集（例如 `dev`、`staging` 或 `production`）。
-- 使用標準協定將 OpenSearch 與 LangChain 或 LangGraph 等代理程式框架整合。
+- 使用標準通訊協定，將 OpenSearch 與 LangChain 或 LangGraph 等代理程式架構整合。
 
 OpenSearch MCP Server 提供下列功能：
 
-- MCP 介面：支援任何與 MCP 相容的用戶端，包括 Claude Desktop、Cursor 和 Kiro。
-- 工具：包含列出索引、擷取對應、執行搜尋查詢、檢查叢集健康狀態及計算文件數量的工具。可視需要啟用其他工具類別（搜尋相關性與以技能為基礎的分析）。
-- 傳輸選項：針對本機桌面用戶端支援標準輸入/輸出 (`stdio`)，針對遠端部署則支援串流傳輸（Server-Sent Events 和 HTTP 串流）。
-- 驗證：支援基本驗證、AWS IAM 角色、AWS 設定檔憑證、以標頭為基礎的驗證、雙向 TLS (mTLS) 及匿名存取。
+- MCP 介面：支援任何相容於 MCP 的用戶端，包括 Claude Desktop、Cursor 和 Kiro。
+- 工具：包含列出索引、擷取對應、執行搜尋查詢、檢查叢集健康狀態及計算文件數量等工具。可視需要啟用其他工具類別（搜尋相關性和技能式分析）。
+- 傳輸選項：支援供本機桌面用戶端使用的標準輸入/輸出（`stdio`），以及供遠端部署使用的串流傳輸。串流傳輸支援 Streamable HTTP 和舊版 Server-Sent Events (SSE) 傳輸。
+- 驗證：支援基本驗證、AWS IAM 角色、AWS 設定檔認證資訊、以標頭為基礎的驗證、雙向 TLS (mTLS) 及匿名存取。
 - 叢集組態：支援使用環境變數的單一叢集模式，或使用 YAML 組態檔案的多叢集模式。
 - 服務相容性：可搭配自行管理的 OpenSearch、Amazon OpenSearch Service 及 Amazon OpenSearch Serverless 集合使用。
 
-伺服器會接收來自 AI 用戶端的 MCP 工具呼叫，將其轉換為 OpenSearch REST API 呼叫，並傳回結構化結果，如下圖所示。
+伺服器會接收來自 AI 用戶端的 MCP 工具呼叫，將其轉譯為 OpenSearch REST API 呼叫，並傳回結構化結果，如下圖所示。
 
 ![顯示從 AI 用戶端到 OpenSearch MCP Server 再到 OpenSearch 叢集之流程的圖表]({{site.url}}{{site.baseurl}}/images/ai-agent-integrations/mcp-server.png)
 

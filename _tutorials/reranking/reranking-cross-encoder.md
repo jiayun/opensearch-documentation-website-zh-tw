@@ -1,7 +1,7 @@
 ---
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: "在 Amazon SageMaker 中使用交叉編碼器重新排序搜尋結果"
+title: "在 Amazon SageMaker 中使用交叉編碼器重新排名搜尋結果"
 parent: Reranking search results
 nav_order: 110
 redirect_from:
@@ -9,20 +9,22 @@ redirect_from:
   - /vector-search/tutorials/reranking/reranking-cross-encoder/
 ---
 
-# 在 Amazon SageMaker 中使用交叉編碼器重新排序搜尋結果
+# 在 Amazon SageMaker 中使用交叉編碼器重新排名搜尋結果
 
-[重新排序管線]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/reranking-search-results/)可以重新排序搜尋結果，並針對搜尋結果中的每個文件，計算其相對於搜尋查詢的相關性分數。相關性分數由交叉編碼器模型計算。
+[重新排名管線]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/reranking-search-results/)可以重新排名搜尋結果，並針對搜尋結果中的每個文件，計算其相對於搜尋查詢的相關性分數。相關性分數由交叉編碼器模型計算。
 
-本教學說明如何在重新排序管線中使用 [Hugging Face `ms-marco-MiniLM-L-6-v2` 模型](https://huggingface.co/cross-encoder/ms-marco-MiniLM-L-6-v2)。
+本教學說明如何在重新排名管線中使用 [Hugging Face `ms-marco-MiniLM-L-6-v2` 模型](https://huggingface.co/cross-encoder/ms-marco-MiniLM-L-6-v2)。
 
 請將以 `your_` 前綴開頭的預留位置替換為您自己的值。
 {: .note}
 
-## 必要條件
+## 先決條件
 
 開始之前，請先在 Amazon SageMaker 上部署模型。為獲得更好的效能，請使用 GPU。
 
-執行下列程式碼，將模型部署到 [Amazon SageMaker](https://aws.amazon.com/pm/sagemaker)：
+部署程式碼使用 SageMaker Python SDK 2.x 版。若要安裝，請執行 `pip install "sagemaker<3"`。`sagemaker.get_execution_role()` 呼叫僅能在 SageMaker notebook 中運作。若您在其他環境執行此程式碼，請將其替換為您 SageMaker 執行角色的 Amazon Resource Name (ARN)。
+
+執行下列程式碼，在 [Amazon SageMaker](https://aws.amazon.com/pm/sagemaker) 上部署模型：
 
 ```python
 import sagemaker
@@ -49,13 +51,13 @@ predictor = huggingface_model.deploy(
 ```
 {% include copy.html %}
 
-請記下模型推論端點；您將在下一步中使用它來建立連接器。
+請記下模型推論端點；您將在下一步使用它來建立連接器。
 
 ## 步驟 1：建立連接器並註冊模型
 
 若要為模型建立連接器，請傳送下列請求。
 
-如果您使用的是自行管理的 OpenSearch，請提供您的 AWS 憑證：
+如果您使用的是自行管理的 OpenSearch，請提供您的 AWS 認證資訊：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -70,7 +72,7 @@ POST /_plugins/_ml/connectors/_create
     "session_token": "your_session_token"
   },
   "parameters": {
-    "region": "your_sagemkaer_model_region_like_us-west-2",
+    "region": "your_sagemaker_model_region_like_us-west-2",
     "service_name": "sagemaker"
   },
   "actions": [
@@ -90,12 +92,12 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-如果您使用的是 Amazon OpenSearch Service，您可以提供允許存取 SageMaker 模型推論端點的 AWS Identity and Access Management (IAM) 角色 Amazon Resource Name (ARN)：
+如果您使用的是 Amazon OpenSearch 服務，可以提供允許存取 SageMaker 模型推論端點的 AWS Identity and Access Management (IAM) 角色 Amazon Resource Name (ARN)：
 
 ```json
 POST /_plugins/_ml/connectors/_create
 {
-  "name": "Sagemakre cross-encoder model",
+  "name": "Sagemaker cross-encoder model",
   "description": "Test connector for Sagemaker cross-encoder model",
   "version": 1,
   "protocol": "aws_sigv4",
@@ -103,7 +105,7 @@ POST /_plugins/_ml/connectors/_create
     "roleArn": "your_role_arn_which_allows_access_to_sagemaker_model_inference_endpoint"
   },
   "parameters": {
-    "region": "your_sagemkaer_model_region_like_us-west-2",
+    "region": "your_sagemaker_model_region_like_us-west-2",
     "service_name": "sagemaker"
   },
   "actions": [
@@ -123,7 +125,7 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-如需更多資訊，請參閱 [AWS 文件](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ml-amazon-connector.html)、[本教學]({{site.url}}{{site.baseurl}}/vector-search/tutorials/semantic-search/semantic-search-sagemaker/)以及 [AIConnectorHelper 筆記本](https://github.com/opensearch-project/ml-commons/blob/2.x/docs/tutorials/aws/AIConnectorHelper.ipynb)。
+如需更多資訊，請參閱 [AWS 文件](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ml-amazon-connector.html)、[本教學]({{site.url}}{{site.baseurl}}/vector-search/tutorials/semantic-search/semantic-search-sagemaker/) 與 [AIConnectorHelper 筆記本](https://github.com/opensearch-project/ml-commons/blob/main/docs/tutorials/aws/AIConnectorHelper.ipynb)。
 
 使用回應中的連接器 ID 來註冊並部署模型：
 
@@ -138,7 +140,7 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-請記下回應中的模型 ID；您將在後續步驟中使用它。
+請記下回應中的模型 ID；後續步驟將會用到。
 
 若要測試模型，請呼叫 Predict API：
 
@@ -161,9 +163,9 @@ POST _plugins/_ml/models/your_model_id/_predict
 ```
 {% include copy-curl.html %}
 
-`inputs` 陣列中的每個項目包含一個 `query_text` 和一個 `text_docs` 字串，並以 ` . ` 分隔
+`inputs` 陣列中的每個物件都在 `text` 欄位中包含查詢，並在 `text_pair` 欄位中包含一份文件。
 
-或者，您可以依照下列方式測試模型：
+您也可以依照下列方式測試模型：
 
 ```json
 POST _plugins/_ml/_predict/text_similarity/your_model_id
@@ -182,16 +184,16 @@ POST _plugins/_ml/_predict/text_similarity/your_model_id
 [
   {
     "label": "LABEL_0",
-    "score": 0.054037678986787796
+    "score": 0.05403755232691765
   },
   {
     "label": "LABEL_0",
-    "score": 0.5877784490585327
+    "score": 0.5877783298492432
   }
 ]
 ```
 
-連接器 `pre_process_function` 會將模型輸出轉換為 [重新排序處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/) 可解讀的下列格式：
+連接器 `post_process_function` 會將模型輸出轉換為[重新排名處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/)可以解讀的下列格式：
 
 ```json
 {
@@ -205,7 +207,7 @@ POST _plugins/_ml/_predict/text_similarity/your_model_id
             1
           ],
           "data": [
-            0.054037678986787796
+            0.05403755232691765
           ]
         },
         {
@@ -215,7 +217,7 @@ POST _plugins/_ml/_predict/text_similarity/your_model_id
             1
           ],
           "data": [
-            0.5877784490585327
+            0.5877783298492432
           ]
         }
       ],
@@ -225,11 +227,11 @@ POST _plugins/_ml/_predict/text_similarity/your_model_id
 }
 ```
 
-回應包含兩個 `similarity` 輸出。對於每個 `similarity` 輸出，`data` 陣列會針對每個文件與查詢的比對提供一個相關性分數。`similarity` 輸出依照輸入文件的順序提供：第一個相似度結果對應第一個文件。
+回應包含兩個 `similarity` 輸出。對於每個 `similarity` 輸出，`data` 陣列會針對每份文件相對於查詢提供一個相關性分數。`similarity` 輸出會依照輸入文件的順序提供：第一個相似度結果對應第一份文件。
 
-## 步驟 2：設定重新排序管線
+## 步驟 2：設定重新排名管線
 
-請依照下列步驟設定重新排序管線。
+請依照下列步驟設定重新排名管線。
 
 ### 步驟 2.1：匯入測試資料
 
@@ -248,9 +250,9 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-### 步驟 2.2：建立重新排序管線
+### 步驟 2.2：建立重新排名管線
 
-使用 MS MARCO 交叉編碼器模型建立重新排序管線：
+使用 MS MARCO 交叉編碼器模型建立重新排名管線：
 
 ```json
 PUT /_search/pipeline/rerank_pipeline_sagemaker
@@ -272,10 +274,10 @@ PUT /_search/pipeline/rerank_pipeline_sagemaker
 ```
 {% include copy-curl.html %}
 
-如果您在 `document_fields` 中提供多個欄位名稱，則會先串接所有欄位的值，然後再執行重新排序。
+如果您在 `document_fields` 中提供多個欄位名稱，則會先串接所有欄位的值，然後再執行重新排名。
 {: .note}
 
-### 步驟 2.3：測試重新排序
+### 步驟 2.3：測試重新排名
 
 若要限制傳回的結果數量，您可以指定 `size` 參數。例如，將 `"size": 4` 設為傳回前四份文件：
 
@@ -297,7 +299,7 @@ GET my-test-data/_search?search_pipeline=rerank_pipeline_sagemaker
 ```
 {% include copy-curl.html %}
 
-回應包含四份最相關的文件：
+回應會包含最相關的四份文件：
 
 ```json
 {
@@ -327,7 +329,7 @@ GET my-test-data/_search?search_pipeline=rerank_pipeline_sagemaker
       {
         "_index": "my-test-data",
         "_id": "VExye5AB9ZeWZdmDjWZn",
-        "_score": 0.55655104,
+        "_score": 0.5565504,
         "_source": {
           "passage_text": "Capital punishment (the death penalty) has existed in the United States since beforethe United States was a country. As of 2017, capital punishment is legal in 30 of the 50 states."
         }
@@ -335,7 +337,7 @@ GET my-test-data/_search?search_pipeline=rerank_pipeline_sagemaker
       {
         "_index": "my-test-data",
         "_id": "UUxye5AB9ZeWZdmDjWZn",
-        "_score": 0.115356825,
+        "_score": 0.115356795,
         "_source": {
           "passage_text": "Carson City is the capital city of the American state of Nevada."
         }
@@ -343,7 +345,7 @@ GET my-test-data/_search?search_pipeline=rerank_pipeline_sagemaker
       {
         "_index": "my-test-data",
         "_id": "Ukxye5AB9ZeWZdmDjWZn",
-        "_score": 0.00021142483,
+        "_score": 0.00021142441,
         "_source": {
           "passage_text": "The Commonwealth of the Northern Mariana Islands is a group of islands in the Pacific Ocean. Its capital is Saipan."
         }
@@ -356,7 +358,7 @@ GET my-test-data/_search?search_pipeline=rerank_pipeline_sagemaker
 }
 ```
 
-若要將這些結果與未重新排序的結果進行比較，請在沒有重新排序管線的情況下執行搜尋：
+若要將這些結果與未重新排名的結果進行比較，請在沒有重新排名管線的情況下執行搜尋：
 
 ```json
 GET my-test-data/_search
@@ -430,3 +432,9 @@ GET my-test-data/_search
   }
 }
 ```
+
+## 相關文件
+
+- [重新排名搜尋結果]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/reranking-search-results/)
+- [使用交叉編碼器模型重新排名搜尋結果]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/rerank-cross-encoder/)
+- [重新排名處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/)

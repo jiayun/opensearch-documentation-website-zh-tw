@@ -1,33 +1,33 @@
 ---
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: "依欄位重新排序"
+title: "依欄位重新排名"
 parent: Reranking search results
 grand_parent: Optimizing search quality
 has_children: false
 nav_order: 20
 ---
 
-# 依欄位重新排序搜尋結果
-**Introduced 2.18**
+# 依欄位重新排名搜尋結果
+**自 2.18 起導入**
 {: .label .label-purple }
 
-您可以使用 `by_field` rerank 類型，依文件欄位重新排序搜尋結果。當模型已經執行並為您的文件產生數值分數，或已套用先前的搜尋回應處理器，而您想根據彙總欄位以不同方式重新排序文件時，依欄位重新排序搜尋結果就非常實用。
+您可以使用 `by_field` 重新排名類型，依文件欄位重新排名搜尋結果。當模型已經執行並為您的文件產生數值分數，或已套用先前的搜尋回應處理器，而您想根據彙總欄位以不同方式重新排名文件時，依欄位重新排名搜尋結果就非常實用。
 
-若要實作重新排序，您需要設定一個在搜尋時執行的[搜尋管線]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/index/)。搜尋管線會攔截搜尋結果，並對其套用 [`rerank` 處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/)。`rerank` 處理器會評估搜尋結果，並根據從文件欄位取得的新分數進行排序。
+若要實作重新排名，您需要設定一個在搜尋時執行的[搜尋管線]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/index/)。搜尋管線會攔截搜尋結果，並對其套用 [`rerank` 處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/)。`rerank` 處理器會評估搜尋結果，並根據從文件欄位取得的新分數進行排序。
 
-## 執行含重新排序的搜尋
+## 執行含重新排名的搜尋
 
-若要執行含重新排序的搜尋，請依照下列步驟：
+若要執行含重新排名的搜尋，請依照下列步驟：
 
 1. [設定搜尋管線](#step-1-configure-a-search-pipeline)。
 1. [建立用於匯入的索引](#step-2-create-an-index-for-ingestion)。
 1. [將文件匯入索引](#step-3-ingest-documents-into-the-index)。
-1. [使用重新排序進行搜尋](#step-4-search-using-reranking)。
+1. [使用重新排名進行搜尋](#step-4-search-using-reranking)。
 
 ## 步驟 1：設定搜尋管線
 
-設定一個包含 [`rerank` 處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/) 的搜尋管線，並指定 `by_field` rerank 類型。管線會依 `reviews.stars` 欄位排序（以完整的點路徑指定該欄位），並傳回所有文件的原始查詢分數及其新分數：
+設定一個包含 [`rerank` 處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/) 的搜尋管線，並指定 `by_field` 重新排名類型。管線會依 `reviews.stars` 欄位排序（以完整的點路徑指定該欄位），並傳回所有文件的原始查詢分數及其新分數：
 
 ```json
 PUT /_search/pipeline/rerank_byfield_pipeline
@@ -46,9 +46,9 @@ PUT /_search/pipeline/rerank_byfield_pipeline
 ```
 {% include copy-curl.html %}
 
-如需請求欄位的更多資訊，請參閱 [Request fields]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/#request-body-fields)。
+如需請求欄位的更多資訊，請參閱[請求欄位]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/#request-body-fields)。
 
-當 `keep_previous_score` 為 `true` 時，重新排序前的分數預設會儲存在 `previous_score` 中。如果 `previous_score` 已存在於您的文件中，請使用 `previous_score_field` 選擇不同的欄位名稱。
+當 `keep_previous_score` 為 `true` 時，重新排名前的分數預設會儲存在 `previous_score` 中。如果 `previous_score` 已存在於您的文件中，請使用 `previous_score_field` 選擇不同的欄位名稱。
 
 ## 步驟 2：建立用於匯入的索引
 
@@ -105,7 +105,7 @@ POST /_bulk
 ```
 {% include copy-curl.html %}
 
-## 步驟 4：使用重新排序進行搜尋
+## 步驟 4：使用重新排名進行搜尋
 
 作為範例，請在您的索引上執行 `match_all` 查詢：
 
@@ -209,4 +209,5 @@ POST /book-index/_search
 ## 後續步驟
 
 - 進一步了解 [`rerank` 處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/)。
-- 查看使用外部託管交叉編碼器模型依欄位重新排序的[完整範例]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/rerank-by-field-cross-encoder/)。
+- 參閱[使用外部託管的 cross-encoder 模型依欄位重新排名]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/rerank-by-field-cross-encoder/)的完整範例。
+- 如需使用 Cohere Rerank 依欄位重新排名結果的教學，請參閱[使用 Cohere Rerank 依欄位重新排名搜尋結果]({{site.url}}{{site.baseurl}}/tutorials/reranking/reranking-by-field/)。

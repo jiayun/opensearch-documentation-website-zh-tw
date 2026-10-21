@@ -33,7 +33,7 @@ grand_parent: Agents and tools
 
 ## 步驟 1：註冊將執行 LogPatternAnalysisTool 的流程代理程式
 
-流程代理程式會依序執行一連串工具，並傳回最後一個工具的輸出。若要建立流程代理程式，請傳送下列註冊代理程式請求：
+流程代理程式會依序執行一系列工具，並傳回最後一個工具的輸出。若要建立流程代理程式，請傳送下列註冊代理程式請求：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -41,9 +41,6 @@ POST /_plugins/_ml/agents/_register
   "name": "Test_Agent_For_Log_Pattern_Analysis_Tool",
   "type": "flow",
   "description": "this is a test agent for the LogPatternAnalysisTool",
-  "memory": {
-    "type": "demo"
-  },
   "tools": [
     {
       "type": "LogPatternAnalysisTool",
@@ -54,7 +51,7 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-註冊此工具不需要任何參數。此工具會在執行時使用動態參數驗證。 
+註冊工具不需要任何參數。此工具會在執行時使用動態參數驗證。
 
 OpenSearch 會回應代理程式 ID：
 
@@ -66,7 +63,41 @@ OpenSearch 會回應代理程式 ID：
 
 ## 步驟 2：執行代理程式
 
-執行代理程式以進行各種分析類型。
+執行代理程式以進行各種類型的分析。
+
+這些範例使用固定的時間範圍。若要針對您自己的資料執行範例，請將 `index` 設為您的記錄檔索引，並將時間範圍參數設為該索引中時間戳記範圍內的時間。若要找出最早和最晚的時間戳記，請對時間欄位執行 `min` 和 `max` 彙總：
+
+```json
+GET /opensearch_dashboards_sample_data_logs/_search
+{
+  "size": 0,
+  "aggs": {
+    "earliest": { "min": { "field": "@timestamp" } },
+    "latest": { "max": { "field": "@timestamp" } }
+  }
+}
+```
+{% include copy-curl.html %}
+
+`value_as_string` 欄位包含最早和最晚的時間戳記：
+
+```json
+{
+  ...
+  "aggregations": {
+    "earliest": {
+      "value": 1.791074342912E12,
+      "value_as_string": "2026-10-04T00:39:02.912Z"
+    },
+    "latest": {
+      "value": 1.796334326749E12,
+      "value_as_string": "2026-12-03T21:45:26.749Z"
+    }
+  }
+}
+```
+
+請以 `yyyy-MM-dd HH:mm:ss` 格式提供時間範圍參數，例如 `2026-10-04 00:00:00`。
 
 ### 記錄檔序列分析 
 
@@ -108,6 +139,8 @@ OpenSearch 會傳回與基準模式有顯著差異的異常追蹤序列：
 
 ### 記錄檔模式差異分析
 
+下列範例使用 OpenSearch Dashboards 範例網頁記錄檔。若要新增範例網頁記錄檔，請參閱[新增範例資料]({{site.url}}{{site.baseurl}}/dashboards/getting-started/data-setup/#add-sample-data)。當您新增範例資料時，OpenSearch Dashboards 會依據您新增資料的日期調整其時間戳記，因此您的資料副本不會包含此範例中使用的 2018 年日期。請將 `2018-07-22` 替換為前述彙總所傳回的最早時間戳記日期。
+
 若要執行模式比較分析，請提供 `baseTimeRangeStart` 與 `baseTimeRangeEnd`：
 
 ```json
@@ -126,7 +159,7 @@ POST /_plugins/_ml/agents/OQutgJYBAc35E4_KvI1q/_execute
 ```
 {% include copy-curl.html %}
 
-OpenSearch 會傳回在各時間區段之間頻率有顯著變化的模式：
+OpenSearch 會傳回在不同時間區段之間頻率有顯著變化的模式。`base` 與 `selection` 欄位包含基準時間範圍與選取時間範圍中符合該模式的記錄檔比例，而 `lift` 則是較大比例與較小比例的比值。此工具會傳回 `lift` 大於 3 的模式，以及僅出現在選取時間範圍中的模式。僅出現在選取時間範圍中的模式，其 `base` 為 `0.0`，`lift` 為 `null`，如下列回應所示：
 
 ```json
 {
@@ -135,7 +168,7 @@ OpenSearch 會傳回在各時間區段之間頻率有顯著變化的模式：
       "output": [
         {
           "name": "response",
-          "result": "{\"patternMapDifference\": [{\"pattern\": \"<*> ERROR <*> Connection timeout\", \"base\": 0.02, \"selection\": 0.15, \"lift\": 7.5}]}"
+          "result": "{\"patternMapDifference\":[{\"pattern\":\"<*IP*> - - [<*DATETIME*>] \\\"GET <*> HTTP/<*>\\\" <*> 0 \\\"-\\\" \\\"Mozilla/<*> (<*>; Linux <*>_<*>; rv:<*>) Gecko/<*> Firefox/<*>\\\"\",\"base\":0.0,\"selection\":0.4224137931034483,\"lift\":null},{\"pattern\":\"<*IP*> - - [<*DATETIME*>] \\\"GET <*> HTTP/<*>\\\" 200 <*> \\\"-\\\" \\\"Mozilla/<*> (compatible; MSIE 6<*>; Windows NT 5<*>; <*>; .NET CLR 1<*>)\\\"\",\"base\":0.0,\"selection\":0.27586206896551724,\"lift\":null}]}"
         }
       ]
     }
@@ -145,7 +178,7 @@ OpenSearch 會傳回在各時間區段之間頻率有顯著變化的模式：
 
 ### 記錄檔洞察分析
 
-若要執行錯誤模式偵測，請僅提供選取時間範圍：
+若要執行錯誤模式偵測，只需提供選取的時間範圍：
 
 ```json
 POST /_plugins/_ml/agents/OQutgJYBAc35E4_KvI1q/_execute
@@ -161,7 +194,7 @@ POST /_plugins/_ml/agents/OQutgJYBAc35E4_KvI1q/_execute
 ```
 {% include copy-curl.html %}
 
-OpenSearch 會傳回附有範例記錄檔的錯誤模式：
+OpenSearch 會傳回錯誤模式與範例記錄檔：
 
 ```json
 {
@@ -170,7 +203,7 @@ OpenSearch 會傳回附有範例記錄檔的錯誤模式：
       "output": [
         {
           "name": "response",
-          "result": "{\"logInsights\": [{\"pattern\": \"<*> ERROR User <*> authentication failed\", \"count\": 23, \"sampleLogs\": [\"2025-01-15 10:30:15 ERROR User user123 authentication failed\", \"2025-01-15 10:32:08 ERROR User admin456 authentication failed\"]}]}"
+          "result": "{\"logInsights\":[{\"pattern\":\"<*DATETIME*> ERROR User <*> authentication failed\",\"count\":23.0,\"sampleLogs\":[\"2025-01-15 10:30:15 ERROR User user123 authentication failed\",\"2025-01-15 10:32:08 ERROR User admin456 authentication failed\",\"2025-01-15 10:35:42 ERROR User user789 authentication failed\"]}]}"
         }
       ]
     }
@@ -180,18 +213,19 @@ OpenSearch 會傳回附有範例記錄檔的錯誤模式：
 
 ## 執行參數
 
-下表列出可用於執行代理程式的工具參數。
+下表列出執行代理程式可用的工具參數。
 
-| Parameter | Type | Required/Optional | Description |
+| 參數 | 類型 | 必要/選用 | 說明 |
 |:----------|:-----|:------------------|:------------|
-| `index` | String | Required | 包含記錄資料的 OpenSearch 索引名稱 (例如 `ss4o_logs-otel-2025.06.24`)。 |
-| `timeField` | String | Required | 索引對應中用於時間篩選的日期/時間欄位。 |
-| `logFieldName` | String | Required | 包含要分析之原始記錄訊息的欄位 (例如 `body`、`message` 或 `log`)。 |
-| `traceFieldName` | String | Optional | 包含追蹤 ID 或關聯 ID 以啟用序列分析的欄位 (例如 `traceId` 或 `correlationId`)。記錄檔序列分析模式必要。 |
-| `baseTimeRangeStart` | String | Optional | 基準比較期間的開始時間，格式為 UTC 日期字串 (例如 `2025-06-24 07:33:05`)。序列與模式差異分析模式必要。 |
-| `baseTimeRangeEnd` | String | Optional | 基準比較期間的結束時間，格式為 UTC 日期字串 (例如 `2025-06-24 07:51:27`)。序列與模式差異分析模式必要。 |
-| `selectionTimeRangeStart` | String | Required | 分析目標期間的開始時間，格式為 UTC 日期字串 (例如 `2025-06-24 07:50:26`)。 |
-| `selectionTimeRangeEnd` | String | Required | 分析目標期間的結束時間，格式為 UTC 日期字串 (例如 `2025-06-24 07:55:56`)。 |
+| `index` | 字串 | 必要 | 包含記錄資料的 OpenSearch 索引名稱（例如 `ss4o_logs-otel-2025.06.24`）。 |
+| `timeField` | 字串 | 選用 | 索引對應中用於時間篩選的日期/時間欄位。預設為 `@timestamp`。 |
+| `logFieldName` | 字串 | 選用 | 包含要分析之原始記錄檔訊息的欄位（例如 `body`、`message` 或 `log`）。預設為 `message`。 |
+| `traceFieldName` | 字串 | 選用 | 包含追蹤 ID 或關聯 ID 的欄位，用於啟用序列分析（例如 `traceId` 或 `correlationId`）。記錄檔序列分析模式必要。 |
+| `baseTimeRangeStart` | 字串 | 選用 | 基準比較期間的開始時間，採用 UTC 日期字串格式（例如 `2025-06-24 07:33:05`）。序列與模式差異分析模式必要。 |
+| `baseTimeRangeEnd` | 字串 | 選用 | 基準比較期間的結束時間，採用 UTC 日期字串格式（例如 `2025-06-24 07:51:27`）。序列與模式差異分析模式必要。 |
+| `selectionTimeRangeStart` | 字串 | 必要 | 分析目標期間的開始時間，採用 UTC 日期字串格式（例如 `2025-06-24 07:50:26`）。 |
+| `selectionTimeRangeEnd` | 字串 | 必要 | 分析目標期間的結束時間，採用 UTC 日期字串格式（例如 `2025-06-24 07:55:56`）。 |
+| `filter` | 字串 | 選用 | 在分析前篩選記錄檔的 PPL 布林值運算式（例如 `severity='ERROR'`）。此工具會將其套用為額外的 `where` 子句。記錄檔序列分析模式不會套用此參數，因為該模式需要追蹤中的所有記錄檔。 |
 
 ## 測試工具
 
@@ -199,9 +233,9 @@ OpenSearch 會傳回附有範例記錄檔的錯誤模式：
 
 ## 限制
 
-記錄檔模式分析工具具有下列限制：
+Log Pattern Analysis 工具有下列限制：
 
-- **記錄檔量**：此工具會透過 PPL 查詢處理記錄檔，每個查詢最多 10,000 份文件。為達到最佳效能，請將分析限制在特定時間範圍。
+- **記錄檔量**：此工具透過 PPL 查詢處理記錄檔，每次查詢最多 10,000 份文件。為獲得最佳效能，請將分析限制在特定時間範圍內。
 - **結果限制**：
-  - 模式差異分析：傳回前 10 個顯著模式。
-  - 記錄檔洞察分析：傳回前 5 個錯誤模式，每個模式最多附 2 筆範例記錄檔。
+  - 模式差異分析：最多傳回 `lift` 最高的 10 個模式，以及最多 10 個僅在所選時間範圍內出現的模式。
+  - 記錄檔洞察分析：傳回前 5 個錯誤模式，每個模式最多附 5 筆範例記錄檔。

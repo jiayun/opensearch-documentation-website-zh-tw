@@ -9,13 +9,13 @@ redirect_from:
   - /vector-search/tutorials/semantic-search/semantic-search-cfn-bedrock/
 ---
 
-# 使用 AWS CloudFormation 與 Amazon Bedrock 的語意搜尋 
+# 使用 AWS CloudFormation 與 Amazon Bedrock 進行語意搜尋
 
-本教學說明如何使用 [AWS CloudFormation](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/cfn-template.html) 與 Amazon Bedrock，在 [Amazon OpenSearch Service](https://docs.aws.amazon.com/opensearch-service/) 中實作語意搜尋。如需更多資訊，請參閱[語意搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/semantic-search/)。
+本教學說明如何使用 [AWS CloudFormation](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/cfn-template.html) 與 Amazon Bedrock，在 [Amazon OpenSearch Service](https://docs.aws.amazon.com/opensearch-service/) 中實作語意搜尋。如需詳細資訊，請參閱[語意搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/semantic-search/)。
 
-如果您使用的是自行管理的 OpenSearch 而非 Amazon OpenSearch Service，請使用[這些藍圖](https://github.com/opensearch-project/ml-commons/blob/main/docs/remote_inference_blueprints/)建立連接至 Amazon Bedrock 模型的連接器。如需建立連接器的更多資訊，請參閱[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
+如果您使用的是自行管理的 OpenSearch，而非 Amazon OpenSearch Service，請使用[藍圖](https://github.com/opensearch-project/ml-commons/blob/main/docs/remote_inference_blueprints/)建立連接 Amazon Bedrock 模型的連接器。如需建立連接器的詳細資訊，請參閱[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
 
-CloudFormation 整合會自動執行[使用 Amazon Bedrock Titan 的語意搜尋]({{site.url}}{{site.baseurl}}/vector-search/tutorials/semantic-search/semantic-search-bedrock-cohere/)教學中的步驟。CloudFormation 範本會建立 AWS Identity and Access Management (IAM) 角色，並叫用 AWS Lambda 函式來設定 AI 連接器與模型。
+CloudFormation 整合可自動執行[使用 Amazon Bedrock Titan 進行語意搜尋]({{site.url}}{{site.baseurl}}/vector-search/tutorials/semantic-search/semantic-search-bedrock-titan/)與[在 Amazon Bedrock 上使用 Cohere Embed 進行語意搜尋]({{site.url}}{{site.baseurl}}/vector-search/tutorials/semantic-search/semantic-search-bedrock-cohere/)教學中的步驟。CloudFormation 範本會建立 AWS Identity and Access Management (IAM) 角色，並叫用 AWS Lambda 函式來設定 AI 連接器與模型。
 
 請將以 `your_` 前綴開頭的預留位置替換為您自己的值。
 {: .note}
@@ -28,39 +28,43 @@ CloudFormation 整合會自動執行[使用 Amazon Bedrock Titan 的語意搜尋
 
 ## 步驟 1：對應後端角色
 
-OpenSearch CloudFormation 範本使用 Lambda 函式來建立具有 IAM 角色的 AI 連接器。您必須將該 IAM 角色對應到 `ml_full_access`，才能授予必要的權限。請依照[使用 Amazon Bedrock Titan 的語意搜尋教學的步驟 2.2]({{site.url}}{{site.baseurl}}/vector-search/tutorials/semantic-search/semantic-search-bedrock-titan/#step-22-map-a-backend-role) 來對應後端角色。
+OpenSearch CloudFormation 範本使用 Lambda 函式來建立具有 IAM 角色的 AI 連接器。您必須將該 IAM 角色對應到 `ml_full_access`，才能授予必要的權限。請依照 [使用 Amazon Bedrock Titan 的語意搜尋教學的步驟 2.2]({{site.url}}{{site.baseurl}}/vector-search/tutorials/semantic-search/semantic-search-bedrock-titan/#step-22-map-a-backend-role) 來對應後端角色。
 
-IAM 角色在 CloudFormation 範本中由 **Lambda Invoke OpenSearch ML Commons Role Name** 欄位指定。預設的 IAM 角色為 `LambdaInvokeOpenSearchMLCommonsRole`，因此您必須將 `arn:aws:iam::your_aws_account_id:role/LambdaInvokeOpenSearchMLCommonsRole` 後端角色對應到 `ml_full_access`。
+IAM 角色在 CloudFormation 範本中由 **Lambda Invoke OpenSearch ML Commons Role Name** 欄位指定。預設的 IAM 角色是 `LambdaInvokeOpenSearchMLCommonsRole`，因此您必須將 `arn:aws:iam::your_aws_account_id:role/LambdaInvokeOpenSearchMLCommonsRole` 後端角色對應到 `ml_full_access`。
 
-若要進行更廣泛的對應，您可以使用萬用字元授予所有角色 `ml_full_access`：  
+若要進行更廣泛的對應，您可以使用萬用字元將 `ml_full_access` 授予所有角色：  
 
 ```
 arn:aws:iam::your_aws_account_id:role/*
 ```  
 
-由於 `all_access` 包含的權限多於 `ml_full_access`，因此將後端角色對應到 `all_access` 也是可以接受的。
+由於 `all_access` 包含的權限比 `ml_full_access` 更多，因此將後端角色對應到 `all_access` 也是可以接受的。
 
-## 步驟 2：執行 CloudFormation 範本  
+如果您的網域存取政策尚未允許此 IAM 角色，請將該角色加入網域存取政策。
 
-CloudFormation 範本整合可在 [Amazon OpenSearch Service 主控台](https://console.aws.amazon.com/aos/home)中使用。從左側導覽窗格選取 **Integrations**，如下圖所示。
+## 步驟 2：執行 CloudFormation 範本
 
-![語意搜尋 CloudFormation 整合]({{site.url}}{{site.baseurl}}/images/vector-search-tutorials/semantic_search_bedrock_integration_1.png)  
+CloudFormation 範本整合功能可在 [Amazon OpenSearch Service 主控台](https://console.aws.amazon.com/aos/home)中使用。從左側導覽窗格中選取 **Integrations**，如下圖所示。
 
-若要建立連接器，請完成下列表單。
+![語意搜尋 CloudFormation 整合]({{site.url}}{{site.baseurl}}/images/vector-search-tutorials/semantic_search_bedrock_integration_1.png)
+
+若要建立連接器，請填寫下列表單。
 
 ![將預先訓練的模型部署至 Amazon Bedrock]({{site.url}}{{site.baseurl}}/images/vector-search-tutorials/semantic_search_bedrock_integration_2.png)
 
-請完成下列欄位，其餘欄位維持預設值：  
+主控台為公有網域與虛擬私有雲端 (VPC) 網域提供不同的範本。VPC 網域範本會在您的 VPC 中執行 Lambda 函式，因此也需要執行 Lambda 函式所用的安全群組與子網路。
 
-1. 輸入您的 **Amazon OpenSearch Endpoint**。  
-2. 在 **Model Configuration** 中，選取要部署的 **Model**。請從下列支援的模型中選擇一個： 
+請填寫下列欄位，其餘欄位皆保留預設值：
+
+1. 輸入您的 **Amazon OpenSearch Endpoint**。
+2. 在 **Model Configuration** 中，選取要部署的 **Model**。請從下列支援的模型中選擇一個：
     - `amazon.titan-embed-text-v1`
     - `amazon.titan-embed-image-v1`
-    - `amazon.titan-embed-text-v2:0` 
+    - `amazon.titan-embed-text-v2:0`
     - `cohere.embed-english-v3`
     - `cohere.embed-multilingual-v3`
-3. 選取 **Model Region** (即 Amazon Bedrock 區域)。
-4. 在 **AddProcessFunction** 中，選取 `true` 以啟用，或選取 `false` 以停用連接器中的預設前置與後置處理函式。
+3. 選取 **Model Region**（此為 Amazon Bedrock 區域）。
+4. 在 **AddProcessFunction** 中，選取 `true` 以啟用連接器中的預設前處理與後處理函式，或選取 `false` 將其停用。
 
 ## 輸出
 
@@ -77,7 +81,7 @@ CloudFormation 範本整合可在 [Amazon OpenSearch Service 主控台](https://
 
 ### 步驟 3.1：建立資料匯入管線
 
-首先，建立一個使用 Amazon Bedrock 上模型從輸入文字產生嵌入的[資料匯入管線]({{site.url}}{{site.baseurl}}/ingest-pipelines/)：
+首先，建立一個使用 Amazon Bedrock 模型從輸入文字產生嵌入的[資料匯入管線]({{site.url}}{{site.baseurl}}/ingest-pipelines/)：
 
 ```json
 PUT /_ingest/pipeline/my_bedrock_embedding_pipeline
@@ -86,7 +90,7 @@ PUT /_ingest/pipeline/my_bedrock_embedding_pipeline
     "processors": [
         {
             "text_embedding": {
-                "model_id": "your_bedrock_embedding_model_id_created_in_step3",
+                "model_id": "your_model_id_from_stack_outputs",
                 "field_map": {
                     "text": "text_knn"
                 }
@@ -99,14 +103,13 @@ PUT /_ingest/pipeline/my_bedrock_embedding_pipeline
 
 ### 步驟 3.2：建立向量索引
 
-接著，建立一個向量索引來儲存輸入文字與產生的嵌入：
+接著，建立向量索引以儲存輸入文字與產生的嵌入。將 `dimension` 設為您在範本中所選模型的嵌入大小（在此範例中，`amazon.titan-embed-text-v1` 為 1536）：
 
 ```json
 PUT my_index
 {
   "settings": {
     "index": {
-      "knn.space_type": "cosinesimil",
       "default_pipeline": "my_bedrock_embedding_pipeline",
       "knn": "true"
     }
@@ -115,7 +118,8 @@ PUT my_index
     "properties": {
       "text_knn": {
         "type": "knn_vector",
-        "dimension": 1536
+        "dimension": 1536,
+        "space_type": "cosinesimil"
       }
     }
   }
@@ -137,7 +141,7 @@ POST /my_index/_doc/1000001
 
 ### 步驟 3.4：搜尋索引
 
-執行向量搜尋以從向量索引擷取文件：
+執行向量搜尋，從向量索引擷取文件：
 
 ```json
 POST /my_index/_search
@@ -146,7 +150,7 @@ POST /my_index/_search
     "neural": {
       "text_knn": {
         "query_text": "hello",
-        "model_id": "your_embedding_model_id_created_in_step4",
+        "model_id": "your_model_id_from_stack_outputs",
         "k": 100
       }
     }
@@ -156,3 +160,10 @@ POST /my_index/_search
 }
 ```
 {% include copy-curl.html %}
+
+## 相關文件
+
+- [語意搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/semantic-search/)
+- [連線至外部託管的模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/)
+- [文字嵌入處理器]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/text-embedding/)
+- [神經查詢]({{site.url}}{{site.baseurl}}/query-dsl/specialized/neural/)

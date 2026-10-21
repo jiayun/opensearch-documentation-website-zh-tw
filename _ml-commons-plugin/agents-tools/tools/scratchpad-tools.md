@@ -50,7 +50,7 @@ Scratchpad 遵循簡單的生命週期：
 
 ### 步驟 1：註冊並部署模型
 
-註冊支援代理程式架構的對話模型。下列範例使用 Anthropic Claude：
+註冊一個支援代理程式框架的對話模型。以下範例使用 Anthropic Claude：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -66,7 +66,7 @@ POST /_plugins/_ml/models/_register?deploy=true
     "parameters": {
       "region": "us-east-1",
       "service_name": "bedrock",
-      "model": "anthropic.claude-3-5-sonnet-20241022-v2:0"
+      "model": "us.anthropic.claude-sonnet-4-6"
     },
     "credential": {
       "access_key": "${AWS_ACCESS_KEY_ID}",
@@ -81,7 +81,7 @@ POST /_plugins/_ml/models/_register?deploy=true
         "headers": {
           "content-type": "application/json"
         },
-        "request_body": """{"system": [{"text": "${parameters.system_prompt}"}], "messages": ${parameters.messages}, "inferenceConfig": {"maxTokens": 8000, "temperature": 0}}"""
+        "request_body": """{"system": [{"text": "${parameters.system_prompt}"}], "messages": [${parameters._chat_history:-}{"role":"user","content":[{"text":"${parameters.prompt}"}]}${parameters._interactions:-}]${parameters.tool_configs:-}, "inferenceConfig": {"maxTokens": 8000, "temperature": 0}}"""
       }
     ]
   }
@@ -89,9 +89,9 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-### 步驟 2：註冊含 scratchpad 工具的代理程式
+### 步驟 2：註冊包含 scratchpad 工具的代理程式
 
-註冊同時包含 scratchpad 工具與其他研究工具的對話代理程式：
+註冊一個同時包含 scratchpad 工具與其他研究工具的對話式代理程式：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -101,7 +101,7 @@ POST /_plugins/_ml/agents/_register
     "description": "Research assistant with persistent scratchpad memory",
     "app_type": "rag",
     "llm": {
-        "model_id": "your-model-id",
+        "model_id": "<your-model-id>",
         "parameters": {
             "max_iteration": 50,
             "system_prompt": "You are a sophisticated research assistant with access to OpenSearch indices and a persistent scratchpad for note-taking.\n\nYour Research Workflow:\n1. Check Scratchpad: Before starting a new research task, check your scratchpad to see if you have any relevant information already saved\n2. Create Research Plan: Create a structured research plan\n3. Write to Scratchpad: Save the research plan and any important information to your scratchpad\n4. Use Search: Gather information using OpenSearch search queries\n5. Update Scratchpad: After each search, update your scratchpad with new findings\n6. Iterate: Repeat searching and updating until you have comprehensive information\n7. Complete Task: Provide a thorough response based on your accumulated research\n\nRemember: Your scratchpad is temporary memory for this execution session only. Use it to organize your thoughts and findings during this task.",
@@ -142,7 +142,7 @@ POST /_plugins/_ml/agents/_register
 
 ### 步驟 3：執行代理程式
 
-以研究問題執行代理程式：
+使用研究問題執行代理程式：
 
 ```json
 POST /_plugins/_ml/agents/{your-agent-id}/_execute?async=true
@@ -156,12 +156,27 @@ POST /_plugins/_ml/agents/{your-agent-id}/_execute?async=true
 
 
 代理程式將會：
-1. 從其 scratchpad 讀取，以檢查是否有現有的相關資訊（新執行會從空白開始）。
+1. 從其 scratchpad 讀取，以檢查是否已有相關資訊（新的執行會從空白開始）。
 2. 建立研究計畫並儲存至 scratchpad。
-3. 執行搜尋，並以發現更新 scratchpad。
+3. 執行搜尋並以發現更新 scratchpad。
 4. 根據累積的研究提供完整的答案。
 
-使用 `agents/<your-agent-id>/_execute` API 時，您會在回應中取得 `parent_interaction_id` 與 `memory_id`。請記下 `parent_interaction_id`，以供後續追蹤步驟使用。如需更多資訊，請參閱[檢視 scratchpad 活動](#viewing-scratchpad-activity)。
+由於請求指定了 `async=true`，OpenSearch 會在不等待代理程式完成的情況下傳回任務 ID。回應中也包含 `memory_id` 與 `parent_interaction_id`：
+
+```json
+{
+  "task_id": "pfztP6EBqoCArR_TRGp7",
+  "status": "RUNNING",
+  "response": {
+    "memory_id": "o_ztP6EBqoCArR_TRGpJ",
+    "parent_interaction_id": "pPztP6EBqoCArR_TRGpo"
+  }
+}
+```
+
+請記下 `parent_interaction_id`，以供後續追蹤步驟使用。如需詳細資訊，請參閱[檢視 scratchpad 活動](#viewing-scratchpad-activity)。
+
+若要取得代理程式的答案，請使用 `task_id` 傳送 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 請求。當任務 `state` 為 `COMPLETED` 時，任務 `response` 會包含代理程式的 `inference_results`。
 
 ## 工具參數
 
@@ -169,17 +184,17 @@ POST /_plugins/_ml/agents/{your-agent-id}/_execute?async=true
 
 ### ReadFromScratchPadTool
 
-以下是新增至代理程式時所使用的**註冊參數**。
+以下是新增至代理程式時使用的**註冊參數**。
 
 參數 | 資料類型 | 必要／選用 | 說明
 :--- | :--- | :--- | :---
-`persistent_notes` | 字串 | 選用 | 首次建立時要儲存至 scratchpad 的初始筆記或指示。
+`persistent_notes` | 字串 | 選用 | 首次建立時要儲存在 scratchpad 的初始筆記或指示。
 
-以下是直接呼叫工具時所使用的**執行參數**。
+以下是直接呼叫工具時使用的**執行參數**。
 
 參數 | 資料類型 | 必要／選用 | 說明
 :--- | :--- |:------------------| :---
-`persistent_notes` | 字串 | 必要          | 要儲存至 scratchpad 的初始筆記或指示。
+`persistent_notes` | 字串 | 選用 | 要儲存在 scratchpad 的初始筆記或指示。
 
 ### WriteToScratchPadTool
 

@@ -27,7 +27,15 @@ PUT /_plugins/_ml/model_groups/{model_group_id}
 
 ## 請求本文欄位
 
-請求欄位的說明請參閱[請求欄位](#request-body-fields)。
+下表列出可用的請求本文欄位。所有欄位皆為選用。
+
+欄位 |資料類型 | 說明 
+:--- | :--- | :---
+`name` | String | 模型群組名稱。在叢集中必須是唯一的。
+`description` | String | 模型群組的描述。
+`access_mode` | String | 此模型群組的存取模式。有效值為 `public`、`private` 與 `restricted`。當此參數設為 `restricted` 時，您必須指定 `backend_roles` 或 `add_all_backend_roles` 其中之一，但不可同時指定兩者。將存取模式變更為 `public` 或 `private` 會移除模型群組的後端角色。
+`backend_roles` | Array | 要加入模型群組的模型擁有者後端角色清單。僅能在 `access_mode` 為 `restricted` 或省略時指定。若您指定 `backend_roles` 而未指定 `access_mode`，存取模式會變更為 `restricted`。不可與 `add_all_backend_roles` 同時指定。
+`add_all_backend_roles` | Boolean | 若為 `true`，模型擁有者的所有後端角色都會加入模型群組。若您將此參數設為 `true` 而未指定 `access_mode`，存取模式會變更為 `restricted`。不可與 `backend_roles` 同時指定。管理員使用者不可將此參數設為 `true`。
 
 ## 範例請求
 
@@ -41,6 +49,14 @@ PUT /_plugins/_ml/model_groups/{model_group_id}
 ```
 {% include copy-curl.html %}
 
+## 範例回應
+
+```json
+{
+  "status": "Updated"
+}
+```
+
 ## 在停用模型存取控制的叢集中更新模型群組
 
-如果您的叢集已停用模型存取控制（未符合其中一項[先決條件](ml-commons-plugin/model-access-control/#model-access-control-prerequisites)），您只能更新模型群組的 `name` 和 `description`，而無法更新任何存取參數（`model_access_name`、`backend_roles` 或 `add_backend_roles`）。 
+如果您的叢集已停用模型存取控制（未滿足其中一項[先決條件]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/#model-access-control-prerequisites)），您只能更新模型群組的 `name` 和 `description`，無法更新任何存取參數（`access_mode`、`backend_roles` 或 `add_all_backend_roles`）。 

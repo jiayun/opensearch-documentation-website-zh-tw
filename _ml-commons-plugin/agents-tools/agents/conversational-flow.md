@@ -10,10 +10,10 @@ grand_parent: Agents and tools
 ---
 
 # 對話流程代理程式
-**於 2.13 版導入**
+**於 2.13 版推出**
 {: .label .label-purple }
 
-與[流程代理程式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/flow/)類似，對話流程代理程式會設定一組工具，並依序執行。兩者的差異在於對話流程代理程式會將對話儲存在索引中，例如以下範例中的 `conversation_index`。下列代理程式會先執行 `VectorDBTool`，再執行 `MLModelTool`：
+與[流程代理程式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/flow/)類似，對話流程代理程式會以一組依序執行的工具來設定。兩者的差異在於，對話流程代理程式會將對話儲存在索引中，在下列範例中為 `conversation_index`。下列代理程式會先執行 `VectorDBTool`，再執行 `MLModelTool`：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -45,18 +45,14 @@ POST /_plugins/_ml/agents/_register
       "description": "A general tool to answer any question",
       "parameters": {
         "model_id": "YOUR_LLM_MODEL_ID",
-        "prompt": """
-
-Human:You are a professional data analyst. You will always answer question based on the given context first. If the answer is not directly shown in the context, you will analyze the data and find the answer. If you don't know the answer, just say don't know. 
+        "prompt": """You are a professional data analyst. You will always answer question based on the given context first. If the answer is not directly shown in the context, you will analyze the data and find the answer. If you don't know the answer, just say don't know. 
 
 Context:
 ${parameters.population_knowledge_base.output:-}
 
 ${parameters.chat_history:-}
 
-Human:${parameters.question}
-
-Assistant:"""
+Question: ${parameters.question}"""
       }
     }
   ]
@@ -76,8 +72,9 @@ Assistant:"""
 
 ## 後續步驟
 
-- 如要進一步了解如何註冊代理程式，請參閱 [Register Agent API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/)。
+- 若要進一步了解如何註冊代理程式，請參閱 [Register Agent API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/)。
 - 如需支援的工具清單，請參閱[工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/)。
 - 如需逐步教學，請參閱[代理程式與工具教學]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents-tools-tutorial/)。
 - 如需支援的 API，請參閱 [Agent APIs]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/)。
-- 如要使用工作流程範本建立代理程式與工具，請參閱[AI 搜尋工作流程]({{site.url}}{{site.baseurl}}/vector-search/ai-search/workflows/index/)。
+- 若要使用工作流程範本建立代理程式與工具，請參閱 [AI 搜尋工作流程]({{site.url}}{{site.baseurl}}/vector-search/ai-search/workflows/index/)。
+- 如需使用對話流程代理程式建立 RAG 聊天機器人的教學，請參閱[使用對話流程代理程式的 RAG 聊天機器人]({{site.url}}{{site.baseurl}}/tutorials/gen-ai/chatbots/rag-conversational-agent/)。

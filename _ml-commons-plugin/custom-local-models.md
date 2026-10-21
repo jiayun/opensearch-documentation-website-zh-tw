@@ -108,11 +108,11 @@ POST /_plugins/_ml/model_groups/_register
 
 ## 步驟 2：註冊本機模型
 
-若要將本機模型註冊至步驟 1 中建立的模型群組，請傳送 Register Model API 請求。如需 Register Model API 參數的說明，請參閱[註冊模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/)。 
+若要將本機模型註冊到步驟 1 建立的模型群組，請傳送 Register Model API 請求。Register Model API 參數的說明請參閱[註冊模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/)。
 
-`function_name` 對應於模型類型。對於文字嵌入模型，請將此參數設為 `TEXT_EMBEDDING`。對於稀疏編碼模型，請將此參數設為 `SPARSE_ENCODING` 或 `SPARSE_TOKENIZE`。對於交叉編碼器模型，請將此參數設為 `TEXT_SIMILARITY`。對於問答模型，請將此參數設為 `QUESTION_ANSWERING`。在此範例中，請將 `function_name` 設為 `TEXT_EMBEDDING`，因為您要註冊文字嵌入模型。 
+`function_name` 對應模型類型。對於文字嵌入模型，請將此參數設為 `TEXT_EMBEDDING`。對於稀疏編碼模型，請將此參數設為 `SPARSE_ENCODING` 或 `SPARSE_TOKENIZE`。對於交叉編碼器模型，請將此參數設為 `TEXT_SIMILARITY`。對於問答模型，請將此參數設為 `QUESTION_ANSWERING`。在此範例中，由於您要註冊的是文字嵌入模型，請將 `function_name` 設為 `TEXT_EMBEDDING`。
 
-提供步驟 1 中的模型群組 ID，並傳送下列請求：
+提供步驟 1 的模型群組 ID，並傳送下列請求：
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -137,7 +137,7 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-請注意，在 OpenSearch Dashboards 中，將 `all_config` 欄位內容以三個引號 (`"""`) 包住，會自動逸出欄位內的引號，並提供更好的可讀性：
+請注意，在 OpenSearch Dashboards 中，將 `all_config` 欄位的內容以三引號（`"""`）包覆，可自動逸出欄位內的引號並提升可讀性：
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -162,7 +162,7 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy.html %}
 
-OpenSearch 會傳回註冊作業的工作 ID：
+OpenSearch 會傳回註冊作業的任務 ID：
 
 ```json
 {
@@ -171,14 +171,14 @@ OpenSearch 會傳回註冊作業的工作 ID：
 }
 ```
 
-若要檢查作業的狀態，請將工作 ID 提供給 [Get task]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/)：
+若要檢查作業狀態，請將任務 ID 提供給 [Get task]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/)：
 
-```bash
+```json
 GET /_plugins/_ml/tasks/cVeMb4kBJ1eYAeTMFFgj
 ```
 {% include copy-curl.html %}
 
-作業完成後，狀態會變更為 `COMPLETED`：
+作業完成後，狀態會變為 `COMPLETED`：
 
 ```json
 {
@@ -191,40 +191,41 @@ GET /_plugins/_ml/tasks/cVeMb4kBJ1eYAeTMFFgj
   ],
   "create_time": 1689793598499,
   "last_update_time": 1689793598530,
-  "is_async": false
+  "is_async": true
 }
 ```
 
-請記下傳回的 `model_id`，因為您需要它來部署模型。
+請記下傳回的 `model_id`，因為部署模型時需要用到它。
 
 ## 步驟 3：部署模型
 
-部署作業會從模型索引讀取模型的區塊，然後建立模型實例並載入記憶體。模型越大，切分出的區塊就越多，載入記憶體所需的時間也越長。
+部署作業會從模型索引讀取模型的區塊，然後建立模型執行個體並載入記憶體。模型越大，分割成的區塊就越多，載入記憶體所需的時間也越長。
 
-若要部署已註冊的模型，請在下列請求中提供步驟 3 取得的模型 ID：
+若要部署已註冊的模型，請在下列請求中提供步驟 2 取得的模型 ID：
 
-```bash
+```json
 POST /_plugins/_ml/models/cleMb4kBJ1eYAeTMFFg4/_deploy
 ```
 {% include copy-curl.html %}
 
-回應包含任務 ID，您可以用它來檢查部署作業的狀態：
+回應會包含任務 ID，您可以用來檢查部署作業的狀態：
 
 ```json
 {
   "task_id": "vVePb4kBJ1eYAeTM7ljG",
+  "task_type": "DEPLOY_MODEL",
   "status": "CREATED"
 }
 ```
 
-如同上一個步驟，呼叫 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 來檢查作業狀態：
+如同上一個步驟，請呼叫 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 來檢查作業狀態：
 
-```bash
+```json
 GET /_plugins/_ml/tasks/vVePb4kBJ1eYAeTM7ljG
 ```
 {% include copy-curl.html %}
 
-當作業完成時，狀態會變更為 `COMPLETED`：
+作業完成後，狀態會變更為 `COMPLETED`：
 
 ```json
 {
@@ -248,7 +249,7 @@ GET /_plugins/_ml/tasks/vVePb4kBJ1eYAeTM7ljG
 
 使用 [Predict API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/predict/) 來測試模型。
 
-若為文字嵌入模型，請傳送下列請求：
+對於文字嵌入模型，請傳送下列請求：
 
 ```json
 POST /_plugins/_ml/_predict/text_embedding/cleMb4kBJ1eYAeTMFFg4
@@ -286,7 +287,7 @@ POST /_plugins/_ml/_predict/text_embedding/cleMb4kBJ1eYAeTMFFg4
 }
 ```
 
-若為稀疏編碼模型，請傳送下列請求：
+對於稀疏編碼模型，請傳送下列請求：
 
 ```json
 POST /_plugins/_ml/_predict/sparse_encoding/cleMb4kBJ1eYAeTMFFg4
@@ -315,9 +316,12 @@ POST /_plugins/_ml/_predict/sparse_encoding/cleMb4kBJ1eYAeTMFFg4
                 "bright": 0.1756877,
                 ...
               }
+            ]
           }
         }
+      ]
     }
+  ]
 }
 ```
 
@@ -327,7 +331,7 @@ POST /_plugins/_ml/_predict/sparse_encoding/cleMb4kBJ1eYAeTMFFg4
 
 ## 問答模型
 
-問答模型會從給定的上下文中擷取問題的答案。ML Commons 支援 `text` 格式的上下文。
+問答模型會從給定的脈絡中擷取問題的答案。ML Commons 支援 `text` 格式的脈絡。
 
 若要註冊問答模型，請以下列格式傳送請求。將 `function_name` 指定為 `QUESTION_ANSWERING`：
 
@@ -350,25 +354,25 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-接著傳送請求來部署模型：
+接著傳送請求以部署模型：
 
 ```json
 POST _plugins/_ml/models/{model_id}/_deploy
 ```
 {% include copy-curl.html %}
 
-若要測試問答模型，請傳送下列請求。此請求需要一個 `question` 以及將從中產生答案的相關 `context`：
+若要測試問答模型，請傳送下列請求。此請求需要 `question` 以及相關的 `context`，答案將從中產生：
 
 ```json
 POST /_plugins/_ml/_predict/question_answering/{model_id}
 {
-  "question": "Where do I live?"
+  "question": "Where do I live?",
   "context": "My name is John. I live in New York"
 }
 ```
 {% include copy-curl.html %}
 
-回應會根據上下文提供答案：
+回應會根據脈絡提供答案：
 
 ```json
 {
@@ -376,8 +380,10 @@ POST /_plugins/_ml/_predict/question_answering/{model_id}
     {
       "output": [
         {
-          "result": "New York"
+          "result": "new york"
         }
+      ]
     }
+  ]
 }
 ```

@@ -7,7 +7,7 @@ grand_parent: ML Commons APIs
 nav_order: 20
 ---
 
-# Get Memory Container API
+# 取得記憶容器 API
 **於 3.3 版推出**
 {: .label .label-purple }
 
@@ -20,6 +20,14 @@ nav_order: 20
 GET /_plugins/_ml/memory_containers/{memory_container_id}
 ```
 
+## 路徑參數
+
+下表列出可用的路徑參數。
+
+| 參數 | 資料類型 | 必要/選用 | 說明 |
+| :--- | :--- | :--- | :--- |
+| `memory_container_id` | 字串 | 必要 | 要擷取的記憶容器 ID。 |
+
 ## 範例請求
 
 ```json
@@ -31,30 +39,36 @@ GET /_plugins/_ml/memory_containers/SdjmmpgBOh0h20Y9kWuN
 
 ```json
 {
-    "name": "Raw memory container",
-    "description": "Store static conversations with semantic search",
-    "owner": {
-        "name": "admin",
-        "backend_roles": [
-            "admin"
-        ],
-        "roles": [
-            "own_index",
-            "all_access"
-        ],
-        "custom_attribute_names": [],
-        "user_requested_tenant": "null",
-        "user_requested_tenant_access": "WRITE"
-    },
-    "created_time": 1754943902286,
-    "last_updated_time": 1754943902286,
-    "memory_storage_config": {
-        "memory_index_name": "ml-static-memory-sdjmmpgboh0h20y9kwun-admin",
-        "semantic_storage_enabled": false
-    }
+  "name": "agentic memory test",
+  "description": "Store conversations with semantic search and summarization",
+  "created_time": 1792070644500,
+  "last_updated_time": 1792070644500,
+  "configuration": {
+    "index_prefix": "default",
+    "llm_id": "aFouy5kBrfmzAZ6R6wo-",
+    "embedding_model_type": "TEXT_EMBEDDING",
+    "embedding_model_id": "uXZAtJkBvHNmcp1JAROh",
+    "embedding_dimension": 1024,
+    "max_infer_size": 5,
+    "strategies": [
+      {
+        "id": "semantic_53d1751c",
+        "enabled": true,
+        "type": "SEMANTIC",
+        "namespace": [
+          "user_id"
+        ]
+      }
+    ],
+    "disable_history": false,
+    "disable_session": false,
+    "use_system_index": true
+  }
 }
 ```
 
 ## 回應本文欄位
 
 如需回應欄位的說明，請參閱 [Create Memory Container API 請求欄位]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/create-memory-container#request-body-fields)。
+
+回應中的每個[策略]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/#memory-processing-strategies)也包含 OpenSearch 產生的 `id`。若要更新策略，請在 [Update Memory Container API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/update-memory-container/) 請求中提供此 `id`。

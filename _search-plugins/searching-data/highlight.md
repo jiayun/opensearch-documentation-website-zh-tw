@@ -123,7 +123,7 @@ GET shakespeare/_search
 
 - **倒排索引中的詞項紀錄 (Postings)**：將文件編製索引時，OpenSearch 會建立倒排搜尋索引&mdash;這是用來搜尋文件的核心資料結構。倒排索引中的詞項紀錄 (Postings) 代表倒排搜尋索引，並儲存每個分析後詞彙對應到其出現所在文件清單的對應。如果您在對應 [text 欄位]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/text/) 時將 `index_options` 參數設為 `offsets`，OpenSearch 會將每個詞彙的起始與結束字元位移新增至倒排索引。醒目提示期間，醒目提示器會直接在倒排索引中的詞項紀錄上重新執行原始查詢，以找出每個詞彙。因此，儲存位移可讓大型欄位的醒目提示更有效率，因為它不需要重新分析文字。儲存詞彙位移需要額外的磁碟空間，但使用的磁碟空間比儲存詞彙向量少。
 
-- [**詞彙向量 (Term vectors)**]：如果您在對應 text 欄位時將 [`term_vector` 參數]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/text#term-vector-parameter) 設為  `with_positions_offsets`，醒目提示器會使用 `term_vector` 來醒目提示該欄位。儲存詞彙向量需要最多的磁碟空間。不過，對於大於 1 MB 的欄位，以及前置詞或萬用字元等多詞彙查詢，它可讓醒目提示更快速，因為詞彙向量可存取每份文件的詞彙字典。
+- [**詞彙向量 (Term vectors)**]：如果您在對應 text 欄位時將 [`term_vector` 參數]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/text#term-vector-parameter) 設為 `with_positions_offsets`，醒目提示器會使用 `term_vector` 來醒目提示該欄位。儲存詞彙向量需要最多的磁碟空間。不過，對於大於 1 MB 的欄位，以及前綴或萬用字元等多詞彙查詢，它可讓醒目提示更快速，因為詞彙向量可存取每份文件的詞彙字典。
 
 - **文字重新分析**：在沒有倒排索引中的詞項紀錄與詞彙向量的情況下，醒目提示器會重新分析文字以便醒目提示。對於每份需要醒目提示的文件與每個欄位，醒目提示器會建立一個小型記憶體內索引，並透過 Lucene 的查詢執行規劃器重新執行原始查詢，以存取目前文件的低階相符資訊。重新分析文字在大多數使用案例中運作良好。不過，對於大型欄位，此方法會耗用更多記憶體與時間。
 
@@ -133,7 +133,7 @@ GET shakespeare/_search
 
 - 將文字分割成片段：`plain` 醒目提示器純粹依長度分割文字：每當文字超過 `fragment_size` 的下一個倍數時，就會開始新的片段。因此，片段可能會在句子中間或標點符號處開始或結束。`unified` 和 `fvh` 醒目提示器使用句子邊界，因此當 `fragment_size` 允許時，片段會包含完整的句子。
 - 為片段評分：`plain` 醒目提示器依片段所含的唯一查詢詞彙數量評分，其中每個詞彙會貢獻其 boost（預設為 1）。`fvh` 醒目提示器會計算查詢詞彙的每一次出現，而不只是唯一詞彙。`unified` 醒目提示器使用 BM25 演算法為片段評分。使用 `number_of_fragments` 選項可指定要傳回多少個最佳片段。
-- 醒目提示詞彙：醒目提示器會從查詢中擷取個別詞彙、片語和前置詞，並在選取的片段中醒目提示它們。它們不會評估查詢的布林邏輯。如需更多資訊，請參閱[查詢限制](#query-limitations)。
+- 醒目提示詞彙：醒目提示器會從查詢中擷取個別詞彙、片語和前綴，並在選取的片段中醒目提示它們。它們不會評估查詢的布林邏輯。如需更多資訊，請參閱[查詢限制](#query-limitations)。
 
 例如，建立包含產品評論的索引：
 
@@ -215,7 +215,7 @@ OpenSearch 支援四種醒目提示器實作：`plain`、`unified`、`fvh` (Fast
 
 醒目提示器 | 取得位移的方法
 :--- | :---
-[`unified`](#the-unified-highlighter) | 若 `term_vector` 設為 `with_positions_offsets` 則使用詞彙向量，<br> 若 `index_options` 設為 `offsets` 則使用倒排索引，<br> 否則使用文字重新分析。
+[`unified`](#the-unified-highlighter) | 若 `term_vector` 設為 `with_positions_offsets` 則使用詞彙向量，<br> 若 `index_options` 設為 `offsets` 則使用詞項紀錄 (postings)，<br> 否則使用文字重新分析。
 [`fvh`](#the-fvh-highlighter) | 詞彙向量。
 [`plain`](#the-plain-highlighter) | 文字重新分析。
 [`semantic`](#the-semantic-highlighter) | 模型推論。
@@ -242,7 +242,7 @@ GET shakespeare/_search
 
 ### `unified` 醒目提示器
 
-`unified` 醒目提示器以 Lucene Unified Highlighter 為基礎，是 OpenSearch 的預設醒目提示器。它會將文字分割為句子，並將這些句子視為個別文件，使用 BM25 演算法依相似度評分。`unified` 醒目提示器同時支援精確片語與多詞彙醒目提示，包括模糊、前置詞及正規表達式。如果您使用複雜查詢來醒目提示多份文件中的多個欄位，建議在 `postings` 或 `term_vector` 欄位上使用 `unified` 醒目提示器。
+`unified` 醒目提示器以 Lucene Unified Highlighter 為基礎，是 OpenSearch 的預設醒目提示器。它會將文字分割為句子，並將這些句子視為個別文件，使用 BM25 演算法依相似度評分。`unified` 醒目提示器同時支援精確片語與多詞彙醒目提示，包括模糊、前綴及正規表達式。如果您使用複雜查詢來醒目提示多份文件中的多個欄位，建議在 `postings` 或 `term_vector` 欄位上使用 `unified` 醒目提示器。
 
 ### `fvh` 醒目提示器
 
@@ -271,7 +271,7 @@ GET shakespeare/_search
 
 #### 基本用法（單一推論模式）
 
-若要使用 `semantic` 醒目提示器，請在 `fields` 物件中將 `type` 設為 `semantic`，並在全域 `highlight.options` 物件中提供已部署的句子轉換器或問答模型的 `model_id`。下列範例使用 `neural` 查詢來尋找與「神經退化性疾病的治療方法」相關的文件，然後使用指定的 `sentence_model_id` 套用語意醒目提示：
+若要使用 `semantic` 亮顯器，請在 `fields` 物件中將 `type` 設為 `semantic`，並在全域 `highlight.options` 物件中提供已部署的句子轉換器或問答模型的 `model_id`。下列範例使用 `neural` 查詢來尋找與 "treatments for neurodegenerative diseases" 相關的文件，然後使用指定的 `sentence_model_id` 套用語意亮顯：
 
 ```json
 POST /neural-search-index/_search
@@ -302,7 +302,7 @@ POST /neural-search-index/_search
 ```
 {% include copy-curl.html %}
 
-回應會為每個命中包含一個 `highlight` 物件，透過 <em> 標籤強調語意上最相關的句子：
+回應會為每個命中結果包含一個 `highlight` 物件，透過 <em> 標籤強調語意上最相關的句子：
 
 ```json
 {
@@ -332,7 +332,7 @@ POST /neural-search-index/_search
 }
 ```
 
-如需逐步指引，請參閱 [語意醒目提示教學]({{site.url}}{{site.baseurl}}/tutorials/vector-search/semantic-highlighting-tutorial/)。
+如需逐步指南，請參閱[使用語意亮顯]({{site.url}}{{site.baseurl}}/tutorials/vector-search/semantic-highlighting-tutorial/)。
 
 #### 批次推論模式
 **3.3 版新增**

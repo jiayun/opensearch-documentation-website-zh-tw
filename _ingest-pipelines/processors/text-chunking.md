@@ -284,7 +284,8 @@ PUT _ingest/pipeline/recursively-text-chunking-cascade-ingest-pipeline
 
 ## 後續步驟
 
-- 如需完整範例，請參閱 [文字分段]({{site.url}}{{site.baseurl}}/search-plugins/text-chunking/)。
-- 若要了解更多關於語意搜尋的資訊，請參閱 [語意搜尋]({{site.url}}{{site.baseurl}}/search-plugins/semantic-search/)。
-- 若要了解更多關於稀疏搜尋的資訊，請參閱 [神經稀疏搜尋]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-search/)。
-- 若要了解更多關於在 OpenSearch 中使用模型的資訊，請參閱 [選擇模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/#choosing-a-model)。
+- 如需完整範例，請參閱[文字分塊]({{site.url}}{{site.baseurl}}/search-plugins/text-chunking/)。
+- 若要進一步瞭解語意搜尋，請參閱[語意搜尋]({{site.url}}{{site.baseurl}}/search-plugins/semantic-search/)。
+- 若要進一步瞭解稀疏搜尋，請參閱[神經稀疏搜尋]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-search/)。
+- 若要進一步瞭解如何在 OpenSearch 中使用模型，請參閱[選擇模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/#choosing-a-model)。
+- 如需將長文件分塊並使用外部託管模型產生嵌入的教學，請參閱[使用文字分塊進行語意搜尋]({{site.url}}{{site.baseurl}}/tutorials/vector-search/semantic-search/long-document/)。

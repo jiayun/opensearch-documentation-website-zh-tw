@@ -106,7 +106,7 @@ apache-access-logs-pipeline:
         hosts: ["https://opensearch:9200"]
         insecure: true
         username: admin
-        password: "admin_pass"
+        password: "<custom-admin-password>"
         index_type: custom
         index: "apache-logs-%{yyyy.MM.dd}"
 ```
@@ -220,7 +220,7 @@ application-logs-pipeline:
         hosts: ["https://opensearch:9200"]
         insecure: true
         username: admin
-        password: "admin_pass"
+        password: "<custom-admin-password>"
         index_type: custom
         index: "application-logs-%{yyyy.MM.dd}"
 ```
@@ -370,7 +370,7 @@ network-device-logs-pipeline:
         hosts: ["https://opensearch:9200"]
         insecure: true
         username: admin
-        password: "admin_pass"
+        password: "<custom-admin-password>"
         index_type: custom
         index: "network-logs-%{yyyy.MM.dd}"
 ```

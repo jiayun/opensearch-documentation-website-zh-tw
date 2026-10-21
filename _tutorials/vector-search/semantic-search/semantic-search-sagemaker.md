@@ -9,21 +9,21 @@ redirect_from:
   - /vector-search/tutorials/semantic-search/semantic-search-sagemaker/
 ---
 
-# 使用 Amazon SageMaker 中的模型進行語意搜尋
+# 使用 Amazon SageMaker 中的模型進行語意搜尋 
 
 本教學說明如何在 [Amazon OpenSearch Service](https://docs.aws.amazon.com/opensearch-service/) 中使用 Amazon SageMaker 的嵌入模型來實作語意搜尋。如需更多資訊，請參閱[語意搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/semantic-search/)。
 
-如果您使用 Python，可以建立 Amazon SageMaker 連接器，並使用 [`opensearch-py-ml`](https://github.com/opensearch-project/opensearch-py-ml) 用戶端 CLI 測試模型。CLI 會自動執行許多組態步驟，讓設定更快速並降低出錯的機會。如需使用 CLI 的詳細資訊，請參閱 [CLI 文件](https://opensearch-project.github.io/opensearch-py-ml/cli/index.html#)。
+如果使用 Python，您可以透過 [`opensearch-py-ml`](https://github.com/opensearch-project/opensearch-py-ml) 用戶端 CLI 建立 Amazon SageMaker 連接器並測試模型。此 CLI 會自動化許多組態步驟，讓設定更快速並降低出錯的機會。如需使用 CLI 的更多資訊，請參閱 [CLI 文件](https://opensearch-project.github.io/opensearch-py-ml/cli/index.html#)。
 {: .tip}
 
-如果您使用自我管理的 OpenSearch 而非 Amazon OpenSearch Service，請使用[藍圖](https://github.com/opensearch-project/ml-commons/blob/main/docs/remote_inference_blueprints/sagemaker_connector_blueprint.md)建立 Amazon SageMaker 中模型的連接器。如需建立連接器的詳細資訊，請參閱[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
+如果使用自我管理的 OpenSearch 而非 Amazon OpenSearch Service，請使用[該藍圖](https://github.com/opensearch-project/ml-commons/blob/main/docs/remote_inference_blueprints/sagemaker_connector_blueprint.md)建立連至 Amazon SageMaker 中模型的連接器。如需建立連接器的更多資訊，請參閱[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
 
-本教學不涵蓋如何將模型部署至 Amazon SageMaker。如需部署的詳細資訊，請參閱[即時推論](https://docs.aws.amazon.com/sagemaker/latest/dg/realtime-endpoints.html)。
+本教學不涵蓋如何將模型部署至 Amazon SageMaker。如需部署的更多資訊，請參閱[即時推論](https://docs.aws.amazon.com/sagemaker/latest/dg/realtime-endpoints.html)。
 
-在 Amazon OpenSearch Service 中設定嵌入模型最簡單的方式是使用 [AWS CloudFormation](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/cfn-template.html)。或者，您也可以使用 [AIConnectorHelper 筆記本](https://github.com/opensearch-project/ml-commons/blob/2.x/docs/tutorials/aws/AIConnectorHelper.ipynb) 設定嵌入模型。
+在 Amazon OpenSearch Service 中設定嵌入模型最簡單的方式是使用 [AWS CloudFormation](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/cfn-template.html)。或者，您也可以使用 [AIConnectorHelper notebook](https://github.com/opensearch-project/ml-commons/blob/main/docs/tutorials/aws/AIConnectorHelper.ipynb) 來設定嵌入模型。
 {: .tip}
 
-請將開頭為前置字元 `your_` 的預留位置取代為您自己的值。
+請將以 `your_` 前綴開頭的預留位置替換為您自己的值。
 {: .note}
 
 ## 模型輸入與輸出需求
@@ -179,11 +179,11 @@ Amazon Bedrock Titan 嵌入模型的預設輸出格式如下：
 
 請依照下列步驟在 Amazon OpenSearch Service 中設定 IAM 角色。
 
-### 步驟 2.1：建立 IAM 角色以簽署連接器請求
+### 步驟 2.1：建立用於簽署連接器請求的 IAM 角色
 
-產生新的 IAM 角色，專門用於簽署您的 Create Connector API 請求。
+產生一個專用於簽署 Create Connector API 請求的新 IAM 角色。
 
-建立名為 `my_create_sagemaker_connector_role` 的 IAM 角色，並使用下列信任政策和權限：
+建立名為 `my_create_sagemaker_connector_role` 的 IAM 角色，並套用下列信任政策和權限：
 
 - 自訂信任政策：
 
@@ -219,14 +219,14 @@ Amazon Bedrock Titan 嵌入模型的預設輸出格式如下：
         {
             "Effect": "Allow",
             "Action": "es:ESHttpPost",
-            "Resource": "your_opensearch_domain_arn"
+            "Resource": "your_opensearch_domain_arn/*"
         }
     ]
 }
 ```
 {% include copy.html %}
 
-請記下此角色 ARN；您將在後續步驟中使用它。
+請記下此角色的 ARN；您將在後續步驟中使用它。
 
 ### 步驟 2.2：對應後端角色
 
@@ -245,7 +245,7 @@ IAM 角色現已成功設定在您的 OpenSearch 叢集中。
 
 依照下列步驟為模型建立連接器。如需建立連接器的更多資訊，請參閱 [連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
 
-使用從 AWS 取得的暫時憑證執行下列 Python 程式碼。
+使用從 AWS 取得的暫時認證資訊執行下列 Python 程式碼。
  
 ```python
 import boto3
@@ -452,14 +452,13 @@ PUT /_ingest/pipeline/my_sagemaker_embedding_pipeline
 
 ### 步驟 5.2：建立向量索引
 
-接著，建立用於儲存輸入文字與所產生嵌入的向量索引：
+接下來，建立一個向量索引來儲存輸入文字與產生的嵌入：
 
 ```json
 PUT my_index
 {
   "settings": {
     "index": {
-      "knn.space_type": "cosinesimil",
       "default_pipeline": "my_sagemaker_embedding_pipeline",
       "knn": "true"
     }
@@ -468,7 +467,8 @@ PUT my_index
     "properties": {
       "text_knn": {
         "type": "knn_vector",
-        "dimension": your_sagemake_model_embedding_dimension
+        "dimension": your_sagemaker_model_embedding_dimension,
+        "space_type": "cosinesimil"
       }
     }
   }
@@ -490,7 +490,7 @@ POST /my_index/_doc/1000001
 
 ### 步驟 5.4：搜尋索引
 
-執行向量搜尋以從向量索引擷取文件：
+執行向量搜尋，從向量索引擷取文件：
 
 ```json
 POST /my_index/_search
@@ -509,3 +509,10 @@ POST /my_index/_search
 }
 ```
 {% include copy-curl.html %}
+
+## 相關文件
+
+- [語意搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/semantic-search/)
+- [第三方機器學習平台的連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)
+- [文字嵌入處理器]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/text-embedding/)
+- [Neural 查詢]({{site.url}}{{site.baseurl}}/query-dsl/specialized/neural/)

@@ -19,6 +19,14 @@ nav_order: 40
 DELETE /_plugins/_ml/agents/{agent_id}
 ```
 
+## 路徑參數
+
+下表列出可用的路徑參數。
+
+| 參數 | 資料類型 | 說明 |
+| :--- | :--- | :--- |
+| `agent_id` | 字串 | 要刪除的代理程式 ID。必要。 |
+
 ## 範例請求
 
 ```json
@@ -34,6 +42,7 @@ DELETE /_plugins/_ml/agents/MzcIJX8BA7mbufL6DOwl
   "_id" : "MzcIJX8BA7mbufL6DOwl",
   "_version" : 2,
   "result" : "deleted",
+  "forced_refresh" : true,
   "_shards" : {
     "total" : 2,
     "successful" : 2,

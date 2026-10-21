@@ -13,12 +13,12 @@ nav_order: 90
 
 ## 組態
 
-Option | Required | Type | Description
+選項 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`keys` | Yes | List<String> | 事件中將被解壓縮的欄位。                                                                                          
-`type` | Yes | Enum | 對事件中的 `keys` 使用的解壓縮類型。僅支援 `gzip`。                                           
-`decompress_when` | No | String| 一個 [Data Prepper 條件運算式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/)，用於決定 `decompress` 處理器何時對特定事件執行。
-`tags_on_failure` | No | List<String> | 當處理器無法解壓縮事件內的 `keys` 時，用來標記事件的字串清單。預設為 `_decompression_failure`。                               
+`keys` | 是 | 清單<String> | 事件中將被解壓縮的欄位。                                                                                          
+`type` | 是 | 列舉 | 對事件中的 `keys` 使用的解壓縮類型。僅支援 `gzip`。                                           
+`decompress_when` | 否 | 字串| 一個 [Data Prepper 條件運算式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/)，用於決定 `decompress` 處理器何時對特定事件執行。
+`tags_on_failure` | 否 | 清單<String> | 當處理器無法解壓縮事件內的 `keys` 時，用來標記事件的字串清單。預設為 `_decompression_failure`。                               
 
 ## 用法
 
@@ -48,7 +48,7 @@ decompress-logs-pipeline:
         hosts: ["https://opensearch:9200"]
         insecure: true
         username: admin
-        password: admin_passwrd
+        password: "<custom-admin-password>"
         index_type: custom
         index: decompressed-logs-%{yyyy.MM.dd}
         tags_target_key: "tags"
@@ -153,13 +153,13 @@ curl http://localhost:4900/metrics/prometheus
 
 下表說明常見的[抽象處理器](https://github.com/opensearch-project/data-prepper/blob/main/data-prepper-api/src/main/java/org/opensearch/dataprepper/model/processor/AbstractProcessor.java)指標。 
 
-| Metric name | Type | Description |
+| 指標名稱 | 類型 | 說明 |
 | ------------- | ---- | -----------|
-| `recordsIn` | Counter | 進入管線元件的記錄量。 |
-| `recordsOut` | Counter | 從管線元件輸出的記錄量。 |
-| `timeElapsed` | Timer | 管線元件執行期間所經過的時間。 |
+| `recordsIn` | 計數器 | 進入管線元件的記錄量。 |
+| `recordsOut` | 計數器 | 從管線元件輸出的記錄量。 |
+| `timeElapsed` | 計時器 | 管線元件執行期間所經過的時間。 |
 
-### Counter
+### 計數器
 
 `decompress` 處理器會追蹤下列指標：
 

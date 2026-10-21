@@ -1,13 +1,13 @@
 ---
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: "搜尋代理程式記憶"
+title: "搜尋代理記憶"
 parent: Agentic memory APIs
 grand_parent: ML Commons APIs
 nav_order: 54
 ---
 
-# 搜尋代理程式記憶 API
+# 搜尋代理記憶 (agentic memory) API
 **於 3.3 版推出**
 {: .label .label-purple }
 
@@ -17,6 +17,7 @@ nav_order: 54
 
 ```json
 GET /_plugins/_ml/memory_containers/{memory_container_id}/memories/{type}/_search
+POST /_plugins/_ml/memory_containers/{memory_container_id}/memories/{type}/_search
 ```
 
 ## 路徑參數
@@ -172,18 +173,24 @@ GET /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/working/_searc
     "max_score": null,
     "hits": [
       {
-        "_index": "test1-session",
+        "_index": ".plugins-ml-am-default-memory-sessions",
         "_id": "CcxjTpkBvwXRq366A1aE",
+        "_version": 1,
+        "_seq_no": 10,
+        "_primary_term": 1,
         "_score": null,
         "_source": {
-          "memory_container_id": "HudqiJkB1SltqOcZusVU",
+          "summary": "This is a test session",
+          "created_time": 1757956735881,
+          "last_updated_time": 1757956735881,
           "namespace": {
             "user_id": "bob"
           },
-          "created_time": "2025-09-15T17:18:55.881276939Z",
-          "last_updated_time": "2025-09-15T17:18:55.881276939Z"
+          "memory_container_id": "HudqiJkB1SltqOcZusVU"
         },
-        "sort": ["2025-09-15T17:18:55.881276939Z"]
+        "sort": [
+          1757956735881
+        ]
       }
     ]
   }

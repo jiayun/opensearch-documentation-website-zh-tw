@@ -76,9 +76,9 @@ POST _bulk
 
 ## 步驟 2：註冊並部署模型
 
-下列請求會從 Amazon Bedrock 註冊遠端模型，並將其部署到您的叢集。此 API 呼叫會一步建立連接器和模型。請將 `region`、`access_key`、`secret_key` 和 `session_token` 替換為您自己的值。您可以使用任何支援 `converse` API 的模型，例如 [Anthropic Claude 4](https://www.anthropic.com/news/claude-4) 或 [GPT 5](https://openai.com/index/introducing-gpt-5)。您也可以建立此模型的連接器，以使用其他模型供應商 (請參閱 [連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/))。
+下列請求會從 Amazon Bedrock 註冊遠端模型，並將其部署到您的叢集。此 API 呼叫會一步建立連接器與模型。請將 `region`、`access_key`、`secret_key` 和 `session_token` 替換為您自己的值。您可以使用任何支援 `converse` API 的模型，例如 [Anthropic Claude 4](https://www.anthropic.com/news/claude-4) 或 [GPT 5](https://openai.com/index/introducing-gpt-5)。您也可以為此模型建立連接器，以使用其他模型供應商（請參閱[連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/)）。
 
-**重要**：為 `QueryPlanningTool` 建立連接器時，請求本文必須包含 `system_prompt` 和 `user_prompt` 參數。此工具需要這些參數，才能將系統和使用者提示正確注入模型的請求中。
+**重要**：為 `QueryPlanningTool` 建立連接器時，請求本文必須包含 `system_prompt` 和 `user_prompt` 參數。此工具需要這些參數，才能將系統提示與使用者提示正確注入模型的請求中。
 
 下列範例會註冊並部署 Anthropic Claude 4 模型：
 
@@ -122,7 +122,7 @@ POST /_plugins/_ml/models/_register?deploy=true
 下列範例會註冊並部署 OpenAI GPT 5 模型：
 
 ```json
-POST /_plugins/_ml/models/_register
+POST /_plugins/_ml/models/_register?deploy=true
 {
     "name": "My OpenAI model: gpt-5",
     "function_name": "remote",
@@ -170,7 +170,7 @@ OpenSearch 會回應模型 ID：
 
 ### 僅使用 LLM 知識
 
-若只要使用提示，請不要指定 `generation_type`，如此一來它會預設為 `llmGenerated`：
+若要僅使用提示，請勿指定 `generation_type`，使其預設為 `llmGenerated`：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -182,7 +182,8 @@ POST /_plugins/_ml/agents/_register
     {
       "type": "QueryPlanningTool",
       "parameters": {
-        "model_id": "ANiSxJgBOh0h20Y9XYXl"
+        "model_id": "ANiSxJgBOh0h20Y9XYXl",
+        "response_filter": "$.output.message.content[0].text"
       }
     }
   ]
@@ -190,7 +191,9 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-註冊代理程式時，您可以覆寫在模型註冊期間指定的參數，例如 `system_prompt` 和 `user_prompt`。
+`response_filter` 參數會從模型回應中擷取產生的查詢。若未指定此參數，工具會傳回完整的模型回應，而搜尋管線無法將其作為查詢使用。此範例使用的篩選器適用於透過 Amazon Bedrock Converse API 呼叫的 Anthropic Claude 模型。若為 OpenAI 模型，請使用 `$.choices[0].message.content`。如需更多資訊，請參閱[回應篩選器組態](#response-filter-configuration)。
+
+工具會自行設定 `system_prompt` 和 `user_prompt` 參數，因此在註冊代理程式時為這些參數提供的值不會被使用。若要自訂提示，請指定 `query_planner_system_prompt` 和 `query_planner_user_prompt`。如需更多資訊，請參閱[自訂提示](#customizing-the-prompts)。
 
 ### 使用搜尋範本
 
@@ -239,7 +242,7 @@ POST /_scripts/flower_petal_length_range_template
 ```
 {% include copy-curl.html %}
 
-接著，註冊代理程式，將 `generation_type` 設為 `user_templates`，並在 `search_templates` 參數中提供每個範本的 `template_id` 和 `template_description`：
+接著，註冊一個代理程式，將 `generation_type` 設定為 `user_templates`，並在 `search_templates` 參數中為每個範本提供 `template_id` 與 `template_description`：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -253,6 +256,7 @@ POST /_plugins/_ml/agents/_register
       "description": "A general tool to answer any question",
       "parameters": {
         "model_id": "ANiSxJgBOh0h20Y9XYXl",
+        "response_filter": "$.output.message.content[0].text",
         "generation_type": "user_templates",
         "search_templates": [
           {
@@ -271,11 +275,11 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-LLM 僅使用 `template_description` 作為上下文，協助它在根據使用者提供的 `question` 產生 OpenSearch DSL 查詢時，選擇最適合的範本。請務必提供清楚的範本說明，協助 LLM 做出適當的選擇。請注意，LLM 不會直接填入範本變數或呈現範本；它會分析範本的查詢結構，並以此為指引，產生符合上下文的新 OpenSearch DSL 查詢。
+LLM 會使用 `template_description` 作為唯一的上下文，協助它在根據使用者提供的 `question` 產生 OpenSearch DSL 查詢時，選擇最合適的範本。請務必提供範本的詳細描述，以協助 LLM 做出適當的選擇。請注意，LLM 不會直接填入範本變數或渲染範本；而是分析範本的查詢結構，並將其作為指引，產生新的、符合上下文的 OpenSearch DSL 查詢。
 
-如需參數說明，請參閱[註冊參數](#register-parameters)。
+參數描述請參閱[註冊參數](#register-parameters)。
 
-OpenSearch 會回應代理程式 ID：
+OpenSearch 會回應一個代理程式 ID：
 
 ```json
 {
@@ -298,7 +302,7 @@ POST /_plugins/_ml/agents/RNjQi5gBOh0h20Y9-RX1/_execute
 ```
 {% include copy-curl.html %}
 
-OpenSearch 會傳回推論結果，其中包含產生的 Query DSL：
+OpenSearch 會傳回推論結果，其中包含產生的 query DSL：
 
 ```json
 {
@@ -307,7 +311,7 @@ OpenSearch 會傳回推論結果，其中包含產生的 Query DSL：
       "output": [
         {
           "name": "response",
-          "result": "{'query':{'term':{'species':'setosa'}}}"
+          "result": "{\"size\":0,\"query\":{\"term\":{\"species.keyword\":\"setosa\"}},\"aggs\":{\"count_setosa\":{\"value_count\":{\"field\":\"species.keyword\"}}}}"
         }
       ]
     }
@@ -321,15 +325,17 @@ OpenSearch 會傳回推論結果，其中包含產生的 Query DSL：
 
 參數	| 類型 | 必要/選用 | 說明	
 :--- | :--- | :--- | :---
-`model_id` | 字串 | 必要 | 用於產生 Query DSL 的 LLM 模型 ID。在 `conversational` 代理程式中使用時，若未提供此值，預設會使用代理程式本身的 `llm.model_id`。
-`response_filter` | 字串 | 選用 | 用於從 LLM 回應中擷取所產生查詢的 JSONPath 運算式。
-`generation_type` | 字串 | 選用 | 決定如何產生查詢。使用 `llmGenerated` 可僅依賴 LLM 的內建知識，或使用 `user_templates` 提供預先定義的搜尋範本，引導查詢產生以取得一致的結果。預設為 `llmGenerated`。
-`query_planner_system_prompt` | 字串 | 選用 | 向 LLM 提供高層級指示的系統提示。
-`query_planner_user_prompt` | 字串 | 選用 | 定義如何將自然語言問題和上下文呈現給 LLM，以產生查詢的使用者提示範本。
-`search_templates` | 陣列 | 選用 | 僅在 `generation_type` 為 `user_templates` 時適用。搜尋範本清單，為 LLM 提供預先定義的查詢模式，以產生 Query DSL。每個範本都必須包含 `template_id`（唯一識別碼）和 `template_description`（說明範本的用途與使用案例，協助 LLM 做出適當的選擇）。
-`fallback_query` | 字串 | 選用 | 當 LLM 無法針對指定的查詢文字產生有效的 DSL 查詢時，所使用的 OpenSearch Query DSL 查詢。請參閱[備援行為](#fallback-behavior)。
+`model_id` | 字串 | 必要 | 用於產生查詢 DSL 的 LLM 模型 ID。當在 `conversational` 代理程式中使用時，若未提供此值，預設會使用代理程式自己的 `llm.model_id`。
+`response_filter` | 字串 | 選用 | 用於從 LLM 回應中擷取所產生查詢的 JSONPath 運算式。若未指定，工具會傳回完整的 LLM 回應。在 `flow` 代理程式中執行工具時，請指定此參數。請參閱[回應篩選器組態](#response-filter-configuration)。
+`generation_type` | 字串 | 選用 | 決定查詢的產生方式。使用 `llmGenerated` 時僅依賴 LLM 內建知識；使用 `user_templates` 時則提供預先定義的搜尋範本，引導查詢產生以獲得一致的結果。預設為 `llmGenerated`。
+`query_planner_system_prompt` | 字串 | 選用 | 為 LLM 提供高階指示的系統提示。
+`query_planner_user_prompt` | 字串 | 選用 | 使用者提示範本，定義自然語言問題與上下文如何呈現給 LLM 以進行查詢產生。
+`search_templates` | 陣列 | 選用 | 僅在 `generation_type` 為 `user_templates` 時適用。一份搜尋範本清單，為 LLM 提供預先定義的查詢模式以產生查詢 DSL。每個範本必須包含 `template_id`（唯一識別碼）與 `template_description`（說明範本的用途與使用情境，協助 LLM 做出適當選擇）。
+`template_selection_system_prompt` | 字串 | 選用 | 僅在 `generation_type` 為 `user_templates` 時適用。指示 LLM 如何從 `search_templates` 中選擇搜尋範本的系統提示。若未指定，工具會使用預設的範本選擇提示。
+`template_selection_user_prompt` | 字串 | 選用 | 僅在 `generation_type` 為 `user_templates` 時適用。將問題與可用的搜尋範本呈現給 LLM 以進行範本選擇的使用者提示。若未指定，工具會使用預設的範本選擇提示。
+`fallback_query` | 字串 | 選用 | 當 LLM 無法為指定的查詢文字產生有效的 DSL 查詢時所使用的 OpenSearch 查詢 DSL 查詢。請參閱[備援行為](#fallback-behavior)。
 
-在連接器或代理程式註冊中設定的所有參數，都可以在執行代理程式時覆寫。
+所有在連接器或代理程式註冊中設定的參數，都可以在代理程式執行期間覆寫。
 {: .note}
 
 ## 回應篩選器組態
@@ -356,9 +362,10 @@ OpenSearch 會傳回推論結果，其中包含產生的 Query DSL：
 
 參數 | 類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`question` | 字串 | 必要 | 完整的自然語言查詢，包含產生 OpenSearch DSL 所需的所有上下文。請包含問題、任何特定需求、篩選條件或限制。範例：`Find all products with price greater than 100 dollars`、`Show me documents about machine learning published in 2023`、`Search for users with status active and age between 25 and 35`。
+`question` | 字串 | 必要 | 完整的自然語言查詢，包含產生 OpenSearch DSL 所需的所有必要脈絡。請包含問題、任何特定需求、篩選條件或限制。範例：`Find all products with price greater than 100 dollars`、`Show me documents about machine learning published in 2023`、`Search for users with status active and age between 25 and 35`。
 `index_name` | 字串 | 必要 | 需要為其產生查詢的索引名稱。
 `embedding_model_id` | 字串 | 選用 | 用於執行語意搜尋的模型 ID。
+`query_fields` | 字串 | 選用 | LLM 產生查詢時應優先考量的欄位。透過預設使用者提示中的 `${parameters.query_fields}` 預留位置傳遞給 LLM。
 
 ## 自訂提示
 
@@ -551,13 +558,13 @@ Output:
 
 觸發備援時不會擲回錯誤，而是在系統記錄檔中顯示一筆偵錯記錄。這可確保即使 LLM 提供非預期的輸出，查詢規劃作業仍可繼續運作。
 
-### 覆寫預設備援查詢
+### 覆寫預設的備援查詢
 
-以下範例示範備援查詢的運作方式。
+下列範例示範備援查詢的運作方式。 
 
-若要按照此範例操作，請先完成[代理式搜尋教學]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/index/)中的步驟 1 至 3：建立索引、匯入資料並註冊模型。
+若要依照此範例操作，請先完成[代理式搜尋教學]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/index/)中的步驟 1--3：建立索引、匯入資料及註冊模型。
 
-接著，使用步驟 3 中的模型 ID 註冊代理程式。加入自訂的 `fallback_query` 參數以示範備援行為：
+接著，使用步驟 3 的模型 ID 註冊代理程式。加入自訂的 `fallback_query` 參數以示範備援行為，並針對您的模型類型設定 `response_filter`（請參閱[回應篩選器組態](#response-filter-configuration)）：
 
 ```json
 POST _plugins/_ml/agents/_register
@@ -569,6 +576,7 @@ POST _plugins/_ml/agents/_register
       "type": "QueryPlanningTool",
       "parameters": {
         "model_id": "<your-model-id>",
+        "response_filter": "<response-filter-based-on-model-type>",
         "fallback_query": "{\"size\":10,\"query\":{\"bool\":{\"should\":[{\"match\":{\"species\":{\"query\":\"${parameters.question}\",\"fuzziness\":\"AUTO\"}}},{\"match_all\":{\"boost\":0.1}}],\"minimum_should_match\":1}}}"
       }
     }
@@ -577,7 +585,7 @@ POST _plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-接著，使用上一個步驟中的代理程式 ID 建立搜尋管線：
+接著，使用上一步的代理程式 ID 建立搜尋管線：
 
 ```json
 PUT _search/pipeline/agentic_search_pipeline
@@ -600,7 +608,7 @@ PUT _search/pipeline/agentic_search_pipeline
 ```
 {% include copy-curl.html %}
 
-若要測試備援行為，請傳送搜尋請求，並提出與 `iris-index` 無關的問題：
+若要測試備援行為，請傳送搜尋請求，其中包含與 `iris-index` 無關的問題：
 
 ```json
 POST /iris-index/_search?search_pipeline=agentic_search_pipeline&pretty
@@ -679,7 +687,7 @@ POST /iris-index/_search?search_pipeline=agentic_search_pipeline
 ```
 {% include copy-curl.html %}
 
-回應中包含由 LLM 正確產生的查詢，而不是使用備援查詢：
+回應包含 LLM 產生的適當查詢，而非使用備援查詢：
 
 ```json
 {

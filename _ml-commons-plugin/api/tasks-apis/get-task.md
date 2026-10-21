@@ -31,13 +31,13 @@ GET /_plugins/_ml/tasks/MsBi1YsB0jLkkocYjD5f
 
 回應格式取決於任務狀態。不同的 ML 作業 (例如模型訓練、部署或註冊) 會根據其目前狀態傳回不同的回應格式。
 
-### 任務進行中
+### 工作進行中
 
-當任務仍在執行時，回應會包含任務詳細資料，但不包含 `model_id`：
+當模型註冊工作仍在執行時，回應會包含工作詳細資訊，但不包含 `model_id`：
 
 ```json
 {
-  "task_type": "DEPLOY_MODEL",
+  "task_type": "REGISTER_MODEL",
   "function_name": "TEXT_EMBEDDING",
   "state": "CREATED",
   "worker_node": ["KfEEGG7_SsKZVFqI4ko2FA"],
@@ -49,7 +49,7 @@ GET /_plugins/_ml/tasks/MsBi1YsB0jLkkocYjD5f
 
 ### 任務已完成
 
-當任務順利完成時，回應會包含 `model_id` 及完整的任務詳細資料：
+當任務順利完成時，回應會包含 `model_id` 以及完整的任務詳細資料：
 
 **模型部署任務**：
 
@@ -94,7 +94,9 @@ GET /_plugins/_ml/tasks/MsBi1YsB0jLkkocYjD5f
   "function_name" : "KMEANS",
   "state" : "COMPLETED",
   "input_type" : "SEARCH_QUERY",
-  "worker_node" : "54xOe0w8Qjyze00UuLDfdA",
+  "worker_node" : [
+    "54xOe0w8Qjyze00UuLDfdA"
+  ],
   "create_time" : 1647545342556,
   "last_update_time" : 1647545342587,
   "is_async" : true
@@ -107,12 +109,15 @@ GET /_plugins/_ml/tasks/MsBi1YsB0jLkkocYjD5f
 
 | 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `model_id` | 字串 | ML 模型的唯一識別碼。任務完成時可使用。 |
-| `task_type` | 字串 | ML 作業類型 (例如 `REGISTER_MODEL`、`DEPLOY_MODEL` 或 `TRAINING`)。 |
-| `function_name` | 字串 | ML 函式類型 (例如 `TEXT_EMBEDDING` 或 `KMEANS`)。 |
-| `state` | 字串 | 目前的任務狀態。有效值為 `CREATED` (已建立任務)、`RUNNING` (任務正在執行)、`COMPLETED` (任務順利完成)、`FAILED` (任務發生錯誤)、`CANCELLED` (任務已取消)、`COMPLETED_WITH_ERROR` (任務完成但有錯誤)、`CANCELLING` (任務正在取消)、`EXPIRED` (任務已過期)，以及 `UNREACHABLE` (任務節點無法連線)。 |
-| `worker_node` | 陣列 | 執行任務之節點的節點 ID 陣列。 |
-| `create_time` | Long | 建立任務時的時間戳記，以自 epoch 起算的毫秒為單位。 |
-| `last_update_time` | Long | 上次狀態更新的時間戳記，以自 epoch 起算的毫秒為單位。 |
-| `is_async` | 布林值 | 任務是否以非同步方式執行。ML 任務通常為 `true`。 |
-| `input_type` | 字串 | 訓練任務的輸入類型 (例如 `SEARCH_QUERY`)。 |
+| `model_id` | 字串 | ML 模型的唯一識別碼。在工作完成時可用。 |
+| `task_type` | 字串 | ML 操作的類型（例如 `REGISTER_MODEL`、`DEPLOY_MODEL` 或 `TRAINING`）。 |
+| `function_name` | 字串 | ML 函式類型（例如 `TEXT_EMBEDDING` 或 `KMEANS`）。 |
+| `state` | 字串 | 目前的工作狀態。有效值為 `CREATED`（工作已建立）、`RUNNING`（工作正在執行）、`COMPLETED`（工作成功完成）、`FAILED`（工作發生錯誤）、`CANCELLED`（工作已取消）、`COMPLETED_WITH_ERROR`（工作完成但有錯誤）、`CANCELLING`（工作正在取消中）、`EXPIRED`（工作已過期），以及 `UNREACHABLE`（工作節點無法連線）。 |
+| `worker_node` | 陣列 | 執行此工作之節點的節點 ID 陣列。 |
+| `create_time` | Long | 工作建立的時間戳記，以自 epoch 起算的毫秒數表示。 |
+| `last_update_time` | Long | 最後一次狀態更新的時間戳記，以自 epoch 起算的毫秒數表示。 |
+| `is_async` | 布林值 | 工作是否以非同步方式執行。ML 工作通常為 `true`。 |
+| `input_type` | 字串 | 訓練工作的輸入類型（例如 `SEARCH_QUERY`）。 |
+| `error` | 字串 | 錯誤訊息。僅在工作失敗或完成但有錯誤時傳回。 |
+| `remote_job` | 物件 | 遠端工作的詳細資訊，例如工作 ID 與狀態，由外部服務傳回。僅針對批次預測工作傳回。 |
+| `response` | 物件 | 代理程式執行結果。僅針對非同步代理程式執行工作傳回。 |

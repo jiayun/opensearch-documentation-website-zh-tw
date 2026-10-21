@@ -22,19 +22,20 @@ OpenSearch 支援使用 Server-Sent Events (SSE) 通訊協定或 Streamable HTTP
 
 使用 MCP 工具之前，您必須完成下列先決條件。
 
-### 啟用 MCP 並設定受信任的連接器端點
+### 啟用 MCP 並設定信任的連接器端點
 
-- 透過設定 `plugins.ml_commons.mcp_connector_enabled` 設定來啟用 MCP 通訊協定。
-- 在 `plugins.ml_commons.trusted_connector_endpoints_regex` 設定中設定受信任的連接器端點。基於安全性考量，此設定使用 regex 模式來定義允許哪些 MCP 伺服器 URL。
+- 藉由設定 `plugins.ml_commons.mcp_connector_enabled` 來啟用 MCP 通訊協定。
+- 在 `plugins.ml_commons.trusted_connector_endpoints_regex` 設定中設定信任的連接器端點。基於安全性考量，此設定使用 regex 模式定義允許的 MCP 伺服器 URL。您提供的值會取代預設的信任端點清單，因此也請包含您使用的其他連接器端點，例如 [步驟 2](#step-2-register-a-model) 中使用的 OpenAI 端點。
 
-若要設定這兩個設定，請傳送下列請求：
+若要設定這兩項設定，請傳送以下請求：
 
 ```json
-PUT /_cluster/settings/
+PUT /_cluster/settings
 {
   "persistent": {
     "plugins.ml_commons.trusted_connector_endpoints_regex": [
-      "<mcp server url>"
+      "<mcp server url>",
+      "^https://api\\.openai\\.com/.*$"
     ],
     "plugins.ml_commons.mcp_connector_enabled": "true"
   }
@@ -48,7 +49,7 @@ PUT /_cluster/settings/
 
 ## 步驟 1：建立 MCP 連接器
 
-MCP 連接器會儲存 MCP 伺服器的連線詳細資料和認證。您可以使用 SSE 或 Streamable HTTP 進行連線。
+MCP 連接器會儲存 MCP 伺服器的連線詳細資料與認證資訊。您可以使用 SSE 或 Streamable HTTP 進行連線。
 
 若要使用 SSE 建立 MCP 連接器，請傳送下列請求：
 
@@ -73,7 +74,7 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-若要使用 Streamable HTTP 建立 MCP 連接器，請將 `protocol` 設為 `mcp_streamable_http`。您也可以選擇將 `parameters.endpoint` 設為覆寫預設端點 (`/_plugins/_ml/mcp`)。不需要 SSE 專用的端點：
+若要使用 Streamable HTTP 建立 MCP 連接器，請將 `protocol` 設為 `mcp_streamable_http`。您也可以設定 `parameters.endpoint` 來覆寫預設端點（`/mcp/`）。例如，若要連線至 OpenSearch MCP 伺服器，請將 `parameters.endpoint` 設為 `/_plugins/_ml/mcp`。不需要 SSE 專用的端點：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -96,23 +97,23 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-下表說明連接器參數。如需標準連接器參數的詳細資訊，請參閱 [請求本文欄位]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/#request-body-fields)。
+下表說明連接器參數。如需標準連接器參數的詳細資訊，請參閱[請求本文欄位]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/#request-body-fields)。
 
-| 參數 | 資料類型 | 必要 | 描述 |
+| 參數 | 資料類型 | 必要 | 說明 |
 |:----------|:---------|:---|:------------|
-| `protocol` | 字串 | 是 | 針對 SSE 指定 `mcp_sse`，或針對 Streamable HTTP 指定 `mcp_streamable_http`。 |
-| `url` | 字串 | 是 | MCP 伺服器的完整基礎 URL，包含通訊協定、主機名稱和連接埠 (若未使用預設連接埠，例如 `https://my-mcp-server.com:8443`)。 |
-| `credential` | 物件 | 是 | 包含機密驗證資訊，例如 API 金鑰或權杖。儲存在此物件中的值可使用 `${credential.*}` 語法在 `headers` 區段中安全地參照。 |
+| `protocol` | 字串 | 是 | 指定 `mcp_sse` 以使用 SSE，或指定 `mcp_streamable_http` 以使用 Streamable HTTP。 |
+| `url` | 字串 | 是 | MCP 伺服器的完整基礎 URL，包含通訊協定、主機名稱及連接埠（若未使用預設連接埠，例如 `https://my-mcp-server.com:8443`）。 |
+| `credential` | 物件 | 是 | 包含 API 金鑰或權杖等機敏驗證資訊。儲存在此物件中的值可在 `headers` 區段中使用 `${credential.*}` 語法安全地參照。 |
 | `parameters` | 物件 | 否 | 包含 MCP 連接器的組態參數。 |
 | `parameters.sse_endpoint` | 字串 | 否 | 僅適用於 SSE。MCP 伺服器的 SSE 端點路徑。預設為 `/sse`。 |
-| `parameters.endpoint` | 字串 | 否 | 僅適用於 Streamable HTTP。MCP 伺服器端點路徑。預設為 `/mcp`。 |
-| `headers` | 物件 | 否 | 要包含在對 MCP 伺服器之請求中的 HTTP 標頭。如需驗證標頭，請使用 `${credential.*}` 語法來參照 `credential` 物件中的值 (例如 `"Authorization": "Bearer ${credential.mcp_server_key}"`)。  |
+| `parameters.endpoint` | 字串 | 否 | 僅適用於 Streamable HTTP。MCP 伺服器端點路徑。預設為 `/mcp/`。 |
+| `headers` | 物件 | 否 | 傳送至 MCP 伺服器之請求要包含的 HTTP 標頭。若為驗證標頭，請使用 `${credential.*}` 語法參照 `credential` 物件中的值（例如 `"Authorization": "Bearer ${credential.mcp_server_key}"`）。  |
 
-回應包含連接器 ID：
+回應會包含連接器 ID：
 
 ```json
 {
-  "connector_id": "NZ2W2ZUBZ_3SyqdOvh2n",
+  "connector_id": "NZ2W2ZUBZ_3SyqdOvh2n"
 }
 ```
 
@@ -302,7 +303,7 @@ POST /_plugins/_ml/agents/_register
 
 對於連接器未公開或被 `tool_filters` 排除的工具名稱所做的覆寫不會產生任何效果。對於沒有有效覆寫的任何工具，代理程式會繼續使用 MCP 伺服器的原始描述。
 
-### Flow 代理程式與對話式 flow 代理程式
+### 流程代理程式與對話式流程代理程式
 **3.8 版新增**
 {: .label .label-purple }
 
@@ -326,7 +327,7 @@ POST /_plugins/_ml/agents/_register
 
 如果 MCP 工具列於 `tools` 中，但無法從所設定的連接器取得，代理程式執行將會失敗，並出現指出該工具無法使用的錯誤。如果多個 MCP 連接器公開同名工具，OpenSearch 會使用 `mcp_connectors` 陣列中第一個符合的連接器所提供的工具。
 
-在註冊 flow 或對話式 flow 代理程式之前，請使用 [List Connector MCP Tools API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/mcp-client-apis/list-connector-mcp-tools/) 從您的 MCP 連接器探索工具名稱、類型、描述與輸入結構描述。在代理程式中設定 MCP 工具時，請使用回應中的 `name` 與 `type` 值，並根據每個工具的 `input_schema` 建構 `parameters.input` JSON 字串。
+在註冊流程代理程式（flow agent）或對話式流程代理程式（conversational flow agent）之前，請使用 [List Connector MCP Tools API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/mcp-client-apis/list-connector-mcp-tools/) 從您的 MCP 連接器探索工具名稱、類型、描述與輸入結構描述。在代理程式中設定 MCP 工具時，請使用回應中的 `name` 與 `type` 值，並根據每個工具的 `input_schema` 建構 `parameters.input` JSON 字串。
 
 以下範例註冊一個 `flow` 代理程式，依序呼叫 `search_documents` 與 `get_weather`，然後使用 `MLModelTool` 摘要結果：
 

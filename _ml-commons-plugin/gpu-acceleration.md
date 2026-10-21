@@ -27,7 +27,7 @@ ML 節點支援下列 GPU 執行個體：
 
 ## PyTorch
 
-GPU 加速的 ML 節點需要 [PyTorch](https://pytorch.org/docs/stable/index.html) 1.12.1 才能與 ML 模型搭配運作。
+採用 GPU 加速的機器學習節點需要 [PyTorch](https://pytorch.org/docs/stable/index.html) 1.12.1，才能搭配機器學習模型運作。
 
 ## 設定 GPU 加速的 ML 節點
 
@@ -242,17 +242,17 @@ OpenSearch 現在應已在您的 GPU 加速叢集中執行。但是，如果佈�
 
 #### 手動準備 ML 節點
 
-如果前述兩個指令碼未能正確佈建您的 GPU 加速節點，您可以手動安裝 AWS Inferentia 的驅動程式：
+如果前兩個指令碼無法正確佈建您的 GPU 加速節點，您可以手動安裝 AWS Inferentia 的驅動程式：
 
-1. 根據您選擇的 Linux 作業系統部署 AWS 加速器執行個體。如需操作說明，請參閱 [PyTorch Neuron 設定](https://awsdocs-neuron.readthedocs-hosted.com/en/latest/frameworks/torch/torch-setup.html#pytorch-neuron-setup)。
+1. 依您選擇的 Linux 作業系統部署 AWS 加速器執行個體。相關說明請參閱 [PyTorch Neuron 設定](https://awsdocs-neuron.readthedocs-hosted.com/en/latest/frameworks/torch/torch-setup.html#pytorch-neuron-setup)。
 
-2. 將 Neuron 程式庫複製到 OpenSearch 中。下列命令使用名為 `opensearch-2.5.0` 的目錄：
+2. 將 Neuron 程式庫複製到 OpenSearch。下列命令使用名為 `opensearch-2.5.0` 的目錄：
 
    ```bash
    OPENSEARCH_HOME=~/opensearch-2.5.0
    ```
 
-3. 設定 `PYTORCH_EXTRA_LIBRARY_PATH` 路徑。在此範例中，我們會在 OPENSEARCH_HOME 資料夾中建立 `pytorch` 虛擬環境：
+3. 設定 `PYTORCH_EXTRA_LIBRARY_PATH` 路徑。在此範例中，我們在 OPENSEARCH_HOME 資料夾中建立 `pytorch` 虛擬環境：
 
    ```bash
    PYTORCH_NEURON_LIB_PATH=~/pytorch_venv/lib/python3.7/site-packages/torch_neuron/lib/
@@ -262,7 +262,7 @@ OpenSearch 現在應已在您的 GPU 加速叢集中執行。但是，如果佈�
    export PYTORCH_EXTRA_LIBRARY_PATH=$OPENSEARCH_HOME/lib/torch_neuron/lib/libtorchneuron.so
   ```
 
-4. （選用）若要監視加速器執行個體的 GPU 使用量，請安裝 [Neuron 工具](https://awsdocs-neuron.readthedocs-hosted.com/en/latest/tools/neuron-sys-tools/index.html)，讓模型可以在您的執行個體中使用：
+4. (選用) 若要監控加速器執行個體的 GPU 使用量，請安裝 [Neuron 工具](https://awsdocs-neuron.readthedocs-hosted.com/en/latest/tools/neuron-sys-tools/index.html)，讓模型可以在您的執行個體內使用：
 
    ```bash
    # Install Neuron Tools
@@ -280,30 +280,30 @@ OpenSearch 現在應已在您的 GPU 加速叢集中執行。但是，如果佈�
    ```
 
 
-5. 為確保您有足夠的記憶體可上傳模型，請將 JVM 堆疊大小增加至 `>+2MB`：
+5. 為確保有足夠的記憶體上傳模型，請將 JVM 堆疊大小增加到至少 2 MB：
 
    ```bash
    echo "-Xss2m" | sudo tee -a $OPENSEARCH_HOME/config/jvm.options
    ```
 
-6. 啟動 OpenSearch。
+6. 啟動 OpenSearch。 
 
 ## 疑難排解
 
-由於使用 ML 模型需要大量資料，因此當您嘗試在叢集中執行 OpenSearch 時，可能會遇到下列 `max file descriptors` 或 `vm.max_map_count` 錯誤：
+由於處理 ML 模型所需的資料量龐大，在您的叢集中嘗試執行 OpenSearch 時，可能會遇到下列 `max file descriptors` 或 `vm.max_map_count` 錯誤：
 
 ```bash
 [1]: max file descriptors [8192] for opensearch process is too low, increase to at least [65535]
 [2]: max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]
 ```
 
-若要排解最大檔案描述元錯誤，請執行下列命令：
+若要排解檔案描述元上限錯誤，請執行下列命令：
 
 ```bash
 echo "$(whoami) - nofile 65535" | sudo tee -a /etc/security/limits.conf
 ```
 
-若要修正 `vm.max_map_count` 錯誤，請執行此命令將計數增加至 `262114`：
+若要修正 `vm.max_map_count` 錯誤，請執行此命令將計數增加到 `262144`：
 
 ```bash
 sudo sysctl -w vm.max_map_count=262144

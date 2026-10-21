@@ -15,7 +15,7 @@ grand_parent: Agents and tools
 {: .label .label-purple }
 <!-- vale on -->
 
-`LogPatternTool` 會分析透過[查詢特定領域語言 (DSL)]({{site.url}}{{site.baseurl}}/query-dsl/) 或[管道處理語言 (PPL)]({{site.url}}{{site.baseurl}}/search-plugins/sql/ppl/index/) 查詢所擷取的記錄資料，以擷取並識別記錄訊息中反覆出現的結構模式。此工具會依據共用範本將相似的記錄分組，然後傳回最常見的模式。每個模式都包含具代表性的範例記錄，以及資料集中符合該模式的記錄項目總數。
+`LogPatternTool` 會分析透過[查詢領域特定語言 (DSL)]({{site.url}}{{site.baseurl}}/query-dsl/) 或[管道處理語言 (PPL)]({{site.url}}{{site.baseurl}}/search-plugins/sql/ppl/index/) 查詢所擷取的記錄資料，以擷取並識別記錄訊息中反覆出現的結構模式。此工具會依據共用範本將相似的記錄分組，然後傳回最常見的模式。每個模式都包含具代表性的範例記錄，以及資料集中符合該模式的記錄項目總數。
 
 OpenSearch 會根據請求中是否存在 `input` 或 `ppl` 參數，判斷您使用的是 DSL 還是 PPL 查詢：
 
@@ -29,7 +29,7 @@ OpenSearch 會根據請求中是否存在 `input` 或 `ppl` 參數，判斷您�
 
 ## 步驟 1：註冊將執行 LogPatternTool 的流程代理程式
 
-流程代理程式會依序執行一系列工具，並傳回最後一個工具的輸出。若要建立流程代理程式，請傳送下列註冊代理程式請求：
+流程代理程式會依序執行一連串工具，並傳回最後一個工具的輸出。若要建立流程代理程式，請傳送下列註冊代理程式請求：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -37,9 +37,6 @@ POST /_plugins/_ml/agents/_register
   "name": "Test_Agent_For_Log_Pattern_Tool",
   "type": "flow",
   "description": "this is a test agent for the LogPatternTool",
-  "memory": {
-    "type": "demo"
-  },
   "tools": [
       {
       "type": "LogPatternTool",
@@ -64,6 +61,8 @@ OpenSearch 會以代理程式 ID 回應：
 
 ## 步驟 2：執行代理程式
 
+下列範例會搜尋 OpenSearch Dashboards 的範例網頁記錄。若要新增範例網頁記錄，請參閱[新增範例資料]({{site.url}}{{site.baseurl}}/dashboards/getting-started/data-setup/#add-sample-data)。此查詢不會依時間篩選，因此無論您何時新增範例資料，都會傳回範例回應中所示的模式。若要在您自己的記錄上執行此範例，請變更 `index` 和查詢。
+
 傳送下列請求以執行代理程式：
 
 ```json
@@ -77,7 +76,7 @@ POST /_plugins/_ml/agents/OQutgJYBAc35E4_KvI1q/_execute
 ```
 {% include copy-curl.html %}
 
-OpenSearch 會傳回 JSON 回應，其中包含在您的資料中找到的最常見記錄模式，數量最多為指定的上限。每個識別出的模式都以 JSON 物件表示，包含三個關鍵元件：模式範本、一組符合該模式的代表性範例記錄，以及表示該模式在資料集中出現頻率的計數。其結構遵循 `{"pattern": "...", "sample logs": [...], "total count": N}` 格式，如下列範例回應所示：
+OpenSearch 會傳回 JSON 回應，其中包含在您的資料中找到的最常見記錄模式，最多可達指定的上限。每個識別出的模式都會以 JSON 物件表示，並包含三個主要元件：模式範本、一組符合該模式的代表性範例記錄，以及指出該模式在您的資料集中出現頻率的計數。其結構遵循 `{"pattern": "...", "sample logs": [...], "total count": N}` 格式，如下列範例回應所示：
 
 ```json
 {
@@ -96,29 +95,33 @@ OpenSearch 會傳回 JSON 回應，其中包含在您的資料中找到的最常
 
 ## 註冊參數
 
-下表列出註冊代理程式時可用的工具參數。
+下表列出代理程式註冊時可用的工具參數。
 
 | 參數         | 類型     | 必要/選用                                | 說明 |
 |:-----------------|:---------|:-------------------------------------------------|:------------|
-| `index`          | 字串   | DSL 查詢必要                         | 要搜尋以進行模式分析的索引。 |
-| `input`          | 字串   | DSL 查詢必要                         | 以字串表示的 DSL 查詢 JSON。如果同時提供 `input` 和 `ppl`，則會使用 `input` (DSL)。 |
-| `ppl`            | 字串   | PPL 查詢必要                         | PPL 查詢字串。如果也提供了 `input`，則會忽略此參數。 |
-| `source_field`   | 字串   | 選用                                         | 要在結果中傳回的欄位。可以是單一欄位或陣列 (例如 `["field1", "field2"]`)。 |
-| `doc_size`       | 整數  | 選用                                         | 要擷取的文件數量。預設為 `2`。 |
+| `index`          | 字串   | DSL 查詢時必要                         | 用於模式分析搜尋的索引。 |
+| `input`          | 字串   | DSL 查詢時必要                         | 以字串表示的 DSL 查詢 JSON。若同時提供 `input` 與 `ppl`，則使用 `input` (DSL)。 |
+| `ppl`            | 字串   | PPL 查詢時必要                         | PPL 查詢字串。若同時提供 `input` 則會被忽略。 |
+| `source_field`   | 字串   | 選用                                         | 結果中要回傳的欄位。可以是單一欄位或陣列（例如 `["field1", "field2"]`）。 |
+| `doc_size`       | 整數  | 選用                                         | 要擷取的文件數量。預設為 `1000`。 |
 | `top_n_pattern`  | 整數  | 選用                                         | 將輸出限制為指定數量的最常見模式。預設為 `3`。 |
 | `sample_log_size`| 整數  | 選用                                         | 每個模式要包含的範例記錄數量。預設為 `20`。 |
-| `pattern_field`  | 字串   | 選用                                         | 要分析以偵測模式的欄位。如果未指定，工具會從第一份文件中選取最長的文字欄位。 |
+| `pattern_field`  | 字串   | 選用                                         | 用於模式偵測分析的欄位。若未指定，工具會從第一份文件中選取最長的文字欄位。 |
+| `variable_count_threshold` | 整數 | 選用                                 | 記錄解析器在將記錄分組為模式時，用於識別變數詞元的門檻值。預設為 `5`。 |
 
 
 ## 執行參數
 
-下表列出執行代理程式時可用的工具參數。
+下表列出執行代理程式可用的工具參數。
 
 參數	| 類型 | 必要/選用      | 說明	
 :--- | :--- |:-----------------------| :---
-| `index`   | 字串 | DSL 查詢必要 | 要搜尋以進行模式分析的索引。 |
-| `input`   | 字串 | DSL 查詢必要 | 以字串表示的 DSL 查詢 JSON。如果同時提供 `input` 和 `ppl`，則以 `input` (DSL) 為優先。 |
-| `ppl`     | 字串 | PPL 查詢必要 | PPL 查詢字串。如果也提供了 `input`，則會忽略此參數。 |
+| `index`   | 字串 | DSL 查詢時必要 | 用於模式分析搜尋的索引。 |
+| `input`   | 字串 | DSL 查詢時必要 | 以字串表示的 DSL 查詢 JSON。若同時提供 `input` 與 `ppl`，則以 `input` (DSL) 為優先。 |
+| `ppl`     | 字串 | PPL 查詢時必要 | PPL 查詢字串。若同時提供 `input` 則忽略此項。 |
+| `top_n_pattern` | 整數 | 選用 | 將輸出限制為指定數量的最常見模式。會覆寫註冊時設定的值。 |
+| `sample_log_size` | 整數 | 選用 | 每個模式要包含的範例記錄數量。會覆寫註冊時設定的值。 |
+| `pattern_field` | 字串 | 選用 | 用於模式偵測分析的欄位。會覆寫註冊時設定的值。 |
 
 ## 測試工具
 

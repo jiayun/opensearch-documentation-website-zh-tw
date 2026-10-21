@@ -48,43 +48,45 @@ ML Commons 外掛程式有兩個保留角色：
 
 ## 將後端角色指派給使用者
 
-建立適當的後端角色，並將這些角色指派給使用者。後端角色通常來自 [LDAP 伺服器]({{site.url}}{{site.baseurl}}/security/configuration/ldap/)或 [SAML 提供者]({{site.url}}{{site.baseurl}}/security/configuration/saml/)，但如果您使用內部使用者資料庫，則可以使用 REST API [手動新增它們]({{site.url}}{{site.baseurl}}/security/api/users/create-user/)。
+建立適當的後端角色，並將這些角色指派給使用者。後端角色通常來自 [LDAP 伺服器]({{site.url}}{{site.baseurl}}/security/configuration/ldap/) 或 [SAML 提供者]({{site.url}}{{site.baseurl}}/security/configuration/saml/)，但如果您使用內部使用者資料庫，則可以使用 REST API [手動新增這些角色]({{site.url}}{{site.baseurl}}/security/api/users/create-user/)。
 
 只有管理員使用者可以將後端角色指派給使用者。
 {: .note}
 
-指派後端角色時，請考量下列兩個使用者的範例：`alice` 和 `bob`。
+指派後端角色時，請參考以下兩位使用者的範例：`alice` 和 `bob`。
 
-下列請求會將 `analyst` 後端角色指派給使用者 `alice`：
+下列請求會將後端角色 `analyst` 指派給使用者 `alice`：
 
 ```json
-PUT _plugins/_security/api/internalusers/alice
+PUT /_plugins/_security/api/internalusers/alice
 {
-  "password": "alice",
+  "password": "Str0ngPassw0rd_5521!",
   "backend_roles": [
     "analyst"
   ],
   "attributes": {}
 }
 ```
+{% include copy-curl.html security=true %}
 
-下一個請求會將 `human-resources` 後端角色指派給使用者 `bob`：
+下一個請求會將後端角色 `human-resources` 指派給使用者 `bob`：
 
 ```json
-PUT _plugins/_security/api/internalusers/bob
+PUT /_plugins/_security/api/internalusers/bob
 {
-  "password": "bob",
+  "password": "Str0ngPassw0rd_6630!",
   "backend_roles": [
     "human-resources"
   ],
   "attributes": {}
 }
 ```
+{% include copy-curl.html security=true %}
 
 最後，最後一個請求會將可讓使用者完整存取 ML Commons 的角色同時指派給 `alice` 和 `bob`：
 
 ```json
-PUT _plugins/_security/api/rolesmapping/ml_full_access
+PUT /_plugins/_security/api/rolesmapping/ml_full_access
 {
   "backend_roles": [],
   "hosts": [],
@@ -94,8 +96,9 @@ PUT _plugins/_security/api/rolesmapping/ml_full_access
   ]
 }
 ```
+{% include copy-curl.html security=true %}
 
-如果 `alice` 建立了模型群組並為其指派 `analyst` 後端角色，則 `bob` 無法存取此模型。
+如果 `alice` 建立模型群組並為其指派後端角色 `analyst`，則 `bob` 無法存取此模型。
 
 ## 啟用模型存取控制
 
@@ -118,18 +121,18 @@ PUT _cluster/settings
 如需與模型存取控制相關之 API 的資訊，請參閱 [Model Group API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-group-apis/index/)。
 
 ## 隱藏模型
-**於 2.12 版推出**
+**於 2.12 推出**
 {: .label .label-purple }
 
-若要對終端使用者 (包括叢集管理員) 隱藏模型詳細資料，您可以註冊_隱藏_模型。如果模型已隱藏，非超級管理員使用者就沒有權限呼叫該模型上的任何 [Model API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/index/)，但 [Predict API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/predict/) 除外。
+若要對終端使用者（包括叢集管理員）隱藏模型詳細資訊，您可以註冊一個 _隱藏_ 模型。如果模型已隱藏，非超級管理員使用者便無權對該模型呼叫 [Predict API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/predict/) 以外的任何 [Model APIs]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/index/)。
 
-只有超級管理員使用者可以註冊隱藏模型。隱藏模型可以是 OpenSearch 提供的預先訓練模型、您自己的自訂模型，或外部託管的模型。若要註冊隱藏模型，您必須先使用[管理員憑證]({{site.url}}{{site.baseurl}}/security/configuration/tls/#configuring-admin-certificates)進行驗證：
+只有超級管理員使用者可以註冊隱藏模型。隱藏模型可以是 OpenSearch 提供的預先訓練模型、您自己的自訂模型，或由外部託管的模型。若要註冊隱藏模型，您必須先使用[管理員憑證]({{site.url}}{{site.baseurl}}/security/configuration/tls/#configuring-admin-certificates)進行驗證：
 
 ```bash
 curl -k --cert ./kirk.pem --key ./kirk-key.pem -XGET 'https://localhost:9200/.opendistro_security/_search'
 ```
 
-超級管理員使用者建立的所有模型都會自動註冊為隱藏。若要註冊隱藏模型，請將請求傳送至 `_register` 端點：
+超級管理員使用者建立的所有模型都會自動註冊為隱藏模型。若要註冊隱藏模型，請將請求傳送至 `_register` 端點：
 
 ```bash
 curl -k --cert ./kirk.pem --key ./kirk-key.pem -X POST 'https://localhost:9200/_plugins/_ml/models/_register' -H 'Content-Type: application/json' -d '
@@ -158,8 +161,8 @@ curl -k --cert ./kirk.pem --key ./kirk-key.pem -X POST 'https://localhost:9200/_
             "headers": {
                 "content-type": "application/json"
             },
-            "url": "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-v2/invoke",
-            "request_body": "{\"prompt\":\"\\n\\nHuman: ${parameters.inputs}\\n\\nAssistant:\",\"max_tokens_to_sample\":300,\"temperature\":0.5,\"top_k\":250,\"top_p\":1,\"stop_sequences\":[\"\\\\n\\\\nHuman:\"]}"
+            "url": "https://bedrock-runtime.us-east-1.amazonaws.com/model/us.anthropic.claude-sonnet-4-6/invoke",
+            "request_body": "{\"anthropic_version\":\"bedrock-2023-05-31\",\"messages\":[{\"role\":\"user\",\"content\":\"${parameters.inputs}\"}],\"max_tokens\":300,\"temperature\":0.5,\"top_k\":250}"
           }
        ]
     }
@@ -167,13 +170,13 @@ curl -k --cert ./kirk.pem --key ./kirk-key.pem -X POST 'https://localhost:9200/_
 ```
 {% include copy.html %}
 
-註冊隱藏模型之後，只有超級管理員可以對該模型叫用作業，包括部署、取消部署、刪除和取得 API 作業。舉例來說，若要部署隱藏模型，請傳送下列請求。在此請求中，`q7wLt4sBaDRBsUkl9BJV` 是模型 ID：
+隱藏模型註冊後，只有超級管理員可以對該模型呼叫操作，包括部署、取消部署、刪除和取得等 API 操作。例如，若要部署隱藏模型，請傳送下列請求。在此請求中，`OPENSEARCH_ASSISTANT_MODEL` 是模型 ID：
 
-```json
-curl -k --cert ./kirk.pem --key ./kirk-key.pem -X POST 'https://localhost:9200/_plugins/_ml/models/q7wLt4sBaDRBsUkl9BJV/_deploy'
+```bash
+curl -k --cert ./kirk.pem --key ./kirk-key.pem -X POST 'https://localhost:9200/_plugins/_ml/models/OPENSEARCH_ASSISTANT_MODEL/_deploy'
 ```
 {% include copy.html %}
 
-隱藏模型的 `model_id` 是模型 `name`。隱藏模型包含設為 `true` 的 `is_hidden` 參數。您無法變更隱藏模型的 `is_hidden` 參數。
+隱藏模型的 `model_id` 是模型的 `name`。隱藏模型包含一個設為 `true` 的 `is_hidden` 參數。您無法變更隱藏模型的 `is_hidden` 參數。
 
-管理員使用者可以透過更新模型的後端角色來變更模型的存取權。 
+管理員使用者可以透過更新模型的後端角色來變更模型的存取權限。 

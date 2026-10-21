@@ -186,7 +186,7 @@ opensearch-migration-pipeline:
 
 ### 預設搜尋行為
 
-根據預設，`opensearch` 來源會使用叢集的版本與發行版來判斷要使用哪個 `search_context_type`。對於支援 [Point in Time]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/paginate/#point-in-time-with-search_after) 的叢集與網域，來源會使用 `point_in_time`。如果叢集不支援 Point in Time 搜尋，則會改用 [scroll search]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/paginate/#scroll-search)。
+根據預設，`opensearch` 來源會使用叢集的版本與發行版來判斷要使用哪個 `search_context_type`。對於支援[時間點搜尋 (Point in Time)]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/paginate/#point-in-time-with-search_after) 的叢集與網域，來源會使用 `point_in_time`。如果叢集不支援時間點搜尋，則會改用[捲動搜尋]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/paginate/#scroll-search)。
 
 對於 Amazon OpenSearch Serverless 集合，預設行為是使用 [`search_after`]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/paginate/#the-search_after-parameter)。不過，我們建議改用 `point_in_time`。
 
@@ -206,8 +206,8 @@ opensearch-migration-pipeline:
 
 選項 | 必要 | 類型    | 說明
 :--- | :--- |:--------| :---
-`region` | 否 | 字串  | 要用於憑證的 AWS Region。預設為[標準 SDK 判斷 Region 的行為](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/region-selection.html)。
-`sts_role_arn` | 否 | 字串  | 對 Amazon OpenSearch Service 和 Amazon OpenSearch Serverless 的請求所要擔任的 AWS Security Token Service (AWS STS) 角色。預設為 `null`，其會使用[憑證的標準 SDK 行為](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/credentials.html)。
+`region` | 否 | 字串  | 要用於認證資訊的 AWS Region。預設為[標準 SDK 判斷 Region 的行為](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/region-selection.html)。
+`sts_role_arn` | 否 | 字串  | 對 Amazon OpenSearch Service 和 Amazon OpenSearch Serverless 的請求所要擔任的 AWS Security Token Service (AWS STS) 角色。預設為 `null`，其會使用[認證資訊的標準 SDK 行為](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/credentials.html)。
 `serverless` | 否 | 布林值 | 從 Amazon OpenSearch Serverless 集合處理時，應設為 `true`。預設為 `false`。
 
 ## 指標
@@ -219,8 +219,8 @@ opensearch-migration-pipeline:
 - `documentsProcessed`：測量 `opensearch` 來源外掛程式處理的文件總數。
 - `indicesProcessed`：測量 `opensearch` 來源外掛程式處理的索引總數。
 - `processingErrors`：測量 `opensearch` 來源外掛程式發生的索引處理錯誤總數。
-- `credentialsChanged`：測量 `opensearch` 來源重新整理基本憑證 (使用者名稱/密碼) 的次數。
-- `clientRefreshErrors`：測量因 `opensearch` 來源重新整理基本憑證而產生新用戶端時遇到的錯誤數。
+- `credentialsChanged`：測量 `opensearch` 來源重新整理基本認證資訊（使用者名稱/密碼）的次數。
+- `clientRefreshErrors`：測量因 `opensearch` 來源重新整理基本認證資訊而產生新用戶端時遇到的錯誤數。
 
 ### 計時器
 
@@ -233,21 +233,21 @@ opensearch-migration-pipeline:
 
 ## OpenSearch 叢集安全性
 
-為了使用 `opensearch` 來源外掛程式從 OpenSearch 叢集提取資料，您必須在管線組態中指定您的使用者名稱與密碼。下列範例 `pipeline.yaml` 檔案示範如何指定預設的管理員安全性憑證：
+為了使用 `opensearch` 來源外掛程式從 OpenSearch 叢集提取資料，您必須在管線組態中指定您的使用者名稱與密碼。下列範例 `pipeline.yaml` 檔案示範如何指定預設的管理員安全性認證資訊：
 
 ```yaml
 source:
   opensearch:
     username: "admin"
-    password: "admin"
+    password: "<custom-admin-password>"
   ...
 ```
 
 ### Amazon OpenSearch Service 網域安全性
 
-`opensearch` 來源外掛程式可以從 [Amazon OpenSearch Service](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/what-is.html) 網域提取資料，該網域使用 AWS Identity and Access Management (IAM) 來提供安全性。此外掛程式會使用預設的 Amazon OpenSearch Service 憑證鏈。請使用 [AWS Command Line Interface (AWS CLI)](https://aws.amazon.com/cli/) 執行 `aws configure` 來設定您的憑證。
+`opensearch` 來源外掛程式可以從 [Amazon OpenSearch Service](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/what-is.html) 網域提取資料，該網域使用 AWS Identity and Access Management (IAM) 來提供安全性。此外掛程式會使用預設的 Amazon OpenSearch Service 認證資訊鏈。請使用 [AWS Command Line Interface (AWS CLI)](https://aws.amazon.com/cli/) 執行 `aws configure` 來設定您的認證資訊。
 
-請確定您設定的憑證具有必要的 IAM 權限。下列網域存取政策顯示最低必要權限：
+請確定您設定的認證資訊具有必要的 IAM 權限。下列網域存取政策顯示最低必要權限：
 
 ```json
 {

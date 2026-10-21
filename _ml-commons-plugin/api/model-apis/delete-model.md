@@ -11,10 +11,12 @@ nav_order: 47
 
 根據 `model_id` 刪除模型。
 
-當您刪除模型群組中的最後一個模型版本時，該模型群組會自動從索引中刪除。
+您無法刪除已部署或正在部署中的模型。若要刪除已部署的模型，請先將其[取消部署]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/undeploy-model/)。
 {: .important}
 
-有關此 API 的使用者存取權資訊，請參閱 [模型存取控制注意事項]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/index/#model-access-control-considerations)。
+刪除模型群組中的最後一個模型版本並不會刪除該模型群組。若要刪除模型群組，請使用 [Delete Model Group API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-group-apis/delete-model-group/)。
+
+如需此 API 的使用者存取權資訊，請參閱[模型存取控制注意事項]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/index/#model-access-control-considerations)。
 
 ## 端點
 
@@ -37,9 +39,10 @@ DELETE /_plugins/_ml/models/MzcIJX8BA7mbufL6DOwl
   "_id" : "MzcIJX8BA7mbufL6DOwl",
   "_version" : 2,
   "result" : "deleted",
+  "forced_refresh" : true,
   "_shards" : {
-    "total" : 2,
-    "successful" : 2,
+    "total" : 1,
+    "successful" : 1,
     "failed" : 0
   },
   "_seq_no" : 27,

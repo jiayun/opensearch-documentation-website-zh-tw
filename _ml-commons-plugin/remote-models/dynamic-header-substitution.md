@@ -17,7 +17,11 @@ great_grand_parent: Integrating ML models
 
 ## 設定動態標頭
 
-若要設定動態標頭，請在連接器的 `actions[].headers` 欄位中定義含有 `${parameters.*}` 預留位置的標頭。您也可以選擇在頂層的 `parameters` 欄位中設定參數的預設值：
+若要設定動態標頭，請在連接器的 `actions[].headers` 欄位中使用 `${parameters.*}` 預留位置定義該標頭。您也可以選擇在最上層的 `parameters` 欄位中為該參數設定預設值。
+
+以下範例使用預留位置端點 `api.example.com`。連接器 URL 必須符合 `plugins.ml_commons.trusted_connector_endpoints_regex` 中的模式，因此請將該端點替換為您模型的端點，或將其加入信任的端點清單。如需更多資訊，請參閱[新增信任的端點]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/#adding-trusted-endpoints)。
+
+若要建立包含動態標頭的連接器，請傳送以下請求：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -47,7 +51,7 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-進行預測時，請在 `_predict` 請求的 `parameters` 欄位中傳入執行階段值：
+在預測時，請在 `_predict` 請求的 `parameters` 欄位中傳入執行階段的值：
 
 ```json
 POST /_plugins/_ml/models/{model_id}/_predict
@@ -60,7 +64,7 @@ POST /_plugins/_ml/models/{model_id}/_predict
 ```
 {% include copy-curl.html %}
 
-傳送至遠端端點的 HTTP 請求會包含替換後的標頭：
+傳送至遠端端點的最終 HTTP 請求會包含替換後的標頭：
 
 ```json
 POST https://api.example.com/predict
@@ -68,7 +72,7 @@ Authorization: test-api-key
 X-Test-Request-Id: request-123
 ```
 
-如果未提供執行階段值，且連接器的 `parameters` 欄位中未設定預設值，預測請求就會遭到拒絕，並傳回 400 錯誤。若要避免此情況，請在連接器的 `parameters` 欄位中定義參數的預設值。如果未提供執行階段值，就會使用預設值。
+若未提供執行階段的值，且連接器的 `parameters` 欄位中也未設定預設值，預測請求將被拒絕並回傳 400 錯誤。若要避免這種情況，請在連接器的 `parameters` 欄位中為該參數定義預設值。若未提供執行階段的值，則會使用預設值。
 
 ## 安全性限制
 
@@ -96,12 +100,19 @@ X-Test-Request-Id: request-123
 
 ## 執行階段驗證
 
-進行預測時，系統會在傳送請求前驗證替換後的標頭值：
+在進行替換之前，OpenSearch 會對 `_predict` 請求中的參數值進行 JSON 逸出處理。執行階段值中的換行字元會以兩個字元 `\n` 的形式送達標頭，其他控制字元則會以 `\u0001` 等逸出序列的形式送達。下列值在替換時不會進行逸出處理：
 
-- 含有 `\r` 或 `\n` 字元的標頭值會遭到拒絕，以防止 HTTP 回應分割。
-- 含有控制字元（`0x00–0x1F`，定位字元除外）的值會遭到拒絕。
-- 每個標頭值不得超過 8 KB。
-- 所有標頭的總大小不得超過 64 KB。
+- `_predict` 請求之 `no_escape_params` 參數中所列參數的值
+- 有效 JSON 物件或陣列的值
+- 連接器 `parameters` 欄位的預設值
+
+在預測時，替換後的標頭值會先經過驗證，之後才會將請求傳送至模型端點。若預測請求的標頭未通過下列任一項檢查，就會傳回 400 錯誤：
+
+- 含有歸位字元（`\r`）、換行字元（`\n`）或其他控制字元（`0x00–0x1F`，但不含定位字元，以及 `0x7F`）的標頭值會遭到拒絕，以防止 HTTP 回應分割。由於執行階段值會經過逸出處理，因此這項限制僅適用於未經逸出處理即替換的值。
+- 每個標頭（包括其名稱與值）不得超過 8 KB（8,192 個字元）。
+- 所有標頭名稱與值的合計大小不得超過 64 KB（65,536 個字元）。
+
+大小限制適用於逸出後的值，因此逸出序列也會計入其中。例如，執行階段值中的 `"` 字元會計為兩個字元（`\"`）。
 
 ## 後續步驟
 

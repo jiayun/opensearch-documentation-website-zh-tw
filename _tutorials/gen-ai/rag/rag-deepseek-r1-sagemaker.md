@@ -14,7 +14,9 @@ redirect_from:
 
 本教學說明如何使用 [Amazon OpenSearch Service](https://docs.aws.amazon.com/opensearch-service/) 與 [DeepSeek-R1 模型](https://huggingface.co/deepseek-ai/DeepSeek-R1) 實作檢索增強生成 (RAG)。
 
-如果您使用的是自行管理的 OpenSearch 而非 Amazon OpenSearch Service，請使用[該藍圖](https://github.com/opensearch-project/ml-commons/blob/main/docs/remote_inference_blueprints/deepseek_connector_chat_blueprint.md)建立連往 DeepSeek-R1 模型的連接器。如需建立連接器的更多資訊，請參閱 [連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。然後直接前往[步驟 4](#step-4-create-and-test-the-model)。
+若要從 Jupyter notebook 執行本教學中的步驟，請使用 [DeepSeek RAG 示範 notebook](https://github.com/opensearch-project/ml-commons/blob/main/docs/tutorials/aws/DeepSeek_demo_notebook_for_RAG.ipynb)。
+
+如果您使用的是自行管理的 OpenSearch 而非 Amazon OpenSearch Service，請使用[該藍圖](https://github.com/opensearch-project/ml-commons/blob/main/docs/remote_inference_blueprints/deepseek_connector_chat_blueprint.md)建立連接至 DeepSeek-R1 模型的連接器。如需建立連接器的更多資訊，請參閱[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。然後直接前往[步驟 4](#step-4-create-and-test-the-model)。
 
 請將以 `your_` 為前綴的預留位置替換為您自己的值。
 {: .note}
@@ -28,9 +30,9 @@ redirect_from:
 
 ### 將 DeepSeek-R1 部署至 Amazon SageMaker
 
-依照[這篇部落格文章](https://community.aws/content/2sG84dNUCFzA9z4HdfqTI0tcvKP/deploying-deepseek-r1-on-amazon-sagemaker)中的指示，將 DeepSeek-R1 模型部署至 Amazon SageMaker。
+請依照[這篇部落格文章](https://builder.aws.com/content/2sG84dNUCFzA9z4HdfqTI0tcvKP/deploying-deepseek-r1-on-amazon-sagemaker)中的說明，將 DeepSeek-R1-Distill-Qwen-14B 模型部署至 Amazon SageMaker。
 
-記下 Amazon SageMaker DeepSeek-R1 模型的 Amazon Resource Name (ARN) 與 URL；後續步驟會用到。
+請記下 Amazon SageMaker DeepSeek-R1 模型的 Amazon Resource Name (ARN) 和 URL，您將在後續步驟中使用它們。
 
 ### 建立 OpenSearch 叢集
 
@@ -38,7 +40,7 @@ redirect_from:
 
 記下網域的 ARN 與 URL；後續步驟會用到。
 
-## 步驟 1：建立供 Amazon SageMaker 存取的 IAM 角色
+## 步驟 1：建立用於存取 Amazon SageMaker 的 IAM 角色
 
 若要在 Amazon SageMaker 中叫用 DeepSeek-R1 模型，您必須建立具有適當權限的 AWS Identity and Access Management (IAM) 角色。連接器將使用此角色來叫用模型。
 
@@ -90,9 +92,9 @@ redirect_from:
 
 ### 步驟 2.1：建立用於簽署連接器請求的 IAM 角色
 
-產生一個專門用於簽署 Create Connector API 請求的新 IAM 角色。
+專門為簽署 Create Connector API 請求產生一個新的 IAM 角色。
 
-建立名為 `my_create_sagemaker_deepseek_connector_role` 的 IAM 角色，並附上下列信任政策與權限：
+建立一個名為 `my_create_sagemaker_deepseek_connector_role` 的 IAM 角色，並使用下列信任政策與權限：
 
 - 自訂信任政策：
 
@@ -128,14 +130,14 @@ redirect_from:
     {
       "Effect": "Allow",
       "Action": "es:ESHttpPost",
-      "Resource": "your_opensearch_domain_arn"
+      "Resource": "your_opensearch_domain_arn/*"
     }
   ]
 }
 ```
 {% include copy.html %}
 
-記下此角色 ARN；後續步驟會用到。
+請記下此角色的 ARN；您將在後續步驟中使用它。
 
 ### 步驟 2.2：對應後端角色
 
@@ -154,7 +156,7 @@ IAM 角色現已成功在您的 OpenSearch 叢集中完成設定。
 
 依照下列步驟為 DeepSeek-R1 模型建立連接器。如需建立連接器的更多資訊，請參閱 [連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
 
-使用一次性臨時憑證執行下列 Python 程式碼。
+使用一次性的臨時認證資訊執行下列 Python 程式碼。
 
 ```python
 import boto3
@@ -224,7 +226,7 @@ print(r.text)
 
 ## 步驟 4：建立並測試模型
 
-登入 OpenSearch Dashboards，開啟 DevTools 主控台，並執行下列請求來建立及測試 DeepSeek-R1 模型。
+登入 OpenSearch Dashboards，開啟 DevTools 主控台，然後執行下列請求以建立並測試 DeepSeek-R1 模型。
 
 1. 建立模型群組：
 
@@ -277,7 +279,7 @@ print(r.text)
     ```
     {% include copy-curl.html %}
 
-    回應中包含部署作業的任務 ID：
+    回應中包含部署作業的工作 ID：
 
     ```json
     {
@@ -309,15 +311,7 @@ print(r.text)
             {
               "name": "response",
               "dataAsMap": {
-                "response": [
-                  {
-                    "generated_text": """hello<think>
-
-    </think>
-
-    Hello! How can I assist you today? 😊"""
-                  }
-                ]
+                "completion": "hello<think>\n\n</think>\n\nHello! How can I assist you today? 😊"
               }
             }
           ],
@@ -358,7 +352,56 @@ PUT /_search/pipeline/my-conversation-search-pipeline-deepseek
 
 ### 步驟 5.2：建立向量資料庫
 
-請依照[本教學]({{site.url}}{{site.baseurl}}/search-plugins/neural-search-tutorial/)的步驟 1 和 2 建立嵌入模型與向量索引。接著將範例資料匯入索引：
+Amazon OpenSearch Service 不支援本機模型，因此請使用外部託管的嵌入模型。若要建立一個，請依照[使用 Amazon Bedrock Titan 進行語意搜尋]({{site.url}}{{site.baseurl}}/tutorials/vector-search/semantic-search/semantic-search-bedrock-titan/)的步驟 1--4 操作。
+
+建立一個資料匯入管線，使用該嵌入模型從 `text` 欄位產生嵌入：
+
+```json
+PUT /_ingest/pipeline/my-nlp-ingest-pipeline
+{
+  "description": "text embedding pipeline",
+  "processors": [
+    {
+      "text_embedding": {
+        "model_id": "your_embedding_model_id",
+        "field_map": {
+          "text": "passage_embedding"
+        }
+      }
+    }
+  ]
+}
+```
+{% include copy-curl.html %}
+
+建立一個使用該管線的向量索引。`dimension` 必須與嵌入模型的輸出維度相符，Amazon Bedrock Titan Text Embeddings 模型的輸出維度為 1,536：
+
+```json
+PUT /my-nlp-index
+{
+  "settings": {
+    "index": {
+      "default_pipeline": "my-nlp-ingest-pipeline",
+      "knn": "true"
+    }
+  },
+  "mappings": {
+    "properties": {
+      "passage_embedding": {
+        "type": "knn_vector",
+        "dimension": 1536,
+        "space_type": "cosinesimil"
+      },
+      "text": {
+        "type": "text"
+      }
+    }
+  }
+}
+```
+{% include copy-curl.html %}
+
+將範例資料匯入索引：
 
 ```json
 POST _bulk
@@ -379,7 +422,7 @@ POST _bulk
 
 ### 步驟 5.3：搜尋索引
 
-執行向量搜尋以從向量資料庫擷取文件，並使用 DeepSeek 模型進行 RAG：
+執行向量搜尋，從向量資料庫擷取文件，並使用 DeepSeek 模型進行 RAG：
 
 ```json
 GET /my-nlp-index/_search?search_pipeline=my-conversation-search-pipeline-deepseek
@@ -388,7 +431,7 @@ GET /my-nlp-index/_search?search_pipeline=my-conversation-search-pipeline-deepse
     "neural": {
       "passage_embedding": {
         "query_text": "What's the population increase of New York City from 2021 to 2023? How is the trending comparing with Miami?",
-        "model_id": "USkHsZQBts7fa6bybx3G",
+        "model_id": "your_embedding_model_id",
         "k": 5
       }
     }
@@ -409,7 +452,7 @@ GET /my-nlp-index/_search?search_pipeline=my-conversation-search-pipeline-deepse
 ```
 {% include copy-curl.html %}
 
-回應同時包含從向量搜尋擷取的相關文件（位於 `hits` 陣列中）以及 DeepSeek 模型產生的答案（位於 `ext.retrieval_augmented_generation` 物件中）：
+回應包含從向量搜尋擷取的相關文件（位於 `hits` 陣列中），以及 DeepSeek 模型產生的答案（位於 `ext.retrieval_augmented_generation` 物件中）：
 
 ```json
 {
@@ -480,3 +523,11 @@ The population of New York City increased by 114,000 from 2021 to 2023. The grow
   }
 }
 ```
+
+## 相關文件
+
+- [使用 RAG 進行對話式搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/conversational-search/)
+- [第三方機器學習平台的連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)
+- [檢索增強生成處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rag-processor/)
+- [文字嵌入處理器]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/text-embedding/)
+- [神經查詢]({{site.url}}{{site.baseurl}}/query-dsl/specialized/neural/)

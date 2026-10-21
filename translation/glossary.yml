@@ -31,6 +31,19 @@ keep_in_english:
   - API, field, parameter, setting, plugin, processor and index names written in code
 
 terms:
+  - {en: sink (Data Prepper), zh: 接收器, note: "管線的輸出端；一般標題與敘述翻譯為接收器，首次可附 sink。程式碼中的 sink、sinks 及外掛程式識別字保持原文。"}
+  - {en: source (Data Prepper), zh: 來源, note: "管線讀取事件的來源；程式碼中的 source、sources 及外掛程式識別字保持原文。"}
+  - {en: agentic memory, zh: 代理記憶, note: "代理程式跨工作階段保存的語意記憶，不是硬體記憶體；首次附英文。"}
+  - {en: memory container, zh: 記憶容器, note: "代理記憶的邏輯容器；不是硬體記憶體容器。API 與設定識別字保留原文。"}
+  - {en: flow agent, zh: 流程代理程式, note: "一般標題與敘述使用中文，首次附英文；程式碼中的 flow 類型識別字保持原文。"}
+  - {en: conversational flow agent, zh: 對話式流程代理程式, note: "一般標題與敘述使用中文，首次附英文；程式碼中的 conversational_flow 保持原文。"}
+  - {en: context (LLM), zh: 脈絡, note: "例如先前任務的脈絡；與 content（內容）區分。程式碼與設定識別字保持原文。"}
+  - {en: reranking / rerank, zh: 重新排名, note: "搜尋相關性語境的一般名詞與動詞皆適用，不是依欄位值排序。「rerank 類型」這類一般敘述也須翻譯；程式碼中的 rerank 處理器識別字、模型名稱及 API 識別字保留原文。"}
+  - {en: rolling upgrade, zh: 滾動升級, note: "逐一升級節點；不是索引 rollover（輪替）。"}
+  - {en: pull-based ingestion, zh: 拉取式匯入, note: "由匯入端主動從來源取得資料；首次附英文，與推送式匯入區分。"}
+  - {en: index rollup, zh: 索引彙總, note: "首次附 index rollup；保留較低精細度的索引資料，與查詢 aggregation 不同。不得譯為 rollover 的輪替；索引彙總搭配英文或明確功能語境時可接受。"}
+  - {en: Java agent, zh: Java 代理程式, note: "JVM 語境的 Java agent，可用 Java 代理程式並於首次附英文；不能僅因 AI agent 也譯為代理程式就判為語意錯誤。"}
+  - {en: Live Tail, zh: 即時檢視末端記錄, note: "功能名稱可保留 Live Tail，或在首次出現附中文說明；與分散式追蹤不同。"}
   - {en: Helm chart, zh: Helm 套件（chart）, note: "chart 是 Kubernetes 應用程式的封裝，不是圖表。可保留 Helm chart；首次出現附中文說明。識別字與路徑保留原文。"}
   - {en: index (noun), zh: 索引}
   - {en: index (verb), zh: 編製索引, note: 例如「將文件編製索引」；亦可用「索引」}
@@ -121,7 +134,7 @@ terms:
   - {en: trace, zh: 追蹤}
   - {en: observability, zh: 可觀測性}
   - {en: performance, zh: 效能}
-  - {en: memory, zh: 記憶體}
+  - {en: memory, zh: 記憶體, note: "僅指硬體、JVM 或程序使用的記憶體。代理程式保存的對話、任務歷程或記憶索引則用「記憶」，不是硬體記憶體；memory_id、memory index 與追蹤代理程式執行等語境適用此區分。"}
   - {en: cache, zh: 快取}
   - {en: thread, zh: 執行緒}
   - {en: thread pool, zh: 執行緒集區}

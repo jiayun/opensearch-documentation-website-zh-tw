@@ -29,17 +29,19 @@ OpenSearch 可與 AI 代理程式整合，讓您將其作為外部 AI 工具的�
 
 ## 相關功能
 
-OpenSearch 也提供下列在叢集*內部*設定的代理程式功能：
+OpenSearch 也在*叢集內部*提供下列代理程式功能：
 
-- 透過 ML Commons Agent API 註冊的[代理程式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/)（flow、conversational 和 plan-execute-reflect）。
-- OpenSearch 代理程式可使用的[工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/)，例如 `VectorDBTool`、`ListIndexTool` 和 `PPLTool`。
-- [叢集內 MCP 連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/mcp/)，可讓 OpenSearch 代理程式呼叫託管於*外部* MCP 伺服器上的工具。
+- 透過 ML Commons Agent API 註冊的[代理程式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/)（流程型、對話型與規劃-執行-反思代理程式）。
+- OpenSearch 代理程式可使用的[工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/)，例如 `VectorDBTool`、`ListIndexTool` 與 `PPLTool`。
+- [MCP 連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/mcp/mcp-connector/)，讓 OpenSearch 代理程式呼叫託管於外部 MCP 伺服器上的工具。
+- [叢集內 MCP 伺服器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/mcp/in-cluster-mcp-server/)，讓外部 MCP 用戶端呼叫您叢集中註冊的工具。
 
 下表說明何時使用各項功能。
 
-| 使用案例 | 功能 |
+| 使用情境 | 功能 |
 | :--- | :--- |
 | 讓外部 AI 助理查詢 OpenSearch | [OpenSearch MCP Server]({{site.url}}{{site.baseurl}}/ai-agent-integrations/mcp-server/) |
-| 教導程式設計助理如何使用 OpenSearch | [代理程式技能]({{site.url}}{{site.baseurl}}/ai-agent-integrations/agent-skills/) |
-| 在 OpenSearch *內部*執行會呼叫外部工具的代理程式  | [使用 MCP 工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/mcp/) |
+| 教導程式碼助理如何使用 OpenSearch | [代理程式技能]({{site.url}}{{site.baseurl}}/ai-agent-integrations/agent-skills/) |
 | 在叢集內註冊並執行代理程式 | [代理程式與工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/) |
+
+若要比較所有 MCP 選項，包括叢集內 MCP 伺服器與 MCP 連接器，請參閱 [MCP 伺服器與用戶端]({{site.url}}{{site.baseurl}}/ml-commons-plugin/mcp/)。

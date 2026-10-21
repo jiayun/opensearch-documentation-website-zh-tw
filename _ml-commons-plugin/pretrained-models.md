@@ -24,7 +24,7 @@ OpenSearch 支援下列模型，並依類型分類。文字嵌入模型來自 [H
 
 句子轉換器模型會將句子和段落對應至多維的密集向量空間。向量數量取決於模型類型。您可以將這些模型用於分群或語意搜尋等使用案例。
 
-下表列出句子轉換器模型，以及可用於下載這些模型的成品連結。請注意，您必須在模型名稱前加上 `huggingface/` 前綴，如 **Model name** 欄所示。
+下表列出句子轉換器模型，以及可用於下載這些模型的成品連結。請注意，您必須在模型名稱前加上 `huggingface/` 前綴，如 **模型名稱** 欄所示。
 
 **詞元限制與截斷**：文字嵌入模型有最大詞元數限制 (以 BERT 為基礎的模型通常為 512 個詞元)。當文件超過此限制時，模型會自動截斷文字，而被截斷的內容不會呈現在嵌入中。這可能會大幅影響搜尋相關性，因為如果相關內容遭到截斷，文件可能不會出現在搜尋結果中。為避免此問題，請在產生嵌入之前，先將長文件分割成較小的區塊。
 {: .warning}
@@ -79,9 +79,9 @@ OpenSearch 支援下列模型，並依類型分類。文字嵌入模型來自 [H
 **2.12 版新增**
 {: .label .label-purple }
 
-交叉編碼器模型支援查詢重新排序。
+交叉編碼器模型支援查詢重新排名。
 
-下表列出交叉編碼器模型及其可用於下載的成品連結。請注意，模型名稱必須加上 `huggingface/cross-encoders` 前綴，如 **Model name** 欄所示。
+下表列出交叉編碼器模型及其可用於下載的成品連結。請注意，模型名稱必須加上 `huggingface/cross-encoders` 前綴，如 **模型名稱** 欄所示。
 
 | 模型名稱 | 版本 | TorchScript 成品 | ONNX 成品 |
 |:---|:---|:---|:---|
@@ -92,15 +92,15 @@ OpenSearch 支援下列模型，並依類型分類。文字嵌入模型來自 [H
 **3.0 版新增**
 {: .label .label-purple }
 
-語意句子醒目提示模型專為搭配 [`semantic` 醒目提示器]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight/#the-semantic-highlighter)而設計。這些模型會分析文件文字，並找出與搜尋查詢語意最相關的句子。
+語意句子醒目提示模型專為搭配 [`semantic` 醒目提示器]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight/#the-semantic-highlighter) 而設計。這些模型會分析文件文字，並找出與搜尋查詢在語意上最相關的句子。
 
 如需搭配語意醒目提示器使用這些模型的教學，請參閱[使用語意醒目提示]({{site.url}}{{site.baseurl}}/tutorials/vector-search/semantic-highlighting-tutorial/)。
 
-下表列出語意句子醒目提示模型及其可用於下載的成品連結。請注意，模型名稱必須加上 `opensearch/` 前綴，如 **Model name** 欄所示。
+下表列出語意句子醒目提示模型及其下載用的成品連結。請注意，您必須在模型名稱前加上 `amazon/`，如 **模型名稱** 欄所示。
 
 | 模型名稱 | 版本 | TorchScript 成品 | 說明 |
 |:---|:---|:---|:---|
-| `amazon/sentence-highlighting/opensearch-semantic-highlighter-v1` | 1.0.0 | - [model_url](https://artifacts.opensearch.org/models/ml-models/amazon/sentence-highlighting/opensearch-semantic-highlighter-v1/1.0.0/torch_script/sentence-highlighting_opensearch-semantic-highlighter-v1-1.0.0-torch_script.zip) <br>- [config_url](https://artifacts.opensearch.org/models/ml-models/amazon/sentence-highlighting/opensearch-semantic-highlighter-v1/1.0.0/torch_script/config.json) | 專為找出需醒目提示的語意相關句子而最佳化的模型。 |
+| `amazon/sentence-highlighting/opensearch-semantic-highlighter-v1` | 1.0.0 | - [model_url](https://artifacts.opensearch.org/models/ml-models/amazon/sentence-highlighting/opensearch-semantic-highlighter-v1/1.0.0/torch_script/sentence-highlighting_opensearch-semantic-highlighter-v1-1.0.0-torch_script.zip) <br>- [config_url](https://artifacts.opensearch.org/models/ml-models/amazon/sentence-highlighting/opensearch-semantic-highlighter-v1/1.0.0/torch_script/config.json) | 經過最佳化的模型，用於找出語意上相關、需要醒目提示的句子。 |
 
 
 ## 必要條件
@@ -152,22 +152,22 @@ POST /_plugins/_ml/model_groups/_register
 
 ## 步驟 2：註冊 OpenSearch 提供的本機模型
 
-若要將 OpenSearch 提供的模型註冊到步驟 1 建立的模型群組，請在以下請求中提供步驟 1 的模型群組 ID。
+若要將 OpenSearch 提供的模型註冊到步驟 1 建立的模型群組，請在下列請求中提供步驟 1 的模型群組 ID。
 
-由於預先訓練模型來自 ML Commons 模型儲存庫，您只需在註冊 API 請求中提供 `name`、`version`、`model_group_id` 和 `model_format`：
+由於預先訓練模型來自 ML Commons 模型儲存庫，您只需要在註冊 API 請求中提供 `name`、`version`、`model_group_id` 和 `model_format`：  
 
 ```json
 POST /_plugins/_ml/models/_register
 {
   "name": "huggingface/sentence-transformers/msmarco-distilbert-base-tas-b",
   "version": "1.0.3",
-  "model_group_id": "Z1eQf4oB5Vm0Tdw8EIP2",
+  "model_group_id": "wlcnb4kBJ1eYAeTMHlV6",
   "model_format": "TORCH_SCRIPT"
 }
 ```
 {% include copy-curl.html %}
 
-OpenSearch 會傳回註冊作業的任務 ID：
+OpenSearch 會傳回註冊作業的工作 ID：
 
 ```json
 {
@@ -176,14 +176,14 @@ OpenSearch 會傳回註冊作業的任務 ID：
 }
 ```
 
-若要檢查作業狀態，請將任務 ID 提供給 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/)：
+若要檢查作業狀態，請將工作 ID 提供給 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/)：
 
-```bash
+```json
 GET /_plugins/_ml/tasks/cVeMb4kBJ1eYAeTMFFgj
 ```
 {% include copy-curl.html %}
 
-當作業完成時，狀態會變為 `COMPLETED`：
+作業完成後，狀態會變更為 `COMPLETED`：
 
 ```json
 {
@@ -196,40 +196,41 @@ GET /_plugins/_ml/tasks/cVeMb4kBJ1eYAeTMFFgj
   ],
   "create_time": 1689793598499,
   "last_update_time": 1689793598530,
-  "is_async": false
+  "is_async": true
 }
 ```
 
-請記下傳回的 `model_id`，因為部署模型時需要用到它。
+請記下傳回的 `model_id`，因為部署模型時會需要用到它。
 
 ## 步驟 3：部署模型
 
-部署作業會從模型索引讀取模型的區塊，然後建立要載入記憶體的模型執行個體。模型越大，被分割成的區塊就越多，載入記憶體所需的時間也越長。
+部署作業會從模型索引讀取模型的區塊，然後建立模型實例並載入記憶體。模型越大，被切分的區塊就越多，載入記憶體所需的時間也越長。
 
-若要部署已註冊的模型，請在以下請求中提供其步驟 3 的模型 ID：
+若要部署已註冊的模型，請在下列請求中提供步驟 2 取得的模型 ID：
 
-```bash
+```json
 POST /_plugins/_ml/models/cleMb4kBJ1eYAeTMFFg4/_deploy
 ```
 {% include copy-curl.html %}
 
-回應包含任務 ID，您可用它來檢查部署作業的狀態：
+回應包含工作 ID，您可以用它來檢查部署作業的狀態：
 
 ```json
 {
   "task_id": "vVePb4kBJ1eYAeTM7ljG",
+  "task_type": "DEPLOY_MODEL",
   "status": "CREATED"
 }
 ```
 
-與上一個步驟相同，透過呼叫 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 檢查作業狀態：
+如同前一個步驟，呼叫 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 來檢查作業狀態：
 
-```bash
+```json
 GET /_plugins/_ml/tasks/vVePb4kBJ1eYAeTM7ljG
 ```
 {% include copy-curl.html %}
 
-當作業完成時，狀態會變為 `COMPLETED`：
+作業完成後，狀態會變為 `COMPLETED`：
 
 ```json
 {
@@ -246,7 +247,7 @@ GET /_plugins/_ml/tasks/vVePb4kBJ1eYAeTM7ljG
 }
 ```
 
-如果叢集或節點重新啟動，您需要重新部署模型。若要了解如何設定自動重新部署，請參閱[模型部署設定]({{site.url}}{{site.baseurl}}/ml-commons-plugin/cluster-settings/#model-deployment-settings)。
+如果叢集或節點重新啟動，您需要重新部署模型。若要瞭解如何設定自動重新部署，請參閱[模型部署設定]({{site.url}}{{site.baseurl}}/ml-commons-plugin/cluster-settings/#model-deployment-settings)。
 {: .tip} 
 
 ## 步驟 4 (選用)：測試模型
@@ -295,7 +296,7 @@ POST /_plugins/_ml/_predict/text_embedding/cleMb4kBJ1eYAeTMFFg4
 
 ### 稀疏編碼模型或稀疏斷詞器
 
-若為稀疏編碼模型或稀疏斷詞器，請傳送下列請求：
+若使用稀疏編碼模型或稀疏斷詞器，請傳送下列請求：
 
 ```json
 POST /_plugins/_ml/_predict/sparse_encoding/cleMb4kBJ1eYAeTMFFg4
@@ -305,7 +306,7 @@ POST /_plugins/_ml/_predict/sparse_encoding/cleMb4kBJ1eYAeTMFFg4
 ```
 {% include copy-curl.html %}
 
-回應中包含擷取出的詞元及其對應的權重：
+回應會包含擷取出的詞元及其對應的權重：
 
 ```json
 {
@@ -324,13 +325,16 @@ POST /_plugins/_ml/_predict/sparse_encoding/cleMb4kBJ1eYAeTMFFg4
                 "bright": 0.1756877,
                 ...
               }
+            ]
           }
         }
+      ]
     }
+  ]
 }
 ```
 
-上述範例使用預設的 `lexical` 輸出格式，會以字串作為鍵傳回。您可以將 `parameters.sparse_embedding_format` 設為 `lexical` (傳回字串詞元) 或 `token_id` (傳回整數詞元 ID)，來控制輸出鍵的格式。下列範例將 `sparse_embedding_format` 設為 `token_id`：
+上述範例使用預設的 `lexical` 輸出格式，會以字串作為鍵。您可以將 `parameters.sparse_embedding_format` 設為 `lexical`（傳回字串詞元）或 `token_id`（傳回整數詞元 ID），來控制輸出鍵的格式。下列範例將 `sparse_embedding_format` 設為 `token_id`：
 
 ```json
 POST /_plugins/_ml/_predict/sparse_encoding/cleMb4kBJ1eYAeTMFFg4
@@ -343,7 +347,7 @@ POST /_plugins/_ml/_predict/sparse_encoding/cleMb4kBJ1eYAeTMFFg4
 ```
 {% include copy-curl.html %}
 
-回應中包含詞元 ID 及其對應的詞元權重：
+回應會包含詞元 ID 及其對應的詞元權重：
 
 ```json
 {
@@ -351,6 +355,7 @@ POST /_plugins/_ml/_predict/sparse_encoding/cleMb4kBJ1eYAeTMFFg4
     {
       "output": [
         {
+          "name": "output",
           "dataAsMap": {
             "response": [
               {
@@ -482,5 +487,5 @@ POST _plugins/_ml/models/{model_id}/_predict
 
 若要了解如何設定向量索引，並使用稀疏編碼模型進行搜尋，請參閱[神經稀疏搜尋]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-search/)。
 
-若要了解如何使用交叉編碼器模型進行重新排序，請參閱[重新排序搜尋結果]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/reranking-search-results/)。
+若要了解如何使用交叉編碼器模型進行重新排名，請參閱[重新排名搜尋結果]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/reranking-search-results/)。
 

@@ -89,10 +89,10 @@ OpenSearch 會回應模型 ID：
 ```
 
 <!-- vale off -->
-## 步驟 3：註冊將執行 PPLTool 的流程代理程式
+## 步驟 3：註冊會執行 PPLTool 的流程代理程式
 <!-- vale on -->
 
-流程代理程式會依序執行一連串工具，並回傳最後一個工具的輸出。若要建立流程代理程式，請傳送下列註冊代理程式請求，並在 `model_id` 參數中提供模型 ID。若要執行產生的查詢，請將 `execute` 設為 `true`：
+流程代理程式會依序執行一系列工具，並傳回最後一個工具的輸出。若要建立流程代理程式，請傳送下列註冊代理程式請求，並在 `model_id` 參數中提供模型 ID。若要執行產生的查詢，請將 `execute` 設為 `true`：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -100,9 +100,6 @@ POST /_plugins/_ml/agents/_register
   "name": "Test_Agent_For_PPL",
   "type": "flow",
   "description": "this is a test agent",
-  "memory": {
-    "type": "demo"
-  },
   "tools": [
     {
       "type": "PPLTool",
@@ -183,16 +180,16 @@ OpenSearch 會回傳 PPL 查詢與查詢結果：
 
 ## 註冊參數
 
-下表列出註冊代理程式時可使用的所有工具參數。
+下表列出註冊代理程式時可用的所有工具參數。
 
-參數	| 類型 | 必要／選用 | 說明	
+參數	| 類型 | 必要/選用 | 說明	
 :--- | :--- | :--- | :---
-`model_id` | 字串 | 必要 | 用於將文字轉換為 PPL 查詢的大型語言模型 (LLM) 模型 ID。
-`model_type` | 字串 | 選用 | 模型類型。有效值為 `CLAUDE` (Anthropic Claude 模型)、`OPENAI` (OpenAI 模型) 與 `FINETUNE` (自訂微調模型)。
-`prompt` | 字串 | 選用 | 提供給 LLM 的提示詞。
+`model_id` | 字串 | 必要 | 用於將文字轉換為 PPL 查詢的大型語言模型 (LLM) 的模型 ID。
+`model_type` | 字串 | 選用 | 模型類型。有效值為 `CLAUDE` (Anthropic Claude 模型)、`OPENAI` (OpenAI 模型) 和 `FINETUNE` (自訂微調模型)。預設為 `CLAUDE`。
+`prompt` | 字串 | 選用 | 提供給 LLM 的提示。
 `execute` | 布林值 | 選用 | 指定是否執行 PPL 查詢。預設為 `true`。
-`input` | 物件 | 選用 | 包含兩個參數，分別指定要搜尋的索引以及要提供給 LLM 的問題。例如 `"input": "{\"index\": \"${parameters.index}\", \"question\": ${parameters.question} }"`。
-`head` | 整數 | 選用 | 當 `execute` 設為 `true` 時，限制回傳的執行結果數量。預設為 `-1` (無限制)。
+`input` | 物件 | 選用 | 包含兩個參數，分別指定要搜尋的索引以及提供給 LLM 的問題。例如 `"input": "{\"index\": \"${parameters.index}\", \"question\": ${parameters.question} }"`。
+`head` | 整數 | 選用 | 當 `execute` 設為 `true` 時，限制傳回的執行結果數量。預設為 `-1` (無限制)。
 
 ## 執行參數
 

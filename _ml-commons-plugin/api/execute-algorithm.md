@@ -6,15 +6,27 @@ parent: ML Commons APIs
 nav_order: 90
 ---
 
-# Execute Algorithm API
+# 執行演算法 API
 
 有些演算法（例如 [Localization]({{site.url}}{{site.baseurl}}/ml-commons-plugin/algorithms#localization)）不需要已訓練的模型。您可以使用 `execute` API 執行不依賴模型的演算法。
 
 ## 端點
 
 ```json
-POST _plugins/_ml/_execute/{algorithm_name}
+POST /_plugins/_ml/_execute/{algorithm_name}
 ```
+
+## 路徑參數
+
+下表列出可用的路徑參數。
+
+| 參數 | 資料類型 | 說明 |
+| :--- | :--- | :--- |
+| `algorithm_name` | 字串 | 要執行的演算法名稱，例如 `anomaly_localization` 或 `metrics_correlation`。必要。 |
+
+## 請求本文欄位
+
+請求本文的欄位取決於所使用的演算法。各演算法的欄位請參閱 [Localization]({{site.url}}{{site.baseurl}}/ml-commons-plugin/algorithms#localization) 與 [Metrics correlation]({{site.url}}{{site.baseurl}}/ml-commons-plugin/algorithms#metrics-correlation)。
 
 ## 範例請求：執行 Localization 演算法
 

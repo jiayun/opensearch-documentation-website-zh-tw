@@ -39,9 +39,9 @@ pipeline:
 ```
 {% include copy.html %}
 
-接著，建立名為 `logs_json.log` 的記錄檔。然後，將您 `pipeline.yaml` 檔案中檔案來源的 `path` 替換為正確的檔案路徑。如需更詳細的資訊，請參閱[設定 OpenSearch Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/getting-started/#2-configuring-data-prepper)。 
+接著，建立名為 `logs_json.log` 的記錄檔。然後，將 `pipeline.yaml` 檔案中 file 來源的 `path` 取代為正確的檔案路徑。如需更詳細的資訊，請參閱[執行 Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/getting-started/running/)。
 
-執行 Data Prepper 之前，來源會呈現下列格式：
+在執行 Data Prepper 之前，來源會以下列格式顯示：
 
 ```json
 {"lowercaseField": "TESTmeSSage"}

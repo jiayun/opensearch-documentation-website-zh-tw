@@ -42,7 +42,7 @@ opensearch_collection:
     vector-search:
       name: "向量搜尋"
     ml-commons-plugin:
-      name: "機器學習"
+      name: "AI 與機器學習"
     ai-agent-integrations:
       name: "AI 代理程式整合"
     dashboards:

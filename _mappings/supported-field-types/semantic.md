@@ -22,10 +22,10 @@ redirect_from:
 
 ## 範例：稠密嵌入模型
 
-`semantic` 欄位類型同時支援對稱與非對稱嵌入模型。對稱模型對文件和查詢使用相同的嵌入表示法。非對稱模型（例如 E5）在匯入期間將文件內容編碼為段落，並在搜尋時將查詢文字編碼為查詢。
+`semantic` 欄位類型同時支援對稱與非對稱嵌入模型。對稱模型對文件與查詢使用相同的嵌入表示法。非對稱模型（例如 E5）在匯入時將文件內容編碼為段落，並在搜尋時將查詢文字編碼為查詢。如需完整範例，請參閱[使用非對稱嵌入模型的語意搜尋]({{site.url}}{{site.baseurl}}/tutorials/vector-search/semantic-search/semantic-search-asymmetric/)。
 {: .note}
 
-設定模型後，您可以使用它建立含有 `semantic` 欄位的索引。此範例假設您已在叢集中設定 ID 為 `n17yX5cBsaYnPfyOzmQU` 的稠密嵌入模型：
+設定模型後，您可以使用該模型建立含有 `semantic` 欄位的索引。此範例假設您已在叢集中設定 ID 為 `n17yX5cBsaYnPfyOzmQU` 的稠密嵌入模型：
 
 ```json
 PUT /my-nlp-index
@@ -47,7 +47,7 @@ PUT /my-nlp-index
 ```
 {% include copy-curl.html %}
 
-建立索引後，您可以擷取其對應，以確認已自動建立 `passage_semantic_info` 欄位。`passage_semantic_info` 欄位包含用於儲存稠密嵌入的 `knn_vector` 子欄位，以及用於擷取模型 ID、模型名稱和模型類型等資訊的其他中繼資料欄位：
+建立索引後，您可以擷取其對應，以確認系統已自動建立 `passage_semantic_info` 欄位。`passage_semantic_info` 欄位包含用於儲存稠密嵌入的 `knn_vector` 子欄位，以及用於擷取模型 ID、模型名稱和模型類型等資訊的其他中繼資料欄位：
 
 ```json
 GET /my-nlp-index/_mapping
@@ -97,9 +97,9 @@ GET /my-nlp-index/_mapping
 ```
 {% include copy-curl.html %}
 
-`knn_vector` 欄位的 `dimension` 和 `space_type` 取決於 ML 模型組態。對於[預先訓練的稠密模型](ml-commons-plugin/pretrained-models/#sentence-transformers)，此資訊包含在預設模型組態中。對於外部裝載的稠密嵌入模型，您必須在模型組態中明確定義 `dimension` 和 `space_type`，才能將模型與 `semantic` 欄位搭配使用。
+`knn_vector` 欄位的 `dimension` 與 `space_type` 由 ML 模型組態決定。對於[預先訓練的稠密模型](ml-commons-plugin/pretrained-models/#sentence-transformers)，此資訊已包含在預設模型組態中。對於外部裝載的稠密嵌入模型，您必須先在模型組態中明確定義 `dimension` 與 `space_type`，才能將該模型用於 `semantic` 欄位。
 
-自動產生的 `knn_vector` 子欄位支援其他設定，但目前無法在 `semantic` 欄位中設定。如需詳細資訊，請參閱[限制](#limitations)。
+自動產生的 `knn_vector` 子欄位支援其他目前無法在 `semantic` 欄位中設定的設定。如需詳細資訊，請參閱[限制](#limitations)。
 {: .note}
 
 ## 範例：稀疏編碼模型

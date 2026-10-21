@@ -17,9 +17,9 @@ grand_parent: Agents and tools
 
 OpenSearch 提供兩種類型的對話式代理程式：
 
-- **[`conversational_v2` 代理程式](#the-conversational_v2-agent-with-full-multimodal-support)** (OpenSearch 3.6 及更新版本)：透過標準化介面提供內建多模態支援的增強型代理程式。需要[統一註冊方法]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#unified-registration-method)及[代理程式記憶體]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/)。
+- **[`conversational_v2` 代理程式](#the-conversational_v2-agent-with-full-multimodal-support)** (OpenSearch 3.6 及更新版本)：透過標準化介面提供內建多模態支援的增強型代理程式。需要[統一註冊方法]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#unified-registration-method)及[代理記憶（agentic memory）]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/)。
 
-- **[`conversational` 代理程式 (v1)](#the-conversational-agent-v1)** (OpenSearch 2.13 及更新版本)：同時支援[統一註冊方法]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#unified-registration-method) (僅限純文字輸入) 及[一般註冊方法]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#regular-registration-method) (功能取決於連接器)。同時支援 `conversation_index` 與 `agentic_memory` 記憶體類型。
+- **[`conversational` 代理程式 (v1)](#the-conversational-agent-v1)** (OpenSearch 2.13 及更新版本)：同時支援[統一註冊方法]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#unified-registration-method) (僅限純文字輸入) 及[一般註冊方法]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#regular-registration-method) (功能取決於連接器)。同時支援 `conversation_index` 與 `agentic_memory` 記憶類型。
 
 ## 具備完整多模態支援的 `conversational_v2` 代理程式
 **於 3.6 版推出**
@@ -31,7 +31,7 @@ OpenSearch 提供兩種類型的對話式代理程式：
 - **內容區塊**：包含文字、影像及文件的多模態陣列。
 - **訊息**：具備角色及多模態內容區塊的完整對話歷史記錄，可用於多輪互動。
 
-代理程式會傳回包含停止原因、助理訊息、記憶體工作階段 ID 及詞元使用指標的回應。`conversational_v2` 代理程式需要 `agentic_memory` 記憶體類型。
+代理程式會傳回包含停止原因、助理訊息、記憶工作階段 ID 及詞元使用指標的回應。`conversational_v2` 代理程式需要 `agentic_memory` 記憶類型。
 
 ### 先決條件
 
@@ -41,9 +41,9 @@ OpenSearch 提供兩種類型的對話式代理程式：
 
 若要註冊 `conversational_v2` 代理程式，請依照下列步驟操作。
 
-**步驟 1：建立記憶體容器**
+**步驟 1：建立記憶容器**
 
-註冊 `conversational_v2` 代理程式之前，請先使用 [Create Memory Container API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/create-memory-container/) 建立記憶體容器：
+註冊 `conversational_v2` 代理程式之前，請先使用 [Create Memory Container API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/create-memory-container/) 建立記憶容器：
 
 ```json
 POST /_plugins/_ml/memory_containers/_create
@@ -53,9 +53,9 @@ POST /_plugins/_ml/memory_containers/_create
 ```
 {% include copy-curl.html %}
 
-這會建立具有預設設定的記憶體容器。視您的使用情境而定，您可能會想設定其他選項，例如 `disable_session`、`embedding_model_id` 或記憶體策略。如需所有可用選項，請參閱 [Create Memory Container API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/create-memory-container/)。
+這會建立一個使用預設設定的記憶容器。視您的使用情境而定，您可能會想設定其他選項，例如 `disable_session`、`embedding_model_id` 或記憶策略。如需所有可用選項，請參閱 [Create Memory Container API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agentic-memory-apis/create-memory-container/)。
 
-回應會傳回 `memory_container_id`，供您在註冊代理程式時使用：
+回應會傳回一個 `memory_container_id`，您在註冊代理程式時會用到它：
 
 ```json
 {
@@ -75,7 +75,7 @@ POST /_plugins/_ml/agents/_register
   "type": "conversational_v2",
   "description": "A multimodal conversational agent",
   "model": {
-    "model_id": "us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    "model_id": "us.anthropic.claude-sonnet-4-6",
     "model_provider": "bedrock/converse",
     "credential": {
       "access_key": "<YOUR_AWS_ACCESS_KEY>",
@@ -158,48 +158,37 @@ POST /_plugins/_ml/agents/_register
 
 ### `conversational_v2` 代理程式回應格式
 
-`conversational_v2` 代理程式會傳回標準化的回應格式：
+`conversational_v2` 代理程式會以標準化格式傳回回應：
 
 ```json
 {
-  "inference_results": [
-    {
-      "output": [
-        {
-          "name": "response",
-          "dataAsMap": {
-            "stop_reason": "end_turn",
-            "message": {
-              "role": "assistant",
-              "content": [
-                {
-                  "text": "Based on your cluster, I found the following indexes..."
-                }
-              ]
-            },
-            "memory_id": "test_memory_id",
-            "metrics": {
-              "total_usage": {
-                "inputTokens": 1234,
-                "outputTokens": 567,
-                "totalTokens": 1801
-              }
-            }
-          }
-        }
-      ]
+  "stop_reason": "end_turn",
+  "message": {
+    "role": "assistant",
+    "content": [
+      {
+        "text": "Based on your cluster, I found the following indexes..."
+      }
+    ]
+  },
+  "memory_id": "test_memory_id",
+  "metrics": {
+    "total_usage": {
+      "inputTokens": 1234,
+      "outputTokens": 567,
+      "totalTokens": 1801
     }
-  ]
+  }
 }
 ```
 
-如需 `conversational_v2` 代理程式回應欄位，請參閱[`conversational_v2` 代理程式回應格式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-agent/#the-conversational_v2-agent-response-format)。
+如需 `conversational_v2` 代理程式回應欄位的相關資訊，請參閱 [`conversational_v2` 代理程式回應格式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/execute-agent/#the-conversational_v2-agent-response-format)。
 
 ### 限制
 
 下列限制適用於 `conversational_v2` 代理程式：
 
-- **記憶體類型**：僅支援 `agentic_memory`。`conversation_index` 記憶體類型與 `conversational_v2` 代理程式不相容。
+- **記憶類型**：僅支援 `agentic_memory`。`conversation_index` 記憶類型與 `conversational_v2` 代理程式不相容。
 - **串流**：不支援串流回應。
 - **掛鉤與上下文管理**：不支援代理程式執行掛鉤與上下文管理。
 
@@ -217,7 +206,7 @@ POST /_plugins/_ml/agents/_register
 
 ### 使用統一註冊方法
 
-下列範例使用統一註冊方法註冊 `conversational` 代理程式：
+以下範例使用統一註冊方法註冊 `conversational` 代理程式：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -226,7 +215,7 @@ POST /_plugins/_ml/agents/_register
   "type": "conversational",
   "description": "A conversational agent using unified registration",
   "model": {
-    "model_id": "us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    "model_id": "us.anthropic.claude-sonnet-4-6",
     "model_provider": "bedrock/converse",
     "credential": {
       "access_key": "<YOUR_AWS_ACCESS_KEY>",
@@ -253,7 +242,7 @@ POST /_plugins/_ml/agents/_register
 ```json
 POST /_plugins/_ml/agents/_register
 {
-  "name": "Test_Agent_For_ReAct_ClaudeV2",
+  "name": "Test_Agent_For_ReAct_Claude",
   "type": "conversational",
   "description": "This is a test agent",
   "llm": {
@@ -261,7 +250,7 @@ POST /_plugins/_ml/agents/_register
     "parameters": {
       "max_iteration": 5,
       "stop_when_no_tool_found": true,
-      "response_filter": "$.completion"
+      "response_filter": "$.content[0].text"
     }
   },
   "memory": {
@@ -301,8 +290,10 @@ POST /_plugins/_ml/agents/_register
 
 ## 後續步驟
 
-- 如要進一步了解如何註冊代理程式，請參閱 [Register Agent API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/)。
+- 若要進一步了解如何註冊代理程式，請參閱 [Register Agent API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/)。
 - 如需支援的工具清單，請參閱[工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/)。
 - 如需逐步教學，請參閱[代理程式與工具教學]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents-tools-tutorial/)。
-- 如需支援的 API，請參閱 [Agent APIs]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/)。
-- 如要使用工作流程範本建立代理程式與工具，請參閱 [AI 搜尋工作流程]({{site.url}}{{site.baseurl}}/vector-search/ai-search/workflows/index/)。
+- 如需支援的 API，請參閱[代理程式 API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/)。
+- 若要使用工作流程範本建立代理程式與工具，請參閱 [AI 搜尋工作流程]({{site.url}}{{site.baseurl}}/vector-search/ai-search/workflows/index/)。
+- 如需使用對話式代理程式建立 RAG 聊天機器人的教學，請參閱 [RAG 聊天機器人]({{site.url}}{{site.baseurl}}/tutorials/gen-ai/chatbots/rag-chatbot/)。
+- 如需使用對話式代理程式為 OpenSearch Dashboards 建置聊天機器人的教學，請參閱[建立您自己的聊天機器人]({{site.url}}{{site.baseurl}}/tutorials/gen-ai/chatbots/build-chatbot/)。

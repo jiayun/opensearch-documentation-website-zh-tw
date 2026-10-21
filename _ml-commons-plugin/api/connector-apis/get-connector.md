@@ -11,7 +11,7 @@ nav_order: 20
 
 此 API 會依連接器 ID 擷取連接器。
 
-### 端點
+## 端點
 
 ```json
 GET /_plugins/_ml/connectors/{connector_id}
@@ -28,9 +28,9 @@ GET /_plugins/_ml/connectors/N8AE1osB0jLkkocYjz7D
 
 ```json
 {
-  "name" : "BedRock Claude-Instant v1",
+  "name" : "BedRock Claude Sonnet 4.6",
   "version" : "1",
-  "description" : "Bedrock connector for Claude Instant testing",
+  "description" : "Bedrock connector for Claude Sonnet 4.6 testing",
   "protocol" : "aws_sigv4",
   "parameters" : {
     "endpoint" : "bedrock.us-east-1.amazonaws.com",
@@ -44,13 +44,15 @@ GET /_plugins/_ml/connectors/N8AE1osB0jLkkocYjz7D
     {
       "action_type" : "PREDICT",
       "method" : "POST",
-      "url" : "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-instant-v1/invoke",
+      "url" : "https://bedrock-runtime.us-east-1.amazonaws.com/model/us.anthropic.claude-sonnet-4-6/invoke",
       "headers" : {
         "x-amz-content-sha256" : "required",
         "content-type" : "application/json"
       },
-      "request_body" : "{\"prompt\":\"${parameters.prompt}\", \"max_tokens_to_sample\":${parameters.max_tokens_to_sample}, \"temperature\":${parameters.temperature},  \"anthropic_version\":\"${parameters.anthropic_version}\" }"
+      "request_body" : "{\"messages\":[{\"role\":\"user\",\"content\":\"${parameters.prompt}\"}], \"max_tokens\":${parameters.max_tokens}, \"temperature\":${parameters.temperature}, \"anthropic_version\":\"${parameters.anthropic_version}\" }"
     }
-  ]
+  ],
+  "created_time" : 1792088573796,
+  "last_updated_time" : 1792088573796
 }
 ```

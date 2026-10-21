@@ -13,7 +13,7 @@ nav_order: 20
 
 使用此 API 可依模型 ID 取得模型的控制器相關資訊。
 
-### 端點
+## 端點
 
 ```json
 GET /_plugins/_ml/controllers/{model_id}
@@ -34,7 +34,7 @@ GET /_plugins/_ml/controllers/T_S-cY0BKCJ3ot9qr0aP
 ```
 {% include copy-curl.html %}
 
-## 範例回應
+## 回應範例
 
 ```json
 {
@@ -52,7 +52,7 @@ GET /_plugins/_ml/controllers/T_S-cY0BKCJ3ot9qr0aP
 }
 ```
 
-如果模型沒有定義控制器，OpenSearch 會傳回錯誤：
+如果模型未定義控制器，OpenSearch 會傳回錯誤：
 
 ```json
 {
@@ -60,11 +60,11 @@ GET /_plugins/_ml/controllers/T_S-cY0BKCJ3ot9qr0aP
     "root_cause": [
       {
         "type": "status_exception",
-        "reason": "Failed to find model controller with the provided model ID: T_S-cY0BKCJ3ot9qr0aP"
+        "reason": "Failed to find model controller with the provided model ID"
       }
     ],
     "type": "status_exception",
-    "reason": "Failed to find model controller with the provided model ID: T_S-cY0BKCJ3ot9qr0aP"
+    "reason": "Failed to find model controller with the provided model ID"
   },
   "status": 404
 }

@@ -26,7 +26,7 @@ GET /_plugins/_ml/mcp/tools/_list
 ```
 {% include copy-curl.html %}
 
-## 回應範例
+## 範例回應
 
 OpenSearch 會回應 MCP 工具清單：
 
@@ -66,3 +66,7 @@ OpenSearch 會回應 MCP 工具清單：
     ]
 }
 ```
+
+## 必要權限
+
+如果您使用 Security 外掛程式，請確認您具備適當的權限：`cluster:admin/opensearch/ml/mcp_tools/list`。

@@ -22,7 +22,7 @@ sink:
       hosts: ["https://opensearch:9200"]
       index: my-index
       username: admin
-      password: admin-password
+      password: "<custom-admin-password>"
       insecure: true
 
       dlq:
@@ -55,7 +55,7 @@ DLQ 支援下列組態選項。
 `bucket` | 是 | 字串 | DLQ 將失敗記錄輸出至其中的儲存貯體名稱。
 `key_path_prefix` | 否 | 字串 | Amazon Simple Storage Service (Amazon S3) 儲存貯體中使用的 `key_prefix`。預設為 `""`。支援時間值模式變數，例如 `/%{yyyy}/%{MM}/%{dd}`，包括 [Java DateTimeFormatter](https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html) 中列出的任何變數。例如，使用 `/%{yyyy}/%{MM}/%{dd}` 模式時，您可以將 `key_prefix` 設為 `/2023/01/24`。
 `region` | 否 | 字串 | S3 儲存貯體的 AWS 區域。預設為 `us-east-1`。
-`sts_role_arn` | 否 | 字串 | DLQ 為了寫入 AWS S3 儲存貯體而擔任的 STS 角色。預設為 `null`，其使用標準 SDK 的憑證行為。若要使用此選項，S3 儲存貯體必須已設定 `s3:PutObject` 權限。
+`sts_role_arn` | 否 | 字串 | DLQ 為了寫入 AWS S3 儲存貯體而擔任的 STS 角色。預設為 `null`，其使用標準 SDK 的認證資訊行為。若要使用此選項，S3 儲存貯體必須已設定 `s3:PutObject` 權限。
 `bucket_owner` | 否 | 字串 | S3 儲存貯體擁有者的 AWS 帳戶 ID。設定後，Data Prepper 會將此值以 `expectedBucketOwner` 傳遞至 S3，若與實際的儲存貯體擁有者不符，S3 會拒絕寫入。預設為 `null`，其不會執行明確的儲存貯體擁有者檢查。
 
 將 DLQ 與 OpenSearch 輸出端搭配使用時，您可以設定 [`max_retries`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sinks/opensearch/#configure-max_retries) 選項，在輸出端達到重試次數上限後，將失敗的記錄傳送至 DLQ。

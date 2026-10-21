@@ -1,18 +1,18 @@
 ---
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: "使用 Amazon Bedrock 上的 Cohere Rerank 對搜尋結果重新排序"
+title: "使用 Amazon Bedrock 上的 Cohere Rerank 對搜尋結果重新排名"
 parent: Reranking search results
 nav_order: 95
 redirect_from:
   - /vector-search/tutorials/reranking/reranking-cohere-bedrock/
 ---
 
-# 使用 Amazon Bedrock 上的 Cohere Rerank 對搜尋結果重新排序
+# 使用 Amazon Bedrock 上的 Cohere Rerank 對搜尋結果重新排名
 
-本教學說明如何在 [Amazon OpenSearch Service](https://docs.aws.amazon.com/opensearch-service/) 與自行管理的 OpenSearch 中，使用託管於 Amazon Bedrock 的 [Cohere Rerank 模型](https://docs.aws.amazon.com/bedrock/latest/userguide/rerank-supported.html) 實作搜尋結果重新排序。
+本教學說明如何在 [Amazon OpenSearch Service](https://docs.aws.amazon.com/opensearch-service/) 與自行管理的 OpenSearch 中，使用託管於 Amazon Bedrock 的 [Cohere Rerank 模型](https://docs.aws.amazon.com/bedrock/latest/userguide/rerank-supported.html) 實作搜尋結果重新排名。
 
-[重新排序管線]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/reranking-search-results/) 可以對搜尋結果重新排序，並針對搜尋結果中的每份文件，計算其相對於搜尋查詢的相關性分數。相關性分數由交叉編碼器模型計算。
+[重新排名管線]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/reranking-search-results/) 可以對搜尋結果重新排名，並針對搜尋結果中的每份文件，計算其相對於搜尋查詢的相關性分數。相關性分數由交叉編碼器模型計算。
 
 請將以 `your_` 前綴開頭的預留位置替換為您自己的值。
 {: .note}
@@ -53,7 +53,7 @@ print(json.dumps(results, indent=2))
 ```
 {% include copy.html %}
 
-回應包含依相關性分數排序的重新排序結果：
+回應包含依相關性分數排序的重新排名結果：
 
 ```json
 [
@@ -110,7 +110,7 @@ print(json.dumps(sorted(results, key=lambda x: x['index']), indent=2))
 
 若要為模型建立連接器，請傳送下列請求。
 
-如果您使用的是自行管理的 OpenSearch，請提供您的 AWS 憑證：
+如果您使用自行管理的 OpenSearch，請提供您的 AWS 認證資訊：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -135,7 +135,7 @@ POST /_plugins/_ml/connectors/_create
     {
       "action_type": "PREDICT",
       "method": "POST",
-      "url": "https://${parameters. endpoint}.${parameters.region}.amazonaws.com/model/${parameters.model_name}/invoke",
+      "url": "https://${parameters.endpoint}.${parameters.region}.amazonaws.com/model/${parameters.model_name}/invoke",
       "headers": {
         "x-amz-content-sha256": "required",
         "content-type": "application/json"
@@ -192,7 +192,7 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-如果您使用的是 Amazon OpenSearch Service，您可以提供允許存取 Amazon Bedrock 的 AWS Identity and Access Management (IAM) 角色 Amazon Resource Name (ARN)：
+如果您使用 Amazon OpenSearch Service，則可以提供允許存取 Amazon Bedrock 的 AWS Identity and Access Management (IAM) 角色 Amazon Resource Name (ARN)：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -215,7 +215,7 @@ POST /_plugins/_ml/connectors/_create
     {
       "action_type": "PREDICT",
       "method": "POST",
-      "url": "https://${parameters. endpoint}.${parameters.region}.amazonaws.com/model/${parameters.model_name}/invoke",
+      "url": "https://${parameters.endpoint}.${parameters.region}.amazonaws.com/model/${parameters.model_name}/invoke",
       "headers": {
         "x-amz-content-sha256": "required",
         "content-type": "application/json"
@@ -270,8 +270,9 @@ POST /_plugins/_ml/connectors/_create
   ]
 }
 ```
+{% include copy-curl.html %}
 
-如需更多資訊，請參閱 [AWS 文件](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ml-amazon-connector.html)。
+如需詳細資訊，請參閱 [AWS 文件](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ml-amazon-connector.html)。
 
 使用回應中的連接器 ID 來註冊並部署模型：
 
@@ -286,7 +287,7 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-請記下回應中的模型 ID；後續步驟將會用到。
+請記下回應中的模型 ID；您將在後續步驟中使用它。
 
 使用 Predict API 測試模型：
 
@@ -306,7 +307,7 @@ POST _plugins/_ml/models/your_model_id/_predict
 ```
 {% include copy-curl.html %}
 
-或者，您也可以依照下列方式測試模型：
+或者，您也可以如下所示測試模型：
 
 ```json
 POST _plugins/_ml/_predict/text_similarity/your_model_id
@@ -322,9 +323,9 @@ POST _plugins/_ml/_predict/text_similarity/your_model_id
 ```
 {% include copy-curl.html %}
 
-連接器 `pre_process_function` 會將輸入轉換為先前所示參數所需的格式。
+連接器 `pre_process_function` 會將輸入轉換成先前所示參數所需的格式。
 
-預設情況下，Amazon Bedrock Rerank API 的輸出具有下列格式：
+根據預設，Cohere Rerank 模型的輸出格式如下：
 
 ```json
 [
@@ -347,7 +348,7 @@ POST _plugins/_ml/_predict/text_similarity/your_model_id
 ]
 ```
 
-連接器 `post_process_function` 會將模型的輸出轉換為 [重新排序處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/) 可以解讀的格式，並依索引排序結果。此調整後的格式如下：
+連接器 `post_process_function` 會將模型的輸出轉換成[重新排名處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/) 可解讀的格式，並依索引排序結果。調整後的格式如下：
 
 ```json
 {
@@ -401,11 +402,11 @@ POST _plugins/_ml/_predict/text_similarity/your_model_id
 }
 ```
 
-回應包含四個 `similarity` 物件。對於每個 `similarity` 物件，`data` 陣列包含每個文件相對於查詢的相關性分數。`similarity` 物件會依照輸入文件的順序提供——第一個物件對應第一個文件。這與 Cohere Rerank 模型的預設輸出不同，後者會依相關性分數排序文件。文件順序會在 `connector.post_process.cohere.rerank` 後處理函式中變更，讓輸出與重新排序管線相容。
+回應包含四個 `similarity` 物件。對於每個 `similarity` 物件，`data` 陣列會包含每份文件相對於查詢的相關性分數。`similarity` 物件會依輸入文件的順序提供——第一個物件對應第一份文件。這與 Cohere Rerank 模型的預設輸出不同，後者會依相關性分數排序文件。連接器 `post_process_function` 會變更文件順序，使輸出與重新排名管線相容。
 
-## 步驟 2：設定重新排序管線
+## 步驟 2：設定重新排名管線
 
-請依照下列步驟設定重新排序管線。
+請依照下列步驟設定重新排名管線。
 
 ### 步驟 2.1：匯入測試資料
 
@@ -424,9 +425,9 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-### 步驟 2.2：建立重新排序管線
+### 步驟 2.2：建立重新排名管線
 
-使用 Cohere Rerank 模型建立重新排序管線：
+使用 Cohere Rerank 模型建立重新排名管線：
 
 ```json
 PUT /_search/pipeline/rerank_pipeline_bedrock
@@ -448,14 +449,14 @@ PUT /_search/pipeline/rerank_pipeline_bedrock
 ```
 {% include copy-curl.html %}
 
-如果您在 `document_fields` 中提供多個欄位名稱，會先串接所有欄位的值，然後再執行重新排序。
+如果您在 `document_fields` 中提供多個欄位名稱，會先串接所有欄位的值，然後再執行重新排名。
 {: .note}
 
-### 步驟 2.3：測試重新排序
+### 步驟 2.3：測試重新排名
 
 若要限制傳回的結果數量，您可以指定 `size` 參數。例如，將 `"size": 2` 設為傳回前兩份文件。
 
-首先，在不使用重新排序管線的情況下測試查詢：
+首先，在不使用重新排名管線的情況下測試查詢：
 
 ```json
 POST my-test-data/_search
@@ -564,7 +565,7 @@ POST my-test-data/_search
 }
 ```
 
-接著，使用重新排序管線測試查詢：
+接著，使用重新排名管線測試查詢：
 
 ```json
 POST my-test-data/_search?search_pipeline=rerank_pipeline_bedrock
@@ -683,7 +684,7 @@ POST my-test-data/_search?search_pipeline=rerank_pipeline_bedrock
 }
 ```
 
-若要避免將查詢寫兩次，請使用 `query_text_path` 而非 `query_text`，如下所示：
+為了避免重複撰寫查詢，請使用 `query_text_path` 而非 `query_text`，如下所示：
 
 ```json
 POST my-test-data/_search?search_pipeline=rerank_pipeline_bedrock
@@ -710,3 +711,9 @@ POST my-test-data/_search?search_pipeline=rerank_pipeline_bedrock
 }
 ```
 {% include copy-curl.html %}
+
+## 相關文件
+
+- [重新排名搜尋結果]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/reranking-search-results/)
+- [重新排名處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/)
+- [第三方 ML 平台的連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)

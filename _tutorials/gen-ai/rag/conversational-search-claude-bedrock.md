@@ -53,13 +53,13 @@ POST _bulk
 
 ### 步驟 1.1：建立連接器並註冊模型
 
-首先，為 Claude 模型建立連接器。在此範例中，您將使用 Anthropic Claude 3.5 Sonnet：
+首先，為 Claude 模型建立連接器。在此範例中，您將使用 Anthropic Claude Sonnet 4.6：
 
 ```json
 POST _plugins/_ml/connectors/_create
 {
-    "name": "Amazon Bedrock claude v3",
-    "description": "Test connector for Amazon Bedrock claude v3",
+    "name": "Amazon Bedrock Claude Sonnet 4.6",
+    "description": "Test connector for Amazon Bedrock Claude Sonnet 4.6",
     "version": 1,
     "protocol": "aws_sigv4",
     "credential": {
@@ -70,10 +70,9 @@ POST _plugins/_ml/connectors/_create
     "parameters": {
         "region": "your_aws_region",
         "service_name": "bedrock",
-        "model": "anthropic.claude-3-5-sonnet-20240620-v1:0",
+        "model": "us.anthropic.claude-sonnet-4-6",
         "system_prompt": "you are a helpful assistant.",
         "temperature": 0.0,
-        "top_p": 0.9,
         "max_tokens": 1000
     },
     "actions": [
@@ -84,31 +83,29 @@ POST _plugins/_ml/connectors/_create
                 "content-type": "application/json"
             },
             "url": "https://bedrock-runtime.${parameters.region}.amazonaws.com/model/${parameters.model}/converse",
-            "request_body": "{ \"system\": [{\"text\": \"${parameters.system_prompt}\"}], \"messages\": ${parameters.messages} , \"inferenceConfig\": {\"temperature\": ${parameters.temperature}, \"topP\": ${parameters.top_p}, \"maxTokens\": ${parameters.max_tokens}} }"
+            "request_body": "{ \"system\": [{\"text\": \"${parameters.system_prompt}\"}], \"messages\": ${parameters.messages} , \"inferenceConfig\": {\"temperature\": ${parameters.temperature}, \"maxTokens\": ${parameters.max_tokens}} }"
         }
     ]
 }
 ```
 {% include copy-curl.html %}
 
-若要使用 Claude 2，請將 `model` 指定為 `anthropic.claude-v2`，而非 `anthropic.claude-3-5-sonnet-20240620-v1:0`。
-
-請記下連接器 ID；您將使用它來註冊模型。
+記下連接器 ID；您稍後會用它來註冊模型。
 
 接著，註冊模型：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
 {
-    "name": "Bedrock Claude3.5 model",
-    "description": "Bedrock Claude3.5 model",
+    "name": "Bedrock Claude Sonnet 4.6 model",
+    "description": "Bedrock Claude Sonnet 4.6 model",
     "function_name": "remote",
     "connector_id": "your_connector_id"
 }
 ```
 {% include copy-curl.html %}
 
-請記下模型 ID；您將在下列步驟中使用它。
+記下模型 ID；您會在後續步驟中使用它。
 
 測試模型：
 
@@ -132,7 +129,7 @@ POST /_plugins/_ml/models/your_model_id/_predict
 {% include copy-curl.html %}
 
 
-回應中包含模型生成的文字：
+回應包含模型產生的文字：
 
 ```json
 {
@@ -143,13 +140,13 @@ POST /_plugins/_ml/models/your_model_id/_predict
           "name": "response",
           "dataAsMap": {
             "metrics": {
-              "latencyMs": 955.0
+              "latencyMs": 830
             },
             "output": {
               "message": {
                 "content": [
                   {
-                    "text": "Hello! How can I assist you today? Feel free to ask me any questions or let me know if you need help with anything."
+                    "text": "Hello! How are you doing? Is there something I can help you with today?"
                   }
                 ],
                 "role": "assistant"
@@ -157,9 +154,14 @@ POST /_plugins/_ml/models/your_model_id/_predict
             },
             "stopReason": "end_turn",
             "usage": {
-              "inputTokens": 14.0,
-              "outputTokens": 30.0,
-              "totalTokens": 44.0
+              "cacheReadInputTokenCount": 0,
+              "cacheReadInputTokens": 0,
+              "cacheWriteInputTokenCount": 0,
+              "cacheWriteInputTokens": 0,
+              "inputTokens": 15,
+              "outputTokens": 23,
+              "serverToolUsage": {},
+              "totalTokens": 38
             }
           }
         }
@@ -211,7 +213,7 @@ GET /qa_demo/_search?search_pipeline=my-conversation-search-pipeline-claude
   ],
   "ext": {
     "generative_qa_parameters": {
-      "llm_model": "bedrock-converse/anthropic.claude-3-sonnet-20240229-v1:0",
+      "llm_model": "bedrock-converse/us.anthropic.claude-sonnet-4-6",
       "llm_question": "What's the population increase of New York City from 2021 to 2023?",
       "context_size": 5
     }
@@ -220,7 +222,7 @@ GET /qa_demo/_search?search_pipeline=my-conversation-search-pipeline-claude
 ```
 {% include copy-curl.html %}
 
-回應包含模型的回答及相關文件：
+回應包含模型答案與相關文件：
 
 ```json
 {
@@ -259,7 +261,7 @@ GET /qa_demo/_search?search_pipeline=my-conversation-search-pipeline-claude
 
 ### 步驟 1.3：設定對話式搜尋
 
-請依照下列步驟，將對話歷程儲存在記憶中，以設定對話式搜尋。 
+依照下列步驟設定對話式搜尋，將對話歷程儲存在記憶中。
 
 1. 建立記憶：
 
@@ -271,7 +273,7 @@ GET /qa_demo/_search?search_pipeline=my-conversation-search-pipeline-claude
     ```
     {% include copy-curl.html %}
 
-    回應包含記憶 ID：
+    回應中包含記憶 ID：
 
     ```json
     {
@@ -295,7 +297,7 @@ GET /qa_demo/_search?search_pipeline=my-conversation-search-pipeline-claude
     ],
     "ext": {
         "generative_qa_parameters": {
-        "llm_model": "bedrock-converse/anthropic.claude-3-sonnet-20240229-v1:0",
+        "llm_model": "bedrock-converse/us.anthropic.claude-sonnet-4-6",
         "llm_question": "What's the population increase of New York City from 2021 to 2023?",
         "context_size": 5,
         "memory_id": "sBAqY5UBSzdNxlHvrSJK"
@@ -305,7 +307,7 @@ GET /qa_demo/_search?search_pipeline=my-conversation-search-pipeline-claude
     ```
     {% include copy-curl.html %}
 
-    回應包含模型的回答及相關文件：
+    回應中包含模型答案與相關文件：
 
     ```json
     {
@@ -359,7 +361,7 @@ GET /qa_demo/_search?search_pipeline=my-conversation-search-pipeline-claude
     ],
     "ext": {
         "generative_qa_parameters": {
-        "llm_model": "bedrock-converse/anthropic.claude-3-sonnet-20240229-v1:0",
+        "llm_model": "bedrock-converse/us.anthropic.claude-sonnet-4-6",
         "llm_question": "can you compare the population increase of Chicago with New York City",
         "context_size": 5,
         "memory_id": "sBAqY5UBSzdNxlHvrSJK"
@@ -369,7 +371,7 @@ GET /qa_demo/_search?search_pipeline=my-conversation-search-pipeline-claude
     ```
     {% include copy-curl.html %}
 
-    模型使用記憶中的對話歷程，將芝加哥的人口資料與先前討論過的紐約市統計資料進行比較：
+    模型會利用記憶中的對話歷程，將芝加哥的人口資料與先前討論過的紐約市統計數據進行比較：
 
     ```json
     {
@@ -413,18 +415,15 @@ GET /qa_demo/_search?search_pipeline=my-conversation-search-pipeline-claude
 
 請依照下列步驟，使用 Amazon Bedrock Invoke API 進行對話式搜尋。
 
-Amazon Bedrock Invoke API 不支援 Anthropic Claude 3.x 模型，因為這些模型需要不同的介面。
-{: .important}
-
 ### 步驟 2.1：建立連接器並註冊模型
 
-首先，為 Claude 模型建立連接器。在此範例中，您將使用 Anthropic Claude v2：
+首先，為 Claude 模型建立連接器。在此範例中，您將透過 Anthropic Claude Messages API 使用 Anthropic Claude Sonnet 4.6：
 
 ```json
 POST _plugins/_ml/connectors/_create
 {
-    "name": "Bedrock Claude2",
-    "description": "Connector for Bedrock Claude2",
+    "name": "Bedrock Claude Sonnet 4.6 Invoke",
+    "description": "Connector for Bedrock Claude Sonnet 4.6 using the Invoke API",
     "version": 1,
     "protocol": "aws_sigv4",
     "credential": {
@@ -435,7 +434,7 @@ POST _plugins/_ml/connectors/_create
     "parameters": {
         "region": "your_aws_region",
         "service_name": "bedrock",
-        "model": "anthropic.claude-v2"
+        "model": "us.anthropic.claude-sonnet-4-6"
     },
     "actions": [
         {
@@ -445,29 +444,32 @@ POST _plugins/_ml/connectors/_create
                 "content-type": "application/json"
             },
             "url": "https://bedrock-runtime.${parameters.region}.amazonaws.com/model/${parameters.model}/invoke",
-            "request_body": "{\"prompt\":\"\\n\\nHuman: ${parameters.inputs}\\n\\nAssistant:\",\"max_tokens_to_sample\":300,\"temperature\":0.5,\"top_k\":250,\"top_p\":1,\"stop_sequences\":[\"\\\\n\\\\nHuman:\"]}"
+            "request_body": "{\"anthropic_version\":\"bedrock-2023-05-31\",\"max_tokens\":300,\"temperature\":0.5,\"top_k\":250,\"messages\":[{\"role\":\"user\",\"content\":[{\"type\":\"text\",\"text\":\"${parameters.inputs}\"}]}]}",
+            "post_process_function": "\n  return '{' +\n    '\"name\": \"response\",' +\n    '\"dataAsMap\": {' +\n      '\"completion\":\"' + escape(params.content[0].text) + '\"}' +\n  '}';\n"
         }
     ]
 }
 ```
 {% include copy-curl.html %}
 
-記下連接器 ID，稍後會用它來註冊模型。
+`post_process_function` 會在 `completion` 欄位中傳回模型的答案，RAG 處理器會針對 `bedrock/claude` 模型從該欄位讀取答案。
+
+請記下連接器 ID，您將使用它來註冊模型。
 
 接著，註冊模型：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
 {
-    "name": "Bedrock Claude2 model",
+    "name": "Bedrock Claude Sonnet 4.6 Invoke model",
     "function_name": "remote",
-    "description": "Bedrock Claude2 model",
+    "description": "Bedrock Claude Sonnet 4.6 Invoke model",
     "connector_id": "your_connector_id"
 }
 ```
 {% include copy-curl.html %}
 
-記下模型 ID，後續步驟會用到它。
+請記下模型 ID，您將在後續步驟中使用它。
 
 測試模型：
 
@@ -481,7 +483,7 @@ POST /_plugins/_ml/models/your_model_id/_predict
 ```
 {% include copy-curl.html %}
 
-回應會包含模型產生的文字：
+回應包含模型產生的文字：
 
 ```json
 {
@@ -491,10 +493,7 @@ POST /_plugins/_ml/models/your_model_id/_predict
         {
           "name": "response",
           "dataAsMap": {
-            "type": "completion",
-            "completion": " The Los Angeles Dodgers won the 2020 World Series, defeating the Tampa Bay Rays 4 games to 2. The World Series was played at a neutral site in Arlington, Texas due to the COVID-19 pandemic. It was the Dodgers' first World Series championship since 1988.",
-            "stop_reason": "stop_sequence",
-            "stop": "\n\nHuman:"
+            "completion": "The **Los Angeles Dodgers** won the 2020 World Series, defeating the Tampa Bay Rays 4 games to 2. It was the Dodgers' first World Series title since 1988. The series was played at a neutral site (Globe Life Field in Arlington, Texas) due to the COVID-19 pandemic."
           }
         }
       ],
@@ -506,16 +505,16 @@ POST /_plugins/_ml/models/your_model_id/_predict
 
 ### 步驟 2.2：設定 RAG
 
-若要設定 RAG，請建立一個包含 RAG 處理器的搜尋管線：
+若要設定 RAG，請建立包含 RAG 處理器的搜尋管線：
 
 ```json
-PUT /_search/pipeline/my-conversation-search-pipeline-claude2
+PUT /_search/pipeline/my-conversation-search-pipeline-claude-invoke
 {
   "response_processors": [
     {
       "retrieval_augmented_generation": {
         "tag": "Demo pipeline",
-        "description": "Demo pipeline Using Bedrock Claude2",
+        "description": "Demo pipeline Using Bedrock Claude Invoke API",
         "model_id": "your_model_id",
         "context_field_list": [
           "text"
@@ -529,10 +528,10 @@ PUT /_search/pipeline/my-conversation-search-pipeline-claude2
 ```
 {% include copy-curl.html %}
 
-執行基本的 RAG 搜尋，不儲存對話歷史記錄：
+執行不儲存對話歷程記錄的基本 RAG 搜尋：
 
 ```json
-GET /qa_demo/_search?search_pipeline=my-conversation-search-pipeline-claude2
+GET /qa_demo/_search?search_pipeline=my-conversation-search-pipeline-claude-invoke
 {
   "query": {
     "match": {
@@ -559,4 +558,11 @@ GET /qa_demo/_search?search_pipeline=my-conversation-search-pipeline-claude2
 
 ### 步驟 2.3：設定對話式搜尋
 
-請繼續前往 [步驟 1.3](#step-13-configure-conversational-search) 以設定對話式搜尋。
+繼續前往[步驟 1.3](#step-13-configure-conversational-search)以設定對話式搜尋。
+
+## 相關文件
+
+- [使用 RAG 的對話式搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/conversational-search/)
+- [檢索增強生成處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rag-processor/)
+- [第三方機器學習平台的連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)
+- [記憶 API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/memory-apis/)

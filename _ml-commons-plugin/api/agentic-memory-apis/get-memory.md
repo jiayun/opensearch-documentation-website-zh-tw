@@ -1,13 +1,13 @@
 ---
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: "取得代理程式記憶"
+title: "取得代理記憶"
 parent: Agentic memory APIs
 grand_parent: ML Commons APIs
 nav_order: 51
 ---
 
-# Get Agentic Memory API
+# 取得代理記憶（agentic memory）API
 **3.3 版新增**
 {: .label .label-purple }
 
@@ -41,26 +41,37 @@ GET /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/working/XyEuiJ
 ```json
 {
   "memory_container_id": "HudqiJkB1SltqOcZusVU",
-  "memory_type": "conversation",
+  "payload_type": "conversational",
   "messages": [
     {
       "role": "user",
-      "content_text": "I'm Bob, I really like swimming."
+      "content": [
+        {
+          "text": "I'm Bob, I really like swimming.",
+          "type": "text"
+        }
+      ]
     },
     {
       "role": "assistant",
-      "content_text": "Cool, nice. Hope you enjoy your life."
+      "content": [
+        {
+          "text": "Cool, nice. Hope you enjoy your life.",
+          "type": "text"
+        }
+      ]
     }
   ],
   "namespace": {
     "user_id": "bob",
     "session_id": "S-dqiJkB1SltqOcZ1cYO"
   },
-  "metadata": {
-    "status": "checkpoint",
-    "branch": "{\"root_event_id\":\"228nadfs879mtgk\",\"branch_name\":\"high\"}"
-  },
+  "namespace_size": 2,
   "infer": true,
+  "metadata": {
+    "branch": "{\"root_event_id\":\"228nadfs879mtgk\",\"branch_name\":\"high\"}",
+    "status": "checkpoint"
+  },
   "tags": {
     "topic": "personal info"
   },
@@ -110,22 +121,23 @@ GET /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/sessions/CcxjT
 ```json
 {
   "memory_container_id": "HudqiJkB1SltqOcZusVU",
+  "summary": "This is a test session",
+  "created_time": 1757956735881,
+  "last_updated_time": 1757956735881,
   "namespace": {
     "user_id": "bob"
-  },
-  "created_time": "2025-09-15T17:18:55.881276939Z",
-  "last_updated_time": "2025-09-15T17:18:55.881276939Z"
+  }
 }
 ```
 
-## 範例請求：取得歷史記憶
+## 範例請求：取得歷程記憶
 
 ```json
 GET /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/history/eMxnTpkBvwXRq366hmAU
 ```
 {% include copy-curl.html %}
 
-## 範例回應：歷史 
+## 範例回應：歷程 
 
 ```json
 {
@@ -159,14 +171,21 @@ GET /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/history/eMxnTp
 | 欄位                 | 資料類型 | 說明                                             |
 |:----------------------| :--- |:--------------------------------------------------------|
 | `memory_container_id` | 字串 | 記憶容器的 ID。                         |
-| `payload_type`        | 字串 | 負載類型。有效值為 `conversation` 與 `data`。          |
-| `messages`            | 陣列 | 對話訊息的陣列 (僅適用於 `conversation` 記憶類型)。 | 
-| `namespace`           | 物件 | 此記憶的命名空間上下文。                  |
-| `metadata`            | 物件 | 與此記憶相關聯的其他中繼資料。         |
-| `tags`                | 物件 | 用於分類的相關標籤。                     |
+| `payload_type`        | 字串 | 承載資料的類型。有效值為 `conversational` 和 `data`。          |
+| `messages`            | 陣列 | 對話訊息的陣列（僅適用於 `conversational` 承載類型）。 |
+| `structured_data`     | 物件 | 結構化資料內容（僅適用於 `data` 承載類型）。 |
+| `structured_data_blob` | 物件 | 未編製索引而儲存的結構化資料。 |
+| `binary_data`         | 字串 | Base64 編碼的二進位資料內容。 |
+| `message_id`          | 整數 | 訊息在對話中的序號。 |
+| `checkpoint_id`       | 字串 | 與記憶一同儲存的檢查點識別碼。 |
+| `namespace`           | 物件 | 此記憶的命名空間脈絡。                  |
+| `namespace_size`      | 整數 | 命名空間欄位的數量。 |
+| `owner_id`            | 字串 | 記憶擁有者的 ID。僅在啟用 Security 外掛程式時才會出現。 |
+| `metadata`            | 物件 | 與記憶相關聯的其他中繼資料。         |
+| `tags`                | 物件 | 用於分類的相關聯標籤。                     |
 | `infer`               | 布林值 | 此記憶是否已啟用推論。          |
-| `created_time`        | Long | 記憶建立的時間戳記。                  |
-| `last_updated_time`   | Long | 記憶最後更新的時間戳記。             |
+| `created_time`        | 長整數 | 建立記憶的時間戳記。                  |
+| `last_updated_time`   | 長整數 | 上次更新記憶的時間戳記。             |
 
 ### 長期記憶回應欄位
 
@@ -175,15 +194,16 @@ GET /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/history/eMxnTp
 | 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
 | `memory` | 字串 | 擷取出的長期記憶事實。 |
-| `strategy_type` | 字串 | 所使用的記憶策略類型 (例如 `SEMANTIC`、`SUMMARY` 或 `USER_PREFERENCE`)。 |
-| `namespace` | 物件 | 此記憶的命名空間上下文。 |
+| `strategy_type` | 字串 | 所使用的記憶策略類型（例如 `SEMANTIC`、`SUMMARY` 或 `USER_PREFERENCE`）。 |
+| `namespace` | 物件 | 此記憶的命名空間脈絡。 |
 | `namespace_size` | 整數 | 命名空間的數量。 |
-| `tags` | 物件 | 用於分類的相關標籤。 |
-| `created_time` | Long | 記憶建立的時間戳記。 |
-| `last_updated_time` | Long | 記憶最後更新的時間戳記。 |
-| `memory_embedding` | 陣列 | 記憶內容的向量嵌入 (顯示時會截斷)。 |
+| `tags` | 物件 | 用於分類的關聯標籤。 |
+| `created_time` | Long | 記憶建立時的時間戳記。 |
+| `last_updated_time` | Long | 記憶最後更新時的時間戳記。 |
+| `memory_embedding` | 陣列 | 記憶內容的向量嵌入（顯示時會截斷）。 |
 | `owner_id` | 字串 | 記憶擁有者的 ID。 |
 | `strategy_id` | 字串 | 策略執行個體的唯一識別碼。 |
+| `pinned` | 布林值 | 記憶是否已釘選，且不受容器保留政策的限制。 |
 
 ### 工作階段回應欄位
 
@@ -192,13 +212,19 @@ GET /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/history/eMxnTp
 | 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
 | `memory_container_id` | 字串 | 記憶容器的 ID。 |
-| `namespace` | 物件 | 此工作階段的命名空間上下文。 |
-| `created_time` | 字串 | 工作階段建立的時間戳記。 |
-| `last_updated_time` | 字串 | 工作階段最後更新的時間戳記。 |
+| `summary` | 字串 | 工作階段摘要。 |
+| `metadata` | 物件 | 與工作階段相關聯的其他中繼資料。 |
+| `agents` | 物件 | 參與工作階段的代理程式相關資訊。 |
+| `additional_info` | 物件 | 工作階段的其他資訊。 |
+| `namespace` | 物件 | 此工作階段的命名空間脈絡。 |
+| `owner_id` | 字串 | 工作階段擁有者的 ID。僅在啟用 Security 外掛程式時出現。 |
+| `pinned` | 布林值 | 工作階段是否已釘選，且不受容器保留原則的限制。 |
+| `created_time` | Long | 建立工作階段的時間戳記。 |
+| `last_updated_time` | Long | 上次更新工作階段的時間戳記。 |
 
-### 歷史回應欄位
+### 歷程回應欄位
 
-下表列出所有歷史回應本文欄位。
+下表列出所有歷程回應本文的欄位。
 
 | 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
@@ -207,8 +233,9 @@ GET /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/history/eMxnTp
 | `memory_id` | 字串 | 受影響記憶的 ID。 |
 | `action` | 字串 | 操作類型：`ADD`、`UPDATE` 或 `DELETE`。 |
 | `after` | 物件 | 操作後的記憶內容。 |
-| `before` | 物件 | 操作前的記憶內容 (適用於 `UPDATE` 操作)。 |
-| `namespace` | 物件 | 此記憶的命名空間上下文。 |
+| `before` | 物件 | 操作前的記憶內容（適用於 `UPDATE` 操作）。 |
+| `namespace` | 物件 | 此記憶的命名空間脈絡。 |
 | `namespace_size` | 整數 | 命名空間的數量。 |
 | `tags` | 物件 | 用於分類的相關標籤。 |
-| `created_time` | Long | 操作發生的時間戳記。 |
+| `error` | 字串 | 操作失敗時的錯誤訊息。 |
+| `created_time` | 長整數 | 操作發生的時間戳記。 |

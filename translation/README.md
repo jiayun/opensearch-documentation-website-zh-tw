@@ -4,7 +4,7 @@ This directory holds the state of the Taiwan Traditional Chinese (zh-TW)
 translation of the OpenSearch documentation on branch `3.9-zh-tw`. The
 pipeline is `scripts/translation.py`.
 
-The source inventory contains 1,873 pages. Translation and independent review run in batches; use
+The source inventory contains 1,883 pages. Translation and independent review run in batches; use
 `python3 scripts/translation.py status` for live completion, pending work and errors.
 
 ## Layout
@@ -20,7 +20,7 @@ The source inventory contains 1,873 pages. Translation and independent review ru
 | `translation/schemas/*.json` | yes | JSON Schemas for the model request/result formats |
 | `.translation-cache/` | no (ignored) | Validated chunk results, approved reviews, commit journal, run logs |
 
-Baseline commit: `390f28e96b3de986e5cd7abcdd79ada0501bc840`. Pages are all
+Baseline commit: `4a3a535c884008720e0c51664cc0829395c9b6c5`. Pages are all
 `output: true` collections in the baseline `_config.yml` (files with front
 matter) plus `index.md`, `search.md` and `404.md`. `translation/` (including
 the inventory and source store) is excluded from the Jekyll build by
@@ -79,7 +79,7 @@ per-provider `usage` line. Details are in
 
 `_getting-started/index.md`, `_getting-started/intro.md`,
 `_getting-started/quickstart.md`, `_api-reference/index-apis/create-index.md`,
-`_query-dsl/full-text/match.md`, `_data-prepper/getting-started.md`,
+`_query-dsl/full-text/match.md`, `_data-prepper/getting-started/index.md`,
 `_benchmark/index.md`, `_clients/index.md`. All exist at the baseline. If a
 requested path is missing, `run` resolves it to a same-topic page in the same
 directory and prints a `note:`; it aborts before any model call when nothing

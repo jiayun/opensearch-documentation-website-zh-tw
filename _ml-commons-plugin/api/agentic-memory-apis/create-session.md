@@ -7,13 +7,13 @@ grand_parent: ML Commons APIs
 nav_order: 40
 ---
 
-# 建立工作階段
-**於 3.3 版推出**
+# 建立工作階段 API
+**3.3 版新增**
 {: .label .label-purple }
 
-使用此 API 在記憶體容器中建立新的工作階段。工作階段代表使用者與代理程式之間不同的互動情境。
+使用此 API 在記憶容器 (memory container) 中建立新的工作階段。工作階段代表使用者與代理程式之間不同的互動脈絡。 
 
-## 路徑與 HTTP 方法
+## 端點
 
 ```json
 POST /_plugins/_ml/memory_containers/{memory_container_id}/memories/sessions
@@ -25,7 +25,7 @@ POST /_plugins/_ml/memory_containers/{memory_container_id}/memories/sessions
 
 | 參數 | 資料類型 | 必要/選用 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `memory_container_id` | 字串 | 必要 | 將建立工作階段的記憶體容器 ID。 |
+| `memory_container_id` | 字串 | 必要 | 要在其中建立工作階段的記憶容器 ID。 |
 
 ## 請求欄位
 
@@ -33,10 +33,12 @@ POST /_plugins/_ml/memory_containers/{memory_container_id}/memories/sessions
 
 | 欄位 | 資料類型 | 必要/選用 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `session_id` | 字串 | 選用 | 自訂工作階段 ID。若提供此 ID，工作階段將使用此 ID。若未提供，則會產生隨機 ID。 |
-| `summary` | 字串 | 選用 | 工作階段摘要或說明。 |
-| `metadata` | 物件 | 選用 | 以鍵值對形式提供的工作階段其他中繼資料。 |
+| `session_id` | 字串 | 選用 | 自訂的工作階段 ID。若有提供，則此 ID 會用於該工作階段。若未提供，則會產生隨機 ID。 |
+| `summary` | 字串 | 選用 | 工作階段的摘要或描述。 |
+| `metadata` | 物件 | 選用 | 以鍵值對形式提供的工作階段額外中繼資料。 |
 | `namespace` | 物件 | 選用 | 用於組織工作階段的命名空間資訊。 |
+| `agents` | 物件 | 選用 | 以鍵值對形式提供的參與工作階段之代理程式資訊。 |
+| `additional_info` | 物件 | 選用 | 以鍵值對形式提供的工作階段額外資訊。 |
 
 ## 範例請求：使用自訂 ID 建立工作階段
 
@@ -49,6 +51,7 @@ POST /_plugins/_ml/memory_containers/SdjmmpgBOh0h20Y9kWuN/memories/sessions
   }
 }
 ```
+{% include copy-curl.html %}
 
 ## 範例回應：自訂工作階段 ID
 
@@ -90,5 +93,5 @@ POST /_plugins/_ml/memory_containers/SdjmmpgBOh0h20Y9kWuN/memories/sessions
 
 | 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `session_id` | 字串 | 所建立工作階段的 ID (無論是提供或自動產生)。 |
-| `status` | 字串 | 建立作業的狀態。 |
+| `session_id` | 字串 | 所建立工作階段的 ID（由使用者提供或自動產生）。 |
+| `status` | 字串 | 建立作業的狀態。若建立了新的工作階段，傳回值為 `created`；若具有指定 `session_id` 的工作階段已存在，傳回值為 `exists`。 |

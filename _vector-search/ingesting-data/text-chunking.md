@@ -9,7 +9,7 @@ redirect_from:
 ---
 
 # 文字分段
-Introduced 2.13
+自 2.13 版起推出
 {: .label .label-purple }
 
 在 [AI 搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/) 中處理大型文字文件時，通常需要將其分割成較小的段落，因為大多數嵌入模型都有詞元長度限制。這個稱為_文字分段_的流程，可確保每個嵌入都代表一段符合模型限制的聚焦內容，藉此維持向量搜尋結果的品質與相關性。
@@ -91,7 +91,7 @@ PUT testindex
 
 ### 步驟 3：將文件匯入索引
 
-若要將文件匯入上一個步驟中建立的索引，請傳送下列請求：
+若要將文件匯入上一個步驟建立的索引，請傳送下列請求：
 
 ```json
 POST testindex/_doc?pipeline=text-chunking-embedding-ingest-pipeline
@@ -230,7 +230,7 @@ PUT /testindex
 
 ### 步驟 3：將文件匯入索引
 
-若要將文件匯入上一個步驟中建立的索引，請傳送下列請求：
+若要將文件匯入上一個步驟建立的索引，請傳送以下請求：
 
 ```json
 POST testindex/_doc?pipeline=text-chunking-embedding-ingest-pipeline
@@ -267,4 +267,5 @@ GET /testindex/_search
 
 ## 後續步驟
 
-- 探索我們的[教學]({{site.url}}{{site.baseurl}}/vector-search/tutorials/)，了解如何建置 AI 搜尋應用程式。 
+- 探索我們的[教學]({{site.url}}{{site.baseurl}}/vector-search/tutorials/)，了解如何建置 AI 搜尋應用程式。
+- 如需使用外部託管模型將長文件分段並產生嵌入的教學，請參閱[使用文字分段進行語意搜尋]({{site.url}}{{site.baseurl}}/tutorials/vector-search/semantic-search/long-document/)。

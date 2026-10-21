@@ -9,21 +9,21 @@ redirect_from:
   - /vector-search/tutorials/semantic-search/semantic-search-cohere/
 ---
 
-# 使用 Cohere Embed 的語意搜尋
+# 使用 Cohere Embed 進行語意搜尋
 
 本教學說明如何在 [Amazon OpenSearch Service](https://docs.aws.amazon.com/opensearch-service/) 中使用 [Cohere Embed 模型](https://docs.cohere.com/reference/embed) 實作語意搜尋。如需更多資訊，請參閱[語意搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/semantic-search/)。
 
-如果使用 Python，您可以使用 [`opensearch-py-ml`](https://github.com/opensearch-project/opensearch-py-ml) 用戶端 CLI 來建立 Cohere 連接器並測試模型。此 CLI 會自動化許多組態步驟，讓設定更快速並減少出錯的機會。如需使用 CLI 的更多資訊，請參閱 [CLI 文件](https://opensearch-project.github.io/opensearch-py-ml/cli/index.html#)。
+如果您使用 Python，可以建立 Cohere 連接器，並使用 [`opensearch-py-ml`](https://github.com/opensearch-project/opensearch-py-ml) 用戶端 CLI 測試模型。此 CLI 會自動執行許多組態步驟，讓設定更快速並降低出錯的機率。如需使用 CLI 的詳細資訊，請參閱 [CLI 文件](https://opensearch-project.github.io/opensearch-py-ml/cli/index.html#)。
 {: .tip}
 
-如果使用自我管理的 OpenSearch 而非 Amazon OpenSearch Service，請使用[藍圖](https://github.com/opensearch-project/ml-commons/blob/main/docs/remote_inference_blueprints/cohere_connector_embedding_blueprint.md)建立連至 Cohere Embed 模型的連接器。如需建立連接器的更多資訊，請參閱[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
+如果您使用自行管理的 OpenSearch 而非 Amazon OpenSearch Service，請使用[藍圖](https://github.com/opensearch-project/ml-commons/blob/main/docs/remote_inference_blueprints/cohere_connector_embedding_blueprint.md)建立 Cohere Embed 模型的連接器。如需建立連接器的詳細資訊，請參閱[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
 
-在 Amazon OpenSearch Service 中設定嵌入模型最簡單的方式是使用 [AWS CloudFormation](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/cfn-template.html)。或者，您也可以使用 [AIConnectorHelper 筆記本](https://github.com/opensearch-project/ml-commons/blob/2.x/docs/tutorials/aws/AIConnectorHelper.ipynb) 來設定嵌入模型。
+在 Amazon OpenSearch Service 中設定嵌入模型最簡單的方式是使用 [AWS CloudFormation](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/cfn-template.html)。或者，您也可以使用 [AIConnectorHelper notebook](https://github.com/opensearch-project/ml-commons/blob/main/docs/tutorials/aws/AIConnectorHelper.ipynb) 設定嵌入模型。
 {: .tip}
 
-Cohere Embed 模型也在 Amazon Bedrock 上提供。若要使用託管於 Amazon Bedrock 的模型，請參閱[在 Amazon Bedrock 上使用 Cohere Embed 模型的語意搜尋]({{site.url}}{{site.baseurl}}/vector-search/tutorials/semantic-search/semantic-search-bedrock-cohere/)。
+Cohere Embed 模型也可在 Amazon Bedrock 上使用。若要使用託管於 Amazon Bedrock 的模型，請參閱[在 Amazon Bedrock 上使用 Cohere Embed 模型進行語意搜尋]({{site.url}}{{site.baseurl}}/vector-search/tutorials/semantic-search/semantic-search-bedrock-cohere/)。
 
-請將以 `your_` 前綴開頭的預留位置替換為您自己的值。
+請將開頭為前置詞 `your_` 的預留位置替換為您自己的值。
 {: .note}
 
 ## 先決條件：建立 OpenSearch 叢集
@@ -95,11 +95,11 @@ Cohere Embed 模型也在 Amazon Bedrock 上提供。若要使用託管於 Amazo
 
 ### 步驟 3.1：建立用於簽署連接器請求的 IAM 角色
 
-產生一個專門用於簽署 Create Connector API 請求的新 IAM 角色。
+產生一個新的 IAM 角色，專門用來簽署您的 Create Connector API 請求。
 
-建立名為 `my_create_connector_role` 的 IAM 角色，並使用下列信任政策與權限：
+建立名為 `my_create_connector_role` 的 IAM 角色，並套用下列信任政策與權限：
 
-- 自訂信任政策： 
+- 自訂信任政策：
 
 ```json
 {
@@ -117,7 +117,7 @@ Cohere Embed 模型也在 Amazon Bedrock 上提供。若要使用託管於 Amazo
 ```
 {% include copy.html %}
 
-您將在步驟 4 中使用 `your_iam_user_arn` IAM 使用者來擔任此角色。
+您將在步驟 4 使用 `your_iam_user_arn` IAM 使用者來擔任此角色。
 
 - 權限：
 
@@ -133,33 +133,33 @@ Cohere Embed 模型也在 Amazon Bedrock 上提供。若要使用託管於 Amazo
         {
             "Effect": "Allow",
             "Action": "es:ESHttpPost",
-            "Resource": "your_opensearch_domain_arn_created"
+            "Resource": "your_opensearch_domain_arn_created/*"
         }
     ]
 }
 ```
 {% include copy.html %}
 
-請記下此角色的 ARN；您將在後續步驟中使用它。
+請記下此角色的 ARN；您將在後續步驟中使用。
 
 ### 步驟 3.2：對應後端角色
 
-依照下列步驟對應後端角色：
+請依照下列步驟對應後端角色：
 
-1. 登入 OpenSearch Dashboards，並在頂端選單選取 **Security**。
+1. 登入 OpenSearch Dashboards，然後在頂端選單中選取 **Security**。
 2. 選取 **Roles**，然後選取 **ml_full_access** 角色。 
-3. 在 **ml_full_access** 角色詳細資訊頁面上，選取 **Mapped users**，然後選取 **Manage mapping**。 
-4. 在 **Backend roles** 欄位中輸入步驟 3.1 中建立的 IAM 角色 ARN，如下圖所示。
+3. 在 **ml_full_access** 角色詳細資料頁面上，選取 **Mapped users**，然後選取 **Manage mapping**。 
+4. 在 **Backend roles** 欄位中輸入您在步驟 3.1 中建立的 IAM 角色 ARN，如下圖所示。
     ![對應後端角色]({{site.url}}{{site.baseurl}}/images/vector-search-tutorials/mapping_iam_role_arn.png)
-4. 選取 **Map**。 
+5. 選取 **Map**。 
 
-IAM 角色現已成功在您的 OpenSearch 叢集中設定。
+現在已在您的 OpenSearch 叢集中成功設定 IAM 角色。
 
 ## 步驟 4：建立連接器
 
 依照下列步驟為模型建立連接器。如需建立連接器的更多資訊，請參閱[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
 
-使用從 AWS 取得的暫時憑證執行下列 Python 程式碼。
+使用從 AWS 取得的暫時認證資訊執行下列 Python 程式碼。
  
 ```python
 import boto3
@@ -330,7 +330,8 @@ print(r.text)
               "data": [
                 0.02279663,
                 0.014976501,
-                -0.04058838,]
+                -0.04058838,
+                ...]
             }
           ],
           "status_code": 200
@@ -367,14 +368,13 @@ PUT /_ingest/pipeline/my_cohere_embedding_pipeline
 
 ### 步驟 6.2：建立向量索引
 
-接著，建立向量索引以儲存輸入文字和產生的嵌入：
+接著，建立向量索引，以儲存輸入文字與產生的嵌入：
 
 ```json
 PUT my_index
 {
   "settings": {
     "index": {
-      "knn.space_type": "cosinesimil",
       "default_pipeline": "my_cohere_embedding_pipeline",
       "knn": "true"
     }
@@ -383,7 +383,8 @@ PUT my_index
     "properties": {
       "text_knn": {
         "type": "knn_vector",
-        "dimension": 1024
+        "dimension": 1024,
+        "space_type": "cosinesimil"
       }
     }
   }
@@ -405,7 +406,7 @@ POST /my_index/_doc/1000001
 
 ### 步驟 6.4：搜尋索引
 
-執行向量搜尋以從向量索引擷取文件：
+執行向量搜尋，從向量索引擷取文件：
 
 ```json
 POST /my_index/_search
@@ -424,3 +425,10 @@ POST /my_index/_search
 }
 ```
 {% include copy-curl.html %}
+
+## 相關文件
+
+- [語意搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/semantic-search/)
+- [第三方機器學習平台的連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)
+- [文字嵌入處理器]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/text-embedding/)
+- [Neural 查詢]({{site.url}}{{site.baseurl}}/query-dsl/specialized/neural/)

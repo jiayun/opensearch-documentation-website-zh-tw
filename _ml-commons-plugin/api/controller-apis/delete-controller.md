@@ -34,7 +34,7 @@ DELETE /_plugins/_ml/controllers/MzcIJX8BA7mbufL6DOwl
 ```
 {% include copy-curl.html %}
 
-## 回應範例
+## 範例回應
 
 ```json
 {
@@ -42,6 +42,7 @@ DELETE /_plugins/_ml/controllers/MzcIJX8BA7mbufL6DOwl
   "_id" : "MzcIJX8BA7mbufL6DOwl",
   "_version" : 2,
   "result" : "deleted",
+  "forced_refresh" : true,
   "_shards" : {
     "total" : 2,
     "successful" : 2,
@@ -54,7 +55,7 @@ DELETE /_plugins/_ml/controllers/MzcIJX8BA7mbufL6DOwl
 
 ## 錯誤回應
 
-如果控制器索引不存在時嘗試刪除控制器，OpenSearch 會傳回 404 Not Found 錯誤：
+如果您嘗試刪除不存在的控制器，OpenSearch 會傳回 404 Not Found 錯誤。當控制器索引不存在時，會傳回下列錯誤：
 
 ```json
 {

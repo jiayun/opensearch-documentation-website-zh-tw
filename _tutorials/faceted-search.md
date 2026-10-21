@@ -13,16 +13,16 @@ _分面_ 是使用者可選取以縮小搜尋結果範圍的可篩選欄位。�
 
 本教學以電子商務網站的商品目錄為例，說明如何在 OpenSearch 中實作分面搜尋。
 
-## 步驟 1：定義您的索引對應
+## 步驟 1：定義索引對應
 
-首先定義您將用於分面篩選的欄位。[對應]({{site.url}}{{site.baseurl}}/mappings/)組態對有效的分面搜尋至關重要。若要對字串欄位進行分面篩選，請將欄位對應為 `keyword`，而非 `text`，因為 `text` 欄位並未針對彙總最佳化。
+首先定義您要用於分面的欄位。[對應]({{site.url}}{{site.baseurl}}/mappings/)組態對於有效的分面搜尋至關重要。若要在字串欄位上進行分面，請將欄位對應為 `keyword` 而非 `text`，因為 `text` 欄位並未針對彙總進行最佳化。
 
-雖然您可以藉由設定 `"fielddata": true`，在 `text` 欄位上啟用彙總，但應避免在正式環境中採用這種方式，因為它會將所有欄位值載入堆積記憶體，大幅增加記憶體用量，並可能導致效能問題和記憶體不足錯誤。
+雖然您可以透過設定 `"fielddata": true` 在 `text` 欄位上啟用彙總，但應避免在生產環境中使用此做法，因為它會將所有欄位值載入堆積記憶體，大幅增加記憶體用量，並可能導致效能問題與記憶體不足錯誤。
 {: .tip}
 
-分面搜尋的常見挑戰之一，是處理資料中不一致的大小寫。例如，顏色可能儲存為「red」、「RED」或「Red」，這會建立不同的分面桶，使您的結果分散。
+分面搜尋常見的挑戰是處理資料中大小寫不一致的問題。例如，顏色可能儲存為「red」、「RED」或「Red」，這會產生各自獨立的分面桶，使結果變得零散。
 
-若要解決此問題，請建立資料匯入管線，在編製索引時將值統一轉為小寫：
+為了解決此問題，請建立資料匯入管線，在編製索引期間將值正規化為小寫：
 
 ```json
 PUT _ingest/pipeline/normalize-color-pipeline
@@ -39,7 +39,7 @@ PUT _ingest/pipeline/normalize-color-pipeline
 ```
 {% include copy-curl.html %}
 
-接著將所有欄位對應為 `keyword` 以進行彙總，並將管線套用至索引：
+接著將分面欄位（`color` 與 `size`）對應為 `keyword` 以進行彙總，並將管線套用至索引：
 
 ```json
 PUT /products
@@ -118,10 +118,10 @@ POST /products/_search
 回應包含依顏色和尺寸彙總的所有 T 恤：
 
 <details markdown="block">
-<summary>
+  <summary>
     回應
-</summary>
-{: .text-delta}
+  </summary>
+  {: .text-delta}
 
 ```json
 {
@@ -235,10 +235,10 @@ POST /products/_search
 回應包含兩件 T 恤：
 
 <details markdown="block">
-<summary>
+  <summary>
     回應
-</summary>
-{: .text-delta}
+  </summary>
+  {: .text-delta}
 
 ```json
 {
@@ -1099,7 +1099,7 @@ POST /stores/_search
 
 階層式分面可讓您在屬性階層中逐層深入檢視，例如類別 > 子類別 > 產品類型。這可以使用以分隔符編碼階層的欄位來實作。
 
-首先，建立一個使用 `path_hierarchy` 斷詞器的資料匯入管線，自動產生所有階層層級：
+首先，建立一條使用 `script` 處理器的資料匯入管線，從 `category_path` 欄位產生所有階層層級：
 
 ```json
 PUT _ingest/pipeline/category-hierarchy-pipeline
@@ -1162,7 +1162,7 @@ curl -XPUT "http://localhost:9200/_ingest/pipeline/category-hierarchy-pipeline" 
 ```
 {% include copy.html %}
 
-這種做法避免在 `text` 欄位上使用 `fielddata`，而是將每個階層層級明確儲存為獨立的 `keyword` 欄位。雖然這需要更多儲存空間，但可提供更好的查詢效能，並在彙總時更節省記憶體。在正式系統中，您可以在編製索引時使用資料匯入管線或應用程式邏輯自動擷取階層層級。
+這種做法透過將每個階層層級明確儲存為獨立的 `keyword` 欄位，避免在 `text` 欄位上使用 `fielddata`。雖然這需要更多儲存空間，但能提供更好的查詢效能，並在彙總時更節省記憶體。
 
 接下來，定義包含階層式欄位的索引對應，並將該管線設定為索引的預設管線：
 
@@ -1194,13 +1194,13 @@ POST /products-advanced/_bulk
 { "index": {"_id": 1} }
 { "name": "Cotton T-Shirt", "color": "red", "category_path": "Clothing>Shirts>T-Shirts" }
 { "index": {"_id": 2} }
-{ "name": "Wool Sweater", "color": "red", "category_path": "Clothing>Sweaters>Wool" }
+{ "name": "Athletic shirt", "color": "red", "category_path": "Clothing>Athletic>Shirts" }
 { "index": {"_id": 3} }
 { "name": "Running Shoes", "color": "red", "category_path": "Footwear>Athletic>Running" }
 { "index": {"_id": 4} }
 { "name": "Dress Shirt", "color": "blue", "category_path": "Clothing>Shirts>Dress" }
 { "index": {"_id": 5} }
-{ "name": "Hiking Boots", "color": "blue", "category_path": "Footwear>Outdoor>Hiking" }
+{ "name": "Dress Shirt", "color": "white", "category_path": "Clothing>Shirts>Dress" }
 { "index": {"_id": 6} }
 { "name": "Casual Sneakers", "color": "blue", "category_path": "Footwear>Casual>Sneakers" }
 ```
@@ -1232,7 +1232,7 @@ POST /products-advanced/_search
 ```
 {% include copy-curl.html %}
 
-回應包含具有個別彙總結果的扁平結構。類別會顯示計數以及跨類別總計。例如，`Athletic` 子類別顯示來自 `Clothing` (1) 與 `Footwear` (1) 的合併計數：
+回應包含一個扁平結構，內含各自獨立的彙總結果。類別會顯示計數以及跨類別總計。例如，`Athletic` 子類別顯示來自 `Clothing` (1) 與 `Footwear` (1) 的合併計數：
 
 <details markdown="block">
   <summary>
@@ -1370,7 +1370,7 @@ POST /products-advanced/_search
   "aggregations": {
     "full_hierarchy": {
       "doc_count_error_upper_bound": 0,
-      "sum_other_doc_count": 0,
+      "sum_other_doc_count": 1,
       "buckets": [
         {
           "key": "Clothing",
@@ -1410,10 +1410,6 @@ POST /products-advanced/_search
         },
         {
           "key": "Footwear>Casual",
-          "doc_count": 1
-        },
-        {
-          "key": "Footwear>Casual>Sneakers",
           "doc_count": 1
         }
       ]
@@ -1456,9 +1452,11 @@ POST /products-advanced/_search
 
 </details>
 
-結果顯示如下。
+`terms` 彙總預設會傳回前 10 個桶。範例資料包含 11 個不同的 `category_hierarchy` 值，因此 `full_hierarchy` 彙總會省略 `Footwear>Casual>Sneakers`，並將其文件計入 `sum_other_doc_count`。若要傳回所有值，請將 `terms` 彙總中的 `size` 設定為大於不同值數量的數值。
 
-![具有階層式扁平分類的分面搜尋結果]({{site.url}}{{site.baseurl}}/images/faceted-search/faceted-search-hierarchical-flat.png)
+結果如下所示。
+
+![具有階層式扁平類別的分面搜尋結果]({{site.url}}{{site.baseurl}}/images/faceted-search/faceted-search-hierarchical-flat.png)
 
 若要進行階層式導覽，請使用巢狀彙總：
 
@@ -1488,7 +1486,7 @@ POST /products-advanced/_search
 ```
 {% include copy-curl.html %}
 
-回應具有階層式結構，子類別巢狀於其父類別之下。例如，`Athletic` 同時出現在 `Clothing` (1) 與 `Footwear` (1) 之下。子類別計數的範圍限定於其父類別：
+回應具有階層式結構，子類別巢狀置於其父類別之下。例如，`Athletic` 同時出現在 `Clothing` (1) 與 `Footwear` (1) 之下。子類別計數的範圍限定於其父類別：
 
 <details markdown="block">
   <summary>
@@ -1626,7 +1624,7 @@ POST /products-advanced/_search
   "aggregations": {
     "full_hierarchy": {
       "doc_count_error_upper_bound": 0,
-      "sum_other_doc_count": 0,
+      "sum_other_doc_count": 1,
       "buckets": [
         {
           "key": "Clothing",
@@ -1666,10 +1664,6 @@ POST /products-advanced/_search
         },
         {
           "key": "Footwear>Casual",
-          "doc_count": 1
-        },
-        {
-          "key": "Footwear>Casual>Sneakers",
           "doc_count": 1
         }
       ]
@@ -1722,11 +1716,11 @@ POST /products-advanced/_search
 
 </details>
 
-結果顯示如下。
+結果如下所示。
 
-![具有階層式巢狀分類的分面搜尋結果]({{site.url}}{{site.baseurl}}/images/faceted-search/faceted-search-hierarchical-nested.png)
+![具有階層式巢狀類別的分面搜尋結果]({{site.url}}{{site.baseurl}}/images/faceted-search/faceted-search-hierarchical-nested.png)
 
-前綴查詢可讓您依分類階層的特定分支進行篩選，將結果範圍限定在特定分類層級及其所有子分類。若只要顯示 `Clothing>Shirts` 分類及其子分類中的產品，請使用 `keyword` 欄位進行精確的前綴比對：
+前綴查詢可讓您依類別階層的特定分支進行篩選，將結果範圍限定在特定類別層級及其所有子類別。若只想顯示 `Clothing>Shirts` 類別及其子類別中的產品，請使用 `keyword` 欄位進行精確的前綴比對：
 
 ```json
 POST /products-advanced/_search
@@ -1740,7 +1734,7 @@ POST /products-advanced/_search
 ```
 {% include copy-curl.html %}
 
-回應中包含相符的文件。請注意，運動衫不會被傳回：
+回應中包含相符的文件。請注意，Athletic shirt 不會被傳回：
 
 <details markdown="block">
   <summary>
@@ -1826,7 +1820,7 @@ POST /products-advanced/_search
 
 </details>
 
-若只要依 `Clothing` 分類的顏色進行彙總，請使用下列請求：
+若只想依顏色彙總 `Clothing` 類別，請使用下列請求：
 
 ```json
 POST /products-advanced/_search
@@ -1971,13 +1965,13 @@ POST /products-advanced/_search
 
 </details>
 
-同樣地，您也可以在 `prefix` 查詢中指定 `"category_path": "Clothing>Shirts"`，以彙總 `Clothing>Shirts` 分類。您的應用程式程式碼接著可移除前綴，以提供更簡潔的顯示內容（例如視需要將 `Clothing>Shirts` 改為 `Shirts`）。OpenSearch 負責繁重的工作（斷詞與彙總），而您的應用程式程式碼則依階層層級移除前綴，處理顯示格式。
+同樣地，您可以在 `prefix` 查詢中指定 `"category_path": "Clothing>Shirts"`，以彙總 `Clothing>Shirts` 類別。如有需要，您的應用程式碼接著可以移除前綴，以提供更簡潔的顯示內容（例如將 `Clothing>Shirts` 改為 `Shirts`）。OpenSearch 會產生階層層級並加以彙總，而您的應用程式碼則依階層層級移除前綴，以處理顯示格式。
 
 
 ## 相關文件
 
-- [對應與欄位類型]({{site.url}}{{site.baseurl}}/mappings/)
+- [對應]({{site.url}}{{site.baseurl}}/mappings/)
 - [支援的欄位類型]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/)
 - [Query DSL]({{site.url}}{{site.baseurl}}/query-dsl/)
-- [查詢與篩選情境]({{site.url}}{{site.baseurl}}/query-dsl/query-filter-context/)
+- [查詢與篩選脈絡]({{site.url}}{{site.baseurl}}/query-dsl/query-filter-context/)
 - [彙總]({{site.url}}{{site.baseurl}}/aggregations/)

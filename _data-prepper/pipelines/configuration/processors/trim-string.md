@@ -19,7 +19,7 @@ nav_order: 400
 :--- | :--- | :---
  `with_keys` | 是 | 要從中修剪空白字元的索引鍵清單。 |
 
-### 使用方式
+### 用法
 
 若要開始使用，請建立下列 `pipeline.yaml` 檔案：
 
@@ -39,9 +39,9 @@ pipeline:
 ```
 {% include copy.html %}
 
-接著，建立名為 `logs_json.log` 的記錄檔。之後，將 `pipeline.yaml` 檔案之檔案來源中的 `path` 替換為正確的檔案路徑。如需更詳細的資訊，請參閱[設定 OpenSearch Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/getting-started/#2-configuring-data-prepper)。
+接著，建立名為 `logs_json.log` 的記錄檔。然後，將 `pipeline.yaml` 檔案中 file 來源的 `path` 替換為正確的檔案路徑。如需更詳細的資訊，請參閱[執行 Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/getting-started/running/)。
 
-執行 Data Prepper 之前，來源會以下列格式顯示：
+在執行 Data Prepper 之前，來源會以下列格式顯示：
 
 ```json
 {"trimField": " Space Ship "}

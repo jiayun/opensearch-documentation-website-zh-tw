@@ -168,7 +168,7 @@ PUT /_search/pipeline/my-conversation-search-pipeline-openai
     {
       "retrieval_augmented_generation": {
         "tag": "Demo pipeline",
-        "description": "Demo pipeline Using Cohere",
+        "description": "Demo pipeline Using OpenAI",
         "model_id": "your_model_id_created_in_step1",
         "context_field_list": [
           "text"
@@ -182,7 +182,7 @@ PUT /_search/pipeline/my-conversation-search-pipeline-openai
 ```
 {% include copy-curl.html %}
 
-執行基本的 RAG 搜尋，但不儲存對話歷史記錄：
+執行不儲存對話歷程的基本 RAG 搜尋：
 
 ```json
 GET /qa_demo/_search?search_pipeline=my-conversation-search-pipeline-openai
@@ -225,12 +225,12 @@ GET /qa_demo/_search?search_pipeline=my-conversation-search-pipeline-openai
       "value": 6,
       "relation": "eq"
     },
-    "max_score": 9.042081,
+    "max_score": 4.110037,
     "hits": [
       {
         "_index": "qa_demo",
         "_id": "2",
-        "_score": 9.042081,
+        "_score": 4.110037,
         "_source": {
           "text": "Chart and table of population level and growth rate for the New York City metro area from 1950 to 2023. United Nations population projections are also included through the year 2035.\\nThe current metro area population of New York City in 2023 is 18,937,000, a 0.37% increase from 2022.\\nThe metro area population of New York City in 2022 was 18,867,000, a 0.23% increase from 2021.\\nThe metro area population of New York City in 2021 was 18,823,000, a 0.1% increase from 2020.\\nThe metro area population of New York City in 2020 was 18,804,000, a 0.01% decline from 2019."
         }
@@ -244,13 +244,12 @@ GET /qa_demo/_search?search_pipeline=my-conversation-search-pipeline-openai
   }
 }
 ```
-{% include copy-curl.html %}
 
 ## 步驟 3：設定對話式搜尋
 
-請依照下列步驟，透過將對話歷史記錄儲存在記憶體中來設定對話式搜尋。
+請依照下列步驟，將對話歷程儲存在記憶中，以設定對話式搜尋。
 
-1. 建立記憶體：
+1. 建立記憶：
 
     ```json
     POST /_plugins/_ml/memory/
@@ -260,7 +259,7 @@ GET /qa_demo/_search?search_pipeline=my-conversation-search-pipeline-openai
     ```
     {% include copy-curl.html %}
 
-    回應包含記憶體 ID：
+    回應中包含記憶 ID：
 
     ```json
     {
@@ -268,7 +267,7 @@ GET /qa_demo/_search?search_pipeline=my-conversation-search-pipeline-openai
     }
     ```
 
-2. 若要儲存對話歷史記錄，請在搜尋請求中加入記憶體 ID：
+2. 若要儲存對話歷程，請在搜尋請求中加入記憶 ID：
 
     ```json
     GET /qa_demo/_search?search_pipeline=my-conversation-search-pipeline-openai
@@ -295,7 +294,7 @@ GET /qa_demo/_search?search_pipeline=my-conversation-search-pipeline-openai
     ```
     {% include copy-curl.html %}
 
-    回應包含模型答案與相關文件：
+    回應中包含模型答案及相關文件：
 
     ```json
     {
@@ -312,12 +311,12 @@ GET /qa_demo/_search?search_pipeline=my-conversation-search-pipeline-openai
         "value": 6,
         "relation": "eq"
         },
-        "max_score": 9.042081,
+        "max_score": 4.110037,
         "hits": [
         {
             "_index": "qa_demo",
             "_id": "2",
-            "_score": 9.042081,
+            "_score": 4.110037,
             "_source": {
             "text": "Chart and table of population level and growth rate for the New York City metro area from 1950 to 2023. United Nations population projections are also included through the year 2035.\\nThe current metro area population of New York City in 2023 is 18,937,000, a 0.37% increase from 2022.\\nThe metro area population of New York City in 2022 was 18,867,000, a 0.23% increase from 2021.\\nThe metro area population of New York City in 2021 was 18,823,000, a 0.1% increase from 2020.\\nThe metro area population of New York City in 2020 was 18,804,000, a 0.01% decline from 2019."
             }
@@ -333,7 +332,7 @@ GET /qa_demo/_search?search_pipeline=my-conversation-search-pipeline-openai
     }
     ```
 
-3. 若要繼續對話，請在下一次搜尋中提供相同的記憶體 ID：
+3. 若要繼續對話，請在下一次搜尋中提供相同的記憶 ID：
 
     ```json
     GET /qa_demo/_search?search_pipeline=my-conversation-search-pipeline-openai
@@ -360,7 +359,7 @@ GET /qa_demo/_search?search_pipeline=my-conversation-search-pipeline-openai
     ```
     {% include copy-curl.html %}
 
-    模型會利用記憶體中的對話歷史記錄，將邁阿密的人口資料與先前討論過的紐約市統計數據進行比較：
+    模型會利用記憶中的對話歷程，將 Miami 的人口資料與先前討論的 New York City 統計資料進行比較：
 
     ```json
     {
@@ -377,12 +376,12 @@ GET /qa_demo/_search?search_pipeline=my-conversation-search-pipeline-openai
         "value": 6,
         "relation": "eq"
         },
-        "max_score": 3.6660428,
+        "max_score": 1.666383,
         "hits": [
         {
             "_index": "qa_demo",
             "_id": "4",
-            "_score": 3.6660428,
+            "_score": 1.666383,
             "_source": {
             "text": "Chart and table of population level and growth rate for the Miami metro area from 1950 to 2023. United Nations population projections are also included through the year 2035.\\nThe current metro area population of Miami in 2023 is 6,265,000, a 0.8% increase from 2022.\\nThe metro area population of Miami in 2022 was 6,215,000, a 0.78% increase from 2021.\\nThe metro area population of Miami in 2021 was 6,167,000, a 0.74% increase from 2020.\\nThe metro area population of Miami in 2020 was 6,122,000, a 0.71% increase from 2019."
             }
@@ -397,3 +396,10 @@ GET /qa_demo/_search?search_pipeline=my-conversation-search-pipeline-openai
     }
     }
     ```
+
+## 相關文件
+
+- [搭配 RAG 的對話式搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/conversational-search/)
+- [檢索增強生成處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rag-processor/)
+- [第三方 ML 平台的連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)
+- [Memory API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/memory-apis/)

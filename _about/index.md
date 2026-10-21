@@ -6,7 +6,7 @@ nav_order: 1
 has_children: false
 has_toc: false
 nav_exclude: true
-description: "OpenSearch 與 OpenSearch Dashboards 的文件。這是一套開放原始碼的套件，可用於全文搜尋、應用程式監控、記錄檔分析及向量搜尋。"
+description: "OpenSearch 與 OpenSearch Dashboards 文件。這是一套開放原始碼套件，適用於全文搜尋、應用程式監控、記錄分析與向量搜尋。"
 permalink: /about/
 redirect_from:
   - /docs/opensearch/
@@ -53,10 +53,10 @@ features:
   description: 使用 OpenSearch 查詢語言搜尋您的資料
   link: /query-dsl/
 - heading: 向量搜尋
-  description: 使用向量與 AI 驅動的搜尋，建置現代化的搜尋應用程式
+  description: 使用向量與 AI 驅動的搜尋來建置現代化的搜尋應用程式
   link: /vector-search/
-- heading: 機器學習
-  description: 部署模型、連線至 AI 平台，並建置 AI 代理程式與助理
+- heading: AI 與機器學習
+  description: 部署模型、連接 AI 平台，並建置 AI 代理程式與助理
   link: /ml-commons-plugin/
 getting_started:
 - heading: OpenSearch 入門
@@ -87,7 +87,7 @@ getting_started:
 **版本 {{site.opensearch_major_minor_version}}**
 {: .label .label-blue }
 
-OpenSearch 是一套可擴充的開放原始碼搜尋與分析套件，可用於全文搜尋、應用程式監控、記錄檔分析及向量搜尋。OpenSearch Dashboards 則提供視覺化與管理介面。
+OpenSearch 是一套可擴充的開放原始碼搜尋與分析套件，適用於全文搜尋、應用程式監控、記錄分析與向量搜尋。OpenSearch Dashboards 則提供視覺化與管理介面。
 
 ## 入門
 
@@ -104,8 +104,8 @@ OpenSearch 是一套可擴充的開放原始碼搜尋與分析套件，可用於
 
 ## 參與貢獻
 
-[OpenSearch](https://opensearch.org) 由 OpenSearch Software Foundation 支援。所有元件皆依 [Apache License 2.0 版](https://www.apache.org/licenses/LICENSE-2.0.html)於 [GitHub](https://github.com/opensearch-project/) 上提供。
-本專案歡迎各種形式的貢獻，包括 GitHub issue、錯誤修正、功能、外掛程式、文件等等，任何內容皆可。若要參與，請參閱[貢獻](https://github.com/opensearch-project/.github/blob/main/CONTRIBUTING.md)。
+[OpenSearch](https://opensearch.org) 由 OpenSearch Software Foundation 支援。所有元件皆依據 [Apache License 2.0 版](https://www.apache.org/licenses/LICENSE-2.0.html)在 [GitHub](https://github.com/opensearch-project/) 上提供。
+本專案歡迎各種 GitHub 問題回報、錯誤修正、功能、外掛程式、文件等任何貢獻。若要參與，請參閱[貢獻](https://github.com/opensearch-project/.github/blob/main/CONTRIBUTING.md)。
 
 ---
 

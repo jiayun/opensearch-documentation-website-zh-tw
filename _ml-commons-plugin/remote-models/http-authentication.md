@@ -70,20 +70,32 @@ POST /_plugins/_ml/connectors/_create
 
 `mutual_tls_enabled` 與 `keystore_type` 欄位屬於連接器的 `client_config` 物件。如需兩者的說明，請參閱 [連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/#request-body-fields)。
 
-### 先決條件
+### 必要條件
 
-設定 mTLS 之前，請確認符合下列需求：
+在設定 mTLS 之前，請確保符合下列需求：
 
-- 連接器使用 `http` 通訊協定。如需詳細資訊，請參閱 [限制](#restrictions)。
-- 端點 URL 符合受信任的端點。如需詳細資訊，請參閱 [新增受信任的端點]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index#adding-trusted-endpoints)。
-- PEM 格式的私密金鑰未加密，並使用 PKCS #8 編碼 (`-----BEGIN PRIVATE KEY-----`)。不支援 PKCS #1 金鑰 (`-----BEGIN RSA PRIVATE KEY-----`)。若要將 PKCS #1 金鑰轉換為 PKCS #8，請使用下列命令：
+- 叢集已啟用用戶端憑證驗證。此功能預設為停用，在您啟用之前，將 `mutual_tls_enabled` 設定為 `true` 的連接器請求會被拒絕並回傳 `403` 錯誤。若要啟用此功能，請將 `plugins.ml_commons.connector.mutual_tls_enabled` 叢集設定設為 `true`：
+
+  ```json
+  PUT /_cluster/settings
+  {
+    "persistent": {
+      "plugins.ml_commons.connector.mutual_tls_enabled": true
+    }
+  }
+  ```
+  {% include copy-curl.html %}
+
+- 連接器使用 `http` 通訊協定。如需更多資訊，請參閱[限制](#restrictions)。
+- 端點 URL 必須符合信任的端點。如需更多資訊，請參閱[新增信任的端點]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index#adding-trusted-endpoints)。
+- PEM 格式的私密金鑰必須未加密，並使用 PKCS #8 編碼 (`-----BEGIN PRIVATE KEY-----`)。不支援 PKCS #1 金鑰 (`-----BEGIN RSA PRIVATE KEY-----`)。若要將 PKCS #1 金鑰轉換為 PKCS #8，請使用下列命令：
 
 ```bash
 openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in rsa_key.pem -out pkcs8_key.pem
 ```
 {% include copy.html %}
 
-Base64 編碼的 PEM 值會自動偵測並解碼。由於 Base64 編碼可避免手動逸出換行，因此對多行憑證而言是較方便的選項。若要將憑證或金鑰進行 Base64 編碼，請使用下列命令：
+Base64 編碼的 PEM 值會自動偵測並解碼。由於 Base64 編碼可避免手動跳脫換行字元，因此對多行憑證而言是較方便的選項。若要將憑證或金鑰以 Base64 編碼，請使用下列命令：
 
 ```bash
 base64 -i client-cert.pem
@@ -197,13 +209,13 @@ OpenSearch 會偵測到變更，並為後續的預測請求建立新的 HTTP 用
 
 ### 限制
 
-下列限制適用於用戶端憑證驗證：
+用戶端憑證驗證適用下列限制：
 
-- mTLS 僅適用於使用 `http` 通訊協定的連接器。使用 `aws_sigv4`、`mcp_sse` 或 `mcp_streamable_http` 通訊協定的連接器在建立時會接受 `mutual_tls_enabled`，但在執行階段會忽略它。
-- `skip_ssl_verification` 與 `mutual_tls_enabled` 不能同時設為 `true`。停用伺服器憑證驗證會移除雙向 TLS 中的雙向部分，因此請提供 `ca_cert_pem`，以依據私人 CA 驗證伺服器憑證。
-- 啟用 mTLS 時，`credential` 物件不能包含 `api_key`。OpenSearch 會強制僅使用憑證驗證，並拒絕混合的驗證方法。
+- mTLS 僅適用於使用 `http` 通訊協定的連接器，不適用於串流請求。建立使用其他通訊協定（例如 `aws_sigv4`）且將 `mutual_tls_enabled` 設為 `true` 的連接器時，會傳回 `400` 錯誤。
+- `skip_ssl_verification` 與 `mutual_tls_enabled` 不能同時設為 `true`。停用伺服器憑證驗證會移除雙向 TLS 中的雙向部分，因此請提供 `ca_cert_pem`，以對私人 CA 驗證伺服器憑證。
+- 啟用 mTLS 時，`credential` 物件不能包含 `api_key`。OpenSearch 會強制僅使用憑證驗證，並拒絕混合驗證方法。
 - 憑證欄位不支援檔案路徑。請提供憑證內容本身。
-- 憑證資料會在第一次預測請求時驗證。憑證組態無效的連接器可以成功建立，但在第一次使用時會失敗。
+- 憑證資料以及前述 `skip_ssl_verification` 與 `api_key` 限制會在第一次 predict 請求時驗證。憑證組態無效的連接器仍可成功建立，但會在首次使用時失敗。
 
 ## 後續步驟
 

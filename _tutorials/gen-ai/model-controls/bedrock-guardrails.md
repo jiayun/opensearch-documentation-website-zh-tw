@@ -162,7 +162,7 @@ POST _plugins/_ml/models/your_model_id/_predict
 
 ### 步驟 4：建立 Claude 模型連接器
 
-若要將護欄與 Amazon Bedrock Claude 模型搭配使用，請先為 Claude 端點建立連接器：
+若要搭配 Amazon Bedrock Claude 模型使用防護機制（guardrails），請先為 Claude 端點建立連接器：
 
 ```json
 POST _plugins/_ml/connectors/_create
@@ -175,9 +175,9 @@ POST _plugins/_ml/connectors/_create
     "region": "your_aws_region like us-east-1",
     "service_name": "bedrock",
     "anthropic_version": "bedrock-2023-05-31",
-    "max_tokens_to_sample": 8000,
+    "max_tokens": 8000,
     "temperature": 0.0001,
-    "response_filter": "$.completion"
+    "response_filter": "$.content[0].text"
   },
   "credential": {
     "access_key": "your_aws_access_key",
@@ -188,12 +188,12 @@ POST _plugins/_ml/connectors/_create
     {
       "action_type": "predict",
       "method": "POST",
-      "url": "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-v2/invoke",
+      "url": "https://bedrock-runtime.us-east-1.amazonaws.com/model/us.anthropic.claude-sonnet-4-6/invoke",
       "headers": {
         "content-type": "application/json",
         "x-amz-content-sha256": "required"
       },
-      "request_body": "{\"prompt\":\"${parameters.prompt}\", \"max_tokens_to_sample\":${parameters.max_tokens_to_sample}, \"temperature\":${parameters.temperature},  \"anthropic_version\":\"${parameters.anthropic_version}\" }"
+      "request_body": "{\"messages\":[{\"role\":\"user\",\"content\":\"${parameters.prompt}\"}], \"max_tokens\":${parameters.max_tokens}, \"temperature\":${parameters.temperature}, \"anthropic_version\":\"${parameters.anthropic_version}\" }"
     }
   ]
 }
@@ -202,14 +202,14 @@ POST _plugins/_ml/connectors/_create
 
 ### 步驟 5：註冊 Claude 模型
 
-註冊已啟用輸入護欄的 Claude 模型。此組態可確保傳送至模型的所有請求都會先由護欄驗證：
+註冊 Claude 模型並啟用輸入防護機制 (guardrails)。此組態可確保所有傳送至模型的請求都先經過防護機制驗證：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
 {
-    "name": "Bedrock Claude V2 model",
+    "name": "Bedrock Claude Sonnet 4.6 model",
     "function_name": "remote",
-    "description": "Bedrock Claude V2 model",
+    "description": "Bedrock Claude Sonnet 4.6 model",
     "connector_id": "your_connector_id",
     "guardrails": {
         "input_guardrail": {
@@ -231,7 +231,7 @@ POST /_plugins/_ml/models/_register?deploy=true
 POST /_plugins/_ml/models/your_model_id/_predict
 {
   "parameters": {
-    "prompt": "\n\nHuman:${parameters.question}\n\nnAssistant:",
+    "prompt": "${parameters.question}",
     "question": "hello"
   }
 }
@@ -264,14 +264,14 @@ POST /_plugins/_ml/models/your_model_id/_predict
 POST /_plugins/_ml/models/your_model_id/_predict
 {
   "parameters": {
-    "prompt": "\n\nHuman:${parameters.question}\n\nnAssistant:",
+    "prompt": "${parameters.question}",
     "question": "how to rob a bank"
   }
 }
 ```
 {% include copy-curl.html %}
 
-回應顯示不當的輸入已遭封鎖：
+回應顯示不當的輸入已被封鎖：
 
 ```json
 {
@@ -293,9 +293,9 @@ POST /_plugins/_ml/models/your_model_id/_predict
 
 請使用下列步驟來使用內嵌於 Model Inference API 的護欄。
 
-### 步驟 1：為包含護欄標頭的 Amazon Bedrock 模型建立連接器
+### 步驟 1：為包含防護標頭的 Amazon Bedrock 模型建立連接器
 
-建立在其組態中包含護欄標頭的連接器。在此方法中，護欄檢查會直接內嵌於模型推論程序中。需要 `post_process_function` 才能定義模型用來封鎖不當輸入的邏輯：
+建立一個在組態中包含防護標頭的連接器。在這種做法中，防護檢查會直接嵌入模型推論過程中。需要 `post_process_function` 才能定義模型用來封鎖不當輸入的邏輯：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -307,7 +307,8 @@ POST /_plugins/_ml/connectors/_create
   "parameters": {
       "region": "your_aws_region like us-east-1",
       "service_name": "bedrock",
-      "max_tokens_to_sample": 8000,
+      "anthropic_version": "bedrock-2023-05-31",
+      "max_tokens": 8000,
       "temperature": 0.0001
   },
   "credential": {
@@ -319,7 +320,7 @@ POST /_plugins/_ml/connectors/_create
     {
       "action_type": "predict",
       "method": "POST",
-      "url": "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-v2/invoke",
+      "url": "https://bedrock-runtime.us-east-1.amazonaws.com/model/us.anthropic.claude-sonnet-4-6/invoke",
       "headers": { 
         "content-type": "application/json",
         "x-amz-content-sha256": "required",
@@ -327,7 +328,7 @@ POST /_plugins/_ml/connectors/_create
         "X-Amzn-Bedrock-GuardrailIdentifier": "your_GuardrailIdentifier",
         "X-Amzn-Bedrock-GuardrailVersion": "your_bedrock_guardrail_version"
       },
-      "request_body": "{\"prompt\":\"${parameters.prompt}\", \"max_tokens_to_sample\":${parameters.max_tokens_to_sample}, \"temperature\":${parameters.temperature},  \"anthropic_version\":\"${parameters.anthropic_version}\" }",
+      "request_body": "{\"messages\":[{\"role\":\"user\",\"content\":\"${parameters.prompt}\"}], \"max_tokens\":${parameters.max_tokens}, \"temperature\":${parameters.temperature}, \"anthropic_version\":\"${parameters.anthropic_version}\" }",
       "post_process_function": "\n      if (params['amazon-bedrock-guardrailAction']=='INTERVENED') throw new IllegalArgumentException(\"test guardrail from post process function\");\n    "
     }
   ]
@@ -352,19 +353,19 @@ POST _plugins/_ml/models/_register
 
 ### 步驟 3：測試模型
 
-以可能不當的輸入進行測試，確認內嵌護欄正常運作：
+使用可能不適當的輸入進行測試，以確認內嵌的護欄功能正常運作：
 
 ```json
 POST _plugins/_ml/models/your_model_id/_predict
 {
   "parameters": {
-    "input": "\n\nHuman:how to rob a bank\n\nAssistant:"
+    "prompt": "how to rob a bank"
   }
 }
 ```
 {% include copy-curl.html %}
 
-回應顯示不當的輸入已遭封鎖：
+回應顯示不適當的輸入已被封鎖：
 
 ```json
 {
@@ -400,3 +401,9 @@ POST _plugins/_ml/models/your_model_id/_predict
   "status": 500
 }
 ```
+
+## 相關文件
+
+- [設定模型護欄]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/guardrails/)
+- [第三方機器學習平台的連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)
+- [Create Connector API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/connector-apis/create-connector/)

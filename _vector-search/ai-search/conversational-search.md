@@ -12,11 +12,11 @@ redirect_from:
 
 # 使用 RAG 的對話式搜尋
 
-對話式搜尋讓您能以自然語言提問，並透過追問來精煉答案。如此一來，對話就成為您與大型語言模型 (LLM) 之間的對話。為達成此目的，模型不能只逐一回答每個問題，而必須記住整個對話的上下文。
+對話式搜尋讓您能以自然語言提問，並透過追問來精煉答案。如此一來，對話就成為您與大型語言模型 (LLM) 之間的對話。為達成此目的，模型不能只逐一回答每個問題，而必須記住整個對話的脈絡。
 
 對話式搜尋由下列元件實作：
 
-- [對話歷史](#conversation-history)：讓 LLM 記住目前對話的上下文，並理解追問的問題。
+- [對話歷史](#conversation-history)：讓 LLM 記住目前對話的脈絡，並理解追問的問題。
 - [檢索增強生成 (RAG)](#rag)：讓 LLM 以專有或最新資訊補充其靜態知識庫。
 
 ## 對話歷史
@@ -25,7 +25,7 @@ redirect_from:
 
 ## RAG
 
-RAG 會從索引與歷史中擷取資料，並將所有資訊作為上下文傳送給 LLM。LLM 接著以動態擷取的資料補充其靜態知識庫。在 OpenSearch 中，RAG 透過包含[檢索增強生成處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rag-processor/)的搜尋管線來實作。該處理器會攔截 OpenSearch 查詢結果，從對話記憶中擷取對話中先前的訊息，並將提示傳送給 LLM。處理器收到 LLM 的回應後，會將回應儲存在對話記憶中，並同時傳回原始的 OpenSearch 查詢結果與 LLM 回應。
+RAG 會從索引與歷史中擷取資料，並將所有資訊作為脈絡傳送給 LLM。LLM 接著以動態擷取的資料補充其靜態知識庫。在 OpenSearch 中，RAG 透過包含[檢索增強生成處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rag-processor/)的搜尋管線來實作。該處理器會攔截 OpenSearch 查詢結果，從對話記憶中擷取對話中先前的訊息，並將提示傳送給 LLM。處理器收到 LLM 的回應後，會將回應儲存在對話記憶中，並同時傳回原始的 OpenSearch 查詢結果與 LLM 回應。
 
 RAG 技術支援 OpenAI、Amazon Bedrock 與 Cohere 模型。若要使用其他模型，請設定 `llm_response_field` 參數。如需更多資訊，請參閱[步驟 6：使用管線進行 RAG](#step-6-use-the-pipeline-for-rag)。
 {: .note}
@@ -273,12 +273,12 @@ POST _bulk
 
 ## RAG 管線
 
-RAG 是一種技術，它會從索引中擷取文件，將文件傳遞給 seq2seq 模型（例如 LLM），然後以在上下文中動態擷取的資料來補充 LLM 的靜態資訊。
+RAG 是一種技術，會從索引擷取文件，將文件傳入 seq2seq 模型（例如 LLM），然後使用動態擷取的資料，在脈絡中補充 LLM 的靜態資訊。
 
-RAG 技術支援 OpenAI、Amazon Bedrock 和 Cohere 模型。若要使用其他模型，請設定 `llm_response_field` 參數。如需詳細資訊，請參閱[步驟 6：將管線用於 RAG](#step-6-use-the-pipeline-for-rag)。
+RAG 技術支援 OpenAI、Amazon Bedrock 和 Cohere 模型。若要使用其他模型，請設定 `llm_response_field` 參數。如需詳細資訊，請參閱[步驟 6：使用管線進行 RAG](#step-6-use-the-pipeline-for-rag)。
 {: .note}
 
-若要設定 Cohere Command 模型以啟用 RAG，需要使用後處理函式來轉換模型輸出。如需詳細資訊，請參閱 [Cohere RAG 教學](https://github.com/opensearch-project/ml-commons/blob/2.x/docs/tutorials/conversational_search/conversational_search_with_Cohere_Command.md)。
+設定 Cohere Command 模型以啟用 RAG 時，需要使用後處理函式來轉換模型輸出。如需詳細資訊，請參閱[使用 Cohere Command 進行對話式搜尋]({{site.url}}{{site.baseurl}}/tutorials/gen-ai/rag/conversational-search-cohere/)。
 
 ### 步驟 5：建立對話記憶
 
@@ -317,7 +317,7 @@ OpenSearch 會回應新建立記憶的記憶 ID：
 `llm_messages` | 視情況而定 | 在搜尋結果與對話歷史之後傳送給 LLM 的訊息陣列。每則訊息都是包含 `role` 與 `content` 陣列的物件。每個 `content` 元素包含下列其中一種物件：`text`（字串）、`image`（包含 `format` 以及 `data` 或 `url` 其中之一的物件），或 `document`（包含 `format`、`name` 與 `data` 的物件）。僅支援 OpenAI 模型及使用 Amazon Bedrock Converse API（`bedrock-converse/` 前綴）的模型。若未提供 `llm_question`，則為必要。
 `system_prompt` | 否 | 此請求傳送給 LLM 的系統提示。會覆寫處理器中設定的 `system_prompt`。
 `user_instructions` | 否 | 此請求傳送給 LLM 的使用者指示。會覆寫處理器中設定的 `user_instructions`。
-`memory_id` | 否 | 若您提供 `memory_id`，管線會擷取指定記憶中最近的 10 則訊息，並將其加入 LLM 提示中。若您未指定 `memory_id`，先前的上下文就不會加入 LLM 提示中。
+`memory_id` | 否 | 若您提供 `memory_id`，管線會擷取指定記憶中最近的 10 則訊息，並將其加入 LLM 提示中。若您未指定 `memory_id`，先前的脈絡就不會加入 LLM 提示中。
 `context_size` | 否 | 傳送給 LLM 的搜尋結果數量。通常需要設定此參數以符合詞元大小限制，而此限制可能因模型而異。或者，您也可以使用 Search API 中的 `size` 參數來控制傳送給 LLM 的搜尋結果數量。
 `message_size` | 否 | 傳送給 LLM 的訊息數量。與搜尋結果數量類似，這會影響 LLM 接收的詞元總數。未設定時，管線會使用預設訊息數量 `10`。
 `timeout` | 否 | 管線等待透過連接器使用的遠端模型回應的秒數。預設值為 `30`。
@@ -325,7 +325,7 @@ OpenSearch 會回應新建立記憶的記憶 ID：
 若您的 LLM 設有詞元限制，請在 OpenSearch 查詢中設定 `size` 欄位，以限制搜尋回應中使用的文件數量。否則，RAG 管線會將搜尋結果中的每份文件都傳送給 LLM。
 {: .note}
 
-如果您詢問 LLM 有關當前的問題，它無法提供答案，因為它是以數年前的資料訓練而成。不過，如果您將最新資訊加入作為上下文，LLM 就能產生回應。例如，您可以詢問 LLM 紐約市都會區在 2023 年的人口數。您將建構一個包含 OpenSearch match 查詢與 LLM 查詢的查詢。請提供 `memory_id`，讓訊息儲存在適當的記憶物件中：
+如果您詢問 LLM 有關當前的問題，它無法提供答案，因為它是以數年前的資料訓練而成。不過，如果您將最新資訊加入作為脈絡，LLM 就能產生回應。例如，您可以詢問 LLM 紐約市都會區在 2023 年的人口數。您將建構一個包含 OpenSearch match 查詢與 LLM 查詢的查詢。請提供 `memory_id`，讓訊息儲存在適當的記憶物件中：
 
 ```json
 GET /my_rag_test_data/_search
@@ -349,13 +349,13 @@ GET /my_rag_test_data/_search
 ```
 {% include copy-curl.html %}
 
-由於上下文中包含一份含有紐約市人口資訊的文件，LLM 能夠正確回答問題（不過因為它是以前幾年的資料訓練而成，回答中包含「projected」一詞）。回應中包含補充 RAG 資料裡相符的文件以及 LLM 回應：
+由於脈絡中包含一份含有紐約市人口資訊的文件，LLM 能夠正確回答問題（不過因為它是以前幾年的資料訓練而成，回答中包含「projected」一詞）。回應中包含補充 RAG 資料裡相符的文件以及 LLM 回應：
 
 <details open markdown="block">
-<summary>
+  <summary>
     回應
-</summary>
-{: .text-delta}
+  </summary>
+  {: .text-delta}
 
 ```json
 {
@@ -449,10 +449,10 @@ GET /_plugins/_ml/memory/znCqcI0BfUsSoeNTntd7/messages
 回應包含這兩則訊息：
 
 <details open markdown="block">
-<summary>
+  <summary>
     回應
-</summary>
-{: .text-delta}
+  </summary>
+  {: .text-delta}
 
 ```json
 {
@@ -488,4 +488,6 @@ GET /_plugins/_ml/memory/znCqcI0BfUsSoeNTntd7/messages
 
 ## 後續步驟
 
-- 探索我們的[教學]({{site.url}}{{site.baseurl}}/vector-search/tutorials/)，了解如何建置 AI 搜尋應用程式。 
+- 探索我們的[教學]({{site.url}}{{site.baseurl}}/vector-search/tutorials/)，了解如何建置 AI 搜尋應用程式。
+- 如需使用特定模型設定對話式搜尋的教學，請參閱[使用 OpenAI 進行對話式搜尋]({{site.url}}{{site.baseurl}}/tutorials/gen-ai/rag/conversational-search-openai/)、[在 Amazon Bedrock 上使用 Anthropic Claude 進行對話式搜尋]({{site.url}}{{site.baseurl}}/tutorials/gen-ai/rag/conversational-search-claude-bedrock/)及[使用 Ollama 進行對話式搜尋]({{site.url}}{{site.baseurl}}/tutorials/gen-ai/rag/conversational-search-ollama/)。
+- 如需使用 DeepSeek 模型設定 RAG 的教學，請參閱[使用 DeepSeek Chat API 進行 RAG]({{site.url}}{{site.baseurl}}/tutorials/gen-ai/rag/rag-deepseek-chat/)、[在 Amazon Bedrock 上使用 DeepSeek-R1 進行 RAG]({{site.url}}{{site.baseurl}}/tutorials/gen-ai/rag/rag-deepseek-r1-bedrock/)及[在 Amazon SageMaker 中使用 DeepSeek-R1 進行 RAG]({{site.url}}{{site.baseurl}}/tutorials/gen-ai/rag/rag-deepseek-r1-sagemaker/)。

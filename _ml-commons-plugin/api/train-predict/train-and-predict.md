@@ -7,13 +7,41 @@ grand_parent: ML Commons APIs
 nav_order: 75
 ---
 
-# Train and Predict API
+# 訓練與預測 API
 
-用於訓練，然後立即針對相同的訓練資料集進行預測。僅可搭配非監督式學習模型及下列演算法使用：
+用於訓練並立即針對相同的訓練資料集進行預測。僅能搭配非監督式學習模型使用。下表列出支援的演算法，以及要在 `algorithm` 路徑參數中指定的值。
 
-- `BATCH_RCF`
-- `FIT_RCF`
-- `k-means`
+| 演算法 | `algorithm` 值 |
+| :--- | :--- |
+| [Batch RCF]({{site.url}}{{site.baseurl}}/ml-commons-plugin/algorithms/#batch-rcf) | `batch_rcf` |
+| [Fixed in time (FIT) RCF]({{site.url}}{{site.baseurl}}/ml-commons-plugin/algorithms/#fit-rcf) | `fit_rcf` |
+| [k-means]({{site.url}}{{site.baseurl}}/ml-commons-plugin/algorithms/#k-means) | `kmeans` |
+| [RCF Summarize]({{site.url}}{{site.baseurl}}/ml-commons-plugin/algorithms/#rcf-summarize) | `rcf_summarize` |
+
+## 端點
+
+```json
+POST /_plugins/_ml/_train_predict/{algorithm}
+```
+
+## 路徑參數
+
+下表列出可用的路徑參數。
+
+| 參數 | 資料類型 | 說明 |
+| :--- | :--- | :--- |
+| `algorithm` | 字串 | 演算法的名稱，例如 `kmeans`。名稱不區分大小寫。必要。 |
+
+## 請求本文欄位
+
+下表列出可用的請求本文欄位。請使用 `input_index` 與 `input_query` 或 `input_data` 來提供資料。
+
+| 欄位 | 資料類型 | 說明 |
+| :--- | :--- | :--- |
+| `parameters` | 物件 | 演算法的超參數。可用參數取決於演算法。各演算法的參數請參閱[支援的演算法]({{site.url}}{{site.baseurl}}/ml-commons-plugin/algorithms/)。選用。 |
+| `input_index` | 陣列 | 包含資料的索引清單。 |
+| `input_query` | 物件 | 從 `input_index` 選取文件的搜尋查詢。 |
+| `input_data` | 物件 | 直接以資料框形式提供的資料，包含 `column_metas` 與 `rows`。 |
 
 ## 範例請求：使用已編製索引的資料進行訓練與預測
 

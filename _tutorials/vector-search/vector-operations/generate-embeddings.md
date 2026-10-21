@@ -95,13 +95,9 @@ PUT my_books
 
 ### 步驟 2.2：建立資料匯入管線
 
-接著建立內部資料匯入管線，為單一陣列元素產生嵌入。
+接著建立包含 `text_embedding` 處理器的資料匯入管線。`field_map` 中的 `books.title` 鍵會指向 `books` 陣列中每個物件的 `title` 欄位，因此處理器會為每個含有 `title` 的物件產生嵌入，並將其儲存在該物件的 `title_embedding` 欄位中。
 
-此管線包含三個處理器：
-
-- `text_embedding` 處理器：將暫存欄位的值轉換為嵌入。
-
-若要建立這類管線，請傳送下列請求：
+若要建立管線，請傳送下列請求：
 
 ```json
 PUT _ingest/pipeline/bedrock_embedding_pipeline
@@ -122,7 +118,7 @@ PUT _ingest/pipeline/bedrock_embedding_pipeline
 
 ### 步驟 2.3：模擬管線
 
-首先，您將在包含兩個書籍物件的陣列上測試管線，這兩個物件都有 `title` 欄位：
+首先，您將在一個包含兩個書籍物件的陣列上測試管線，兩個物件都有 `title` 欄位：
 
 ```json
 POST _ingest/pipeline/bedrock_embedding_pipeline/_simulate
@@ -173,7 +169,6 @@ POST _ingest/pipeline/bedrock_embedding_pipeline/_simulate
           ]
         },
         "_ingest": {
-          "_value": null,
           "timestamp": "2024-05-28T16:16:50.538929413Z"
         }
       }
@@ -182,10 +177,10 @@ POST _ingest/pipeline/bedrock_embedding_pipeline/_simulate
 }
 ```
 
-接著，您將在包含兩個書籍物件的陣列上測試管線，其中一個有 `title` 欄位，另一個則沒有：
+接下來，您將在一個包含兩個書籍物件的陣列上測試管線，其中一個有 `title` 欄位，另一個沒有：
 
 ```json
-POST _ingest/pipeline/bedrock_embedding_foreach_pipeline/_simulate
+POST _ingest/pipeline/bedrock_embedding_pipeline/_simulate
 {
   "docs": [
     {
@@ -208,7 +203,7 @@ POST _ingest/pipeline/bedrock_embedding_foreach_pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-回應包含含有 `title` 欄位之物件所產生的嵌入：
+回應包含含有 `title` 欄位的物件所產生的嵌入：
 
 ```json
 {
@@ -230,7 +225,6 @@ POST _ingest/pipeline/bedrock_embedding_foreach_pipeline/_simulate
           ]
         },
         "_ingest": {
-          "_value": null,
           "timestamp": "2024-05-28T16:19:03.942644042Z"
         }
       }
@@ -266,7 +260,7 @@ GET my_books/_doc/1
 ```
 {% include copy-curl.html %}
 
-回應包含產生的嵌入：
+回應中包含產生的嵌入：
 
 ```json
 {
@@ -293,7 +287,7 @@ GET my_books/_doc/1
 }      
 ```
 
-您也可以大量匯入多份文件，並透過呼叫 Get Document API 來測試產生的嵌入：
+您也可以批次匯入多份文件，並呼叫 Get Document API 來測試產生的嵌入：
 
 ```json
 POST _bulk
@@ -303,3 +297,10 @@ POST _bulk
 { "books" : [{"title": "third book", "description": "This is third book"}, {"description": "This is fourth book"}] }
 ```
 {% include copy-curl.html %}
+
+## 相關文件
+
+- [自動產生嵌入]({{site.url}}{{site.baseurl}}/vector-search/getting-started/auto-generated-embeddings/)
+- [文字嵌入處理器]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/text-embedding/)
+- [巢狀欄位類型]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/nested/)
+- [第三方機器學習平台的連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)

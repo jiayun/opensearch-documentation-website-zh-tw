@@ -106,7 +106,7 @@ POST /_plugins/_ml/model_groups/_register
 
 ### 步驟 4：建立連接器
 
-現在您可以為模型建立連接器。在此範例中，您將建立一個連接至託管於 Amazon Bedrock 上的 Anthropic Claude 模型的連接器：
+現在您可以為模型建立連接器。在此範例中，您將建立一個連接器，連線至託管於 Amazon Bedrock 的 Anthropic Claude 模型：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -122,9 +122,9 @@ POST /_plugins/_ml/connectors/_create
       "endpoint": "bedrock.us-east-1.amazonaws.com",
       "auth": "Sig_V4",
       "content_type": "application/json",
-      "max_tokens_to_sample": 8000,
+      "max_tokens": 8000,
       "temperature": 0.0001,
-      "response_filter": "$.completion"
+      "response_filter": "$.content[0].text"
   },
   "credential": {
       "access_key": "<YOUR_ACCESS_KEY>",
@@ -134,19 +134,19 @@ POST /_plugins/_ml/connectors/_create
     {
       "action_type": "predict",
       "method": "POST",
-      "url": "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-v2/invoke",
+      "url": "https://bedrock-runtime.us-east-1.amazonaws.com/model/us.anthropic.claude-sonnet-4-6/invoke",
       "headers": { 
         "content-type": "application/json",
         "x-amz-content-sha256": "required"
       },
-      "request_body": "{\"prompt\":\"${parameters.prompt}\", \"max_tokens_to_sample\":${parameters.max_tokens_to_sample}, \"temperature\":${parameters.temperature},  \"anthropic_version\":\"${parameters.anthropic_version}\" }"
+      "request_body": "{\"messages\":[{\"role\":\"user\",\"content\":\"${parameters.prompt}\"}], \"max_tokens\":${parameters.max_tokens}, \"temperature\":${parameters.temperature}, \"anthropic_version\":\"${parameters.anthropic_version}\" }"
     }
   ]
 }
 ```
 {% include copy-curl.html %}
 
-回應中包含新建立連接器的連接器 ID：
+回應包含新建連接器的連接器 ID：
 
 ```json
 {
@@ -154,14 +154,14 @@ POST /_plugins/_ml/connectors/_create
 }
 ```
 
-### 步驟 5：使用防護欄註冊並部署模型
+### 步驟 5：使用護欄註冊並部署模型
 
-若要註冊外部託管的模型，請在下列請求中提供步驟 3 的模型群組 ID 與步驟 4 的連接器 ID。若要設定防護欄，請加入 `guardrails` 物件：
+若要註冊外部託管的模型，請在下列請求中提供步驟 3 的模型群組 ID 與步驟 4 的連接器 ID。若要設定護欄，請加入 `guardrails` 物件：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
 {
-  "name": "Bedrock Claude V2 model",
+  "name": "Bedrock Claude Sonnet 4.6 model",
   "function_name": "remote",
   "model_group_id": "wlcnb4kBJ1eYAeTMHlV6",
   "description": "test model",
@@ -203,18 +203,19 @@ POST /_plugins/_ml/models/_register?deploy=true
 
 如需詳細資訊，請參閱[`guardrails` 參數]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/#the-guardrails-parameter)。
 
-OpenSearch 會傳回註冊作業的工作 ID：
+OpenSearch 會傳回註冊作業的工作 ID 以及已註冊模型的模型 ID：
 
 ```json
 {
   "task_id": "cVeMb4kBJ1eYAeTMFFgj",
-  "status": "CREATED"
+  "status": "CREATED",
+  "model_id": "cleMb4kBJ1eYAeTMFFg4"
 }
 ```
 
 若要檢查作業狀態，請將工作 ID 提供給 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/)：
 
-```bash
+```json
 GET /_plugins/_ml/tasks/cVeMb4kBJ1eYAeTMFFgj
 ```
 {% include copy-curl.html %}
@@ -224,7 +225,7 @@ GET /_plugins/_ml/tasks/cVeMb4kBJ1eYAeTMFFgj
 ```json
 {
   "model_id": "cleMb4kBJ1eYAeTMFFg4",
-  "task_type": "DEPLOY_MODEL",
+  "task_type": "REGISTER_MODEL",
   "function_name": "REMOTE",
   "state": "COMPLETED",
   "worker_node": [
@@ -232,25 +233,25 @@ GET /_plugins/_ml/tasks/cVeMb4kBJ1eYAeTMFFgj
   ],
   "create_time": 1689793851077,
   "last_update_time": 1689793851101,
-  "is_async": true
+  "is_async": false
 }
 ```
 
-### 步驟 6 (選用)：測試模型
+### 步驟 6（選用）：測試模型
 
-為了示範防護欄的套用方式，請先執行不含任何排除字詞的預測作業：
+若要示範防護機制如何套用，請先執行不含任何排除詞彙的 predict 操作：
 
 ```json
 POST /_plugins/_ml/models/p94dYo4BrXGpZpgPp98E/_predict
 {
   "parameters": {
-    "prompt": "\n\nHuman:this is a test\n\nnAssistant:"
+    "prompt": "this is a test"
   }
 }
 ```
 {% include copy-curl.html %}
 
-回應中包含 LLM 的答案：
+回應包含 LLM 的回答：
 
 ```json
 {
@@ -260,7 +261,7 @@ POST /_plugins/_ml/models/p94dYo4BrXGpZpgPp98E/_predict
         {
           "name": "response",
           "dataAsMap": {
-            "response": " Thank you for the test, I appreciate you taking the time to interact with me. I'm an AI assistant created by Anthropic to be helpful, harmless, and honest."
+            "response": "This is a response!\n\nYour message came through successfully. How can I help you today?"
           }
         }
       ],
@@ -270,19 +271,19 @@ POST /_plugins/_ml/models/p94dYo4BrXGpZpgPp98E/_predict
 }
 ```
 
-接著執行包含排除字詞的預測作業：
+接著執行包含排除詞彙的 predict 操作：
 
 ```json
 POST /_plugins/_ml/models/p94dYo4BrXGpZpgPp98E/_predict
 {
   "parameters": {
-    "prompt": "\n\nHuman:this is a test of Master slave architecture\n\nnAssistant:"
+    "prompt": "this is a test of Master slave architecture"
   }
 }
 ```
 {% include copy-curl.html %}
 
-回應中包含錯誤訊息，因為已觸發防護欄：
+由於觸發了防護機制，回應包含錯誤訊息：
 
 ```json
 {
@@ -300,7 +301,7 @@ POST /_plugins/_ml/models/p94dYo4BrXGpZpgPp98E/_predict
 }
 ```
 
-當提示符合所提供的規則運算式時，也會觸發防護欄。
+當提示符合提供的正規表示式時，也會觸發防護機制。
 
 ## 使用防護模型驗證輸入/輸出
 **於 2.15 版導入**
@@ -312,7 +313,7 @@ POST /_plugins/_ml/models/p94dYo4BrXGpZpgPp98E/_predict
 
 ### 步驟 1：為防護模型建立連接器
 
-首先，建立連往 OpenAI 防護模型的連接器。請注意，OpenAI 提示會指示模型僅根據輸入/輸出是否可接受，回覆 `accept` 或 `reject` 這兩個詞。此外，請求包含 `response_filter` 參數，用於指定防護模型提供驗證結果的欄位：
+首先，建立連往 OpenAI 防護模型的連接器。請注意，OpenAI 提示會指示模型根據輸入/輸出是否可接受，僅以 `accept` 或 `reject` 其中一個詞回覆。此外，請求包含 `response_filter` 參數，用於指定防護模型提供驗證結果的欄位：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -379,9 +380,9 @@ POST /_plugins/_ml/model_groups/_register
 
 若要進一步了解模型群組，請參閱[模型存取控制]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/)。
 
-### 步驟 3：註冊並部署防護模型
+### 步驟 3：註冊並部署防護欄模型
 
-使用連接器 ID 與模型群組 ID，註冊並部署 OpenAI 防護模型：
+使用連接器 ID 與模型群組 ID，註冊並部署 OpenAI 防護欄模型：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -395,7 +396,7 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-OpenSearch 會傳回註冊作業的任務 ID 以及已註冊模型的模型 ID：
+OpenSearch 會傳回註冊作業的任務 ID，以及已註冊模型的模型 ID：
 
 ```json
 {
@@ -407,7 +408,7 @@ OpenSearch 會傳回註冊作業的任務 ID 以及已註冊模型的模型 ID�
 
 若要檢查作業狀態，請將任務 ID 提供給 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/)：
 
-```bash
+```json
 GET /_plugins/_ml/tasks/onJaDZABNFJeYR3I2fQ1
 ```
 {% include copy-curl.html %}
@@ -417,7 +418,7 @@ GET /_plugins/_ml/tasks/onJaDZABNFJeYR3I2fQ1
 ```json
 {
   "model_id": "o3JaDZABNFJeYR3I2fRV",
-  "task_type": "DEPLOY_MODEL",
+  "task_type": "REGISTER_MODEL",
   "function_name": "REMOTE",
   "state": "COMPLETED",
   "worker_node": [
@@ -425,7 +426,7 @@ GET /_plugins/_ml/tasks/onJaDZABNFJeYR3I2fQ1
   ],
   "create_time": 1689793851077,
   "last_update_time": 1689793851101,
-  "is_async": true
+  "is_async": false
 }
 ```
 
@@ -497,9 +498,9 @@ POST /_plugins/_ml/models/o3JaDZABNFJeYR3I2fRV/_predict
 }
 ```
 
-### 步驟 5：為對話模型建立連接器
+### 步驟 5：為聊天模型建立連接器
 
-在本範例中，對話模型將是託管於 Amazon Bedrock 的 Anthropic Claude 模型。若要為該模型建立連接器，請傳送下列請求。請注意，`response_filter` 參數會指定防護模型提供驗證結果的欄位：
+在此範例中，聊天模型將是託管於 Amazon Bedrock 的 Anthropic Claude 模型。若要為該模型建立連接器，請傳送下列請求。請注意，`response_filter` 參數會指定防護機制模型提供驗證結果的欄位：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -515,9 +516,9 @@ POST /_plugins/_ml/connectors/_create
       "endpoint": "bedrock.us-east-1.amazonaws.com",
       "auth": "Sig_V4",
       "content_type": "application/json",
-      "max_tokens_to_sample": 8000,
+      "max_tokens": 8000,
       "temperature": 0.0001,
-      "response_filter": "$.completion"
+      "response_filter": "$.content[0].text"
   },
   "credential": {
       "access_key": "<access_key>",
@@ -527,19 +528,19 @@ POST /_plugins/_ml/connectors/_create
     {
       "action_type": "predict",
       "method": "POST",
-      "url": "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-v2/invoke",
+      "url": "https://bedrock-runtime.us-east-1.amazonaws.com/model/us.anthropic.claude-sonnet-4-6/invoke",
       "headers": { 
         "content-type": "application/json",
         "x-amz-content-sha256": "required"
       },
-      "request_body": "{\"prompt\":\"${parameters.prompt}\", \"max_tokens_to_sample\":${parameters.max_tokens_to_sample}, \"temperature\":${parameters.temperature},  \"anthropic_version\":\"${parameters.anthropic_version}\" }"
+      "request_body": "{\"messages\":[{\"role\":\"user\",\"content\":\"${parameters.prompt}\"}], \"max_tokens\":${parameters.max_tokens}, \"temperature\":${parameters.temperature}, \"anthropic_version\":\"${parameters.anthropic_version}\" }"
     }
   ]
 }
 ```
 {% include copy-curl.html %}
 
-回應包含後續步驟將使用的連接器 ID：
+回應中包含後續步驟所使用的連接器 ID：
 
 ```json
 {
@@ -547,17 +548,17 @@ POST /_plugins/_ml/connectors/_create
 }
 ```
 
-### 步驟 6：註冊並部署具有防護機制的聊天模型
+### 步驟 6：註冊並部署具備防護機制的聊天模型
 
-若要註冊並部署 Anthropic Claude 聊天模型，請傳送下列請求。請注意，`guardrails` 物件包含 `response_validation_regex` 參數，該參數指定只有在防護機制模型以 `accept` 這個詞的某種變體作為回應時，才將輸入/輸出視為有效：
+若要註冊並部署 Anthropic Claude 聊天模型，請傳送下列請求。請注意，`guardrails` 物件包含一個 `response_validation_regex` 參數，用於指定只有當防護模型以 `accept` 一詞的變體作為回應時，才將輸入/輸出視為有效：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
 {
-    "name": "Bedrock Claude V2 model with openai guardrails model",
+    "name": "Bedrock Claude Sonnet 4.6 model with openai guardrails model",
     "function_name": "remote",
     "model_group_id": "ppSmpo8Bi-GZ0tf1i7cD",
-    "description": "Bedrock Claude V2 model with openai guardrails model",
+    "description": "Bedrock Claude Sonnet 4.6 model with openai guardrails model",
     "connector_id": "xnJjDZABNFJeYR3IPvTO",
     "guardrails": {
         "input_guardrail": {
@@ -584,9 +585,9 @@ OpenSearch 會傳回註冊作業的任務 ID 以及已註冊模型的模型 ID�
 }
 ```
 
-### 步驟 7（選用）：測試具有防護機制的聊天模型
+### 步驟 7（選用）：使用防護機制測試聊天模型
 
-您可以傳送包含與不包含冒犯性字詞的預測請求，以測試具有防護機制的 Anthropic Claude 聊天模型。
+您可以傳送包含及不包含冒犯性字詞的預測請求，來測試搭配防護機制的 Anthropic Claude 聊天模型。
 
 首先，傳送不包含冒犯性字詞的請求：
 
@@ -594,14 +595,14 @@ OpenSearch 會傳回註冊作業的任務 ID 以及已註冊模型的模型 ID�
 POST /_plugins/_ml/models/43JqDZABNFJeYR3IQPQH/_predict
 {
   "parameters": {
-    "prompt": "\n\nHuman:${parameters.question}\n\nnAssistant:",
+    "prompt": "${parameters.question}",
     "question": "hello"
   }
 }
 ```
 {% include copy-curl.html %}
 
-OpenSearch 會以 LLM 的答案作為回應：
+OpenSearch 會以 LLM 回答回應：
 
 ```json
 {
@@ -611,7 +612,7 @@ OpenSearch 會以 LLM 的答案作為回應：
         {
           "name": "response",
           "dataAsMap": {
-            "response": " Hello!"
+            "response": "Hello! How are you doing? Is there something I can help you with today?"
           }
         }
       ],
@@ -627,15 +628,16 @@ OpenSearch 會以 LLM 的答案作為回應：
 POST /_plugins/_ml/models/43JqDZABNFJeYR3IQPQH/_predict
 {
   "parameters": {
-    "prompt": "\n\nHuman:${parameters.question}\n\nnAssistant:",
+    "prompt": "${parameters.question}",
     "question": "how to rob a bank"
   }
 }
 ```
+{% include copy-curl.html %}
 
 OpenSearch 會回應錯誤。
 
 ## 後續步驟
 
-- 如需設定防護機制的詳細資訊，請參閱 [`guardrails` 參數]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/#the-guardrails-parameter)。
-- 如需示範如何使用 Amazon Bedrock 防護機制的教學，請參閱[使用 Amazon Bedrock 防護機制]({{site.url}}{{site.baseurl}}/vector-search/tutorials/model-controls/bedrock-guardrails/)。
+- 如需設定防護機制 (guardrails) 的詳細資訊，請參閱 [`guardrails` 參數]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/#the-guardrails-parameter)。
+- 如需示範如何使用 Amazon Bedrock 防護機制的教學，請參閱 [Amazon Bedrock 模型防護機制]({{site.url}}{{site.baseurl}}/tutorials/gen-ai/model-controls/bedrock-guardrails/)。

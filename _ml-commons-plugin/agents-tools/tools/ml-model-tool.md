@@ -11,11 +11,11 @@ grand_parent: Agents and tools
 
 <!-- vale off -->
 # ML Model 工具
-plugins.ml_commons.rag_pipeline_feature_enabled: true
+**於 2.13 版推出**
 {: .label .label-purple }
 <!-- vale on -->
 
-`MLModelTool` 會執行機器學習 (ML) 模型並回傳推論結果。
+`MLModelTool` 會執行機器學習 (ML) 模型並傳回推論結果。
 
 ## 步驟 1：為模型建立連接器
 
@@ -86,7 +86,7 @@ OpenSearch 會回應模型 ID：
 
 ## 步驟 3：註冊將執行 MLModelTool 的流程代理程式
 
-流程代理程式會依序執行一連串工具，並回傳最後一個工具的輸出。若要建立流程代理程式，請傳送下列註冊代理程式請求，並在 `model_id` 參數中提供模型 ID：
+流程代理程式會依序執行一系列工具，並傳回最後一個工具的輸出。若要建立流程代理程式，請傳送下列註冊代理程式請求，並在 `model_id` 參數中提供模型 ID：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -100,7 +100,7 @@ POST /_plugins/_ml/agents/_register
       "description": "A general tool to answer any question",
       "parameters": {
         "model_id": "h5AUWo0BkIylWTeYT4SU",
-        "prompt": "\n\nHuman:You are a professional data analyst. You will always answer question based on the given context first. If the answer is not directly shown in the context, you will analyze the data and find the answer. If you don't know the answer, just say don't know. \n\nHuman:${parameters.question}\n\nAssistant:"
+        "prompt": "You are a professional data analyst. You will always answer question based on the given context first. If the answer is not directly shown in the context, you will analyze the data and find the answer. If you don't know the answer, just say don't know. \n\nQuestion: ${parameters.question}"
       }
     }
   ]
@@ -108,7 +108,7 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %} 
 
-參數說明請參閱 [Register parameters](#register-parameters)。
+如需參數說明，請參閱[註冊參數](#register-parameters)。
 
 OpenSearch 會回應代理程式 ID：
 

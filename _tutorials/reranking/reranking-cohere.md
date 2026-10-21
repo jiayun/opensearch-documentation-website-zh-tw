@@ -1,7 +1,7 @@
 ---
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: "使用 Cohere Rerank 重新排序"
+title: "使用 Cohere Rerank 重新排名"
 parent: Reranking search results
 nav_order: 90
 redirect_from:
@@ -9,11 +9,11 @@ redirect_from:
   - /vector-search/tutorials/reranking/reranking-cohere/
 ---
 
-# 使用 Cohere Rerank 重新排序搜尋結果
+# 使用 Cohere Rerank 重新排名搜尋結果
 
-[重新排序管線]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/reranking-search-results/)可以重新排序搜尋結果，為搜尋結果中的每份文件提供相對於搜尋查詢的相關性分數。相關性分數由交叉編碼器模型計算。
+[重新排名管線]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/reranking-search-results/)可以重新排名搜尋結果，為搜尋結果中的每份文件提供相對於搜尋查詢的相關性分數。相關性分數由交叉編碼器模型計算。
 
-本教學說明如何在重新排序管線中使用 [Cohere Rerank](https://docs.cohere.com/reference/rerank-1) 模型。
+本教學說明如何在重新排名管線中使用 [Cohere Rerank](https://docs.cohere.com/reference/rerank-1) 模型。
 
 請將開頭為前置字元 `your_` 的預留位置替換為您自己的值。
 {: .note}
@@ -26,14 +26,14 @@ redirect_from:
 POST /_plugins/_ml/connectors/_create
 {
     "name": "cohere-rerank",
-    "description": "The connector to Cohere reanker model",
+    "description": "The connector to Cohere reranker model",
     "version": "1",
     "protocol": "http",
     "credential": {
         "cohere_key": "your_cohere_api_key"
     },
     "parameters": {
-        "model": "rerank-english-v2.0"
+        "model": "rerank-v3.5"
     },
     "actions": [
         {
@@ -65,7 +65,7 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-請記下回應中的模型 ID；您將在後續步驟中使用它。
+請記下回應中的模型 ID；您會在後續步驟中使用它。
 
 呼叫 Predict API 來測試模型：
 
@@ -84,8 +84,9 @@ POST _plugins/_ml/models/your_model_id/_predict
   }
 }
 ```
+{% include copy-curl.html %}
 
-為確保與重新排序管線相容，`top_n` 值必須與 `documents` 清單的長度相同。
+為確保與重新排名管線相容，`top_n` 的值必須與 `documents` 清單的長度相同。
 {: .important}
 
 您可以提供 `size` 參數，自訂回應中傳回的頂端文件數量。如需詳細資訊，請參閱[步驟 2.3](#step-23-test-the-reranking)。
@@ -144,11 +145,11 @@ OpenSearch 會回應推論結果：
 }
 ```
 
-回應包含四個 `similarity` 物件。對於每個 `similarity` 物件，`data` 陣列包含每份文件相對於查詢的相關性分數。`similarity` 物件會依輸入文件的順序提供；第一個物件對應第一份文件。這與 Cohere Rerank 模型的預設輸出不同，後者會依相關性分數排序文件。文件順序會在 `connector.post_process.cohere.rerank` 後處理函式中變更，以使輸出與重新排序管線相容。
+回應包含四個 `similarity` 物件。對於每個 `similarity` 物件，`data` 陣列會包含每份文件相對於查詢的相關性分數。`similarity` 物件會依輸入文件的順序提供；第一個物件對應第一份文件。這與 Cohere Rerank 模型的預設輸出不同，後者會依相關性分數排序文件。文件順序會在 `connector.post_process.cohere.rerank` 後處理函式中變更，以使輸出與重新排名管線相容。
 
-## 步驟 2：設定重新排序管線
+## 步驟 2：設定重新排名管線
 
-請依照下列步驟設定重新排序管線。
+請依照下列步驟設定重新排名管線。
 
 ### 步驟 2.1：匯入測試資料
 
@@ -167,9 +168,9 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-### 步驟 2.2：建立重新排序管線
+### 步驟 2.2：建立重新排名管線
 
-使用 Cohere Rerank 模型建立重新排序管線：
+使用 Cohere Rerank 模型建立重新排名管線：
 
 ```json
 PUT /_search/pipeline/rerank_pipeline_cohere
@@ -191,9 +192,9 @@ PUT /_search/pipeline/rerank_pipeline_cohere
 ```
 {% include copy-curl.html %}
 
-### 步驟 2.3：測試重新排序
+### 步驟 2.3：測試重新排名
 
-若要限制傳回的結果數量，您可以指定 `size` 參數。例如，將 `"size": 2` 設為傳回前兩份文件：
+若要限制傳回的結果數量，您可以指定 `size` 參數。重新排名處理器只會對查詢傳回的文件重新排名。例如，使用 `"size": 2` 時，處理器只會對 `match_all` 查詢傳回的前兩份文件重新排名。請傳送下列請求，對全部四份文件重新排名：
 
 ```json
 GET my-test-data/_search?search_pipeline=rerank_pipeline_cohere
@@ -213,7 +214,7 @@ GET my-test-data/_search?search_pipeline=rerank_pipeline_cohere
 ```
 {% include copy-curl.html %}
 
-回應包含兩份最相關的文件：
+回應會包含這四份文件，並依相關性分數排序：
 
 ```json
 {
@@ -272,7 +273,7 @@ GET my-test-data/_search?search_pipeline=rerank_pipeline_cohere
 }
 ```
 
-若要將這些結果與未重新排序的結果進行比較，請在沒有重新排序管線的情況下執行搜尋：
+若要將這些結果與未重新排名的結果進行比較，請在沒有重新排名管線的情況下執行搜尋：
 
 ```json
 GET my-test-data/_search
@@ -291,7 +292,7 @@ GET my-test-data/_search
 ```
 {% include copy-curl.html %}
 
-回應中的第一份文件對應 Carson City，而 Carson City 並非美國首都：
+回應中的第一份文件與 Carson City 有關，而 Carson City 並非美國首都：
 
 ```json
 {
@@ -346,3 +347,9 @@ GET my-test-data/_search
   }
 }
 ```
+
+## 相關文件
+
+- [重新排名搜尋結果]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/reranking-search-results/)
+- [重新排名處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/)
+- [第三方機器學習平台的連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)

@@ -19,7 +19,7 @@ redirect_from:
 
 OpenSearch 為多個平台提供連接器，例如：
 
-- [Amazon SageMaker](https://aws.amazon.com/sagemaker/) 可讓您託管文字嵌入模型並管理其生命週期，為 OpenSearch 中的語意搜尋查詢提供支援。連線後，Amazon SageMaker 會託管您的模型，並使用 OpenSearch 查詢推論。這對重視 Amazon SageMaker 功能 (例如模型監控、無伺服器託管，以及持續訓練與部署的工作流程自動化) 的使用者很有幫助。
+- [Amazon SageMaker](https://aws.amazon.com/sagemaker/) 可讓您託管文字嵌入模型並管理其生命週期，為 OpenSearch 中的語意搜尋查詢提供支援。連線後，Amazon SageMaker 會託管您的模型，而 OpenSearch 則用來查詢推論。這對重視 Amazon SageMaker 功能 (例如模型監控、無伺服器託管，以及持續訓練與部署的工作流程自動化) 的使用者很有幫助。
 - [OpenAI ChatGPT](https://platform.openai.com/docs/introduction) 可讓您從 OpenSearch 叢集內部叫用 OpenAI 聊天模型。
 - [Cohere](https://cohere.com/) 可讓您使用 OpenSearch 的資料來支援 Cohere 大型語言模型。
 - [Amazon Bedrock](https://aws.amazon.com/bedrock/) 支援 [Bedrock Titan Embeddings](https://aws.amazon.com/bedrock/titan/) 等模型，可在 OpenSearch 中帶動語意搜尋與檢索增強生成。
@@ -29,7 +29,7 @@ OpenSearch 為多個平台提供連接器，例如：
 
 建立連接器需要兩項資訊：模型的請求與回應格式，以及平台的驗證方法：
 
-- 請求與回應格式定義於_連接器藍圖_中，其中定義了為特定平台與模型建立連接器時要提供的欄位集 (請求本文)。若要尋找適用於您平台與模型的預先建置藍圖，請參閱 [OpenSearch 提供的連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/supported-connectors/)。如需所有連接器欄位的說明，或要為 OpenSearch 未提供的平台或模型建立藍圖，請參閱[連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/)。
+- 請求與回應格式在 _連接器藍圖_ 中指定，其中定義了為特定平台與模型建立連接器時要提供的欄位集 (請求本文)。若要尋找適用於您平台與模型的預先建置藍圖，請參閱 [OpenSearch 提供的連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/supported-connectors/)。如需所有連接器欄位的說明，或要為 OpenSearch 未提供的平台或模型建立藍圖，請參閱[連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/)。
 
 - 驗證方法定義於連接器的 `protocol` 欄位中，並由平台決定。如需詳細資訊，請參閱[連接器驗證]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connector-authentication/)。
 
@@ -121,18 +121,18 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-## 更新連接器憑證
+## 更新連接器認證資訊
 
-在某些情況下，您可能需要更新用來連線至外部託管模型的憑證，例如即將到期的 API 金鑰。若要在不取消部署模型的情況下執行此操作，請在更新請求中提供新的憑證。
+在某些情況下，您可能需要更新用來連線至外部託管模型的認證資訊，例如即將到期的 API 金鑰。若要在不取消部署模型的情況下執行此操作，請在更新請求中提供新的認證資訊。
 
 ### 特定模型的連接器
 
-若要更新連結至特定模型之連接器的憑證，請在下列請求中提供新的憑證：
+若要更新連結至特定模型之連接器的認證資訊，請在下列請求中提供新的認證資訊：
 
 ```json
 PUT /_plugins/_ml/models/{model_id}
 {
-  "connectors": {
+  "connector": {
     "credential": {
       "openAI_key": "<new_openai_key>"
     }
@@ -143,7 +143,7 @@ PUT /_plugins/_ml/models/{model_id}
 
 ### 獨立連接器
 
-若要更新獨立連接器的憑證，請在下列請求中提供新的憑證：
+若要更新獨立連接器的認證資訊，請在下列請求中提供新的認證資訊：
 
 ```json
 PUT /_plugins/_ml/connectors/{connector_id}

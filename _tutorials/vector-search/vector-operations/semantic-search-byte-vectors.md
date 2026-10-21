@@ -214,7 +214,7 @@ POST _bulk
 
 ## 步驟 3：設定語意搜尋
 
-建立一個連接至嵌入模型的連接器，並使用 `search_query` 輸入類型：
+使用 `search_query` 輸入類型，建立連接至嵌入模型的連接器：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -249,14 +249,14 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-請記下回應中的連接器 ID；您將使用它來註冊模型。
+記下回應中的連接器 ID；您稍後會用它來註冊模型。
 
 註冊模型，並提供其連接器 ID：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
 {
-    "name": "Cohere embedding model for INT8 with search_document input type",
+    "name": "Cohere embedding model for INT8 with search_query input type",
     "function_name": "remote",
     "description": "test model",
     "connector_id": "your_connector_id"
@@ -264,7 +264,7 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-請記下回應中的模型 ID；您將使用它來執行查詢。
+記下回應中的模型 ID；您稍後會用它來執行查詢。
 
 執行向量搜尋，並提供模型 ID：
 
@@ -286,7 +286,7 @@ POST /my_test_data/_search
 ```
 {% include copy-curl.html %}
 
-回應中包含查詢結果：
+回應包含查詢結果：
 
 ```json
 {
@@ -317,3 +317,10 @@ POST /my_test_data/_search
   }
 }
 ```
+
+## 相關文件
+
+- [語意搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/semantic-search/)
+- [記憶體最佳化向量]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/)
+- [文字嵌入處理器]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/text-embedding/)
+- [神經查詢]({{site.url}}{{site.baseurl}}/query-dsl/specialized/neural/)

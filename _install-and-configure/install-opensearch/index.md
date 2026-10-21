@@ -45,7 +45,7 @@ redirect_from:
 - 執行多個節點（包括專用的叢集管理員節點），以便在節點發生故障時叢集仍可用。如需更多資訊，請參閱 [建立叢集]({{site.url}}{{site.baseurl}}/tuning-your-cluster/)。
 - 使用快照備份您的資料。如需更多資訊，請參閱 [快照]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/snapshots/index/)。
 
-如需更多安全性建議，請參閱 [OpenSearch 安全性最佳實踐]({{site.url}}{{site.baseurl}}/security/configuration/best-practices/)。
+如需更多安全性建議，請參閱 [OpenSearch 安全性最佳實務]({{site.url}}{{site.baseurl}}/security/configuration/best-practices/)。
 
 ## 檔案系統建議
 
@@ -53,19 +53,19 @@ redirect_from:
 
 ## Java 相容性
 
-Linux 版的 OpenSearch 分發版在 `jdk` 目錄中附帶了相容的 [Adoptium JDK](https://adoptium.net/) Java 版本。若要查看 JDK 版本，請執行 `./jdk/bin/java -version`。例如，OpenSearch 1.0.0 tarball 附帶 Java 15.0.1+9 (non-LTS)，OpenSearch 1.3.0 附帶 Java 11.0.14.1+1 (LTS)，而 OpenSearch 2.0.0 附帶 Java 17.0.2+8 (LTS)。OpenSearch 已通過所有相容 Java 版本的測試。
+Linux 版 OpenSearch 發行版會在 `jdk` 目錄中隨附相容的 [Adoptium JDK](https://adoptium.net/) Java 版本。若要找出 JDK 版本，請執行 `./jdk/bin/java -version`。例如，OpenSearch 1.0.0 tarball 隨附 Java 15.0.1+9（非 LTS），OpenSearch 1.3.0 隨附 Java 11.0.14.1+1（LTS），而 OpenSearch 2.0.0 隨附 Java 17.0.2+8（LTS）。OpenSearch 已使用所有相容的 Java 版本進行測試。
 
-OpenSearch 版本 | 相容的 Java 版本 | 內建 Java 版本
+OpenSearch 版本 | 相容的 Java 版本 | 隨附的 Java 版本
 :---------- | :-------- | :-----------
 1.0--1.2.x    | 11, 15     | 15.0.1+9
 1.3.x          | 8, 11, 14  | 11.0.25+9
 2.0.0--2.11.x    | 11, 17     | 17.0.2+8
-2.12.0+        | 11, 17, 21 | 21.0.11+10
+2.12.0+        | 11, 17, 21 | 21.0.12.1+1
 3.2.0+        | 21, 24 | 24.0.2+12
 3.5.0+        | 21, 25 | 25.0.2+10
 3.6.1+        | 21, 25, 26 | 25.0.4.1+1
 
-若要使用不同的 Java 安裝版本，請將 `OPENSEARCH_JAVA_HOME` 或 `JAVA_HOME` 環境變數設定為 Java 安裝位置。例如：
+若要使用不同的 Java 安裝，請將 `OPENSEARCH_JAVA_HOME` 或 `JAVA_HOME` 環境變數設為 Java 安裝位置。例如：
 
 ```bash
 export OPENSEARCH_JAVA_HOME=/path/to/opensearch-{{site.opensearch_version}}/jdk
@@ -91,7 +91,7 @@ OpenSearch 元件需要開啟以下 TCP 連接埠。
 
 對於在 Linux 上執行的生產環境工作負載，請確保 [Linux 設定](https://www.kernel.org/doc/Documentation/sysctl/vm.txt) `vm.max_map_count` 至少設定為 `262144`。
 
-即使您使用 Docker 映像檔，也請在主機機器上設定此值。若要檢查目前的值，請執行此命令：
+即使您使用 Docker 映像檔，也請在主機上設定此值。若要檢查目前的值，請執行此命令：
 
 ```bash
 cat /proc/sys/vm/max_map_count
@@ -112,7 +112,7 @@ sudo sysctl -p
 ```
 {% include copy.html %}
 
-對於 Windows 工作負載，請在 Docker Desktop WSL 分發版中設定 `vm.max_map_count`。首先，在分發版中開啟 shell：
+對於 Windows 工作負載，請在 Docker Desktop WSL 發行版中設定 `vm.max_map_count`。首先，在發行版中開啟 shell：
 
 ```bash
 wsl -d docker-desktop
@@ -130,15 +130,15 @@ sysctl -w vm.max_map_count=262144
 
 - `bootstrap.memory_lock=true`
 
-  停用分頁 (swapping)（與 `memlock` 一同設定）。分頁可能會大幅降低效能與穩定性，因此您應確保在生產環境叢集中將其停用。
+  停用記憶體交換 (swapping)（搭配 `memlock`）。記憶體交換可能會大幅降低效能與穩定性，因此您應確保在生產環境叢集中將其停用。
 
-  啟用 `bootstrap.memory_lock` 設定將導致 JVM 預留其所需的所有記憶體。[Java SE Hotspot VM Garbage Collection Tuning Guide](https://docs.oracle.com/javase/9/gctuning/other-considerations.htm#JSGCT-GUID-B29C9153-3530-4C15-9154-E74F44E3DAD9) 記錄了預設 1 gigabyte (GB) 的 Class Metadata 原生記憶體預留。結合 Java heap，在記憶體低於這些要求的 VM 上，這可能會因為缺乏原生記憶體而導致錯誤。為了防止錯誤，請使用 `-XX:CompressedClassSpaceSize` 或 `-XX:MaxMetaspaceSize` 限制預留記憶體大小，並設定 Java heap 的大小以確保您有足夠的系統記憶體。
+  啟用 `bootstrap.memory_lock` 設定將導致 JVM 預留其所需的所有記憶體。[Java SE Hotspot VM Garbage Collection Tuning Guide](https://docs.oracle.com/javase/9/gctuning/other-considerations.htm#JSGCT-GUID-B29C9153-3530-4C15-9154-E74F44E3DAD9) 記錄了預設 1 gigabyte (GB) 的類別中繼資料 (Class Metadata) 原生記憶體預留。結合 Java 堆積（heap），在記憶體低於這些要求的虛擬機器 (VM) 上，這可能會因為缺乏原生記憶體而導致錯誤。為了防止錯誤，請使用 `-XX:CompressedClassSpaceSize` 或 `-XX:MaxMetaspaceSize` 限制預留記憶體大小，並設定 Java 堆積的大小以確保您有足夠的系統記憶體。
 
 - `OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m`
 
-  設定 Java heap 的大小（我們建議設定為系統 RAM 的一半）。
+  設定 Java 堆積的大小（我們建議設定為系統 RAM 的一半）。
   
- OpenSearch 的 heap 記憶體配置預設為 `-Xms1g -Xmx1g`，其優先級高於使用百分比表示法 (`-XX:MinRAMPercentage`, `-XX:MaxRAMPercentage`) 指定的組態。例如，如果您設定 `OPENSEARCH_JAVA_OPTS=-XX:MinRAMPercentage=30 -XX:MaxRAMPercentage=70`，預定義的 `-Xms1g -Xmx1g` 值將覆蓋這些設定。使用 `OPENSEARCH_JAVA_OPTS` 定義記憶體配置時，請確保使用 `-Xms` 和 `-Xmx` 表示法。
+ OpenSearch 的堆積記憶體配置預設為 `-Xms1g -Xmx1g`，其優先順序高於使用百分比表示法（`-XX:MinRAMPercentage`、`-XX:MaxRAMPercentage`）指定的組態。例如，如果您設定 `OPENSEARCH_JAVA_OPTS=-XX:MinRAMPercentage=30 -XX:MaxRAMPercentage=70`，預先定義的 `-Xms1g -Xmx1g` 值將覆寫這些設定。使用 `OPENSEARCH_JAVA_OPTS` 定義記憶體配置時，請確保使用 `-Xms` 和 `-Xmx` 表示法。
 {: .note}
 
 - `nofile 65536`
@@ -149,7 +149,7 @@ sysctl -w vm.max_map_count=262144
 
   允許您透過連接埠 9600 存取 Performance Analyzer。
 
-請勿在多個位置宣告相同的 JVM 選項，因為這可能會導致非預期的行為或 OpenSearch 服務無法啟動。如果您使用環境變數（例如 `OPENSEARCH_JAVA_OPTS=-Xms3g -Xmx3g`）宣告 JVM 選項，則應將 `config/jvm.options` 中對該 JVM 選項的所有引用註解掉。反之，如果您在 `config/jvm.options` 中定義 JVM 選項，則不應使用環境變數定義這些 JVM 選項。
+請勿在多個位置宣告相同的 JVM 選項，因為這可能會導致非預期的行為或 OpenSearch 服務無法啟動。如果您使用環境變數（例如 `OPENSEARCH_JAVA_OPTS=-Xms3g -Xmx3g`）宣告 JVM 選項，則應將 `config/jvm.options` 中對該 JVM 選項的所有參照註解掉。反之，如果您在 `config/jvm.options` 中定義 JVM 選項，則不應使用環境變數定義這些 JVM 選項。
 {: .note}
 
 ## 重要系統屬性

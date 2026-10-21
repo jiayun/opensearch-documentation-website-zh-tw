@@ -203,14 +203,13 @@ POST /_plugins/_ml/_predict/text_embedding/your_model_id
           "name": "sentence_embedding",
           "data_type": "FLOAT32",
           "shape": [384],
-          "data": [0.0419328, 0.047480892, ..., 0.31158513, 0.21784715]
+          "data": [0.1803471, 0.21730064, ..., 0.14264598, 0.32749692]
         }
       ]
     }
   ]
 }
 ```
-{% include copy-curl.html %}
 
 ### 產生查詢嵌入
 
@@ -228,7 +227,7 @@ POST /_plugins/_ml/_predict/text_embedding/your_model_id
 ```
 {% include copy-curl.html %}
 
-回應包含產生的嵌入：
+回應中包含所產生的嵌入：
 
 ```json
 {
@@ -239,22 +238,21 @@ POST /_plugins/_ml/_predict/text_embedding/your_model_id
           "name": "sentence_embedding",
           "data_type": "FLOAT32",
           "shape": [384],
-          "data": [0.2338349, -0.13603798, ..., 0.37335885, 0.10653384]
+          "data": [0.27292773, 0.03270153, ..., 0.03248981, 0.19625588]
         }
       ]
     }
   ]
 }
 ```
-{% include copy-curl.html %}
 
-# 步驟 7：執行語意搜尋
+## 步驟 7：執行語意搜尋
 
-現在您將使用 `semantic` 欄位類型執行語意搜尋。
+現在您將使用 `semantic` 欄位類型來執行語意搜尋。
 
-## 步驟 7.1：建立包含語意欄位的索引
+### 步驟 7.1：建立包含語意欄位的索引
 
-建立包含 `semantic` 欄位的索引，該欄位會參照已部署的非對稱模型。OpenSearch 會在匯入與搜尋期間使用指定的模型自動產生嵌入：
+建立包含 `semantic` 欄位的索引，該欄位會參照已部署的非對稱模型。OpenSearch 會在匯入與搜尋期間，使用指定的模型自動產生嵌入：
 
 ```json
 PUT nyc_facts
@@ -277,7 +275,7 @@ PUT nyc_facts
 ```
 {% include copy-curl.html %}
 
-將 `your_model_id` 替換為步驟 4 的模型 ID。由於模型已設定 `passage_prefix` 與 `query_prefix`，`semantic` 欄位會在為文件（`passage` 內容類型）與查詢（`query` 內容類型）產生嵌入時自動套用適當的前綴。
+將 `your_model_id` 替換為步驟 4 的模型 ID。由於模型已設定 `passage_prefix` 與 `query_prefix`，`semantic` 欄位在為文件（`passage` 內容類型）與查詢（`query` 內容類型）產生嵌入時，會自動套用適當的前綴。
 
 ### 步驟 7.2：匯入資料
 
@@ -396,4 +394,10 @@ GET /nyc_facts/_search
 
 ## 參考資料
 
-- Wang, Liang, et al. (2024). *Multilingual E5 Text Embeddings: A Technical Report*. arXiv 預印本 arXiv:2402.05672. [連結](https://arxiv.org/abs/2402.05672)
+- Wang, Liang, et al. (2024)。*Multilingual E5 Text Embeddings: A Technical Report*。arXiv 預印本 arXiv:2402.05672。[連結](https://arxiv.org/abs/2402.05672)
+
+## 相關文件
+
+- [語意搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/semantic-search/)
+- [神經查詢]({{site.url}}{{site.baseurl}}/query-dsl/specialized/neural/)
+- [自訂本機模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/custom-local-models/)

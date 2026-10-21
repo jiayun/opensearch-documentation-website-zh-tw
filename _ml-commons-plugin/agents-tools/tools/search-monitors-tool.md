@@ -27,9 +27,6 @@ POST /_plugins/_ml/agents/_register
   "name": "Test_Agent_For_Search_Monitors_Tool",
   "type": "flow",
   "description": "this is a test agent for the SearchMonitorsTool",
-  "memory": {
-    "type": "demo"
-  },
   "tools": [
     {
       "type": "SearchMonitorsTool",
@@ -112,7 +109,7 @@ OpenSearch 會傳回您叢集上已設定的警示監視器清單，以及警示
 `hasTriggers` |	布林值	| 是否傳回已啟用觸發條件的監視器資訊。不設定此參數（或將其設為 `null`）即可傳回已啟用和已停用觸發條件的監視器資訊。將此參數設為 `true`，即可僅傳回已啟用觸發條件的監視器資訊。將此參數設為 `false`，即可僅傳回已停用觸發條件的監視器資訊。預設為 `null`。
 `indices` | 字串	| 傳回的監視器所追蹤之索引的索引名稱或索引模式。
 `sortOrder`| 字串 | 結果的排序順序。有效值為 `asc`（遞增）和 `desc`（遞減）。預設為 `asc`。 
-`sortString`| 字串 |	指定用來排序結果的監視器欄位。預設為 `name.keyword`。
+`sortString`| 字串 |	指定用來排序結果的監視器欄位。預設為 `monitor.name.keyword`。
 `size`	| 整數 |	要傳回的結果數量。預設為 `20`。
 `startIndex`| 整數 |	作為起點的監視器分頁索引。預設為 `0`。
 

@@ -10,9 +10,9 @@ nav_order: 110
 
 Profile API 操作會傳回 ML 任務與模型的執行階段資訊。Profile 操作可協助您在執行階段偵錯模型問題。
 
-## 傳回的請求數
+## 傳回的請求數量
 
-根據預設，Profile API 會監視最近 100 個請求。若要變更監視請求的數量，請更新下列叢集設定：
+預設情況下，Profile API 會監控最近 100 個請求。若要變更監控的請求數量，請更新下列叢集設定：
 
 ```json
 PUT _cluster/settings
@@ -22,8 +22,9 @@ PUT _cluster/settings
   }
 }
 ```
+{% include copy-curl.html %}
 
-若要清除所有監視請求，請將 `plugins.ml_commons.monitoring_request_count` 設為 `0`。
+若要清除所有監控的請求，請將 `plugins.ml_commons.monitoring_request_count` 設定為 `0`。 
 
 ## 端點
 
@@ -44,15 +45,15 @@ GET /_plugins/_ml/profile/tasks/{task_id}
 
 ### 請求本文欄位
 
-所有 Profile 本文請求欄位皆為選用。
+所有執行概況請求本文欄位皆為選用。
 
 欄位 | 資料類型 | 說明
 :--- | :--- | :--- 
-`node_ids` | 字串 | 傳回特定節點的所有任務與執行概況。
-`model_ids` | 字串 | 傳回特定模型的執行階段資料。您可以串接多個模型 ID，以傳回多個模型執行概況。
-`task_ids` | 字串 | 傳回特定任務的執行階段資料。您可以串接多個任務 ID，以傳回多個任務執行概況。
-`return_all_tasks` | 布林值 | 判斷請求是否傳回所有任務。設為 `false` 時，回應中會省略任務執行概況。
-`return_all_models` | 布林值 | 判斷 Profile 請求是否傳回所有模型。設為 `false` 時，回應中會省略模型執行概況。
+`node_ids` | 陣列 | 傳回指定節點的所有任務與執行概況。 
+`model_ids` | 陣列 | 傳回指定模型的執行階段資料。
+`task_ids` | 陣列 | 傳回指定任務的執行階段資料。
+`return_all_tasks` | 布林值 | 決定請求是否傳回所有任務。設為 `false` 時，回應中會省略任務執行概況。
+`return_all_models` | 布林值 | 決定執行概況請求是否傳回所有模型。設為 `false` 時，回應中會省略模型執行概況。
 
 ## 範例請求：傳回特定節點上的所有任務與模型
 
@@ -66,7 +67,7 @@ GET /_plugins/_ml/profile
 ```
 {% include copy-curl.html %}
 
-## 範例回應
+## 回應範例 
 
 ```json
 {
@@ -85,10 +86,22 @@ GET /_plugins/_ml/profile
       "models" : {
         "WWQI44MBbzI2oUKAvNUt" : { # model id
           "model_state" : "DEPLOYED", # model status
-          "predictor" : "org.opensearch.ml.engine.algorithms.text_embedding.TextEmbeddingModel@592814c9",
+          "predictor" : "org.opensearch.ml.engine.algorithms.text_embedding.TextEmbeddingDenseModel@592814c9",
+          "target_worker_nodes" : [ # nodes planned for deployment
+            "KzONM8c8T4Od-NoUANQNGg"
+          ],
           "worker_nodes" : [ # routing table
             "KzONM8c8T4Od-NoUANQNGg"
           ],
+          "model_inference_stats" : { # model inference latency on this node
+            "count" : 2,
+            "max" : 88.827301,
+            "min" : 4.251,
+            "average" : 46.5391505,
+            "p50" : 46.5391505,
+            "p90" : 80.3683304,
+            "p99" : 87.98140399
+          },
           "predict_request_stats" : { # predict request stats on this node
             "count" : 2, # total predict requests on this node
             "max" : 89.978681, # max latency in milliseconds

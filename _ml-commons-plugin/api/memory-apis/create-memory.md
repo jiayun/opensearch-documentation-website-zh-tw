@@ -42,6 +42,10 @@ PUT /_plugins/_ml/memory/{memory_id}
 欄位 | 資料類型 | 必要／選用 | 說明
 :--- | :--- | :--- | :---
 `name` | 字串 | 選用 | 記憶的名稱。
+`additional_info` | 物件 | 選用 | 記憶的其他資訊，以字串鍵值對提供。建立記憶時，除非同時指定 `name`，否則此欄位會被忽略。
+`application_type` | 字串 | 選用 | 使用該記憶的應用程式類型。僅適用於 POST 方法，除非同時指定 `name`，否則會被忽略。
+
+PUT 方法僅更新 `name` 與 `additional_info` 欄位。PUT 請求中的其他欄位會被忽略。
 
 ## 請求範例
 
@@ -53,10 +57,42 @@ POST /_plugins/_ml/memory/
 ```
 {% include copy-curl.html %}
 
-## 回應範例
+## 範例回應
 
 ```json
 {
   "memory_id": "gW8Aa40BfUsSoeNTvOKI"
+}
+```
+
+## 範例請求：更新記憶
+
+```json
+PUT /_plugins/_ml/memory/gW8Aa40BfUsSoeNTvOKI
+{
+  "name": "Renamed conversation",
+  "additional_info": {
+    "topic": "population growth"
+  }
+}
+```
+{% include copy-curl.html %}
+
+## 範例回應：更新記憶
+
+```json
+{
+  "_index": ".plugins-ml-memory-meta",
+  "_id": "gW8Aa40BfUsSoeNTvOKI",
+  "_version": 2,
+  "result": "updated",
+  "forced_refresh": true,
+  "_shards": {
+    "total": 1,
+    "successful": 1,
+    "failed": 0
+  },
+  "_seq_no": 3,
+  "_primary_term": 1
 }
 ```

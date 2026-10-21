@@ -42,23 +42,27 @@ ML Commons 支援下列設定，用於選取執行 ML 工作與模型的節點�
 我們建議在生產叢集上將 `plugins.ml_commons.only_run_on_ml_node` 設為 `true`。
 {: .tip}
 
-## 工作與模型限制設定
+## 任務與模型限制設定
 
-ML Commons 支援下列設定，用於限制每個節點上 ML 工作與模型的數量及持續時間：
+ML Commons 支援下列設定，用於限制 ML 任務與模型：
 
-- `plugins.ml_commons.max_ml_task_per_node` (動態，整數)：每個 ML 節點上可執行之 ML 工作的最大數量。當設為 `0` 時，任何節點上都不會執行 ML 工作。有效值為 0--10,000。預設值為 `10`。
+- `plugins.ml_commons.max_ml_task_per_node`（動態，整數）：每個 ML 節點可執行的 ML 任務數量上限。設為 `0` 時，任何節點都不會執行 ML 任務。有效值為 0--10,000。預設值為 `10`。
 
-- `plugins.ml_commons.max_model_on_node` (動態，整數)：可部署至每個 ML 節點之模型的最大數量。當設為 `0` 時，無法將任何模型部署至任何節點。有效值為 0--10,000。預設值為 `10`。
+- `plugins.ml_commons.max_model_on_node`（動態，整數）：可部署至每個 ML 節點的模型數量上限。設為 `0` 時，任何節點都無法部署模型。有效值為 0--10,000。預設值為 `10`。
 
-- `plugins.ml_commons.max_register_model_tasks_per_node` (動態，整數)：可在單一節點上平行執行之模型註冊工作的最大數量。當設為 `0` 時，無法在任何節點上註冊任何模型。有效值為 0--10。預設值為 `10`。
+- `plugins.ml_commons.max_register_model_tasks_per_node`（動態，整數）：單一節點上可平行執行的模型註冊任務數量上限。設為 `0` 時，任何節點都無法註冊模型。有效值為 0--10。預設值為 `10`。
 
-- `plugins.ml_commons.max_deploy_model_tasks_per_node` (動態，整數)：可在單一節點上平行執行之模型部署工作的最大數量。當設為 `0` 時，無法將任何模型部署至任何節點。有效值為 0--10。預設值為 `10`。
+- `plugins.ml_commons.max_deploy_model_tasks_per_node`（動態，整數）：單一節點上可平行執行的模型部署任務數量上限。設為 `0` 時，任何節點都無法部署模型。有效值為 0--10。預設值為 `10`。
 
-- `plugins.ml_commons.ml_task_timeout_in_seconds` (動態，整數)：ML 工作可執行的時間長度 (以秒為單位)。逾時後，工作會失敗。有效值為 1--86,400。預設值為 `600`。
+- `plugins.ml_commons.ml_task_timeout_in_seconds`（動態，整數）：ML 任務可執行的時間長度，以秒為單位。逾時後，任務會失敗。有效值為 1--86,400。預設值為 `600`。
 
-- `plugins.ml_commons.sync_up_job_interval_in_seconds` (動態，整數)：ML Commons 執行作業以同步每個節點上新部署或取消部署之模型的間隔 (以秒為單位)。此作業會讓 [Profile API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/profile/) 傳回的執行階段資訊保持最新。當設為 `0` 時，ML Commons 會停止同步作業。有效值為 0--86,400。預設值為 `10`。
+- `plugins.ml_commons.sync_up_job_interval_in_seconds`（動態，整數）：ML Commons 執行作業以同步各節點上新部署或取消部署之模型的間隔，以秒為單位。此作業會讓 [Profile API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/profile/) 傳回的執行階段資訊保持最新。設為 `0` 時，ML Commons 會停止同步作業。有效值為 0--86,400。預設值為 `10`。
 
-- `plugins.ml_commons.monitoring_request_count` (動態，長整數)：每個節點上受監控的預測請求數量。當設為 `0` 時，OpenSearch 會從快取中清除所有受監控的預測請求，並停止監控新的預測請求。有效值為 0--10,000,000。預設值為 `100`。
+- `plugins.ml_commons.monitoring_request_count`（動態，長整數）：每個節點上受監控的預測請求數量。設為 `0` 時，OpenSearch 會從快取清除所有受監控的預測請求，並停止監控新的預測請求。有效值為 0--10,000,000。預設值為 `100`。
+
+- `plugins.ml_commons.max_batch_inference_tasks`（動態，整數）：叢集中可處於 `CREATED` 或 `RUNNING` 狀態的[批次推論]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/batch-predict/)任務數量上限。達到此上限時，OpenSearch 會拒絕新的批次推論請求。設為 `0` 時，無法執行任何批次推論任務。有效值為 0--10,000。預設值為 `100`。
+
+- `plugins.ml_commons.max_json_size`（動態，整數）：ML Commons 所剖析之 JSON 字串的大小上限，以位元組為單位，例如外部託管模型傳回的回應。若 JSON 字串超過此大小，請求會失敗。若要移除限制，請將此值設為 `-1`。預設值為 `100000000`（100 MB）。
 
 ## 模型註冊設定
 
@@ -75,6 +79,16 @@ ML Commons 支援下列設定，用於限制每個節點上 ML 工作與模型�
 
 `plugins.ml_commons.trusted_url_regex` 的預設值不安全。為確保安全，請將其設為僅符合包含您模型之受信任儲存庫的正規表示式，例如 `https://github.com/opensearch-project/ml-commons/blob/2.x/ml-algorithms/src/test/resources/org/opensearch/ml/engine/algorithms/text_embedding/*`。
 {: .warning }
+
+## 連接器端點設定
+
+ML Commons 支援下列設定，用於控制連接器傳送請求的目標端點：
+
+- `plugins.ml_commons.trusted_connector_endpoints_regex`（動態，清單）：Java 正規表示式清單。只有當連接器的端點 URL 符合其中一個表示式時，OpenSearch 才會接受該連接器。您提供的值會取代整份預設清單。如需預設清單，請參閱[新增受信任的端點]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/#adding-trusted-endpoints)。
+
+- `plugins.ml_commons.connector.private_ip_enabled`（動態，布林值）：當值為 `true` 時，連接器可以將請求傳送至解析為私有、連結本機或迴路 IP 位址的主機，例如 `10.0.0.1` 或 `127.0.0.1`。當值為 `false` 時，如果模型的連接器端點解析為這類位址，OpenSearch 就會拒絕該模型的預測請求。若要將變更套用至已部署的模型，請重新部署模型。預設值為 `false`。
+
+- `plugins.ml_commons.trusted_connector_private_endpoints_regex`（動態，清單）：Java 正規表示式清單，用於限制連接器可傳送請求的私有端點。此設定僅在 `plugins.ml_commons.connector.private_ip_enabled` 為 `true` 時適用。如果清單包含表示式，則主機解析為私有 IP 位址的連接器 URL 必須符合其中一個表示式。如果清單為空，連接器可以將請求傳送至任何私有端點。若要將變更套用至已部署的模型，請重新部署模型。預設值為 `[]`。
 
 ## 斷路器設定
 
@@ -110,24 +124,40 @@ ML Commons 支援下列設定，可自動部署及重新部署模型：
 
 ## 功能設定
 
-ML Commons 支援下列設定，可啟用及停用功能：
+ML Commons 支援下列用於啟用與停用功能的設定：
 
-- `plugins.ml_commons.remote_inference.enabled`（動態，布林值）：當值為 `false` 時，使用者無法建立連接器，也無法註冊、部署外部託管模型或使用這些模型執行預測。預設值為 `true`。
+- `plugins.ml_commons.remote_inference.enabled`（動態，布林值）：當設為 `false` 時，使用者無法建立連接器，也無法使用外部託管的模型註冊、部署或執行預測。預設值為 `true`。
 
-- `plugins.ml_commons.local_model.enabled`（動態，布林值）：當值為 `false` 時，使用者無法註冊、部署本機模型或使用這些模型執行預測。預設值為 `true`。
+- `plugins.ml_commons.local_model.enabled`（動態，布林值）：當設為 `false` 時，使用者無法使用本機模型註冊、部署或執行預測。預設值為 `true`。
 
-- `plugins.ml_commons.connector_access_control_enabled`（動態，布林值）：當值為 `true` 時，管理員可以使用 `backend_roles` 控制 Connector APIs 的存取權。預設值為 `false`。
+- `plugins.ml_commons.offline_batch_inference_enabled`（動態，布林值）：當設為 `false` 時，使用者無法執行[批次推論]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/batch-predict/)，也無法取得或取消批次推論任務。預設值為 `true`。
 
-- `plugins.ml_commons.connector.vertexai_enabled`（動態，布林值）：當值為 `true` 時，使用者可以建立使用 `google_cloud` 通訊協定的連接器。如需詳細資訊，請參閱 [Google Cloud 驗證]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/google-cloud/)。預設值為 `false`。
+- `plugins.ml_commons.controller_enabled`（動態，布林值）：當設為 `false` 時，使用者無法使用 [Controller APIs]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/controller-apis/index/) 建立、更新、取得或刪除模型控制器。預設值為 `true`。
 
-- `plugins.ml_commons.safe_delete_model`（動態，布林值）：當值為 `true` 時，OpenSearch 會在刪除模型前檢查下游相依性。如果代理程式、搜尋管線、資料匯入管線或其他下游工作正在使用該模型，OpenSearch 會傳回錯誤，且不會刪除模型。預設值為 `false`。
+- `plugins.ml_commons.model_access_control_enabled`（動態，布林值）：當設為 `true` 且 Security 外掛程式已啟用時，管理員可以使用模型群組控制模型的存取權。如需更多資訊，請參閱[模型存取控制]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/)。預設值為 `false`。
 
-- `plugins.ml_commons.enable_inhouse_python_model`（動態，布林值）：當值為 `true` 時，使用者可以執行 OpenSearch 支援的 Python 模型，例如[指標關聯]({{site.url}}{{site.baseurl}}/ml-commons-plugin/algorithms/#metrics-correlation)。預設值為 `false`。
+- `plugins.ml_commons.connector_access_control_enabled`（動態，布林值）：當設為 `true` 時，管理員可以使用 `backend_roles` 控制 Connector APIs 的存取權。預設值為 `false`。
 
-- `plugins.ml_commons.agent_framework_enabled`（動態，布林值）：當值為 `true` 時，會啟用代理程式架構，包括代理程式與工具，並允許使用者註冊、執行、刪除、擷取及搜尋代理程式。預設值為 `true`。
+- `plugins.ml_commons.connector.vertexai_enabled`（動態，布林值）：當設為 `true` 時，使用者可以建立使用 `google_cloud` 協定的連接器。如需更多資訊，請參閱 [Google Cloud 驗證]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/google-cloud/)。預設值為 `false`。
 
-- `plugins.ml_commons.memory_feature_enabled`（動態，布林值）：當值為 `true` 時，會啟用對話記憶，儲存對話中的所有訊息以供對話式搜尋使用。預設值為 `true`。
+- `plugins.ml_commons.connector.mutual_tls_enabled`（動態，布林值）：當設為 `true` 時，使用者可以建立連接器，在 `client_config` 中將 `mutual_tls_enabled` 設為 `true`，以使用用戶端憑證進行驗證。如需更多資訊，請參閱[用戶端憑證驗證]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/http-authentication/#client-certificate-authentication)。預設值為 `false`。
 
-- `plugins.ml_commons.agentic_memory_enabled`（動態，布林值）：當值為 `true` 時，會啟用[代理程式記憶]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/)，為 AI 代理程式提供記憶管理功能，包括工作階段記憶、工作記憶、長期記憶，以及依命名空間組織的記憶歷程。預設值為 `true`。
+- `plugins.ml_commons.mcp_connector_enabled`（動態，布林值）：當設為 `true` 時，使用者可以建立使用 `mcp_sse` 或 `mcp_streamable_http` 協定的連接器，並註冊使用 MCP 連接器的代理程式。如需更多資訊，請參閱[連線至外部 MCP 伺服器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/mcp/mcp-connector/)。預設值為 `false`。
 
-- `plugins.ml_commons.rag_pipeline_feature_enabled`（動態，布林值）：當值為 `true` 時，會啟用用於檢索增強生成（RAG）的搜尋處理器。RAG 使用記憶與先前對話中的相關資訊產生回應，藉此改善查詢結果。預設值為 `true`。
+- `plugins.ml_commons.safe_delete_model`（動態，布林值）：當設為 `true` 時，OpenSearch 會在刪除模型前檢查下游相依項。如果模型正被代理程式、搜尋管線、資料匯入管線或其他下游任務使用，OpenSearch 會傳回錯誤且不會刪除該模型。預設值為 `false`。
+
+- `plugins.ml_commons.enable_inhouse_python_model`（動態，布林值）：當設為 `true` 時，使用者可以執行 OpenSearch 支援的 Python 型模型，例如[指標相關性分析]({{site.url}}{{site.baseurl}}/ml-commons-plugin/algorithms/#metrics-correlation)。預設值為 `false`。
+
+- `plugins.ml_commons.agent_framework_enabled`（動態，布林值）：當設為 `true` 時，會啟用代理程式框架（包括代理程式與工具），並允許使用者註冊、執行、刪除、擷取及搜尋代理程式。預設值為 `true`。
+
+- `plugins.ml_commons.unified_agent_api_enabled`（動態，布林值）：當設為 `false` 時，使用者無法使用[統一註冊方法]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#unified-registration-method)註冊代理程式，也無法使用標準化的 `input` 欄位執行代理程式。預設值為 `true`。
+
+- `plugins.ml_commons.execute_tools_enabled`（動態，布林值）：當設為 `false` 時，使用者無法使用 [Execute Tool API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/execute-tool/) 執行工具。預設值為 `true`。
+
+- `plugins.ml_commons.mcp_server_enabled`（動態，布林值）：當設為 `true` 時，會啟用 [MCP server APIs]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/mcp-server-apis/index/)，讓代理程式能夠使用 Model Context Protocol (MCP) 連線至 OpenSearch 並使用其工具。預設值為 `false`。
+
+- `plugins.ml_commons.memory_feature_enabled`（動態，布林值）：當設為 `true` 時，會啟用對話記憶，儲存對話中的所有訊息以供對話式搜尋使用。預設值為 `true`。
+
+- `plugins.ml_commons.agentic_memory_enabled`（動態，布林值）：當設為 `true` 時，會啟用[代理記憶]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/)（agentic memory），為 AI 代理程式提供記憶管理，包括工作階段記憶、工作記憶、長期記憶，以及依命名空間組織的記憶歷程。預設值為 `true`。
+
+- `plugins.ml_commons.rag_pipeline_feature_enabled`（動態，布林值）：當設為 `true` 時，會啟用用於檢索增強生成 (RAG) 的搜尋處理器。RAG 透過使用記憶與先前對話中的相關資訊來產生回應，以強化查詢結果。預設值為 `true`。

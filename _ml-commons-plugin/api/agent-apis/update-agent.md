@@ -7,7 +7,7 @@ grand_parent: ML Commons APIs
 nav_order: 15
 ---
 
-# Update Agent API
+# 更新代理程式 API
 **3.1 版引入**
 {: .label .label-purple }
 
@@ -33,14 +33,15 @@ PUT /_plugins/_ml/agents/{agent_id}
 
 欄位 | 資料類型 | 代理程式類型 | 說明
 :---  | :--- | :--- | :--- 
-`name`| 字串 | 全部 | 代理程式名稱。 
-`description` | 字串 | 全部 | 代理程式的說明。 
-`tools` | 陣列 | 全部 | 代理程式可執行的一系列工具。 
-`app_type` | 字串 | 全部 | 指定選用的代理程式類別。
-`memory.type` | 字串 | `conversational_flow`, `conversational` | 指定交談記憶體的儲存位置。唯一支援的類型為 `conversation_index` (將記憶體儲存在交談系統索引中)。
-`llm.model_id` | 字串 | `conversational` | 要傳送問題給大型語言模型 (LLM) 的模型 ID。
+`name`| 字串 | 所有 | 代理程式名稱。 
+`description` | 字串 | 所有 | 代理程式的描述。 
+`tools` | 陣列 | 所有 | 供代理程式執行的工具清單。 
+`app_type` | 字串 | 所有 | 指定選用的代理程式類別。
+`memory.type` | 字串 | `conversational_flow`, `conversational` | 指定對話式記憶的儲存位置。唯一支援的類型是 `conversation_index`（將記憶儲存在對話式系統索引中）。
+`llm.model_id` | 字串 | `conversational` | 要接收問題的大型語言模型 (LLM) 的模型 ID。
 `llm.parameters.response_filter` | 字串 | `conversational` | 解析 LLM 回應的模式。
-`llm.parameters.max_iteration` | 整數 | `conversational` | 要傳送給 LLM 的訊息數量上限。
+`llm.parameters.max_iteration` | 整數 | `conversational` | 傳送給 LLM 的訊息數量上限。
+`parameters` | 物件 | 所有 | 代理程式參數。您提供的參數會與現有的代理程式參數合併，並覆寫名稱相同的參數。
 
 ## 範例請求：更新工具的提示詞
 
@@ -71,6 +72,7 @@ PUT /_plugins/_ml/agents/N8AE1osB0jLkkocYjz7D
     "_id": "ryN5jpcBfY4uTYhorKvh",
     "_version": 2,
     "result": "updated",
+    "forced_refresh": true,
     "_shards": {
         "total": 1,
         "successful": 1,

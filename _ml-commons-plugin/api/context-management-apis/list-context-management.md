@@ -25,8 +25,8 @@ GET /_plugins/_ml/context_management
 
 參數 | 資料類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`size` | 整數 | 選用 | 要傳回的最大結果數量。預設為 `10`。
-`from` | 整數 | 選用 | 分頁的起始索引。預設為 `0`。
+`size` | 整數 | 選用 | 要傳回的結果數量上限。有效值為 1--1000。預設值為 `10`。
+`from` | 整數 | 選用 | 分頁的起始索引。預設值為 `0`。
 
 ## 範例請求
 
@@ -42,35 +42,29 @@ GET /_plugins/_ml/context_management?size=20&from=0
 ```
 {% include copy-curl.html %}
 
-## 範例回應
+## 回應範例
 
 ```json
 {
   "total": 1,
-  "context_management": [
+  "templates": [
     {
       "name": "sliding_window_max_40000_tokens_managers",
       "description": "Context management for truncating tool outputs to prevent input length issues",
       "hooks": {
-        "pre_llm": [
+        "PRE_LLM": [
           {
             "type": "SlidingWindowManager",
             "config": {
-              "max_messages": 8,
-              "activation": {
-                "rule_type": "always"
-              }
+              "max_messages": 8
             }
           }
         ],
-        "post_tool": [
+        "POST_TOOL": [
           {
             "type": "ToolsOutputTruncateManager",
             "config": {
-              "max_output_length": 40000,
-              "activation": {
-                "rule_type": "always"
-              }
+              "max_output_length": 40000
             }
           }
         ]
@@ -81,6 +75,15 @@ GET /_plugins/_ml/context_management?size=20&from=0
   ]
 }
 ```
+
+## 回應本文欄位
+
+下表列出所有回應本文欄位。
+
+欄位 | 資料類型 | 說明
+:--- | :--- | :---
+`total` | 整數 | 此回應中傳回的脈絡管理組態數量。
+`templates` | 陣列 | 脈絡管理組態的清單。欄位說明請參閱 [Get Context Management API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/context-management-apis/get-context-management/#response-body-fields)。
 
 ## 相關文件
 

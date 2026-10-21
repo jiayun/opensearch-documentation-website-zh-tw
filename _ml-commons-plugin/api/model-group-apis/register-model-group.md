@@ -149,4 +149,4 @@ POST /_plugins/_ml/model_groups/_register
 
 ## 在停用模型存取控制的叢集中註冊模型群組
 
-若您的叢集已停用模型存取控制（未符合其中一項[先決條件](ml-commons-plugin/model-access-control/#model-access-control-prerequisites)），您仍可以註冊具有 `name` 和 `description` 的模型群組，但無法指定任何存取參數（`model_access_name`、`backend_roles` 或 `add_backend_roles`）。在此類叢集中，所有模型群組預設皆為公開。
+若您的叢集已停用模型存取控制（未符合其中一項[先決條件]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/#model-access-control-prerequisites)），您仍可以註冊具有 `name` 和 `description` 的模型群組，但無法指定任何存取參數（`access_mode`、`backend_roles` 或 `add_all_backend_roles`）。在此類叢集中，所有模型群組預設皆為公開。

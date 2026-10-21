@@ -7,13 +7,13 @@ grand_parent: ML Commons APIs
 nav_order: 40
 ---
 
-# Update Model API
+# 更新模型 API
 **於 2.12 版推出**
 {: .label .label-purple }
 
-根據 `model_ID` 更新模型。
+根據模型 ID 更新模型。
 
-有關此 API 的使用者存取權資訊，請參閱[模型存取控制注意事項]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/index/#model-access-control-considerations)。
+如需此 API 使用者存取權限的相關資訊，請參閱[模型存取控制考量]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/index/#model-access-control-considerations)。
 
 ## 端點
 
@@ -23,22 +23,23 @@ PUT /_plugins/_ml/models/{model_id}
 
 ## 請求本文欄位
 
-下表列出可更新的欄位。並非所有請求欄位都適用於所有模型。若要判斷該欄位是否適用於您的模型類型，請參閱 [Register Model API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/)。
+下表列出可更新的欄位。並非所有請求欄位都適用於所有模型。若要判斷欄位是否適用於您的模型類型，請參閱 [Register Model API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/)。
 
 欄位 | 資料類型 |  說明
 :---  | :--- | :--- 
-`batch_inference_config` | 物件 | 為外部託管的模型設定批次推論。如需更多資訊，請參閱[`batch_inference_config` 參數]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/#the-batch_inference_config-parameter)。
-`connector` | 物件 | 包含第三方平台上託管模型之連接器的規格。如需更多資訊，請參閱[為特定模型建立連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/#creating-a-connector-for-a-specific-model)。有關連接器內可更新欄位的資訊，請參閱 [Update Connector API 請求欄位]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/connector-apis/update-connector/#request-body-fields)。
-`connector_id` | 字串 | 第三方平台上託管模型之獨立連接器的連接器 ID。如需更多資訊，請參閱[獨立連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/#creating-a-standalone-connector)。若要更新獨立連接器，您必須先取消部署模型、更新連接器，然後重新部署模型。
-`description` | 字串 | 模型描述。
-`is_enabled`| 布林值 | 指定模型是否已啟用。停用模型會使其無法用於 Predict API 請求，無論模型的部署狀態為何。預設為 `true`。
-`model_config` | 物件 | 模型的組態，包括 `model_type`、`embedding_dimension` 和 `framework_type`。`all_config` 是包含所有模型組態的選用 JSON 字串。如需更多資訊，請參閱[`model_config` 物件]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model#the-model_config-object)。 |
-`model_group_id` | 字串 | 要註冊此模型之模型群組的模型群組 ID。
-`name`| 字串 | 模型名稱。
-`rate_limiter` | 物件 | 限制任何使用者可以呼叫模型 Predict API 的次數。如需更多資訊，請參閱[限制推論呼叫速率]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/#rate-limiting-inference-calls)。
-`rate_limiter.limit` | 整數 | 任何使用者在每 `unit` 時間內可以呼叫模型 Predict API 的最大次數。預設情況下，Predict API 呼叫次數沒有限制。一旦設定限制，就無法重設為無限制。替代做法是指定一個高限制值和一個小的時間單位，例如每奈秒 1 個請求。
+`batch_inference_config` | 物件 | 為外部託管的模型設定批次推論。如需詳細資訊，請參閱 [`batch_inference_config` 參數]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/#the-batch_inference_config-parameter)。
+`connector` | 物件 | 包含託管於第三方平台之模型的連接器規格。如需詳細資訊，請參閱[為特定模型建立連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/#creating-a-connector-for-a-specific-model)。如需連接器中可更新欄位的相關資訊，請參閱 [Update Connector API 請求欄位]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/connector-apis/update-connector/#request-body-fields)。
+`connector_id` | 字串 | 託管於第三方平台之模型所使用的獨立連接器 ID。如需詳細資訊，請參閱[獨立連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/#creating-a-standalone-connector)。若要更新獨立連接器，您必須先解除部署模型、更新連接器，然後重新部署模型。
+`deploy_setting` | 物件 | 模型的部署設定，包含 `model_ttl_minutes` 和 `is_auto_deploy_enabled`。如需詳細資訊，請參閱[存取控制與部署欄位]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/#access-control-and-deployment-fields)。
+`description` | 字串 | 模型說明。 
+`is_enabled`| 布林值 | 指定是否啟用模型。停用模型後，無論模型的部署狀態為何，Predict API 請求都無法使用該模型。預設值為 `true`。
+`model_config` | 物件 | 模型的組態，包括 `model_type`、`embedding_dimension` 和 `framework_type`。`all_config` 是選用的 JSON 字串，包含所有模型組態。如需詳細資訊，請參閱 [`model_config` 物件]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model#the-model_config-object)。 |
+`model_group_id` | 字串 | 要將此模型註冊至其中之模型群組的模型群組 ID。 
+`name`| 字串 | 模型名稱。 
+`rate_limiter` | 物件 | 限制任何使用者可對該模型呼叫 Predict API 的次數。如需詳細資訊，請參閱[限制推論呼叫的速率]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/#rate-limiting-inference-calls)。
+`rate_limiter.limit` | 整數 | 任何使用者在每個 `unit` 時間內可對該模型呼叫 Predict API 的最大次數。預設情況下，Predict API 呼叫次數沒有限制。一旦設定限制，就無法將其重設為無限制。您可以改為指定較高的限制值和較小的時間單位，例如每奈秒 1 個請求。
 `rate_limiter.unit` | 字串 | 速率限制器的時間單位。有效值為 `DAYS`、`HOURS`、`MICROSECONDS`、`MILLISECONDS`、`MINUTES`、`NANOSECONDS` 和 `SECONDS`。
-`guardrails`| 物件 | 模型的防護機制。
+`guardrails`| 物件 | 模型的防護機制（guardrails）。
 `interface`| 物件 | 模型的介面。
 
 ## 範例請求：停用模型
@@ -122,6 +123,7 @@ PUT /_plugins/_ml/models/9uGdCJABjaMXYrp14YRj
   "_id": "MzcIJX8BA7mbufL6DOwl",
   "_version": 10,
   "result": "updated",
+  "forced_refresh": true,
   "_shards": {
     "total": 1,
     "successful": 1,
@@ -172,9 +174,10 @@ PUT /_plugins/_ml/models/IMcNB5UB7judm8f45nXo
   "_id": "IMcNB5UB7judm8f45nXo",
   "_version": 2,
   "result": "updated",
+  "forced_refresh": true,
   "_shards": {
-    "total": 2,
-    "successful": 2,
+    "total": 1,
+    "successful": 1,
     "failed": 0
   },
   "_seq_no": 379,

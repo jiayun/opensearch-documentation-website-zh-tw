@@ -11,14 +11,14 @@ nav_order: 10
 **3.3 版新增**
 {: .label .label-purple }
 
-使用此 API 建立儲存代理程式記憶的[記憶容器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/#memory-containers)。容器可以關聯兩種模型類型：
+使用此 API 建立[記憶容器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/#memory-containers)，以儲存代理記憶 (agentic memory)。容器可以關聯兩種模型類型：
 
 - 文字嵌入模型，用於將訊息向量化以便搜尋。稠密向量嵌入請使用文字嵌入模型，稀疏向量格式請使用稀疏編碼模型。若未指定嵌入模型，訊息會被儲存，但無法用於以向量為基礎的搜尋。
 - 大型語言模型 (LLM)，用於對訊息進行推理以產生事實性或經過處理的內容。若未指定 LLM，訊息會直接儲存，不套用推論。長期記憶需要同時設定 LLM 模型與嵌入模型。
 
 如需更多資訊，請參閱[整合 ML 模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/)。
 
-LLM 連接器必須支援 `system_prompt` 與 `user_prompt` 參數，才能進行代理程式記憶處理。預設的 `llm_result_path` 是 Amazon Bedrock Converse API 回應路徑 (`"$.output.message.content[0].text"`)。若使用 OpenAI GPT 模型，請將 `llm_result_path` 設為 `$.choices[0].message.content`。
+LLM 連接器必須支援 `system_prompt` 與 `user_prompt` 參數，才能進行代理記憶處理。預設的 `llm_result_path` 是 Amazon Bedrock Converse API 回應路徑 (`"$.output.message.content[0].text"`)。若使用 OpenAI GPT 模型，請將 `llm_result_path` 設為 `$.choices[0].message.content`。
 {: .note}
 
 建立記憶容器後，請將其 `memory_container_id` 提供給其他 API 使用。
@@ -110,7 +110,7 @@ POST /_plugins/_ml/models/_register
     "description": "test model",
     "connector": {
         "name": "Amazon Bedrock Connector: Chat",
-        "description": "The connector to bedrock Claude 3.7 sonnet model",
+        "description": "The connector to bedrock Claude Sonnet 4.6 model",
         "version": 1,
         "protocol": "aws_sigv4",
         "parameters": {
@@ -118,8 +118,7 @@ POST /_plugins/_ml/models/_register
             "service_name": "bedrock",
             "max_tokens": 8000,
             "temperature": 1,
-            "anthropic_version": "bedrock-2023-05-31",
-            "model": "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+            "model": "us.anthropic.claude-sonnet-4-6"
         },
         "credential": {
             "access_key": "...",
@@ -134,7 +133,7 @@ POST /_plugins/_ml/models/_register
                 "content-type": "application/json"
             },
             "url": "https://bedrock-runtime.${parameters.region}.amazonaws.com/model/${parameters.model}/converse",
-            "request_body": "{  \"anthropic_version\": \"${parameters.anthropic_version}\", \"max_tokens\": ${parameters.max_tokens}, \"temperature\": ${parameters.temperature}, \"system\": [{\"text\": \"${parameters.system_prompt}\"}], \"messages\": [ { \"role\": \"user\", \"content\": [ {\"text\": \"${parameters.user_prompt}\" }] }]}"
+            "request_body": "{ \"inferenceConfig\": { \"maxTokens\": ${parameters.max_tokens}, \"temperature\": ${parameters.temperature} }, \"system\": [{\"text\": \"${parameters.system_prompt}\"}], \"messages\": [ { \"role\": \"user\", \"content\": [ {\"text\": \"${parameters.user_prompt}\" }] }]}"
             }
         ]
     }
@@ -144,6 +143,8 @@ POST /_plugins/_ml/models/_register
 
 Claude 模型需要 `system_prompt` 參數。
 {: .note}
+
+若要讓 LLM 以固定的 JSON 結構描述傳回擷取的事實，請在連接器的 `predict` 動作中將 `supports_structured_output` 設定為 `true`。如需更多資訊，請參閱[連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/#request-body-fields)。
 
 如需使用外部託管模型的更多資訊，請參閱[連線至外部託管模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/)。
 
@@ -175,27 +176,33 @@ POST /_plugins/_ml/memory_containers/_create
 `embedding_model_id` | 字串 | 選用 | 嵌入模型 ID。若提供 `embedding_model_type` 則為必要。
 `embedding_dimension` | 整數 | 選用 | 嵌入模型的維度。若 `embedding_model_type` 為 `TEXT_EMBEDDING` 則為必要。若 `embedding_model_type` 為 `SPARSE_ENCODING` 則不允許。
 `llm_id` | 字串 | 選用 | 用於處理與推論的 LLM 模型 ID。
-`index_prefix` | 字串 | 選用 | 記憶索引的自訂前置字元。若未指定，則使用預設前置字元：當 `use_system_index` 為 `true` 時為 `default`，或當 `use_system_index` 為 `false` 時為 8 字元的隨機 UUID。
-`use_system_index` | 布林值 | 選用 | 是否使用系統索引 (以 `.plugins-ml-agentic-memory-` 為前置字元的隱藏索引)。預設為 `true`。
-`disable_history`  | 布林值 | 選用 | 是否停用歷史稽核軌跡索引。預設為 `false`。此設定僅在已設定策略時生效，因為歷史索引會記錄長期記憶的變更。若未設定策略，則無論此設定為何，都不會建立長期記憶或歷史索引。
-`disable_session`  | 布林值 | 選用 | 是否停用工作階段追蹤索引。預設為 `false` (預設會啟用工作階段)。設為 `true` 可停用工作階段追蹤。
-`max_infer_size`   | 整數 | 選用 | 在記憶整併期間所擷取之相似現有記憶的最大數量，用於做出 ADD/UPDATE/DELETE 決策。預設為 `5`。最大值為 `10`。
-`index_settings`   | 物件 | 選用 | 為此容器將建立之記憶儲存索引的自訂 OpenSearch 索引設定。每種記憶類型 (`sessions`、`working`、`long_term` 和 `history`) 使用各自的索引。請參閱 [`index_settings` 物件](#the-index_settings-object)。
-`strategies` | 陣列 | 選用 | [記憶處理策略]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/#memory-processing-strategies) 的陣列。提供策略時，`llm_id` 和嵌入模型欄位 (`embedding_model_id`、`embedding_model_type`) 皆為必要。請參閱 [`strategies` 陣列](#the-strategies-array)。
-`parameters` | 物件 | 選用 | 記憶容器的全域參數。請參閱 [`parameters` 物件](#the-parameters-object)。
+`index_prefix` | 字串 | 選用 | 記憶索引的自訂前置詞。若未指定，則使用預設前置詞：當 `use_system_index` 為 `true` 時為 `default`，或當 `use_system_index` 為 `false` 時為 8 字元的隨機 UUID。
+`use_system_index` | 布林值 | 選用 | 是否使用系統索引（以 `.plugins-ml-am-` 為前置詞的隱藏索引）。預設為 `true`。
+`disable_history`  | 布林值 | 選用 | 是否停用歷程稽核軌跡索引。預設為 `false`。此設定僅在已設定策略時生效，因為歷程索引會記錄長期記憶的變更。若未設定策略，則無論此設定為何，都不會建立長期記憶或歷程索引。
+`disable_session`  | 布林值 | 選用 | 是否停用工作階段追蹤索引。預設為 `false`（預設會啟用工作階段）。設為 `true` 可停用工作階段追蹤。
+`max_infer_size`   | 整數 | 選用 | 在記憶整併期間擷取相似現有記憶以做出 ADD/UPDATE/DELETE 決策的最大數量。預設為 `5`。最大值為 `10`。
+`index_settings`   | 物件 | 選用 | 為此容器建立之記憶儲存索引的自訂 OpenSearch 索引設定。每種記憶類型（`sessions`、`working`、`long_term` 和 `history`）各自使用自己的索引。請參閱[`index_settings` 物件](#the-index_settings-object)。
+`strategies` | 陣列 | 選用 | [記憶處理策略]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/#memory-processing-strategies)的陣列。提供策略時，`llm_id` 與嵌入模型欄位（`embedding_model_id`、`embedding_model_type`）皆為必要。請參閱[`strategies` 陣列](#the-strategies-array)。
+`parameters` | 物件 | 選用 | 記憶容器的全域參數。請參閱[`parameters` 物件](#the-parameters-object)。
+`retention_policy` | 物件 | 選用 | 每種記憶類型的保留上限。需要 `plugins.ml_commons.memory.retention_enabled` 為 `true`。如需詳細資訊，請參閱[代理記憶保留]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory-retention/)。
 
 ### index_settings 物件
 
-您可以自訂將建立用於儲存記憶資料之儲存索引的 OpenSearch 索引設定。每種記憶類型使用專屬索引，您可以設定分片和副本數量等設定以最佳化效能。
+您可以為將建立的儲存索引自訂 OpenSearch 索引設定，以儲存記憶資料。每種記憶類型都使用專屬的索引，您可以設定分片數量與副本等設定，以最佳化效能。
 
-下列範例說明如何在 `configuration` 物件中指定自訂索引設定：
+索引設定只在建立索引時套用。如果另一個記憶容器已使用相同的 `index_prefix`，則會重複使用現有的索引，並忽略指定的設定。
+{: .note}
+
+下列範例示範如何在 `configuration` 物件中指定自訂索引設定：
 
 ```json
 POST /_plugins/_ml/memory_containers/_create
 {
   "name": "my-memory-container",
   "configuration": {
+    "embedding_model_type": "TEXT_EMBEDDING",
     "embedding_model_id": "your-model-id",
+    "embedding_dimension": 1024,
     "index_settings": {
       "session_index": {
         "index": {
@@ -244,8 +251,8 @@ POST /_plugins/_ml/memory_containers/_create
 
 欄位 | 資料類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`llm_result_path` | 字串 | 選用 | 用於從回應中擷取 LLM 結果的 JSONPath 運算式。預設為 Amazon Bedrock Converse API 回應路徑 (`"$.output.message.content[0].text"`)。
-`system_prompt` | 字串 | 選用 | 用於覆寫預設策略提示的自訂系統提示。
+`llm_result_path` | 字串 | 選用 | 用於從回應中擷取 LLM 結果的 JSONPath 運算式。預設為 Amazon Bedrock Converse API 回應路徑（`"$.output.message.content[0].text"`）。
+`system_prompt` | 字串 | 選用 | 用於覆寫預設策略提示的自訂系統提示。提示中必須包含 `JSON` 一詞以及加上引號的鍵 `"facts"`，且必須指示 LLM 傳回一個 JSON 物件，其中包含由字串組成的 `facts` 陣列。否則，事實擷取會失敗，並在歷程索引中記錄錯誤。
 `llm_id` | 字串 | 選用 | 此策略的 LLM 模型 ID。會覆寫全域 LLM 設定。
 
 ### parameters 物件
@@ -254,11 +261,23 @@ POST /_plugins/_ml/memory_containers/_create
 
 欄位 | 資料類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`llm_result_path` | 字串 | 選用 | 用於從回應中擷取 LLM 結果的全域 JSONPath 運算式。預設為 Amazon Bedrock Converse API 回應路徑 (`"$.output.message.content[0].text"`)。
+`llm_result_path` | 字串 | 選用 | 用於從回應中擷取 LLM 結果的全域 JSONPath 運算式。預設為 Amazon Bedrock Converse API 回應路徑（`"$.output.message.content[0].text"`）。
+`session` | 物件 | 選用 | 新增對話記憶時，若未提供 `session_id`，LLM 所產生的工作階段摘要所使用的參數。請參閱 [`session` 物件](#the-session-object)。
+
+### session 物件
+
+`session` 物件支援下列欄位。
+
+欄位 | 資料類型 | 必要/選用 | 說明
+:--- | :--- | :--- | :---
+`max_summary_size` | 整數 | 選用 | 工作階段摘要的最大字詞數。預設為 `10`。
+`system_prompt` | 字串 | 選用 | 取代預設工作階段摘要提示的自訂系統提示。
+
+OpenSearch 會將 `session` 物件中的任何其他欄位，作為連接器參數傳遞給 LLM，用於摘要請求。例如，如果連接器的請求本文使用 `${parameters.max_tokens}`，則在 `session` 物件中設定 `max_tokens` 可限制 LLM 對工作階段摘要回應的長度。
 
 ## 範例請求：最小記憶容器
 
-下列請求會建立僅含工作記憶 (原始訊息儲存) 的最小記憶容器。未設定任何 AI 模型或策略：
+下列請求會建立僅含工作記憶（原始訊息儲存）的最小記憶容器。未設定任何 AI 模型或策略：
 
 ```json
 POST /_plugins/_ml/memory_containers/_create
@@ -268,9 +287,9 @@ POST /_plugins/_ml/memory_containers/_create
 ```
 {% include copy-curl.html %}
 
-此請求會建立具有單一工作記憶索引的容器。訊息可依 ID 儲存及擷取，但無法使用語意搜尋和長期記憶功能。
+此請求會建立含工作記憶與工作階段索引的容器。訊息可依 ID 儲存與擷取，但無法使用語意搜尋與長期記憶功能。
 
-## 範例請求：含策略的基本記憶容器
+## 範例請求：包含策略的基本記憶容器
 
 ```json
 POST /_plugins/_ml/memory_containers/_create
@@ -279,9 +298,9 @@ POST /_plugins/_ml/memory_containers/_create
   "description": "Store conversations with semantic search and summarization",
   "configuration": {
     "embedding_model_type": "TEXT_EMBEDDING",
-    "embedding_model_id": "{{embedding_model_id}}",
+    "embedding_model_id": "<embedding_model_id>",
     "embedding_dimension": 1024,
-    "llm_id": "{{llm_id}}",
+    "llm_id": "<llm_id>",
     "strategies": [
       {
         "type": "SEMANTIC",
@@ -293,9 +312,9 @@ POST /_plugins/_ml/memory_containers/_create
 ```
 {% include copy-curl.html %}
 
-此請求會建立具有工作記憶、長期記憶和歷史索引的容器。`SEMANTIC` 策略使用 LLM 從訊息中擷取事實，並使用嵌入模型對這些事實啟用向量式語意搜尋。
+此請求會建立一個包含工作記憶、工作階段、長期記憶與歷程記錄索引的記憶容器。`SEMANTIC` 策略使用 LLM 從訊息中擷取事實，並使用嵌入模型對這些事實啟用向量式語意搜尋。
 
-## 範例請求：含多個策略的進階記憶容器
+## 範例請求：具有多種策略的進階記憶容器
 
 ```json
 POST /_plugins/_ml/memory_containers/_create
@@ -304,9 +323,9 @@ POST /_plugins/_ml/memory_containers/_create
   "description": "Store conversations with semantic search and summarization",
   "configuration": {
     "embedding_model_type": "TEXT_EMBEDDING",
-    "embedding_model_id": "{{embedding_model_id}}",
+    "embedding_model_id": "<embedding_model_id>",
     "embedding_dimension": 1024,
-    "llm_id": "{{llm_id}}",
+    "llm_id": "<llm_id>",
     "index_prefix": "my_custom_prefix",
     "use_system_index": false,
     "strategies": [
@@ -315,8 +334,8 @@ POST /_plugins/_ml/memory_containers/_create
         "namespace": ["agent_id"],
         "configuration": {
           "llm_result_path": "$.output.message.content[0].text",
-          "system_prompt": "Extract semantic information from user conversations",
-          "llm_id": "{{custom_llm_id}}"
+          "system_prompt": "Extract semantic information from user conversations. Return only a JSON object in the format {\"facts\": [\"<fact>\"]}.",
+          "llm_id": "<custom_llm_id>"
         }
       },
       {

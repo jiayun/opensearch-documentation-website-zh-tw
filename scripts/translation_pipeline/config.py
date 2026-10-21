@@ -6,7 +6,7 @@ import os
 from pathlib import Path
 
 SCHEMA_VERSION = 1
-BASELINE_COMMIT = "390f28e96b3de986e5cd7abcdd79ada0501bc840"
+BASELINE_COMMIT = "4a3a535c884008720e0c51664cc0829395c9b6c5"
 TARGET_LANGUAGE = "zh-TW"
 
 # Root-level pages rendered by Jekyll in addition to the output collections.
@@ -63,7 +63,7 @@ PILOT_PATHS = (
     "_getting-started/quickstart.md",
     "_api-reference/index-apis/create-index.md",
     "_query-dsl/full-text/match.md",
-    "_data-prepper/getting-started.md",
+    "_data-prepper/getting-started/index.md",
     "_benchmark/index.md",
     "_clients/index.md",
 )

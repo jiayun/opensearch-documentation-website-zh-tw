@@ -360,6 +360,6 @@ python -m mcp_server_opensearch --mode multi --config /path/to/config.yml --tran
 
 ## 後續步驟
 
-- 如需 Kubernetes 部署、結構化記錄、工具篩選和工具自訂的相關資訊，請參閱 [`opensearch-mcp-server-py` 儲存庫](https://github.com/opensearch-project/opensearch-mcp-server-py/blob/main/USER_GUIDE.md)。
-- 若要將 MCP 工具整合至 OpenSearch 代理程式（而非將 OpenSearch 公開給外部代理程式），請參閱[使用 MCP 工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/mcp/)。
-- 如需引導 AI 助理完成 OpenSearch 任務的結構化工作流程，請參閱[代理程式技能]({{site.url}}{{site.baseurl}}/ai-agent-integrations/agent-skills/)。
+- 如需 Kubernetes 部署、結構化記錄、工具篩選及工具自訂的相關資訊，請參閱 [`opensearch-mcp-server-py` 儲存庫](https://github.com/opensearch-project/opensearch-mcp-server-py/blob/main/USER_GUIDE.md)。
+- 若要讓 MCP 用戶端呼叫在您的叢集中註冊的工具，而不需執行獨立的伺服器，請參閱[使用叢集內 MCP 伺服器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/mcp/in-cluster-mcp-server/)。
+- 如需引導 AI 助理完成 OpenSearch 工作的結構化工作流程，請參閱[代理程式技能]({{site.url}}{{site.baseurl}}/ai-agent-integrations/agent-skills/)。

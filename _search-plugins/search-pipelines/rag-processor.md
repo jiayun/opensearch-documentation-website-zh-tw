@@ -24,15 +24,15 @@ grand_parent: Search pipelines
 欄位 | 資料類型 | 說明
 :--- | :--- | :---
 `model_id` | 字串 | 管線中所使用模型的 ID。必要。
-`context_field_list` | 陣列 | 文件來源中包含的欄位清單，管線會將其用作 RAG 的上下文。必要。如需更多資訊，請參閱[上下文欄位清單](#context-field-list)。 
+`context_field_list` | 陣列 | 文件來源中包含的欄位清單，管線會將其用作 RAG 的脈絡。必要。如需更多資訊，請參閱[脈絡欄位清單](#context-field-list)。 
 `system_prompt` | 字串 | 傳送給 LLM 的系統提示，用以調整其行為，例如回應語氣。可以是角色描述或一組指示。選用。
 `user_instructions` | 字串 | 人工產生的指示，傳送給 LLM 以引導其產生結果。 
 `tag` | 字串 | 處理器的識別碼。選用。
 `description` | 字串 | 處理器的說明。選用。
 
-### 上下文欄位清單
+### 脈絡欄位清單
 
-`context_field_list` 是文件來源中包含的欄位清單，管線會將其用作 RAG 的上下文。例如，假設您的 OpenSearch 索引包含一組文件，每份文件都包含 `title` 和 `text`：
+`context_field_list` 是文件來源中包含的欄位清單，管線會將其用作 RAG 的脈絡。例如，假設您的 OpenSearch 索引包含一組文件，每份文件都包含 `title` 和 `text`：
 
 ```json
 {
@@ -76,7 +76,7 @@ PUT /_search/pipeline/rag_pipeline
 
 ### 使用搜尋管線
 
-將 OpenSearch 查詢與 `ext` 物件結合，該物件會儲存 LLM 的生成式問答參數：
+將 OpenSearch 查詢與儲存 LLM 生成式問答參數的 `ext` 物件結合：
 
 ```json
 GET /my_rag_test_data/_search?search_pipeline=rag_pipeline
@@ -100,4 +100,6 @@ GET /my_rag_test_data/_search?search_pipeline=rag_pipeline
 ```
 {% include copy-curl.html %}
 
-如需設定對話式搜尋的更多資訊，請參閱[使用 RAG 的對話式搜尋]({{site.url}}{{site.baseurl}}/search-plugins/conversational-search/)。
+如需設定對話式搜尋的更多資訊，請參閱 [使用 RAG 的對話式搜尋]({{site.url}}{{site.baseurl}}/search-plugins/conversational-search/)。
+
+如需使用特定模型設定 RAG 的教學，請參閱 [RAG 教學]({{site.url}}{{site.baseurl}}/tutorials/gen-ai/rag/)。

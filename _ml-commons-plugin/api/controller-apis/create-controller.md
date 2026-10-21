@@ -8,17 +8,17 @@ nav_order: 10
 ---
 
 # 建立或更新控制器 API
-**2.12 版推出**
+**於 2.12 版推出**
 {: .label .label-purple }
 
-使用此 API 為模型建立或更新控制器。一個模型可能由多位使用者共用。控制器會針對使用者可對該模型進行的 [Predict API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/predict/) 呼叫次數設定速率限制。控制器由一組適用於不同使用者的速率限制器組成。  
+使用此 API 為模型建立或更新控制器 (controller)。一個模型可能由多位使用者共用。控制器會為使用者可對模型發出的 [Predict API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/predict/) 呼叫次數設定速率限制。控制器由一組針對不同使用者的速率限制器組成。  
 
-您必須先註冊模型並取得模型 ID，才能為該模型建立控制器。
+只有在您註冊模型並取得模型 ID 之後，才能為模型建立控制器。控制器僅支援文字嵌入模型與外部託管（遠端）模型。
 {: .tip}
 
-POST 方法會建立新的控制器。PUT 方法會更新現有的控制器。 
+POST 方法會建立新的控制器或覆寫現有的控制器。PUT 方法會更新現有的控制器。若模型沒有對應的控制器，PUT 請求會失敗並傳回 409 Conflict 錯誤。
 
-若要了解如何在模型層級為所有使用者設定速率限制，請參閱 [Update Model API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/update-model/)。速率限制會採用模型層級限制或使用者層級限制中較嚴格的一項。例如，若模型層級限制為每分鐘 2 個請求，而使用者層級限制為每分鐘 4 個請求，則整體限制將設為每分鐘 2 個請求。
+若要了解如何為所有使用者設定模型層級的速率限制，請參閱 [Update Model API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/update-model/)。速率限制會設為模型層級限制或使用者層級限制中較嚴格者。例如，若模型層級限制為每分鐘 2 個請求，而使用者層級限制為每分鐘 4 個請求，則整體限制會設為每分鐘 2 個請求。
 
 ## 端點
 
@@ -114,7 +114,7 @@ PUT _plugins/_ml/controllers/mtw-ZI0B_1JGmyB068C0
 }
 ```
 
-## 回應範例
+## 範例回應
 
 ```json
 {
@@ -168,18 +168,8 @@ POST _plugins/_ml/controllers/mtw-ZI0B_1JGmyB068C0
 
 ```json
 {
-  "_index": ".plugins-ml-controller",
-  "_id": "mtw-ZI0B_1JGmyB068C0",
-  "_version": 2,
-  "result": "updated",
-  "forced_refresh": true,
-  "_shards": {
-    "total": 2,
-    "successful": 2,
-    "failed": 0
-  },
-  "_seq_no": 1,
-  "_primary_term": 1
+  "model_id": "mtw-ZI0B_1JGmyB068C0",
+  "status": "UPDATED"
 }
 ```
 

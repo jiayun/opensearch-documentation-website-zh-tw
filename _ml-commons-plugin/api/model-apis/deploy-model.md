@@ -9,7 +9,7 @@ nav_order: 20
 
 # 部署模型 API
 
-部署模型操作會從模型索引讀取模型的分段，然後建立模型執行個體以快取於記憶體中。此操作需要 `model_id`。
+部署模型操作會從模型索引讀取模型的分塊，然後建立模型執行個體以快取於記憶體中。此操作需要 `model_id`。
 
 [外部託管的模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/) 在您第一次傳送 Predict API 請求時，預設會自動部署。若要停用外部託管模型的自動部署，請將 `plugins.ml_commons.model_auto_deploy.enable` 設為 `false`：
 
@@ -31,6 +31,22 @@ PUT _cluster/settings
 POST /_plugins/_ml/models/{model_id}/_deploy
 ```
 
+## 路徑參數
+
+下表列出可用的路徑參數。
+
+| 參數 | 資料類型 | 說明 |
+| :--- | :--- | :--- |
+| `model_id` | 字串 | 要部署的模型 ID。必要。 |
+
+## 請求本文欄位
+
+下表列出可用的請求本文欄位。請求本文為選用。
+
+| 欄位 | 資料類型 | 說明 |
+| :--- | :--- | :--- |
+| `node_ids` | 陣列 | 要在其上部署模型的節點 ID 清單。若省略，模型會部署到所有符合條件的 ML 節點。需要將 `plugins.ml_commons.allow_custom_deployment_plan` 設為 `true`。如需詳細資訊，請參閱 [ML Commons 叢集設定]({{site.url}}{{site.baseurl}}/ml-commons-plugin/cluster-settings/)。 |
+
 ## 範例請求：部署至所有可用的 ML 節點
 
 在此範例請求中，OpenSearch 會將模型部署至任何可用的 OpenSearch ML 節點：
@@ -40,9 +56,9 @@ POST /_plugins/_ml/models/WWQI44MBbzI2oUKAvNUt/_deploy
 ```
 {% include copy-curl.html %}
 
-## 範例請求：部署至特定節點
+## 範例請求：部署到特定節點
 
-如果您想保留叢集中其他 ML 節點的記憶體，可以在請求本文中指定 `node_ids`，將模型部署至特定節點：
+如果您想保留叢集中其他 ML 節點的記憶體，可以在請求本文中指定 `node_ids`，將模型部署到特定節點。此選項需要將 `plugins.ml_commons.allow_custom_deployment_plan` 設定為 `true`：
 
 ```json
 POST /_plugins/_ml/models/WWQI44MBbzI2oUKAvNUt/_deploy

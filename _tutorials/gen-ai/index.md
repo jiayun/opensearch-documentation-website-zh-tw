@@ -27,6 +27,6 @@ cards:
 
 # 生成式 AI 教學
 
-探索下列教學，了解如何使用 OpenSearch 向量資料庫實作生成式 AI 應用程式。如需 OpenSearch 生成式 AI 功能的更多資訊，請參閱[向量搜尋]({{site.url}}{{site.baseurl}}/vector-search/)與[機器學習]({{site.url}}{{site.baseurl}}/ml-commons-plugin/)。
+請探索下列教學，了解如何使用 OpenSearch 向量資料庫實作生成式 AI 應用程式。如需 OpenSearch 生成式 AI 功能的詳細資訊，請參閱[向量搜尋]({{site.url}}{{site.baseurl}}/vector-search/)與 [AI 與機器學習]({{site.url}}{{site.baseurl}}/ml-commons-plugin/)。
 
 {% include cards.html cards=page.cards %}

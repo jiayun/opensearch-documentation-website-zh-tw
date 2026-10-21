@@ -1,20 +1,20 @@
 ---
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: "使用交叉編碼器依欄位重新排序"
+title: "使用交叉編碼器依欄位重新排名"
 parent: Reranking search results
 grand_parent: Optimizing search quality
 has_children: false
 nav_order: 30
 ---
 
-# 使用交叉編碼器模型依欄位重新排序
+# 使用交叉編碼器模型依欄位重新排名
 **於 2.18 版推出**
 {: .label .label-purple }
 
-在本教學中，您將學習如何使用託管於 Amazon SageMaker 的交叉編碼器模型，重新排序搜尋結果並提升搜尋相關性。
+在本教學中，您將學習如何使用託管於 Amazon SageMaker 的交叉編碼器模型，重新排名搜尋結果並提升搜尋相關性。
 
-若要重新排序文件，您將設定一個在查詢時處理搜尋結果的搜尋管線。此管線會攔截搜尋結果，並將其傳遞至 [`ml_inference` 搜尋回應處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/ml-inference-search-response/)，該處理器會叫用交叉編碼器模型。模型會產生分數，用來重新排序相符的文件 [`by_field`]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/rerank-by-field/)。
+若要重新排名文件，您將設定一個在查詢時處理搜尋結果的搜尋管線。此管線會攔截搜尋結果，並將其傳遞至 [`ml_inference` 搜尋回應處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/ml-inference-search-response/)，該處理器會叫用交叉編碼器模型。模型會產生分數，用來重新排名相符的文件 [`by_field`]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/rerank-by-field/)。
 
 ## 先決條件：在 Amazon SageMaker 上部署模型
 
@@ -48,15 +48,15 @@ predictor = huggingface_model.deploy(
 
 部署模型後，您可以前往 AWS Management Console 中的 Amazon SageMaker 主控台，並在左側索引標籤選取 **Inference > Endpoints**，以找到模型端點。請記下所建立模型的 URL；您將使用它來建立連接器。
 
-## 執行含重新排序的搜尋
+## 執行含重新排名的搜尋
 
-若要執行含重新排序的搜尋，請依照下列步驟：
+若要執行含重新排名的搜尋，請依照下列步驟：
 
 1. [建立連接器](#step-1-create-a-connector)。
 1. [註冊模型](#step-2-register-the-model)。
 1. [將文件匯入索引](#step-3-ingest-documents-into-an-index)。
 1. [建立搜尋管線](#step-4-create-a-search-pipeline)。
-1. [使用重新排序進行搜尋](#step-5-search-using-reranking)。
+1. [使用重新排名進行搜尋](#step-5-search-using-reranking)。
 
 ## 步驟 1：建立連接器
 
@@ -135,7 +135,7 @@ POST /nyc_areas/_bulk
 
 ## 步驟 4：建立搜尋管線
 
-接著，建立用於重新排序的搜尋管線。在搜尋管線組態中，`input_map` 與 `output_map` 會定義如何為交叉編碼器模型準備輸入資料，以及如何解讀模型的輸出以進行重新排序：
+接著，建立用於重新排名的搜尋管線。在搜尋管線組態中，`input_map` 與 `output_map` 會定義如何為交叉編碼器模型準備輸入資料，以及如何解讀模型的輸出以進行重新排名：
 
 - `input_map` 會指定搜尋文件與查詢中的哪些欄位應做為模型輸入：
     - `text` 欄位會對應至已編製索引文件中的 `facts` 欄位。它會提供模型將分析的文件特定內容。
@@ -144,11 +144,11 @@ POST /nyc_areas/_bulk
     `text` (文件 `facts`) 與 `text_pair` (搜尋 `query`) 的組合，可讓交叉編碼器模型考量文件與查詢之間的語意關係，進而比較其相關性。
 
 - `output_map` 欄位會指定模型的輸出如何對應至回應中的欄位：
-    - 回應中的 `rank_score` 欄位將儲存模型的相關性分數，該分數將用於執行重新排序。
+    - 回應中的 `rank_score` 欄位將儲存模型的相關性分數，該分數將用於執行重新排名。
 
-使用 `by_field` 重新排序類型時，`rank_score` 欄位將包含與 `_score` 欄位相同的分數。若要從搜尋結果中移除 `rank_score` 欄位，請將 `remove_target_field` 設為 `true`。
+使用 `by_field` 重新排名類型時，`rank_score` 欄位將包含與 `_score` 欄位相同的分數。若要從搜尋結果中移除 `rank_score` 欄位，請將 `remove_target_field` 設為 `true`。
 
-比較原始分數與重新排序後的分數，有助於您評估搜尋相關性的改善程度。若要比較原始 BM25 分數與重新排序後的分數，請將 `keep_previous_score` 設為 `true`。原始分數會基於偵錯目的納入搜尋結果中，且預設會儲存在 `previous_score` 欄位中。如果您的索引已包含名為 `previous_score` 的文件欄位，請將 `previous_score_field` 設為不同的名稱，以免重新排序處理器覆寫現有欄位。
+比較原始分數與重新排名後的分數，有助於您評估搜尋相關性的改善程度。若要比較原始 BM25 分數與重新排名後的分數，請將 `keep_previous_score` 設為 `true`。原始分數會基於偵錯目的納入搜尋結果中，且預設會儲存在 `previous_score` 欄位中。如果您的索引已包含名為 `previous_score` 的文件欄位，請將 `previous_score_field` 設為不同的名稱，以免重新排名處理器覆寫現有欄位。
 
     
 若要建立搜尋管線，請傳送下列請求：
@@ -196,9 +196,9 @@ PUT /_search/pipeline/my_pipeline
 ```
 {% include copy-curl.html %}
 
-## 步驟 5：使用重新排序進行搜尋
+## 步驟 5：使用重新排名進行搜尋
 
-使用下列請求來搜尋已編製索引的文件，並使用交叉編碼器模型重新排序。此請求會擷取在 `description` 或 `facts` 欄位中包含任何指定詞彙的文件。接著使用這些詞彙來比較並重新排序符合的文件：
+使用下列請求搜尋已編製索引的文件，並使用 cross-encoder 模型重新排名。此請求會擷取在 `description` 或 `facts` 欄位中包含任一指定詞彙的文件。接著會使用這些詞彙來比較並重新排名符合的文件：
 
 ```json
 POST /nyc_areas/_search?search_pipeline=my_pipeline
@@ -213,7 +213,7 @@ POST /nyc_areas/_search?search_pipeline=my_pipeline
 ```
 {% include copy-curl.html %}
 
-在回應中，`original_query_score` 欄位包含文件的 BM25 分數，也就是在未套用管線的情況下文件原本會得到的分數。請注意，雖然 BM25 將 "Astoria" 排名最高，但交叉編碼器模型優先考慮 "Harlem"，因為它符合較多的搜尋詞彙：
+在回應中，`original_query_score` 欄位包含文件的 BM25 分數，也就是在未套用管線的情況下文件會得到的分數。請注意，雖然 BM25 將 "Astoria" 排名最高，但 cross-encoder 模型優先考慮 "Harlem"，因為它符合較多的搜尋詞彙：
 
 ```json
 {
@@ -278,4 +278,7 @@ POST /nyc_areas/_search?search_pipeline=my_pipeline
   }
 }
 ```
- 
+
+## 後續步驟
+
+- 如需使用 Cohere Rerank 依欄位重新排名結果的教學，請參閱 [使用 Cohere Rerank 依欄位重新排名搜尋結果]({{site.url}}{{site.baseurl}}/tutorials/reranking/reranking-by-field/)。

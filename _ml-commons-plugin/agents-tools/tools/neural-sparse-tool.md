@@ -15,11 +15,11 @@ grand_parent: Agents and tools
 {: .label .label-purple }
 <!-- vale on -->
 
-`NeuralSparseSearchTool` 會執行稀疏向量擷取。如需 neural sparse search 的詳細資訊，請參閱 [Neural sparse search]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-search/)。
+`NeuralSparseSearchTool` 會執行稀疏向量擷取。如需神經稀疏搜尋的詳細資訊，請參閱[神經稀疏搜尋]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-search/)。
 
 ## 步驟 1：註冊並部署稀疏編碼模型
 
-OpenSearch 支援多個預先訓練的稀疏編碼模型。您可以使用其中一個模型，也可以使用自己的自訂模型。如需支援的預先訓練模型清單，請參閱 [Sparse encoding models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/#sparse-encoding-models)。如需詳細資訊，請參閱 [OpenSearch-provided pretrained models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/) 和 [Custom local models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/custom-local-models/)。
+OpenSearch 支援多個預先訓練的稀疏編碼模型。您可以使用其中一個模型，也可以使用自己的自訂模型。如需支援的預先訓練模型清單，請參閱[稀疏編碼模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/#sparse-encoding-models)。如需詳細資訊，請參閱 [OpenSearch 提供的預先訓練模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/)和[自訂本機模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/custom-local-models/)。
 
 在此範例中，您將使用 `amazon/neural-sparse/opensearch-neural-sparse-encoding-v2-distill` 預先訓練模型來進行匯入和搜尋。若要註冊模型並將其部署至 OpenSearch，請傳送下列請求：
 
@@ -110,7 +110,7 @@ PUT index_for_neural_sparse
 ```
 {% include copy-curl.html %}
 
-最後，傳送大量請求將資料匯入索引：
+最後，傳送一筆批次請求（bulk request），將資料匯入索引：
 
 ```json
 POST _bulk
@@ -154,7 +154,7 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-如需參數說明，請參閱 [Register parameters](#register-parameters)。
+如需參數說明，請參閱[註冊參數](#register-parameters)。
 
 OpenSearch 會回應代理程式 ID：
 
@@ -166,9 +166,7 @@ OpenSearch 會回應代理程式 ID：
 
 ## 步驟 4：執行代理程式
 
-執行代理程式之前，請確認您已新增範例 OpenSearch Dashboards `Sample web logs` 資料集。如需詳細資訊，請參閱 [Adding sample data]({{site.url}}{{site.baseurl}}/dashboards/getting-started/data-setup/#add-sample-data)。
-
-接著，傳送下列請求來執行代理程式：
+傳送下列請求以執行代理程式：
 
 ```json
 POST /_plugins/_ml/agents/9X7xWI0Bpc3sThaJdY9i/_execute
@@ -178,7 +176,7 @@ POST /_plugins/_ml/agents/9X7xWI0Bpc3sThaJdY9i/_execute
   }
 }
 ```
-{% include copy-curl.html %}
+{% include copy-curl.html %} 
 
 OpenSearch 會傳回推論結果：
 
@@ -207,7 +205,7 @@ OpenSearch 會傳回推論結果：
 :--- | :--- | :--- | :---
 `model_id` | 字串 | 必要 | 搜尋時要使用的稀疏編碼模型 ID。
 `index` | 字串 | 必要 | 要搜尋的索引。
-`embedding_field` | 字串 | 必要 | 當 neural sparse 模型編碼原始文字文件時，編碼結果會儲存在某個欄位中。請將此欄位指定為 `embedding_field`。Neural sparse search 會計算查詢文字與文件 `embedding_field` 中文字的相似度分數，藉此將文件與查詢進行比對。
+`embedding_field` | 字串 | 必要 | 當神經稀疏模型編碼原始文字文件時，編碼結果會儲存在某個欄位中。請將此欄位指定為 `embedding_field`。神經稀疏搜尋會計算查詢文字與文件 `embedding_field` 中文字的相似度分數，藉此將文件與查詢進行比對。
 `source_field` | 字串 | 必要 | 要傳回的文件欄位。您可以提供多個欄位清單作為字串陣列，例如 `["field1", "field2"]`。
 `input` | 字串 | 流程代理程式必要 | 來自流程代理程式參數的執行階段輸入。若使用大型語言模型 (LLM)，此欄位會填入 LLM 回應。
 `name` | 字串  | 選用 | 工具名稱。當 LLM 需要為任務選取合適的工具時很有用。

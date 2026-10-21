@@ -147,7 +147,7 @@ raw-trace-pipeline:
         hosts: ["https://localhost:9200"]
         insecure: true
         username: admin
-        password: admin_password
+        password: "<custom-admin-password>"
         index_type: trace-analytics-raw
 service-map-pipeline:
   delay: "100"
@@ -165,7 +165,7 @@ service-map-pipeline:
         hosts: ["https://localhost:9200"]
         insecure: true
         username: admin
-        password: admin_password
+        password: "<custom-admin-password>"
         index_type: trace-analytics-service-map
 ```
 {% include copy.html %}
@@ -174,7 +174,7 @@ service-map-pipeline:
 
 #### 範例：`otel trace`
 
-以下是啟用 SSL 與基本驗證的 `otel-trace-source` .yaml 檔範例。請注意，您需要修改 `otel-collector-config.yaml` 檔，使其使用您自己的憑證。
+以下是啟用 SSL 與基本驗證的 `otel-trace-source` .yaml 檔範例。請注意，您需要修改 `otel-collector-config.yaml` 檔，使其使用您自己的認證資訊。
 
 ```yaml
 source:
@@ -252,7 +252,7 @@ raw-trace-pipeline:
         hosts: [ "https://opensearch:9200" ]
         # Change to your credentials
         username: admin
-        password: admin_password
+        password: "<custom-admin-password>"
         # Add a certificate file if you are accessing an OpenSearch cluster with a self-signed certificate  
         #cert: /path/to/cert
         # If you are connecting to an Amazon OpenSearch Service domain without
@@ -266,7 +266,7 @@ raw-trace-pipeline:
         index_type: trace-analytics-raw
         # Change to your credentials
         username: admin
-        password: admin_password
+        password: "<custom-admin-password>"
         # Add a certificate file if you are accessing an OpenSearch cluster with a self-signed certificate  
         #cert: /path/to/cert
         # If you are connecting to an Amazon OpenSearch Service domain without
@@ -304,7 +304,7 @@ service-map-pipeline:
         index_type: trace-analytics-service-map
         # Change to your credentials
         username: admin
-        password: admin_password
+        password: "<custom-admin-password>"
         # Add a certificate file if you are accessing an OpenSearch cluster with a self-signed certificate  
         #cert: /path/to/cert
         # If you are connecting to an Amazon OpenSearch Service domain without
@@ -323,7 +323,7 @@ service-map-pipeline:
 * `hosts` – 設為您的主機。
 * `username` – 提供您的 OpenSearch 使用者名稱。
 * `password` – 提供您的 OpenSearch 密碼。
-* `aws_sigv4` – 如果您使用 Amazon OpenSearch Service 並採用 AWS 簽署，請將此值設為 `true`。它會使用預設 AWS 憑證提供者來簽署請求。
+* `aws_sigv4` – 如果您使用 Amazon OpenSearch Service 並採用 AWS 簽署，請將此值設為 `true`。它會使用預設的 AWS 認證資訊提供者來簽署請求。
 * `aws_region` – 如果您使用 Amazon OpenSearch Service 並採用 AWS 簽署，請將此值設為您的 AWS 區域。
 
 如需 OpenSearch 接收端的其他可用組態，請參閱 [Data Prepper OpenSearch 接收端]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sinks/opensearch/)。
@@ -457,7 +457,7 @@ raw-trace-pipeline:
         hosts: ["https://opensearch:9200"]
         insecure: true
         username: admin
-        password: <strong_password>
+        password: "<custom-admin-password>"
         index_type: trace-analytics-raw
 
 service-map-pipeline:
@@ -471,7 +471,7 @@ service-map-pipeline:
         hosts: ["https://opensearch:9200"]
         insecure: true
         username: admin
-        password: <strong_password>
+        password: "<custom-admin-password>"
         index_type: trace-analytics-service-map
 ```
 {% include copy.html %}
@@ -594,7 +594,7 @@ docker run --rm --network anton_opensearch-net \
 
 ## 遷移至 Data Prepper 2.0
 
-從 Data Prepper 1.4 版開始，追蹤處理採用 Data Prepper 的事件模型。這讓管線作者能設定其他處理器來修改 span 或 trace。為了提供遷移途徑，Data Prepper 1.4 版引進了下列變更：
+從 Data Prepper 1.4 版開始，追蹤處理採用 Data Prepper 的事件模型。這讓管線作者能設定其他處理器來修改 span 或追蹤。為了提供遷移途徑，Data Prepper 1.4 版引進了下列變更：
 
 * `otel_trace_source` 有一個選用的 `record_type` 參數，可設為 `event`。設定後，它會輸出事件物件。
 * `otel_traces` 取代 `otel_traces_prepper`，用於以事件為基礎的 span。

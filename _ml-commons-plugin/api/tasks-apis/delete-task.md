@@ -14,7 +14,7 @@ nav_order: 20
 ML Commons 在執行刪除請求時不會檢查任務狀態。目前正在執行的任務有可能在完成前就被刪除。若要檢查任務狀態，請在刪除任務前執行 `GET /_plugins/_ml/tasks/<task_id>`。
 {: .note}
 
-### 端點
+## 端點
 
 ```json
 DELETE /_plugins/_ml/tasks/{task_id}
@@ -27,7 +27,7 @@ DELETE /_plugins/_ml/tasks/xQRYLX8BydmmU1x6nuD3
 ```
 {% include copy-curl.html %}
 
-## 範例回應
+## 回應範例
 
 ```json
 {
@@ -35,9 +35,10 @@ DELETE /_plugins/_ml/tasks/xQRYLX8BydmmU1x6nuD3
   "_id" : "xQRYLX8BydmmU1x6nuD3",
   "_version" : 4,
   "result" : "deleted",
+  "forced_refresh" : true,
   "_shards" : {
-    "total" : 2,
-    "successful" : 2,
+    "total" : 1,
+    "successful" : 1,
     "failed" : 0
   },
   "_seq_no" : 42,

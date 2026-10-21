@@ -29,7 +29,7 @@ AG-UI 代理程式可使用兩種類型的工具：
 使用 AG-UI 代理程式之前，您必須更新叢集設定以啟用此功能。`ag_ui_enabled` 與 `stream_enabled` 設定為必要，而 `mcp_connector_enabled` (用於連線至 Model Context Protocol [MCP] 伺服器) 與 `unified_agent_api_enabled` 則為選用但建議設定：
 
 ```json
-PUT _cluster/settings
+PUT /_cluster/settings
 {
   "persistent": {
     "plugins.ml_commons.ag_ui_enabled": true,
@@ -150,7 +150,7 @@ AG-UI 執行遵循 [AG-UI 通訊協定](https://docs.ag-ui.com/introduction)規�
 下列範例顯示如何使用 AG-UI 通訊協定格式，搭配前端工具、對話情境與應用程式狀態來執行 AG-UI 代理程式：
 
 ```json
-POST /_plugins/_ml/agents/{{agent_id}}/_execute/stream
+POST /_plugins/_ml/agents/{agent_id}/_execute/stream
 {
     "threadId": "thread-xxxxx",
     "runId": "run-xxxxx",

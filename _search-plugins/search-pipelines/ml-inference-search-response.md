@@ -569,7 +569,7 @@ GET /review_string_index/_search?search_pipeline=my_pipeline_request_review_llm
 }
 ```
 
-### 範例：使用文字相似度模型重新排序搜尋結果
+### 範例：使用文字相似度模型重新排名搜尋結果
 
 下列範例示範如何設定 `ml_inference` 搜尋回應處理器以搭配文字相似度模型。
 
@@ -703,7 +703,7 @@ GET /demo-index-0/_search?search_pipeline=my_rerank_pipeline
 ```
 {% include copy-curl.html %}
 
-回應包含原始文件及其重新排序後的分數：
+回應包含原始文件及其重新排名後的分數：
 
 ```json
 {
@@ -756,4 +756,5 @@ GET /demo-index-0/_search?search_pipeline=my_rerank_pipeline
 
 ## 後續步驟
 
-- 請參閱[使用外部託管的交叉編碼器模型依欄位重新排序]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/rerank-by-field-cross-encoder/)的完整範例。
+- 參閱[使用外部託管的 cross-encoder 模型依欄位重新排名]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/rerank-by-field-cross-encoder/)的完整範例。
+- 如需使用 Cohere Rerank 依欄位重新排名結果的教學，請參閱[使用 Cohere Rerank 依欄位重新排名搜尋結果]({{site.url}}{{site.baseurl}}/tutorials/reranking/reranking-by-field/)。

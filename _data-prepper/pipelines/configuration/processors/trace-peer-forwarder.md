@@ -15,7 +15,7 @@ nav_order: 380
 
 ## 使用方式
 
-若要開始使用 `trace_peer_forwarder`，請先設定[對等轉送器]({{site.url}}{{site.baseurl}}/data-prepper/managing-data-prepper/peer-forwarder/)。接著建立 `pipeline.yaml` 檔案，並將 `trace peer forwarder` 指定為處理器。您可以在 `data-prepper-config.yaml` 檔案中設定 `peer forwarder`。如需更詳細的資訊，請參閱[設定 OpenSearch Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/getting-started/#2-configuring-data-prepper)。
+若要開始使用 `trace_peer_forwarder`，請先設定[對等轉送器]({{site.url}}{{site.baseurl}}/data-prepper/managing-data-prepper/peer-forwarder/)。接著建立 `pipeline.yaml` 檔案，並將 `trace peer forwarder` 指定為處理器。您可以在 `data-prepper-config.yaml` 檔案中設定 `peer forwarder`。如需更詳細的資訊，請參閱[設定 OpenSearch Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/managing-data-prepper/configuring-data-prepper/)。
 
 請參閱下列 `pipeline.yaml` 檔案範例： 
 

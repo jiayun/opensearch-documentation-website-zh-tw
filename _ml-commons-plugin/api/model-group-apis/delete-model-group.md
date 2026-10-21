@@ -9,7 +9,7 @@ nav_order: 50
 
 # 刪除模型群組 API
 
-只有在不包含任何模型版本的情況下，您才能刪除模型群組。
+只有在不包含任何模型版本時，您才能刪除模型群組。
 {: .important}
 
 如果您的叢集已啟用模型存取控制，則只有擁有者或具有相符後端角色的使用者可以刪除該模型群組。任何使用者都可以刪除任何公開的模型群組。
@@ -19,10 +19,13 @@ nav_order: 50
 管理員使用者可以刪除任何模型群組。
 {: .note}
 
-當您刪除模型群組中的最後一個模型版本時，該模型群組會自動從索引中刪除。
-{: .important}
-
 如需更多資訊，請參閱[模型存取控制]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/)。
+
+## 端點
+
+```json
+DELETE /_plugins/_ml/model_groups/{model_group_id}
+```
 
 ## 範例請求
 
@@ -39,8 +42,9 @@ DELETE _plugins/_ml/model_groups/{model_group_id}
   "_id": "l8nnQogByXnLJ-QNpEk2",
   "_version": 5,
   "result": "deleted",
+  "forced_refresh": true,
   "_shards": {
-    "total": 2,
+    "total": 1,
     "successful": 1,
     "failed": 0
   },

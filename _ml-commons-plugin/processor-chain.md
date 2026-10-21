@@ -3,7 +3,7 @@
 layout: default
 title: "處理器鏈"
 has_children: false
-nav_order: 30
+nav_order: 40
 ---
 
 # 處理器鏈
@@ -275,14 +275,14 @@ nav_order: 30
 
 ### regex_capture
 
-從 regex 比對結果中擷取特定群組。如需 regex 語法詳細資訊，請參閱 [Java regex 語法](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html)。
+從輸入中第一個正規表示式比對結果擷取特定群組。如果模式不相符，則會原封不動地傳回輸入。如需正規表示式語法的詳細資訊，請參閱 [Java 正規表示式語法](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html)。
 
 **參數**：
 
-- `pattern`（字串，必要）：含有擷取群組的規則運算式模式。
-- `groups`（字串或陣列，選用）：要擷取的群組編號。可以是單一數字，例如 `"1"`，或陣列，例如 `"[1, 2, 4]"`。預設為 `"1"`。
+- `pattern`（字串，必要）：包含擷取群組的正規表示式模式。
+- `groups`（字串或陣列，選用）：要擷取的群組編號。可以是單一數字（例如 `"1"`），也可以是陣列（例如 `"[1, 2, 4]"`）。預設值為 `"1"`。
 
-**範例組態**：
+**組態範例**：
 
 ```json
 {
@@ -292,13 +292,13 @@ nav_order: 30
 }
 ```
 
-**範例輸入**：
+**輸入範例**：
 
 ```json
 "1,green,open,.plugins-ml-model-group,DCJHJc7pQ6Gid02PaSeXBQ,1,0"
 ```
 
-**範例輸出**：
+**輸出範例**：
 
 ```json
 ["1", ".plugins-ml-model-group"]
@@ -306,10 +306,10 @@ nav_order: 30
 
 ### regex_replace
 
-使用規則運算式模式取代文字。如需 regex 語法詳細資訊，請參閱 [Java regex 語法](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html)。
+使用正規表示式模式取代文字。如需正規表示式語法的詳細資訊，請參閱 [Java 正規表示式語法](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html)。
 
 **參數**：
-- `pattern`（字串，必要）：要比對的規則運算式模式。
+- `pattern`（字串，必要）：要比對的正規表示式模式。
 - `replacement`（字串，選用）：取代文字。預設為 `""`。
 - `replace_all`（布林值，選用）：要取代所有符合項目或僅取代第一個。預設為 `true`。
 
@@ -447,7 +447,7 @@ nav_order: 30
 
 下列範例示範如何搭配代理程式使用處理器鏈。
 
-### 步驟 1：註冊具有輸出處理器的流程代理程式
+### 步驟 1：註冊具有輸出處理器的流程代理程式（flow agent）
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -466,8 +466,9 @@ POST /_plugins/_ml/agents/_register
             "replacement": ""
           },
           {
-            "type": "regex_capture",
-            "pattern": "(\\d+,\\w+,\\w+,([^,]+))"
+            "type": "regex_replace",
+            "pattern": "(\\d+,\\w+,\\w+,[^,\n]+)[^\n]*",
+            "replacement": "$1"
           }
         ]
       }
@@ -479,7 +480,7 @@ POST /_plugins/_ml/agents/_register
 
 ### 步驟 2：執行代理程式
 
-使用前一個步驟傳回的 `agent_id`：
+使用上一步傳回的 `agent_id`：
 
 ```json
 POST /_plugins/_ml/agents/{agent_id}/_execute
@@ -491,26 +492,35 @@ POST /_plugins/_ml/agents/{agent_id}/_execute
 ```
 {% include copy-curl.html %}
 
-若沒有輸出處理器，原始 `ListIndexTool` 會傳回冗長的 CSV 輸出，其中包含標頭與額外資料欄：
+若沒有輸出處理器，原始 `ListIndexTool` 會傳回含有標頭與額外欄位的冗長 CSV 輸出：
 
 ```cs
-row,health,status,index,uuid,pri,rep,docs.count,docs.deleted,store.size,pri.store.size
+row,health,status,index,uuid,pri(number of primary shards),rep(number of replica shards),docs.count(number of available documents),docs.deleted(number of deleted documents),store.size(store size of primary and replica shards),pri.store.size(store size of primary shards)
 1,green,open,.plugins-ml-model-group,DCJHJc7pQ6Gid02PaSeXBQ,1,0,1,0,12.7kb,12.7kb
 2,green,open,.plugins-ml-memory-message,6qVpepfRSCi9bQF_As_t2A,1,0,7,0,53kb,53kb
 3,green,open,.plugins-ml-memory-meta,LqP3QMaURNKYDZ9p8dTq3Q,1,0,2,0,44.8kb,44.8kb
 ```
 
-輸出處理器會以下列方式將冗長的 CSV 輸出轉換為簡潔、易讀的格式：
+輸出處理器會透過下列方式，將冗長的 CSV 輸出轉換成簡潔易讀的格式：
 
 1. **`regex_replace`**：移除 CSV 標頭列。
-2. **`regex_capture`**：僅擷取必要資訊 (列號、健康狀態、狀態及索引名稱)。
+2. **`regex_replace`**：在每一列中只保留列號、健康狀態、狀態與索引名稱。此模式會擷取一列的前四個欄位，並比對該列的其餘部分，而取代字串 `$1` 會以擷取到的欄位取代整列。由於 `replace_all` 預設為 `true`，因此每一列都會被處理。
 
-有了輸出處理器，代理程式會傳回簡潔、格式化的資料，其中僅包含必要的索引資訊：
+使用輸出處理器後，代理程式會為每個索引傳回一行：
 
-```cs
-1,green,open,.plugins-ml-model-group
-2,green,open,.plugins-ml-memory-message
-3,green,open,.plugins-ml-memory-meta
+```json
+{
+  "inference_results": [
+    {
+      "output": [
+        {
+          "name": "response",
+          "result": "1,green,open,.plugins-ml-model-group\n2,green,open,.plugins-ml-memory-message\n3,green,open,.plugins-ml-memory-meta\n"
+        }
+      ]
+    }
+  ]
+}
 ```
 
 ## 搭配模型使用的範例

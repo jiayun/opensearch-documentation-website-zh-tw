@@ -30,7 +30,7 @@ redirect_from:
 
 ### 新增信任的端點
 
-若要在 OpenSearch 中設定連接器，請使用 `plugins.ml_commons.trusted_connector_endpoints_regex` 設定將信任的端點新增至叢集設定，該設定支援 Java regex 運算式：
+若要在 OpenSearch 中設定連接器，請使用 `plugins.ml_commons.trusted_connector_endpoints_regex` 設定，將信任的端點新增至叢集設定，該設定支援 Java regex 運算式。下列請求會設定預設的信任端點清單。若要信任其他端點，請將其模式加入此清單：
 
 ```json
 PUT /_cluster/settings
@@ -38,27 +38,34 @@ PUT /_cluster/settings
     "persistent": {
         "plugins.ml_commons.trusted_connector_endpoints_regex": [
           "^https://runtime\\.sagemaker\\..*[a-z0-9-]\\.amazonaws\\.com/.*$",
+          "^https://api\\.sagemaker\\..*[a-z0-9-]\\.amazonaws\\.com/.*$",
           "^https://api\\.openai\\.com/.*$",
           "^https://api\\.cohere\\.ai/.*$",
+          "^https://api\\.deepseek\\.com/.*$",
+          "^https://generativelanguage\\.googleapis\\.com/.*$",
           "^https://bedrock-runtime\\..*[a-z0-9-]\\.amazonaws\\.com/.*$",
-          "^https://.*-aiplatform\\.googleapis\\.com/.*$"
+          "^https://bedrock-agent-runtime\\..*[a-z0-9-]\\.amazonaws\\.com/.*$",
+          "^https://bedrock\\..*[a-z0-9-]\\.amazonaws\\.com/.*$",
+          "^https://textract\\..*[a-z0-9-]\\.amazonaws\\.com$",
+          "^https://comprehend\\..*[a-z0-9-]\\.amazonaws\\.com$",
+          "^https://rekognition(-fips)?\\..*[a-z0-9-]\\.amazonaws\\.com$"
         ]
     }
 }
 ```
 {% include copy-curl.html %}
 
-此設定會取代整份信任端點清單，因此請包含叢集所需的每個模式。
+此設定會取代整個信任端點清單，因此請包含叢集所需的每個模式。
 {: .note}
 
 
 
 ### 設定連接器存取控制
 
-如果您打算使用遠端連接器，請務必使用已啟用 Security 外掛程式的 OpenSearch 叢集。使用 Security 外掛程式可讓您使用連接器存取控制，這是使用遠端連接器時的必要條件。
+如果您打算使用遠端連接器，請務必使用已啟用 Security 外掛程式的 OpenSearch 叢集。使用 Security 外掛程式可讓您存取連接器存取控制，這是使用遠端連接器時的必要功能。
 {: .warning}
 
-如果您需要連接器的細微存取控制，請使用下列叢集設定：
+如果您需要對連接器進行精細的存取控制，請使用下列叢集設定：
 
 ```json
 PUT /_cluster/settings
@@ -70,7 +77,7 @@ PUT /_cluster/settings
 ```
 {% include copy-curl.html %}
 
-啟用存取控制後，您即可安裝 [Security 外掛程式]({{site.url}}{{site.baseurl}}/security/index/)。這會使 `backend_roles`、`add_all_backend_roles` 或 `access_model` 選項變為必要，才能使用連接器 API。若成功，OpenSearch 會傳回下列回應：
+如果成功，OpenSearch 會傳回下列回應：
 
 ```json
 {
@@ -85,6 +92,8 @@ PUT /_cluster/settings
   "transient": {}
 }
 ```
+
+當 [Security 外掛程式]({{site.url}}{{site.baseurl}}/security/index/) 與連接器存取控制皆已啟用時，您可以在建立連接器時提供 `backend_roles`、`add_all_backend_roles` 或 `access_mode` 選項，以控制對連接器的存取。如果您未提供任何這些選項，連接器即為私有。如果 Security 外掛程式或連接器存取控制任一項已停用，Create Connector API 會拒絕包含這些選項的請求。
 
 ## 步驟 1：註冊模型群組
 
@@ -117,12 +126,12 @@ POST /_plugins/_ml/model_groups/_register
 
 ## 步驟 2：建立連接器
 
-您可以建立獨立連接器，供 OpenSearch 中共用相同外部端點與組態的多個模型註冊重複使用。或者，您也可以在建立模型時指定連接器，使其僅能用於該模型。如需更多資訊與範例連接器，請參閱[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
+您可以建立獨立連接器，供 OpenSearch 中共用相同外部端點和組態的多個模型註冊重複使用。或者，您可以在建立模型時指定連接器，讓該連接器僅供該模型使用。如需詳細資訊和連接器範例，請參閱[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
 
-如果您使用的是 Amazon OpenSearch Service，建立連接器的程序有所不同。如需更多資訊，請參閱[在 Amazon OpenSearch Service 中建立連接器](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ml-amazon-connector.html)。
+如果您使用 Amazon OpenSearch Service，建立連接器的程序會有所不同。如需詳細資訊，請參閱[在 Amazon OpenSearch Service 中建立連接器](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ml-amazon-connector.html)。
 {: .note}
 
-Connectors Create API（`/_plugins/_ml/connectors/_create`）會建立連接器，協助在 OpenSearch 中註冊與部署外部模型。使用 `endpoint` 參數，您可以透過其特定的 API 端點將 ML Commons 連線至任何支援的 ML 工具。例如，您可以使用 `api.openai.com` 端點連線至 ChatGPT 模型：
+Connectors Create API（`/_plugins/_ml/connectors/_create`）會建立連接器，協助您在 OpenSearch 中註冊和部署外部模型。您可以使用 `endpoint` 參數，透過任何受支援機器學習工具的專用 API 端點，將 ML Commons 連接至該工具。例如，您可以使用 `api.openai.com` 端點連接至 ChatGPT 模型：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -136,7 +145,7 @@ POST /_plugins/_ml/connectors/_create
         "model": "gpt-4o-mini"
     },
     "credential": {
-        "openAI_key": "..."
+        "openAI_key": "<openai_api_key>"
     },
     "actions": [
         {
@@ -163,37 +172,38 @@ POST /_plugins/_ml/connectors/_create
 
 ## 步驟 3：註冊外部託管的模型
 
-若要將外部託管的模型註冊到步驟 1 建立的模型群組，請在下列請求中提供步驟 1 的模型群組 ID 與步驟 2 的連接器 ID。您必須將 `function_name` 指定為 `remote`：
+若要將外部託管的模型註冊到步驟 1 建立的模型群組，請在下列請求中提供步驟 1 的模型群組 ID 以及步驟 2 的連接器 ID。您必須將 `function_name` 指定為 `remote`：
 
 ```json
 POST /_plugins/_ml/models/_register
 {
     "name": "openAI-gpt-4o-mini",
     "function_name": "remote",
-    "model_group_id": "1jriBYsBq7EKuKzZX131",
+    "model_group_id": "wlcnb4kBJ1eYAeTMHlV6",
     "description": "test model",
     "connector_id": "a1eMb4kBJ1eYAeTMAljY"
 }
 ```
 {% include copy-curl.html %}
 
-OpenSearch 會傳回註冊作業的工作 ID：
+OpenSearch 會傳回註冊作業的工作 ID 以及已註冊模型的模型 ID：
 
 ```json
 {
   "task_id": "cVeMb4kBJ1eYAeTMFFgj",
-  "status": "CREATED"
+  "status": "CREATED",
+  "model_id": "cleMb4kBJ1eYAeTMFFg4"
 }
 ```
 
 若要檢查作業狀態，請將工作 ID 提供給 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/)：
 
-```bash
+```json
 GET /_plugins/_ml/tasks/cVeMb4kBJ1eYAeTMFFgj
 ```
 {% include copy-curl.html %}
 
-當作業完成時，狀態會變為 `COMPLETED`：
+作業完成後，狀態會變更為 `COMPLETED`：
 
 ```json
 {
@@ -210,11 +220,12 @@ GET /_plugins/_ml/tasks/cVeMb4kBJ1eYAeTMFFgj
 }
 ```
 
-請記下傳回的 `model_id`，因為部署模型時需要用到它。
+請記下傳回的 `model_id`，因為部署模型時會用到。
 
 ## 步驟 4：部署模型
 
-依預設，當您第一次傳送 Predict API 請求時，外部託管的模型會自動部署。若要停用外部託管模型的自動部署，請將 `plugins.ml_commons.model_auto_deploy.enable` 設為 `false`：
+外部託管的模型預設會在您首次傳送 Predict API 請求時自動部署。若要停用外部託管模型的自動部署，請將 `plugins.ml_commons.model_auto_deploy.enable` 設定為 `false`：
+
 ```json
 PUT _cluster/settings
 {
@@ -227,7 +238,7 @@ PUT _cluster/settings
 
 若要部署模型，請使用 [Deploy API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/deploy-model/)。
 
-```bash
+```json
 POST /_plugins/_ml/models/cleMb4kBJ1eYAeTMFFg4/_deploy
 ```
 {% include copy-curl.html %}
@@ -237,18 +248,19 @@ POST /_plugins/_ml/models/cleMb4kBJ1eYAeTMFFg4/_deploy
 ```json
 {
   "task_id": "vVePb4kBJ1eYAeTM7ljG",
-  "status": "CREATED"
+  "task_type": "DEPLOY_MODEL",
+  "status": "COMPLETED"
 }
 ```
 
-如同上一個步驟，呼叫 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 來檢查作業狀態：
+如同上一個步驟，透過呼叫 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 來檢查作業的狀態：
 
-```bash
+```json
 GET /_plugins/_ml/tasks/vVePb4kBJ1eYAeTM7ljG
 ```
 {% include copy-curl.html %}
 
-當作業完成時，狀態會變為 `COMPLETED`：
+當作業完成時，狀態會變更為 `COMPLETED`：
 
 ```json
 {
@@ -267,7 +279,7 @@ GET /_plugins/_ml/tasks/vVePb4kBJ1eYAeTM7ljG
 
 ## 步驟 5（選用）：測試模型
 
-使用 [Predict API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/predict/) 來測試模型：
+使用 [Predict API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/predict/) 測試模型：
 
 ```json
 POST /_plugins/_ml/models/cleMb4kBJ1eYAeTMFFg4/_predict
@@ -288,7 +300,7 @@ POST /_plugins/_ml/models/cleMb4kBJ1eYAeTMFFg4/_predict
 ```
 {% include copy-curl.html %}
 
-若要進一步了解 OpenAI 內的聊天功能，請參閱 [OpenAI Chat API](https://platform.openai.com/docs/api-reference/chat)。
+若要進一步了解 OpenAI 的聊天功能，請參閱 [OpenAI Chat API](https://platform.openai.com/docs/api-reference/chat)。
 
 回應包含 OpenAI 模型提供的推論結果：
 
@@ -321,7 +333,8 @@ POST /_plugins/_ml/models/cleMb4kBJ1eYAeTMFFg4/_predict
             }
           }
         }
-      ]
+      ],
+      "status_code": 200
     }
   ]
 }

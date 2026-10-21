@@ -7,7 +7,7 @@ grand_parent: ML Commons APIs
 nav_order: 20
 ---
 
-# 執行 Agent API
+# 執行代理程式 API
 **於 2.13 版推出**
 {: .label .label-purple }
 
@@ -27,8 +27,8 @@ POST /_plugins/_ml/agents/{agent_id}/_execute
 下表列出可用的查詢參數。
 
 參數 | 資料類型 | 必要/選用 | 說明
-:---  | :--- | :--- 
-`async` | 布林值 | 選用 | 若為 `true`，則以非同步方式執行代理程式，並傳回 `task_id` 以追蹤執行情形。若要檢查任務狀態，請使用 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/)。預設值為 `false`。
+:---  | :--- | :--- | :---
+`async` | 布林值 | 選用 | 若為 `true`，則以非同步方式執行代理程式，並傳回 `task_id` 以追蹤執行狀況。若要檢查任務狀態，請使用 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/)。預設為 `false`。
 
 ## 請求本文欄位
 
@@ -39,14 +39,14 @@ POST /_plugins/_ml/agents/{agent_id}/_execute
 `parameters`| 物件 | 選用 | 代理程式所需的參數。註冊期間所設定的任何代理程式參數，皆可使用此欄位覆寫。請搭配[一般註冊方法]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/)使用。
 `parameters.question`| 字串 | 選用 | 要向代理程式提出的問題。請搭配[一般註冊方法]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/)使用。
 `parameters.verbose`| 布林值 | 選用 | 提供詳細輸出。
-`parameters.memory_id` | 字串 | 選用 | 用於接續現有對話的記憶體工作階段 ID。此欄位支援對話式記憶體後端，包括 `conversation_index` 與 `agentic_memory`。若要開始新的工作階段，請省略此參數。
-`parameters.memory_container_id` | 字串 | 選用 | 當代理程式使用 `agentic_memory` 時，針對此次執行覆寫所設定的記憶體容器。
+`parameters.memory_id` | 字串 | 選用 | 用於接續現有對話的記憶工作階段 ID。此欄位支援對話式記憶後端，包括 `conversation_index` 與 `agentic_memory`。若要開始新的工作階段，請省略此參數。
+`parameters.memory_container_id` | 字串 | 選用 | 當代理程式使用 `agentic_memory` 時，針對此次執行覆寫所設定的記憶容器。
 `parameters.include_token_usage` | 布林值 | 選用 | 設為 `true` 時，會在回應中包含每次大型語言模型 (LLM) 呼叫的詳細詞元用量指標。支援 `conversational` (v1)、`plan-execute-reflect` 與 `AG-UI` 代理程式。`conversational_v2` 代理程式一律會在其回應格式中包含詞元用量，不需要此參數。預設值為 `false`。請參閱[追蹤詞元用量](#tracking-token-usage)。
 `input` | 字串或陣列 | 選用 | 標準化輸入欄位，支援純文字、多模態內容區塊或訊息式對話。請搭配[統一註冊方法]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#unified-registration-method)使用。
 
 > 設定 `conversation_index` 或 `agentic_memory` 時，回應會包含 `memory_id`。若要接續相同的工作階段，請在後續請求中包含 `memory_id`。省略 `memory_id` 即可開始新的工作階段。
 >
-> 使用 `agentic_memory` 時，您也必須提供記憶體容器 ID。請在代理程式註冊期間 (`memory.memory_container_id`) 或每次請求中 (`parameters.memory_container_id`) 指定。若未提供記憶體容器 ID，請求會失敗。
+> 使用 `agentic_memory` 時，您也必須提供記憶容器 ID。請在代理程式註冊期間 (`memory.memory_container_id`) 或每次請求中 (`parameters.memory_container_id`) 指定。若未提供記憶容器 ID，請求會失敗。
 {: .note}
 
 ## 一般代理程式執行
@@ -71,6 +71,7 @@ POST /_plugins/_ml/agents/879v9YwBjWKCe6Kg12Tx/_execute
     {
       "output": [
         {
+          "name": "MLModelTool",
           "result": """ Based on the given context, the key information is:
 
 The metro area population of Seattle in 2021 was 3,461,000.
@@ -90,15 +91,15 @@ Therefore, the population increase of Seattle from 2021 to 2023 is 58,000."""
 
 ## 回應欄位
 
-下表列出代理程式執行的基本回應欄位。
+下表列出代理程式執行的基礎回應欄位。
 
 | 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
 | `inference_results` | 陣列 | 包含代理程式的執行結果。 |
-| `inference_results.output` | 陣列 | 包含具有名稱值對的輸出物件。 |
+| `inference_results.output` | 陣列 | 包含具有名稱-值配對的輸出物件。 |
 | `inference_results.output.name` | 字串 | 輸出欄位名稱。常見值：`response`、`memory_id`、`parent_interaction_id`、`token_usage`。 |
-| `inference_results.output.result` | 字串 | 簡單字串結果的輸出值（當 `name` 為 `response`、`memory_id` 或 `parent_interaction_id` 時會出現）。 |
-| `inference_results.output.dataAsMap` | 物件 | 結構化結果的輸出值。請參閱[詞元用量回應欄位](#token-usage-response-fields)與[`conversational_v2` 代理程式回應格式](#the-conversational_v2-agent-response-format)。 |
+| `inference_results.output.result` | 字串 | 簡單字串結果的輸出值（當 `name` 為 `memory_id` 或 `parent_interaction_id`，或為流程代理程式 (flow agent) 所回傳其輸出的工具名稱時，會出現此欄位）。 |
+| `inference_results.output.dataAsMap` | 物件 | 結構化結果的輸出值。對於對話式代理程式的 `response` 輸出，包含 `response` 文字與一個 `additional_info` 物件。對於 `token_usage` 輸出，請參閱[詞元使用量回應欄位](#token-usage-response-fields)。 |
 
 ## 統一代理程式執行
 **於 3.5 版推出**
@@ -129,7 +130,15 @@ POST /_plugins/_ml/agents/{agent_id}/_execute
     {
       "output": [
         {
-          "result": "I have access to the following tools:\n\n1. ListIndexTool - Lists all indices in the cluster\n2. SearchIndexTool - Searches within OpenSearch indices\n3. IndexMappingTool - Retrieves index mapping information"
+          "name": "memory_id",
+          "result": "iEgpJZwBZx9B0F4spD5v"
+        },
+        {
+          "name": "response",
+          "dataAsMap": {
+            "response": "I have access to the following tools:\n\n1. ListIndexTool - Lists all indices in the cluster\n2. SearchIndexTool - Searches within OpenSearch indices\n3. IndexMappingTool - Retrieves index mapping information",
+            "additional_info": {}
+          }
         }
       ]
     }
@@ -172,9 +181,11 @@ POST /_plugins/_ml/agents/{agent_id}/_execute
 | 內容類型 | 說明 | 欄位 |
 | :--- | :--- | :--- |
 | `text` | 純文字內容 | `text`：文字字串。|
-| `image` | 影像資料 | `image.type`：來源類型。有效值為 `base64`。<br>`image.format`：影像格式 (例如 `jpeg`、`png`、`gif` 或 `webp`)。<br>`image.data`：Base64 編碼的影像資料。 |
-| `video` | 影片資料 | `video.type`：來源類型。有效值為 `base64`。<br>`video.format`：影片格式 (例如 `mp4`、`mov` 或 `avi`)。<br>`video.data`：Base64 編碼的影片資料。 |
-| `document` | 文件資料 | `document.type`：來源類型。有效值為 `base64`。<br>`document.format`：文件格式 (例如 `pdf`、`docx` 或 `txt`)。<br>`document.data`：Base64 編碼的文件資料。 |
+| `image` | 影像資料 | `source.type`：來源類型。有效值為 `base64`。 <br>`source.format`：影像格式（例如 `jpeg`、`png`、`gif` 或 `webp`）。<br>`source.data`：Base64 編碼的影像資料。 |
+| `video` | 影片資料 | `source.type`：來源類型。有效值為 `base64`。 <br>`source.format`：影片格式（例如 `mp4`、`mov` 或 `avi`）。<br>`source.data`：Base64 編碼的影片資料。 |
+| `document` | 文件資料 | `source.type`：來源類型。有效值為 `base64`。 <br>`source.format`：文件格式（例如 `pdf`、`docx` 或 `txt`）。<br>`source.data`：Base64 編碼的文件資料。 |
+
+內容類型支援取決於模型供應商。OpenAI 模型不接受 `video` 或 `document` 內容。
 
 ### 以訊息為基礎的對話
 
@@ -216,7 +227,7 @@ POST /_plugins/_ml/agents/{agent_id}/_execute
 ```
 {% include copy-curl.html %}
 
-這些訊息會儲存在代理程式的記憶體中。
+這些訊息會儲存在代理程式的記憶中。
 
 #### 訊息欄位
 
@@ -224,70 +235,60 @@ POST /_plugins/_ml/agents/{agent_id}/_execute
 
 | 欄位 | 資料類型 | 必要/選用 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `role` | 字串 | 必要 | 訊息角色。有效值：`user`、`assistant`。 |
-| `content` | 陣列 | 必要 | 內容區塊的陣列 (文字、影像等)。 |
+| `role` | 字串 | 必要 | 訊息角色。有效值：`user`、`assistant`、`system` 與 `tool`。 |
+| `content` | 陣列 | 必要 | 內容區塊（文字、影像等）的陣列。 |
+| `toolCalls` | 陣列 | 選用 | 對於 `assistant` 訊息，為助理所請求的工具呼叫。每個工具呼叫包含一個 `id`、一個 `type`（預設為 `function`），以及一個 `function` 物件，其中包含工具的 `name` 及其以 JSON 編碼字串表示的 `arguments`。 |
+| `toolCallId` | 字串 | 選用 | 對於 `tool` 訊息，為該訊息所含結果對應之工具呼叫的 ID。 |
 
 #### 範例回應：以訊息為基礎的對話
 
-代理程式會記住先前訊息的內容：
+代理程式會記住先前訊息的脈絡：
 
 ```json
 {
-  "inference_results": [
-    {
-      "output": [
-        {
-          "name": "memory_id",
-          "result": "iEgpJZwBZx9B0F4spD5v"
-        },
-        {
-          "name": "parent_interaction_id",
-          "result": "ikgpJZwBZx9B0F4spT61"
-        },
-        {
-          "name": "response",
-          "result": "You like the color red, which you mentioned earlier in our conversation."
-        }
-      ]
+  "stop_reason": "end_turn",
+  "message": {
+    "role": "assistant",
+    "content": [
+      {
+        "text": "You like the color red, which you mentioned earlier in our conversation."
+      }
+    ]
+  },
+  "memory_id": "iEgpJZwBZx9B0F4spD5v",
+  "metrics": {
+    "total_usage": {
+      "inputTokens": 764,
+      "outputTokens": 18,
+      "totalTokens": 782
     }
-  ]
+  }
 }
 ```
 
 ### `conversational_v2` 代理程式回應格式
 
-`conversational_v2` 代理程式會傳回下列標準化回應格式：
+`conversational_v2` 代理程式會傳回下列標準化回應格式。這些欄位位於回應本文的最上層：
 
 ```json
 {
-  "inference_results": [
-    {
-      "output": [
-        {
-          "name": "response",
-          "dataAsMap": {
-            "stop_reason": "end_turn",
-            "message": {
-              "role": "assistant",
-              "content": [
-                {
-                  "text": "Here is what I found..."
-                }
-              ]
-            },
-            "memory_id": "abc123xyz",
-            "metrics": {
-              "total_usage": {
-                "inputTokens": 1234,
-                "outputTokens": 567,
-                "totalTokens": 1801
-              }
-            }
-          }
-        }
-      ]
+  "stop_reason": "end_turn",
+  "message": {
+    "role": "assistant",
+    "content": [
+      {
+        "text": "Here is what I found..."
+      }
+    ]
+  },
+  "memory_id": "abc123xyz",
+  "metrics": {
+    "total_usage": {
+      "inputTokens": 1234,
+      "outputTokens": 567,
+      "totalTokens": 1801
     }
-  ]
+  }
 }
 ```
 
@@ -295,16 +296,16 @@ POST /_plugins/_ml/agents/{agent_id}/_execute
 
 | 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `stop_reason` | 字串 | 代理程式停止產生回應的原因。有效值為 `end_turn` (正常完成)、`max_iterations` (已達反覆運算上限)，以及 `tool_use` (在叫用工具時停止)。 |
+| `stop_reason` | 字串 | 代理程式停止產生回應的原因。有效值為 `end_turn`（正常完成）與 `max_iterations`（已達反覆運算上限）。 |
 | `message` | 物件 | 助理的最終回應訊息。 |
 | `message.role` | 字串 | 一律為 `assistant`。 |
-| `message.content` | 陣列 | 包含回應文字或其他內容的內容區塊陣列。 |
-| `memory_id` | 字串 | 記憶體工作階段 ID。請在後續請求的 `parameters.memory_id` 欄位中包含此 ID，以繼續對話。 |
-| `metrics.total_usage.inputTokens` | 整數 | 取用的輸入詞元數。 |
+| `message.content` | 陣列 | 內容區塊的陣列，包含回應文字或其他內容。 |
+| `memory_id` | 字串 | 記憶工作階段 ID。請在後續請求的 `parameters.memory_id` 欄位中加入此 ID，以繼續對話。 |
+| `metrics.total_usage.inputTokens` | 整數 | 耗用的輸入詞元數。 |
 | `metrics.total_usage.outputTokens` | 整數 | 產生的輸出詞元數。 |
 | `metrics.total_usage.totalTokens` | 整數 | 使用的詞元總數。 |
 
-如需統一註冊方法和輸入格式的詳細資訊，請參閱[統一註冊方法]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#unified-registration-method)。
+如需統一註冊方法與輸入格式的詳細資訊，請參閱[統一註冊方法]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/#unified-registration-method)。
 
 ## 追蹤詞元使用量
 **於 3.6 版推出**
@@ -361,8 +362,17 @@ POST /_plugins/_ml/agents/{agent_id}/_execute
     {
       "output": [
         {
+          "name": "memory_id",
+          "result": "lD3rP6EBrGbhC91R6B01"
+        },
+        {
+          "name": "parent_interaction_id",
+          "result": "lT3rP6EBrGbhC91R6B1D"
+        },
+        {
           "name": "response",
-          "result": """ Based on the given context, the key information is:
+          "dataAsMap": {
+            "response": """ Based on the given context, the key information is:
 
 The metro area population of Seattle in 2021 was 3,461,000.
 The metro area population of Seattle in 2023 is 3,519,000.
@@ -371,7 +381,9 @@ To calculate the population increase from 2021 to 2023:
 
 Population in 2023 (3,519,000) - Population in 2021 (3,461,000) = 58,000
 
-Therefore, the population increase of Seattle from 2021 to 2023 is 58,000."""
+Therefore, the population increase of Seattle from 2021 to 2023 is 58,000.""",
+            "additional_info": {}
+          }
         },
         {
           "name": "token_usage",
@@ -452,5 +464,5 @@ Therefore, the population increase of Seattle from 2021 to 2023 is 58,000."""
 
 詞元計數由模型供應商計算，並可能因斷詞方法而異。如需詞元計算方式的詳細資訊，請參閱您的模型供應商說明文件：
 - [Amazon Bedrock TokenUsage](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_TokenUsage.html)
-- [OpenAI tokenization](https://platform.openai.com/docs/guides/tokenization)
-- [Google Gemini token counting](https://ai.google.dev/gemini-api/docs/tokens)
+- [OpenAI 詞元化](https://platform.openai.com/docs/guides/tokenization)
+- [Google Gemini 詞元計數](https://ai.google.dev/gemini-api/docs/tokens)

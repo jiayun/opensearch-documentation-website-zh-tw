@@ -228,22 +228,22 @@ PUT test-index
 
 ## 位元組向量
 
-預設情況下，k-NN 向量是 `float` 向量，每個維度佔 4 位元組。如果您想節省儲存空間，可以搭配 `faiss` 或 `lucene` 引擎使用 `byte` 向量。在 `byte` 向量中，每個維度是一個範圍為 [-128, 127] 的帶正負號 8 位元整數。
+根據預設，k-NN 向量是 `float` 向量，其中每個維度佔 4 個位元組。如果您想節省儲存空間，可以搭配 `faiss` 或 `lucene` 引擎使用 `byte` 向量。在 `byte` 向量中，每個維度是範圍為 [-128, 127] 的帶正負號 8 位元整數。
  
-位元組向量僅支援 `lucene` 與 `faiss` 引擎，不支援 `nmslib` 引擎。
+位元組向量僅支援 `lucene` 和 `faiss` 引擎。不支援 `nmslib` 引擎。
 {: .note}
 
-在 [k-NN 基準測試](https://github.com/opensearch-project/opensearch-benchmark-workloads/tree/main/vectorsearch)中，使用 `byte` 而非 `float` 向量可大幅降低儲存與記憶體用量，同時提升索引處理吞吐量並降低查詢延遲。此外，召回精確度並未受到太大影響（請注意，召回率可能取決於多種因素，例如所使用的[量化技術](#quantization-techniques)與資料分佈）。
+在 [k-NN 基準測試](https://github.com/opensearch-project/opensearch-benchmark-workloads/tree/main/vectorsearch)中，使用 `byte` 而非 `float` 向量可大幅減少儲存空間與記憶體用量，同時提升編製索引的輸送量並降低查詢延遲。此外，召回率精確度並未受到太大影響（請注意，召回率可能取決於多種因素，例如所使用的[量化技術](#quantization-techniques)以及資料分佈）。
 
-使用 `byte` 向量時，與使用 `float` 向量相比，預期會有一些召回精確度的損失。位元組向量適用於大規模應用程式，以及優先考慮以極小召回損失換取較低記憶體佔用量的使用情境。
+使用 `byte` 向量時，相較於使用 `float` 向量，預期召回率精確度會有些許損失。位元組向量適用於優先考慮降低記憶體佔用量、以換取極小召回率損失的大規模應用程式和使用案例。
 {: .important}
 
-搭配 `faiss` 引擎使用 `byte` 向量時，我們建議使用[單指令多資料 (SIMD) 最佳化]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/#simd-optimization)，這有助於大幅降低搜尋延遲並提升索引處理吞吐量。
+搭配 `faiss` 引擎使用 `byte` 向量時，我們建議使用[單指令多資料 (SIMD) 最佳化]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/#simd-optimization)，這有助於大幅降低搜尋延遲並提升編製索引的輸送量。
 {: .important} 
 
-k-NN 外掛程式 2.9 版新增了選用的 `data_type` 參數，用於定義向量的資料類型。此參數的預設值為 `float`。
+選用的 `data_type` 參數於 k-NN 外掛程式 2.9 版引進，用於定義向量的資料類型。此參數的預設值為 `float`。
 
-若要使用 `byte` 向量，請在為索引建立對應時，將 `data_type` 參數設為 `byte`。
+如要使用 `byte` 向量，請在為索引建立對應時，將 `data_type` 參數設為 `byte`。如需匯入 Cohere 模型所產生位元組量化嵌入的完整範例，請參閱[使用位元組量化向量的語意搜尋]({{site.url}}{{site.baseurl}}/tutorials/vector-search/vector-operations/semantic-search-byte-vectors/)。
 
 ### 範例：HNSW
 
@@ -582,10 +582,12 @@ return Byte(bval)
 
 在 OpenSearch k-NN 外掛程式中使用二進位向量有幾項需求：
 
-- 二進位向量索引的 `data_type` 必須為 `binary`。
-- 二進位向量索引的 `space_type` 必須為 `hamming`。
+- 二進位向量索引的 `data_type` 必須是 `binary`。
+- 二進位向量索引的 `space_type` 必須是 `hamming`。
 - 二進位向量索引的 `dimension` 必須是 8 的倍數。
-- 您必須將二進位資料轉換為 [-128, 127] 範圍內的 8 位元帶正負號整數 (`int8`)。例如，8 位元的二進位序列 `0, 1, 1, 0, 0, 0, 1, 1` 必須轉換為其對應的位元組值 `99`，才能做為二進位向量輸入使用。
+- 您必須將二進位資料轉換為 [-128, 127] 範圍內的 8 位元有號整數（`int8`）。例如，8 位元的二進位序列 `0, 1, 1, 0, 0, 0, 1, 1` 必須轉換為對應的位元組值 `99`，才能作為二進位向量輸入。
+
+如需匯入由 Cohere 模型產生的二進位嵌入的完整範例，請參閱[使用 Cohere 壓縮嵌入最佳化向量搜尋]({{site.url}}{{site.baseurl}}/tutorials/vector-search/vector-operations/optimize-compression/)。
 
 ### 範例：HNSW
 

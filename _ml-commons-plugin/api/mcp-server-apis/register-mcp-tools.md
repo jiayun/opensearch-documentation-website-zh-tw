@@ -25,31 +25,32 @@ POST /_plugins/_ml/mcp/tools/_register
 
 欄位 | 資料類型 | 必要/選用 | 說明
 :---  | :--- | :--- | :--- 
-`tools` | 陣列 | 必要 | 工具的清單。
+`tools` | 陣列 | 必要 | 工具清單。
 
 
-`tools` 陣列包含工具的清單。每個工具包含下列欄位。
+`tools` 陣列包含工具清單。每個工具包含下列欄位。
 
 欄位 | 資料類型 | 必要/選用 | 說明
-:---  | :--- | :---
-`name`| 字串 | 選用 | 工具名稱。工具名稱預設為 `type` 參數值。如果您需要在 MCP 伺服器中包含多個相同類型的工具，請為這些工具指定不同的名稱。 |
-`type` | 字串 | 必要 | 工具類型。如需支援工具的清單，請參閱[工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/)。
+:---  | :--- | :--- | :---
+`name`| 字串 | 選用 | 工具名稱。工具名稱預設為 `type` 參數值。若您需要在 MCP 伺服器中包含多個相同類型的工具，請為這些工具指定不同的名稱。 |
+`type` | 字串 | 必要 | 工具類型。如需支援的工具清單，請參閱[工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/)。
 `description` | 字串 | 選用 | 工具的說明。
 `parameters` | 物件 | 選用 | 工具的參數。參數取決於工具類型。如需特定工具類型的資訊，請參閱[工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/)。
-`attributes` | 物件 | 選用 | 工具的組態屬性 (attributes)。此欄位中最重要的屬性是工具的 `input_schema`，其定義工具的預期參數格式。此結構描述會傳送給大型語言模型 (LLM)，以便在執行工具時正確地格式化參數。
+`attributes` | 物件 | 選用 | 工具的組態屬性（attributes）。此欄位中最重要的屬性是工具的 `input_schema`，其定義工具的預期參數格式。此結構描述會傳送給大型語言模型（LLM），以便其在執行工具時正確格式化參數。
 
 ## 範例請求
 
 [內建工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/index/)分為零組態工具 (不需要參數) 或參數化工具 (需要參數)。零組態工具使用標準初始化程序，因此因為不需要參數而具有相同的請求本文。相對地，對於參數化工具，您必須提供正確的初始化參數，以確保工具如預期般運作。
 
-### 範例請求：零組態工具
+### 請求範例：免組態工具
 
 <details markdown="block">
-  <summary>
-    範例請求
-  </summary>
+<summary>
+    請求範例
+</summary>
 
 ```json
+POST /_plugins/_ml/mcp/tools/_register
 {
     "tools": [
         {
@@ -385,7 +386,7 @@ POST /_plugins/_ml/mcp/tools/_register
 
 ## 範例回應
 
-OpenSearch 會回應節點 ID 以及每個節點所有工具的建立狀態：
+OpenSearch 會回應節點 ID，以及每個節點上所有工具建立作業的狀態：
 
 ```json
 {
@@ -397,3 +398,7 @@ OpenSearch 會回應節點 ID 以及每個節點所有工具的建立狀態：
     }
 }
 ```
+
+## 必要權限
+
+如果您使用 Security 外掛程式，請確認您具備適當的權限：`cluster:admin/opensearch/ml/mcp_tools/register`。

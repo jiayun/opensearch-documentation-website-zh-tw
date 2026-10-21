@@ -9,19 +9,19 @@ redirect_from:
   - /vector-search/tutorials/semantic-search/semantic-search-openai/
 ---
 
-# 使用 OpenAI 嵌入模型的語意搜尋
+# 使用 OpenAI 嵌入模型進行語意搜尋
 
-本教學說明如何在 [Amazon OpenSearch Service](https://docs.aws.amazon.com/opensearch-service/) 中使用 [OpenAI 嵌入模型](https://platform.openai.com/docs/guides/embeddings) 實作語意搜尋。更多資訊請參閱 [語意搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/semantic-search/)。
+本教學說明如何在 [Amazon OpenSearch Service](https://docs.aws.amazon.com/opensearch-service/) 中使用 [OpenAI 嵌入模型](https://platform.openai.com/docs/guides/embeddings) 實作語意搜尋。更多資訊請參閱[語意搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/semantic-search/)。
 
-如果您使用 Python，可以透過 [`opensearch-py-ml`](https://github.com/opensearch-project/opensearch-py-ml) 用戶端 CLI 建立 OpenAI 連接器並測試模型。此 CLI 會自動化許多設定步驟，讓設定更快速並降低出錯的機會。關於使用 CLI 的更多資訊，請參閱 [CLI 文件](https://opensearch-project.github.io/opensearch-py-ml/cli/index.html#)。
+如果使用 Python，您可以建立 OpenAI 連接器，並使用 [`opensearch-py-ml`](https://github.com/opensearch-project/opensearch-py-ml) 用戶端 CLI 測試模型。CLI 會自動化許多組態步驟，讓設定更快速並降低出錯的機會。關於使用 CLI 的更多資訊，請參閱 [CLI 文件](https://opensearch-project.github.io/opensearch-py-ml/cli/index.html#)。
 {: .tip}
 
-如果您使用自我管理的 OpenSearch 而非 Amazon OpenSearch Service，請使用[藍圖](https://github.com/opensearch-project/ml-commons/blob/2.x/docs/remote_inference_blueprints/openai_connector_embedding_blueprint.md)建立 OpenAI 模型的連接器。
+如果使用自行管理的 OpenSearch 而非 Amazon OpenSearch Service，請使用[藍圖](https://github.com/opensearch-project/ml-commons/blob/2.x/docs/remote_inference_blueprints/openai_connector_embedding_blueprint.md)建立連至 OpenAI 模型的連接器。
 
-或者，您也可以使用 [AIConnectorHelper 筆記本](https://github.com/opensearch-project/ml-commons/blob/2.x/docs/tutorials/aws/AIConnectorHelper.ipynb) 設定嵌入模型。
+或者，您也可以使用 [AIConnectorHelper notebook](https://github.com/opensearch-project/ml-commons/blob/main/docs/tutorials/aws/AIConnectorHelper.ipynb) 設定嵌入模型。
 {: .tip}
 
-請將以 `your_` 前綴開頭的預留位置替換為您自己的值。
+請將以字首 `your_` 開頭的預留位置替換為您自己的值。
 {: .note}
 
 ## 必要條件：建立 OpenSearch 叢集
@@ -93,11 +93,11 @@ redirect_from:
 
 ### 步驟 3.1：建立用於簽署連接器請求的 IAM 角色
 
-專門為簽署您的 Create Connector API 請求產生一個新的 IAM 角色。
+產生一個新的 IAM 角色，專門用來簽署您的 Create Connector API 請求。
 
-建立名為 `my_create_openai_connector_role` 的 IAM 角色，並新增下列信任政策與權限：
+建立名為 `my_create_openai_connector_role` 的 IAM 角色，並套用下列信任政策與權限：
 
-- 自訂信任政策： 
+- 自訂信任政策：
 
 ```json
 {
@@ -115,7 +115,7 @@ redirect_from:
 ```
 {% include copy.html %}
 
-您將在步驟 4 中使用 `your_iam_user_arn` IAM 使用者來擔任此角色。
+您將在步驟 4 使用 `your_iam_user_arn` IAM 使用者來擔任此角色。
 
 - 權限：
 
@@ -131,33 +131,33 @@ redirect_from:
         {
             "Effect": "Allow",
             "Action": "es:ESHttpPost",
-            "Resource": "your_opensearch_domain_arn_created"
+            "Resource": "your_opensearch_domain_arn_created/*"
         }
     ]
 }
 ```
 {% include copy.html %}
 
-記下此角色的 ARN；後續步驟會用到。
+請記下此角色的 ARN；您將在後續步驟中使用。
 
 ### 步驟 3.2：對應後端角色
 
-依照下列步驟對應後端角色：
+請依照下列步驟對應後端角色：
 
 1. 登入 OpenSearch Dashboards，並在頂端選單選取 **Security**。
-2. 選取 **Roles**，然後選取 **ml_full_access** 角色。 
-3. 在 **ml_full_access** 角色詳細資料頁面上，選取 **Mapped users**，然後選取 **Manage mapping**。 
+2. 選取 **Roles**，然後選取 **ml_full_access** 角色。
+3. 在 **ml_full_access** 角色詳細資料頁面，選取 **Mapped users**，然後選取 **Manage mapping**。
 4. 在 **Backend roles** 欄位中輸入步驟 3.1 建立的 IAM 角色 ARN，如下圖所示。
     ![對應後端角色]({{site.url}}{{site.baseurl}}/images/vector-search-tutorials/mapping_iam_role_arn.png)
-4. 選取 **Map**。 
+5. 選取 **Map**。
 
-IAM 角色現已成功在您的 OpenSearch 叢集中設定完成。
+IAM 角色現已成功設定在您的 OpenSearch 叢集中。
 
 ## 步驟 4：建立連接器
 
 依照下列步驟為 OpenAI 模型建立連接器。關於建立連接器的更多資訊，請參閱 [連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
 
-使用從 AWS 取得的臨時憑證執行下列 Python 程式碼。
+使用從 AWS 取得的臨時認證資訊執行下列 Python 程式碼。
  
 ```python
 import boto3
@@ -363,14 +363,13 @@ PUT /_ingest/pipeline/my_openai_embedding_pipeline
 
 ### 步驟 6.2：建立向量索引
 
-接著，建立一個向量索引來儲存輸入文字與產生的嵌入：
+接著，建立向量索引以儲存輸入文字與產生的嵌入：
 
 ```json
 PUT my_index
 {
   "settings": {
     "index": {
-      "knn.space_type": "cosinesimil",
       "default_pipeline": "my_openai_embedding_pipeline",
       "knn": "true"
     }
@@ -379,7 +378,8 @@ PUT my_index
     "properties": {
       "text_knn": {
         "type": "knn_vector",
-        "dimension": 1536
+        "dimension": 1536,
+        "space_type": "cosinesimil"
       }
     }
   }
@@ -401,7 +401,7 @@ POST /my_index/_doc/1000001
 
 ### 步驟 6.4：搜尋索引
 
-執行向量搜尋以從向量索引擷取文件：
+執行向量搜尋，以從向量索引擷取文件：
 
 ```json
 POST /my_index/_search
@@ -420,3 +420,10 @@ POST /my_index/_search
 }
 ```
 {% include copy-curl.html %}
+
+## 相關文件
+
+- [語意搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/semantic-search/)
+- [第三方機器學習平台的連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)
+- [文字嵌入處理器]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/text-embedding/)
+- [神經網路查詢]({{site.url}}{{site.baseurl}}/query-dsl/specialized/neural/)

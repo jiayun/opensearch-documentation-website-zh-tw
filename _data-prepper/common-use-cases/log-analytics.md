@@ -67,7 +67,7 @@ log-pipeline:
         hosts: [ "https://localhost:9200" ]
         # Change to your credentials
         username: "admin"
-        password: "admin"
+        password: "<custom-admin-password>"
         # Add a certificate file if you are accessing an OpenSearch cluster with a self-signed certificate
         #cert: /path/to/cert
         # If you are connecting to an Amazon OpenSearch Service domain without
@@ -89,7 +89,7 @@ log-pipeline:
 * `index` – 將此項變更為您要傳送記錄檔的 OpenSearch 索引。
 * `username` – 提供您的 OpenSearch 使用者名稱。
 * `password` – 提供您的 OpenSearch 密碼。
-* `aws_sigv4` – 如果您使用採用 AWS 簽署的 Amazon OpenSearch Service，請將此項設為 true。它會使用預設的 AWS 憑證提供者簽署請求。
+* `aws_sigv4` – 如果您使用採用 AWS 簽署的 Amazon OpenSearch Service，請將此項設為 true。它會使用預設的 AWS 認證資訊提供者簽署請求。
 * `aws_region` – 如果您使用採用 AWS 簽署的 Amazon OpenSearch Service，請將此值設為託管您叢集的 AWS 區域。
 
 ## Fluent Bit

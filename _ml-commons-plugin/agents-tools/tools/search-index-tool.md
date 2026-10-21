@@ -19,7 +19,7 @@ grand_parent: Agents and tools
 
 ## 步驟 1：註冊將執行 SearchIndexTool 的流程代理程式
 
-流程代理程式會依序執行一連串工具，並傳回最後一個工具的輸出。若要建立流程代理程式，請傳送下列註冊代理程式請求：
+流程代理程式 (flow agent) 會依序執行一連串工具，並傳回最後一個工具的輸出。若要建立流程代理程式，請傳送下列註冊代理程式請求：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -27,9 +27,6 @@ POST /_plugins/_ml/agents/_register
   "name": "Test_Agent_For_Search_Index_Tool",
   "type": "flow",
   "description": "this is a test for search index tool",
-  "memory": {
-    "type": "demo"
-  },
   "tools": [
     {
       "type": "SearchIndexTool"
@@ -39,7 +36,7 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %} 
 
-OpenSearch 會回應代理程式 ID：
+OpenSearch 會以代理程式 ID 回應：
 
 ```json
 {
@@ -112,13 +109,62 @@ OpenSearch 會傳回查詢結果：
 }
 ```
 
+## 在對話式代理程式中使用此工具
+
+在使用函式呼叫的 `conversational` 代理程式中，LLM 會依據工具的輸入結構描述提供工具輸入。根據預設，輸入結構描述要求 LLM 提供 `index` 與 `query` 參數。若希望 LLM 只提供問題，請在工具參數中指定索引與查詢，並在 `attributes.input_schema` 中定義自訂輸入結構描述。
+
+下列工具定義會在 `test_population_data` 索引上執行 `neural` 查詢。LLM 會提供 `question`，工具則將其用作 `query_text`：
+
+```json
+{
+  "type": "SearchIndexTool",
+  "name": "retrieve_population_data",
+  "description": "This tool provides population data of US cities.",
+  "parameters": {
+    "input": "{\"index\": \"${parameters.index}\", \"query\": ${parameters.query} }",
+    "index": "test_population_data",
+    "query": {
+      "query": {
+        "neural": {
+          "population_description_embedding": {
+            "query_text": "${parameters.question}",
+            "model_id": "your_text_embedding_model_id"
+          }
+        }
+      },
+      "size": 2,
+      "_source": "population_description"
+    }
+  },
+  "attributes": {
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "question": {
+          "type": "string",
+          "description": "Natural language question"
+        }
+      },
+      "required": [ "question" ],
+      "additionalProperties": false
+    },
+    "strict": false
+  }
+}
+```
+
+如需完整範例，請參閱[搭配神經查詢使用 Search Index 工具]({{site.url}}{{site.baseurl}}/tutorials/gen-ai/chatbots/rag-chatbot/#using-the-search-index-tool-with-a-neural-query)。
+
 ## 執行參數
 
-下表列出註冊代理程式時可用的所有工具參數。
+下表列出執行代理程式時可用的所有工具參數。
 
 參數 | 類型 | 說明
 :--- | :--- | :---
-`input`| 字串 | 要用於搜尋的索引名稱與查詢，格式為 JSON。`index` 參數包含索引名稱，而 `query` 參數包含以 Query DSL 格式化的查詢。例如，`"{\"index\": \"opensearch_dashboards_sample_data_ecommerce\", \"query\": {\"size\": 22,  \"_source\": \"category\"}}"`。`input` 參數及其包含的 `index` 與 `query` 參數為必要。
+`input`| 字串 | 用於搜尋的索引名稱與查詢，採用 JSON 格式。`index` 參數包含索引名稱，`query` 參數則包含以 Query DSL 格式撰寫的查詢。例如：`"{\"index\": \"opensearch_dashboards_sample_data_ecommerce\", \"query\": {\"size\": 22,  \"_source\": \"category\"}}"`。除非您提供頂層的 `index` 和 `query` 參數，否則 `input` 參數及其包含的 `index` 和 `query` 參數皆為必要。
+`index` | 字串 | 要搜尋的索引名稱。未提供 `input` 時，與 `query` 搭配使用。
+`query` | 字串 | Query DSL 格式的搜尋查詢，以 JSON 字串表示（例如：`"{\"size\": 1, \"_source\": \"email\"}"`）。未提供 `input` 時，與 `index` 搭配使用。
+`return_raw_response` | 布林值 | 若為 `true`，工具會以 JSON 物件傳回完整的搜尋回應，而非每個命中結果各一行。預設值為 `false`。
 
 ## 測試工具
 

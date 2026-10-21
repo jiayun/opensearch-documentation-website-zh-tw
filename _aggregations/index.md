@@ -333,7 +333,8 @@ PUT products
 
 ## 後續步驟
 
-- 探索[指標彙總]({{site.url}}{{site.baseurl}}/aggregations/metric/)，以計算資料的統計值。
-- 了解[桶彙總]({{site.url}}{{site.baseurl}}/aggregations/bucket/)，以依類別、範圍或時間間隔將資料分組並分析。
-- 探索[管線彙總]({{site.url}}{{site.baseurl}}/aggregations/pipeline/)，以使用其他彙總的輸出進行進階分析。
-- 使用彙總[在 OpenSearch Dashboards 中建立視覺化]({{site.url}}{{site.baseurl}}/dashboards/visualize/viz-index/)。
+- 探索[指標彙總]({{site.url}}{{site.baseurl}}/aggregations/metric/)，以計算資料的統計數據。
+- 瞭解[桶彙總]({{site.url}}{{site.baseurl}}/aggregations/bucket/)，依類別、範圍或時間間隔分組並分析資料。
+- 探索[管線彙總]({{site.url}}{{site.baseurl}}/aggregations/pipeline/)，使用其他彙總的輸出進行進階分析。
+- 使用彙總在 [OpenSearch Dashboards 中建立視覺化]({{site.url}}{{site.baseurl}}/dashboards/visualize/viz-index/)。
+- 如需使用彙總與後置篩選器建構多面向搜尋的教學，請參閱[在 OpenSearch 中實作多面向搜尋]({{site.url}}{{site.baseurl}}/tutorials/faceted-search/)。

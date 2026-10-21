@@ -13,15 +13,17 @@ redirect_from:
 ---
 
 # MCP 伺服器 API
-**於 3.0 版推出**
+**3.0 版新增**
 {: .label .label-purple }
 
-[Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) 定義了代理程式如何探索及執行工具。OpenSearch 中的 MCP 伺服器可讓代理程式連線並使用可用的[工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/)。
+使用這些 API 來管理叢集內的 [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) 伺服器，讓外部 MCP 用戶端能夠探索並呼叫您叢集中註冊的[工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/)。
 
-ML Commons 中的 MCP 伺服器使用 Streamable HTTP 傳輸通訊協定與用戶端通訊。如需傳輸的詳細資訊，請參閱[官方 MCP 文件](https://modelcontextprotocol.io/specification/2025-03-26/basic/transports)。
+叢集內的 MCP 伺服器使用 Streamable HTTP 傳輸協定與用戶端通訊。關於此傳輸方式的詳細資訊，請參閱[官方 MCP 文件](https://modelcontextprotocol.io/specification/2025-03-26/basic/transports)。
 {: .note }
 
-ML Commons 支援下列 MCP API：
+關於設定 MCP 伺服器與連接用戶端的說明，請參閱[使用叢集內 MCP 伺服器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/mcp/in-cluster-mcp-server/)。
+
+叢集內的 MCP 伺服器支援下列 API：
 
 - [註冊 MCP 工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/mcp-server-apis/register-mcp-tools/)
 - [更新 MCP 工具]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/mcp-server-apis/update-mcp-tools/)

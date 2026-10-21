@@ -183,4 +183,5 @@ GET /my-nlp-index/_search
 
 ## 後續步驟
 
-- 探索我們的[教學]({{site.url}}{{site.baseurl}}/vector-search/tutorials/)，了解如何建置 AI 搜尋應用程式。 
+- 瀏覽我們的[教學]({{site.url}}{{site.baseurl}}/vector-search/tutorials/)，了解如何建立 AI 搜尋應用程式。
+- 若要使用 ML 推論處理器設定多模態搜尋，請參閱[使用 ML 推論處理器的多模態搜尋]({{site.url}}{{site.baseurl}}/tutorials/vector-search/semantic-search/multimodal-search-ml-inference/)。

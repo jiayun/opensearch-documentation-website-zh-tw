@@ -8,11 +8,11 @@ nav_order: 60
 
 # 使用語意醒目提示
 
-語意醒目提示會根據查詢的含義，找出並強調文件中語意上最相關的句子或段落，藉此強化搜尋結果。傳統的醒目提示器仰賴完全相符的關鍵字，語意醒目提示則不同，它使用機器學習 (ML) 模型來理解文字片段的上下文與相關性。如此一來，即使醒目提示的段落中沒有出現完全相同的搜尋詞彙，您仍可精確找出文件中最切題的資訊。如需詳細資訊，請參閱[使用 `semantic` 醒目提示器]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight#the-semantic-highlighter)。
+語意醒目提示會根據查詢的含義，找出並強調文件中語意最相關的句子或段落，藉此強化搜尋結果。傳統醒目提示依賴完全相符的關鍵字，語意醒目提示則不同，它使用機器學習 (ML) 模型來理解文字分段的脈絡與相關性。即使醒目提示的段落中沒有出現確切的搜尋詞彙，您仍可藉此精確找出文件中最相關的資訊。如需詳細資訊，請參閱[使用 `semantic` 醒目提示器]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight#the-semantic-highlighter)。
 
 本教學將引導您設定語意醒目提示，並搭配神經搜尋查詢使用。
 
-請將以 `your_` 為前綴的預留位置替換為您自己的值。
+請將前綴為 `your-` 的預留位置替換成您自己的值。
 {: .note}
 
 ## 先決條件
@@ -118,9 +118,9 @@ POST /_plugins/_ml/models/_register?deploy=true
 在正式環境中，建議使用外部託管的模型，而非本機部署的模型。外部託管模型提供更佳的擴充性、資源隔離，並支援批次推論等進階功能。如需部署外部託管模型的相關資訊，請參閱[連線至外部託管模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/)。
 {: .tip}
 
-## 步驟 3（選用）：設定資料匯入管線 
+## 步驟 3：設定資料匯入管線
 
-若要在編製索引時自動產生嵌入，請建立[資料匯入管線]({{site.url}}{{site.baseurl}}/ingest-pipelines/)：
+若要在編製索引時產生嵌入，請建立[資料匯入管線]({{site.url}}{{site.baseurl}}/ingest-pipelines/)：
 
 ```json
 PUT /_ingest/pipeline/nlp-ingest-pipeline
@@ -129,7 +129,7 @@ PUT /_ingest/pipeline/nlp-ingest-pipeline
   "processors": [
     {
       "text_embedding": {
-        "model_id": "your-text-embedding-model-id",
+        "model_id": "<your-text-embedding-model-id>",
         "field_map": {
           "text": "text_embedding"
         }
@@ -150,9 +150,9 @@ PUT /neural-search-index/_settings
 ```
 {% include copy-curl.html %}
 
-## 步驟 4：將資料編製索引
+## 步驟 4：編製資料索引
 
-現在，將一些範例文件編製索引。如果您已設定資料匯入管線，系統會自動產生嵌入：
+現在，為一些範例文件編製索引。資料匯入管線會自動產生嵌入：
 
 ```json
 POST /neural-search-index/_doc/1
@@ -182,14 +182,14 @@ POST /neural-search-index/_doc/3
 
 將神經搜尋查詢與語意醒目提示器結合：
 
-1.  使用 `neural` 查詢，透過文字嵌入模型找出與您的查詢文字語意相似的文件。
+1.  使用 `neural` 查詢，透過文字嵌入模型尋找與您的查詢文字語意相似的文件。
 2.  新增 `highlight` 區段。
-3.  在 `highlight.fields` 中，指定 `text` 欄位（或包含您要醒目提示之內容的其他欄位）。
-4.  將此欄位的 `type` 設定為 `semantic`。
+3.  在 `highlight.fields` 中，指定 `text` 欄位（或其他包含您想要醒目提示之內容的欄位）。
+4.  將此欄位的 `type` 設為 `semantic`。
 5.  新增全域 `highlight.options` 物件。
 6.  在 `options` 中，提供您已部署之句子醒目提示模型的 `model_id`。
 
-使用下列請求擷取前五筆相符文件（在 `k` 參數中指定）。將預留位置模型 ID（`TEXT_EMBEDDING_MODEL_ID` 與 `SEMANTIC_HIGHLIGHTING_MODEL_ID`）替換為步驟 2 中成功部署後取得的模型 ID：
+使用下列請求擷取相符程度最高的兩份文件（在 `k` 參數中指定）。將模型 ID 預留位置（`<your-text-embedding-model-id>` 和 `<your-semantic-highlighting-model-id>`）替換為步驟 2 中成功部署後取得的模型 ID：
 
 ```json
 POST /neural-search-index/_search
@@ -220,7 +220,7 @@ POST /neural-search-index/_search
 ```
 {% include copy-curl.html %}
 
-搜尋結果在每個命中結果中包含 `highlight` 物件。`highlight` 物件中指定的 `text` 欄位包含原始文字，預設會將語意最相關的句子以 `<em>` 標籤包覆：
+搜尋結果的每筆命中項目都包含一個 `highlight` 物件。`highlight` 物件中指定的 `text` 欄位包含原始文字，其中語意最相關的句子預設會以 `<em>` 標籤包覆：
 
 ```json
 {
@@ -271,7 +271,7 @@ POST /neural-search-index/_search
 }
 ```
 
-`semantic` 醒目提示器會在每份擷取文件的內容中，找出模型判定與查詢（「treatments for neurodegenerative diseases」）語意相關的句子。如有需要，您可以使用 `pre_tags` 與 `post_tags` 參數自訂醒目提示標籤。如需更多資訊，請參閱[變更醒目提示標籤]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight/#changing-the-highlighting-tags)。
+`semantic` 醒目提示器會在每份擷取文件的脈絡中，找出模型判定與查詢（「treatments for neurodegenerative diseases」）語意相關的句子。您可以視需要使用 `pre_tags` 和 `post_tags` 參數自訂醒目提示標籤。如需詳細資訊，請參閱[變更醒目提示標籤]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight/#changing-the-highlighting-tags)。
 
 ### 使用批次推論模式進行醒目提示
 
@@ -279,4 +279,11 @@ POST /neural-search-index/_search
 
 ## 後續步驟
 
-如需語意醒目提示選項與組態的更多資訊，請參閱[使用語意醒目提示器]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight#the-semantic-highlighter)。
+如需語意醒目提示選項與組態的詳細資訊，請參閱[使用語意醒目提示器]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight#the-semantic-highlighter)。
+
+## 相關文件
+
+- [語意搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/semantic-search/)
+- [神經查詢]({{site.url}}{{site.baseurl}}/query-dsl/specialized/neural/)
+- [文字嵌入處理器]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/text-embedding/)
+- [OpenSearch 提供的預先訓練模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/)

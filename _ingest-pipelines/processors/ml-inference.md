@@ -380,7 +380,7 @@ POST _ingest/pipeline/ml_inference_pipeline/_simulate
 
 #### 回應
 
-回應確認處理器已在 `context_embedding` 欄位中產生文字嵌入。該文件現在在同一個路徑下同時包含 `context` 與 `context_embedding` 欄位：
+回應確認處理器已在 `context_embedding` 欄位中產生文字嵌入。此文件現在在同一個路徑下同時包含 `context` 與 `context_embedding` 欄位：
 
 ```json
 {
@@ -455,5 +455,11 @@ POST _ingest/pipeline/ml_inference_pipeline/_simulate
 }
 ```
 
-建立資料匯入管線後，您需要建立一個索引以供匯入，並將文件匯入該索引。
+建立資料匯入管線之後，您需要建立一個索引以供匯入，並將文件匯入該索引。
 {: .note}
+
+## 後續步驟
+
+- 如需在匯入期間產生文字與影像嵌入的完整範例，請參閱[使用 ML 推論處理器進行多模態搜尋]({{site.url}}{{site.baseurl}}/tutorials/vector-search/semantic-search/multimodal-search-ml-inference/)。
+- 如需在匯入期間偵測文件語言的完整範例，請參閱[為多語言搜尋識別文件語言]({{site.url}}{{site.baseurl}}/tutorials/language-identification/)。
+- 如需為文字區塊產生嵌入的完整範例，請參閱[使用文字區塊化進行語意搜尋]({{site.url}}{{site.baseurl}}/tutorials/vector-search/semantic-search/long-document/)。

@@ -33,21 +33,20 @@ GET /_plugins/_ml/memory/{memory_id}/_search
 
 ## 回應本文欄位
 
-下表列出可用的回應欄位。
+回應採用標準的 OpenSearch 搜尋回應格式。每個命中項目的 `_id` 即為訊息 ID。下表列出 `hits` 陣列中每個元素的 `_source` 物件所含欄位。
 
 | 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
 | `memory_id` | 字串 | 記憶 ID。 |
-| `message_id` | 字串 | 訊息 ID。 |
-| `create_time` | 字串 | 建立訊息的時間。 |
-| `updated_time` | 字串 | 上次更新訊息的時間。 |
-| `input` | 字串 | 訊息中的問題 (人類輸入)。 |
-| `prompt_template` | 字串 | 用於訊息的提示範本。 |
-| `response` | 字串 | 問題的答案 (生成式 AI 輸出)。 |
+| `create_time` | 字串 | 訊息的建立時間。 |
+| `updated_time` | 字串 | 訊息的最後更新時間。 |
+| `input` | 字串 | 訊息中的問題（人類輸入）。 |
+| `prompt_template` | 字串 | 用於該訊息的提示範本。 |
+| `response` | 字串 | 問題的答案（生成式 AI 輸出）。 |
 | `origin` | 字串 | 產生回應的 AI 或其他系統名稱。 |
 | `additional_info` | 物件 | 傳送至 `origin` 的任何其他資訊。 |
-| `parent_message_id` | 字串 | 父訊息的 ID (用於追蹤訊息)。 |
-| `trace_number` | 整數 | 追蹤編號 (用於追蹤訊息)。 |
+| `parent_message_id` | 字串 | 父訊息的 ID（用於追蹤訊息）。 |
+| `trace_number` | 整數 | 追蹤編號（用於追蹤訊息）。 |
 
 ## 範例請求
 

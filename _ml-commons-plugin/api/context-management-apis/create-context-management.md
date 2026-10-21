@@ -7,7 +7,7 @@ grand_parent: ML Commons APIs
 nav_order: 10
 ---
 
-# Create Context Management API
+# 建立脈絡管理 API
 **於 3.5 版推出**
 {: .label .label-purple }
 
@@ -25,7 +25,7 @@ POST /_plugins/_ml/context_management/{context_management_name}
 
 參數 | 資料類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`context_management_name` | 字串 | 必要 | 脈絡管理的唯一名稱。
+`context_management_name` | 字串 | 必要 | 脈絡管理的唯一名稱。長度必須為 1--49 個字元，且只能包含小寫字母、數字、連字號 (`-`) 和底線 (`_`)。
 
 ## 請求本文欄位
 
@@ -33,24 +33,24 @@ POST /_plugins/_ml/context_management/{context_management_name}
 
 欄位 | 資料類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`description` | 字串 | 選用 | 以人類可讀的方式描述此脈絡管理的功能。
-`hooks` | 物件 | 必要 | 將掛鉤名稱對應至脈絡管理器組態清單的對應關係。請參閱 [`hooks` 物件](#the-hooks-object)。
+`description` | 字串 | 選用 | 此脈絡管理功能的用途說明，供人員閱讀。
+`hooks` | 物件 | 必要 | 將 hook 名稱對應至脈絡管理器組態清單的對應。必須包含至少一個 hook。請參閱 [`hooks` 物件](#the-hooks-object)。
 
 ### hooks 物件
 
-`hooks` 物件將掛鉤名稱對應至脈絡管理器組態陣列。支援下列掛鉤。
+`hooks` 物件將 hook 名稱對應到脈絡管理器組態的陣列。Hook 名稱區分大小寫，且必須為大寫。此 API 接受其他 hook 名稱，但在這些名稱下設定的脈絡管理器永遠不會執行。支援下列 hook。
 
-掛鉤 | 說明
+Hook | 說明
 :--- | :---
-`pre_llm` | 在傳送請求至大型語言模型（LLM）之前執行。
-`post_tool` | 在工具執行完成後執行。
+`PRE_LLM` | 在將請求傳送至大型語言模型 (LLM) 之前執行。
+`POST_TOOL` | 在工具執行完成後執行。
 
-每個掛鉤都包含一個脈絡管理器組態陣列，其中具有下列欄位。
+每個 hook 都包含一個脈絡管理器組態陣列，具有下列欄位。
 
 欄位 | 資料類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`type` | 字串 | 必要 | 脈絡管理器類型。有效值為 `SlidingWindowManager`、`SummarizationManager` 和 `ToolsOutputTruncateManager`。
-`config` | 物件 | 必要 | 脈絡管理器類型專用的組態。請參閱[脈絡管理器組態](#context-manager-configurations)。
+`type` | 字串 | 必要 | 脈絡管理器類型。有效值為 `SlidingWindowManager`、`SummarizationManager` 與 `ToolsOutputTruncateManager`。
+`config` | 物件 | 選用 | 特定脈絡管理器類型的組態。若省略，則使用預設值。請參閱[脈絡管理器組態](#context-manager-configurations)。
 
 ### 脈絡管理器組態
 
@@ -86,15 +86,14 @@ POST /_plugins/_ml/context_management/{context_management_name}
 `max_output_length` | 整數 | 選用 | 要保留的工具輸出長度上限。預設為 `40000`。
 `activation` | 物件 | 選用 | 啟動規則。預設為一律啟動。請參閱[啟動規則](#activation-rules)。
 
-### 啟動規則
+### 啟用規則
 
-啟動規則決定脈絡管理器應於何時執行。若省略，管理器會一律執行。多個規則使用 `AND` 邏輯，必須滿足所有規則才會啟動。如需更多資訊與範例，請參閱[啟動規則]({{site.url}}{{site.baseurl}}/ml-commons-plugin/context-management/#activation-rules)。
+啟用規則決定脈絡管理器應在何時執行。若省略，脈絡管理器一律執行。多個規則採用 `AND` 邏輯---必須滿足所有規則才會啟用。如需詳細資訊與範例，請參閱[啟用規則]({{site.url}}{{site.baseurl}}/ml-commons-plugin/context-management/#activation-rules)。
 
 欄位 | 資料類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`rule_type` | 字串 | 選用 | 設為 `always`，即可一律啟動管理器。
-`message_count_exceed` | 整數 | 選用 | 當訊息數量超過此閾值時啟動。
-`tokens_exceed` | 整數 | 選用 | 當詞元數量超過此閾值時啟動。
+`message_count_exceed` | 整數 | 選用 | 當訊息數量超過此閾值時啟用。
+`tokens_exceed` | 整數 | 選用 | 當詞元數量超過此閾值時啟用。
 
 ## 請求範例：基本滑動視窗脈絡管理
 
@@ -103,7 +102,7 @@ POST /_plugins/_ml/context_management/basic-sliding-window
 {
   "description": "Basic sliding window context management",
   "hooks": {
-    "pre_llm": [
+    "PRE_LLM": [
       {
         "type": "SlidingWindowManager",
         "config": {

@@ -15,7 +15,12 @@ nav_order: 15
 
 ```json
 GET /_plugins/_ml/tasks/_search
+POST /_plugins/_ml/tasks/_search
 ```
+
+## 請求本文欄位
+
+請求本文接受標準的 [Query DSL]({{site.url}}{{site.baseurl}}/query-dsl/) 搜尋請求欄位，例如 `query`、`size`、`from`、`sort` 和 `_source`。
 
 ## 範例請求：搜尋 `function_name` 為 `KMEANS` 的任務
 
@@ -69,7 +74,9 @@ GET /_plugins/_ml/tasks/_search
           "is_async" : true,
           "function_name" : "KMEANS",
           "input_type" : "SEARCH_QUERY",
-          "worker_node" : "jjqFrlW7QWmni1tRnb_7Dg",
+          "worker_node" : [
+            "jjqFrlW7QWmni1tRnb_7Dg"
+          ],
           "state" : "COMPLETED",
           "model_id" : "AAnLJ38BvytMh9aUi-M2",
           "task_type" : "TRAINING"
@@ -88,7 +95,9 @@ GET /_plugins/_ml/tasks/_search
           "is_async" : true,
           "function_name" : "KMEANS",
           "input_type" : "SEARCH_QUERY",
-          "worker_node" : "A_IiqoloTDK01uZvCjREaA",
+          "worker_node" : [
+            "A_IiqoloTDK01uZvCjREaA"
+          ],
           "state" : "COMPLETED",
           "model_id" : "xARRLX8BydmmU1x6I-CG",
           "task_type" : "TRAINING"

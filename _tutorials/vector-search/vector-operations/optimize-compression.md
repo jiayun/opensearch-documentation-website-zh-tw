@@ -90,7 +90,7 @@ POST _plugins/_ml/connectors/_create
 
 ### 步驟 1.2：註冊模型
 
-接著，使用您在上一步建立的連接器註冊模型。`interface` 參數為選用。如果模型不需要特定的介面組態，請將此參數設為空物件：`"interface": {}`：
+接下來，使用您在上一個步驟建立的連接器來註冊模型。`interface` 參數是選用的。如果模型不需要特定的介面組態，請將此參數設定為空物件：`"interface": {}`：
 
 ```json
 POST _plugins/_ml/models/_register?deploy=true
@@ -108,9 +108,9 @@ POST _plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-如需詳細資訊，請參閱[模型介面文件]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/#the-interface-parameter)
+如需更多資訊，請參閱[模型介面文件]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/#the-interface-parameter)
 
-回應中包含模型 ID：
+回應會包含模型 ID：
 
 ```json
 {
@@ -120,7 +120,7 @@ POST _plugins/_ml/models/_register?deploy=true
 }
 ```
 
-若要測試模型，請傳送下列請求：
+若要測試模型，請傳送以下請求：
 
 ```json
 POST _plugins/_ml/models/t64OPpUBX2k07okSZc2n/_predict
@@ -133,7 +133,7 @@ POST _plugins/_ml/models/t64OPpUBX2k07okSZc2n/_predict
 ```
 {% include copy-curl.html %}
 
-回應包含產生的嵌入：
+回應會包含產生的嵌入：
 
 ```json
 {
@@ -150,8 +150,8 @@ POST _plugins/_ml/models/t64OPpUBX2k07okSZc2n/_predict
             "embeddings": {
               "int8": [
                 [
-                  -26.0,
-                  31.0,
+                  -27,
+                  31,
                   ...
                 ]
               ]
@@ -213,7 +213,7 @@ PUT _ingest/pipeline/ml_inference_pipeline_cohere
 ```
 {% include copy-curl.html %}
     
-### 選項 2：合併 `title` 和 `description`，只呼叫模型一次
+### 選項 2：合併 `title` 與 `description` 以單次叫用模型
 
 ```json
 PUT _ingest/pipeline/ml_inference_pipeline_cohere
@@ -224,8 +224,8 @@ PUT _ingest/pipeline/ml_inference_pipeline_cohere
         "set": {
             "field": "title_desc_tmp",
             "value": [
-            "{{title}}",
-            "{{description}}"
+            {% raw %}"{{title}}"{% endraw %},
+            {% raw %}"{{description}}"{% endraw %}
             ]
         }
         },
@@ -574,10 +574,10 @@ GET books/_search?search_pipeline=ml_inference_pipeline_cohere_search2
 
 使用與[步驟 2](#step-2-create-an-ingest-pipeline)相同的組態建立名為 `ml_inference_pipeline_cohere_binary` 的新資料匯入管線，但將所有出現的 `int8` 取代為 `binary`。
 
-### 選項 1：分別為 `title` 與 `description` 叫用模型
+### 選項 1：為 `title` 和 `description` 分別呼叫模型
 
 ```json
-PUT _ingest/pipeline/ml_inference_pipeline_cohere
+PUT _ingest/pipeline/ml_inference_pipeline_cohere_binary
 {
 "processors": [
     {
@@ -612,10 +612,10 @@ PUT _ingest/pipeline/ml_inference_pipeline_cohere
 ```
 {% include copy-curl.html %}
     
-### 選項 2：合併 `title` 與 `description` 以叫用模型一次
+### 選項 2：合併 `title` 與 `description` 以呼叫模型一次
 
 ```json
-PUT _ingest/pipeline/ml_inference_pipeline_cohere
+PUT _ingest/pipeline/ml_inference_pipeline_cohere_binary
 {
     "description": "Concatenate title and description fields",
     "processors": [
@@ -623,8 +623,8 @@ PUT _ingest/pipeline/ml_inference_pipeline_cohere
         "set": {
             "field": "title_desc_tmp",
             "value": [
-            "{{title}}",
-            "{{description}}"
+            {% raw %}"{{title}}"{% endraw %},
+            {% raw %}"{{description}}"{% endraw %}
             ]
         }
         },
@@ -717,7 +717,7 @@ POST _bulk
 
 ### 步驟 5.3：建立搜尋管線
 
-使用與[步驟 2](#step-4-search-the-index)相同的組態，建立名為 `ml_inference_pipeline_cohere_search_binary` 的新搜尋管線，但將所有出現的 `int8` 取代為 `binary`。
+使用與[步驟 4](#step-4-search-the-index)相同的組態建立名為 `ml_inference_pipeline_cohere_search_binary` 的新搜尋管線，但將所有出現的 `int8` 取代為 `binary`。
 
 1. 將 `embeddings.int8[0]` 變更為 `embeddings.binary[0]`。
 1. 將 `"embedding_types": ["int8"]` 變更為 `"embedding_types": ["binary"]`。
@@ -805,4 +805,12 @@ PUT _search/pipeline/ml_inference_pipeline_cohere_search_binary2
 ```
 {% include copy-curl.html %}
 
-接著，您可以使用該搜尋管線執行向量搜尋，如[步驟 4](#step-4-search-the-index)所述。
+然後您就可以使用該搜尋管線執行向量搜尋，如[步驟 4](#step-4-search-the-index) 所述。
+
+## 相關文件
+
+- [記憶體最佳化向量]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/)
+- [第三方 ML 平台的連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)
+- [ML 推論處理器]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/ml-inference/)
+- [ML 推論搜尋請求處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/ml-inference-search-request/)
+- [k-NN 查詢]({{site.url}}{{site.baseurl}}/query-dsl/specialized/k-nn/)

@@ -19,7 +19,7 @@ grand_parent: Agents and tools
 
 ## 步驟 1：註冊將執行 SearchAnomalyResultsTool 的流程代理程式
 
-流程代理程式會依序執行一連串工具，並傳回最後一個工具的輸出。若要建立流程代理程式，請傳送下列註冊代理程式請求：
+流程代理程式 (flow agent) 會依序執行一連串工具，並回傳最後一個工具的輸出。若要建立流程代理程式，請傳送下列註冊代理程式請求：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -27,9 +27,6 @@ POST /_plugins/_ml/agents/_register
   "name": "Test_Agent_For_Search_Anomaly_Results_Tool",
   "type": "flow",
   "description": "this is a test agent for the SearchAnomalyResultsTool",
-  "memory": {
-    "type": "demo"
-  },
   "tools": [
     {
       "type": "SearchAnomalyResultsTool",
@@ -43,7 +40,7 @@ POST /_plugins/_ml/agents/_register
 
 如需參數說明，請參閱[註冊參數](#register-parameters)。
 
-OpenSearch 會回應代理程式 ID：
+OpenSearch 會以代理程式 ID 回應：
 
 ```json
 {
@@ -106,14 +103,14 @@ OpenSearch 會回應叢集上設定的個別異常偵測器清單（每個結果
 參數	| 類型 | 說明	
 :--- | :--- | :---
 `detectorId`	| 字串	| 要從中傳回結果的偵測器 ID。
-`realTime`	| 布林值 | 是否傳回即時異常偵測器結果。將此參數設為 `false` 可僅傳回歷史分析結果。
-`anomalyGradeThreshold` | 浮點數	| 傳回的異常偵測器結果的最低異常等級。異常等級是介於 0 到 1 之間的數字，表示資料點的異常程度。
+`realTime`	| 布林值 | 是否傳回即時異常偵測器結果。將此參數設為 `false` 以僅傳回歷史分析結果。
+`anomalyGradeThreshold` | 浮點數	| 所傳回異常偵測器結果的最低異常等級。異常等級是介於 0 與 1 之間的數字，表示資料點的異常程度。此工具只會傳回異常等級大於此值的結果。預設值為 `0`。
 `dataStartTime` | 長整數	| 要傳回異常偵測器結果的最早時間，以 epoch 毫秒為單位。
-`dataEndTime` | 長整數 |	要傳回異常偵測器結果的最晚時間，以 epoch 毫秒為單位。
-`sortOrder`	|字串 | 結果的排序順序。有效值為 `asc`（遞增）與 `desc`（遞減）。預設為 `desc`。 
-`sortString`| 字串 |	指定用於排序結果的偵測器欄位。預設為 `data_start_time`。
-`size`	| 整數 |	要傳回的結果數量。預設為 `20`。
-`startIndex`| 整數 |	結果開始分頁的索引。預設為 `0`。
+`dataEndTime` | 長整數 |	要傳回異常偵測器結果的最新時間，以 epoch 毫秒為單位。
+`sortOrder`	|字串 | 結果的排序順序。有效值為 `asc`（遞增）與 `desc`（遞減）。預設值為 `asc`。 
+`sortString`| 字串 |	指定用來排序結果的偵測器欄位。預設值為 `data_start_time`。
+`size`	| 整數 |	要傳回的結果數量。預設值為 `20`。
+`startIndex`| 整數 |	要開始傳回之分頁結果的索引。預設值為 `0`。
 
 ## 執行參數
 

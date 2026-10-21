@@ -7,7 +7,7 @@ grand_parent: ML Commons APIs
 nav_order: 25
 ---
 
-# Execute Agent Stream API
+# 執行代理程式串流 API
 **於 3.3 版推出**
 {: .label .label-purple }
 
@@ -102,7 +102,7 @@ transport.ssl.enforce_hostname_verification: false
 若要啟用串流功能旗標，請依照下列方式更新叢集設定：
 
 ```json
-PUT _cluster/settings
+PUT /_cluster/settings
 {
   "persistent" : {
     "plugins.ml_commons.stream_enabled": true
@@ -170,7 +170,7 @@ POST /_plugins/_ml/models/_register
         "parameters": {
             "region": "<your_aws_region>",
             "service_name": "bedrock",
-            "model": "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+            "model": "us.anthropic.claude-sonnet-4-6"
         },
         "actions": [
             {

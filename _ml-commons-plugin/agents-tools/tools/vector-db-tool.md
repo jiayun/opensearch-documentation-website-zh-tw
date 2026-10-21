@@ -17,11 +17,11 @@ grand_parent: Agents and tools
 
 `VectorDBTool` 會執行稠密向量擷取。如需 OpenSearch 向量資料庫功能的詳細資訊，請參閱[神經搜尋]({{site.url}}{{site.baseurl}}/search-plugins/neural-search/)。
 
-## 步驟 1：註冊並部署稀疏編碼模型
+## 步驟 1：註冊並部署文字嵌入模型
 
-OpenSearch 支援數種預先訓練的模型。您可以使用其中一種模型、使用自己的自訂模型，或為外部託管的模型建立連接器。如需支援的預先訓練模型清單，請參閱 [OpenSearch 提供的預先訓練模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/)。如需自訂模型的詳細資訊，請參閱[自訂本機模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/custom-local-models/)。如需整合外部託管模型的資訊，請參閱[連接至外部託管模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/)。
+OpenSearch 支援多種預先訓練的模型。您可以使用其中一種模型、使用自己的自訂模型，或為外部託管的模型建立連接器。如需支援的預先訓練模型清單，請參閱 [OpenSearch 提供的預先訓練模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/)。如需自訂模型的更多資訊，請參閱 [自訂本機模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/custom-local-models/)。如需整合外部託管模型的資訊，請參閱 [連線至外部託管的模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/)。
 
-在本範例中，您將使用 `huggingface/sentence-transformers/all-MiniLM-L12-v2` 預先訓練模型來進行匯入與搜尋。若要將模型註冊並部署到 OpenSearch，請傳送下列請求：
+在本範例中，您將使用 `huggingface/sentence-transformers/all-MiniLM-L12-v2` 預先訓練模型進行匯入與搜尋。若要註冊並部署該模型至 OpenSearch，請傳送以下請求：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -31,7 +31,7 @@ POST /_plugins/_ml/models/_register?deploy=true
   "model_format": "TORCH_SCRIPT"
 }
 ```
-{% include copy-curl.html %}
+{% include copy-curl.html %} 
 
 OpenSearch 會回應模型註冊與部署任務的任務 ID：
 
@@ -42,14 +42,14 @@ OpenSearch 會回應模型註冊與部署任務的任務 ID：
 }
 ```
 
-您可以呼叫 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 來監視任務的狀態：
+您可以呼叫 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 來監視任務狀態：
 
 ```json
 GET _plugins/_ml/tasks/M_9KY40Bk4MTqirc5lP8
 ```
-{% include copy-curl.html %}
+{% include copy-curl.html %} 
 
-模型註冊並部署完成後，任務的 `state` 會變為 `COMPLETED`，且 OpenSearch 會傳回該模型的模型 ID：
+模型註冊並部署完成後，任務 `state` 會變為 `COMPLETED`，且 OpenSearch 會傳回該模型的模型 ID：
 
 ```json
 {
@@ -68,7 +68,7 @@ GET _plugins/_ml/tasks/M_9KY40Bk4MTqirc5lP8
 
 ## 步驟 2：將資料匯入索引
 
-首先，您要設定一條資料匯入管線，使用上一個步驟設定的稀疏編碼模型來編碼文件：
+首先，您將設定資料匯入管線，使用上一個步驟設定的文字嵌入模型來編碼文件：
 
 ```json
 PUT /_ingest/pipeline/test-pipeline-local-model
@@ -86,7 +86,7 @@ PUT /_ingest/pipeline/test-pipeline-local-model
   ]
 }
 ```
-{% include copy-curl.html %}
+{% include copy-curl.html %} 
 
 接著，建立 k-NN 索引，並將該管線指定為預設管線：
 
@@ -100,22 +100,22 @@ PUT my_test_data
       },
       "embedding": {
         "type": "knn_vector",
-        "dimension": 384
+        "dimension": 384,
+        "space_type": "cosinesimil"
       }
     }
   },
   "settings": {
     "index": {
-      "knn.space_type": "cosinesimil",
       "default_pipeline": "test-pipeline-local-model",
       "knn": "true"
     }
   }
 }
 ```
-{% include copy-curl.html %}
+{% include copy-curl.html %} 
 
-最後，透過傳送大量請求 (bulk request) 將資料匯入索引：
+最後，傳送大量請求，將資料匯入索引：
 
 ```json
 POST _bulk
@@ -132,7 +132,7 @@ POST _bulk
 {"index": {"_index": "my_test_data", "_id": "6"}}
 {"text": "Chart and table of population level and growth rate for the Seattle metro area from 1950 to 2023. United Nations population projections are also included through the year 2035.\\nThe current metro area population of Seattle in 2023 is 3,519,000, a 0.86% increase from 2022.\\nThe metro area population of Seattle in 2022 was 3,489,000, a 0.81% increase from 2021.\\nThe metro area population of Seattle in 2021 was 3,461,000, a 0.82% increase from 2020.\\nThe metro area population of Seattle in 2020 was 3,433,000, a 0.79% increase from 2019."}
 ```
-{% include copy-curl.html %}
+{% include copy-curl.html %} 
 
 ## 步驟 3：註冊將執行 VectorDBTool 的流程代理程式
 
@@ -172,9 +172,7 @@ OpenSearch 會回應一個代理程式 ID：
 
 ## 步驟 4：執行代理程式
 
-執行代理程式之前，請確認您已新增範例 OpenSearch Dashboards `Sample web logs` 資料集。若要進一步了解，請參閱[新增範例資料]({{site.url}}{{site.baseurl}}/dashboards/getting-started/data-setup/#add-sample-data)。
-
-接著，傳送下列請求以執行代理程式：
+傳送下列請求以執行代理程式：
 
 ```json
 POST /_plugins/_ml/agents/9X7xWI0Bpc3sThaJdY9i/_execute
@@ -186,7 +184,7 @@ POST /_plugins/_ml/agents/9X7xWI0Bpc3sThaJdY9i/_execute
 ```
 {% include copy-curl.html %} 
 
-OpenSearch 會執行向量搜尋並傳回相關文件：
+OpenSearch 會執行向量搜尋並傳回相關的文件：
 
 ```json
 {

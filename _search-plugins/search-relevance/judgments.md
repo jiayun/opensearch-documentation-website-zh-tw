@@ -594,4 +594,4 @@ GET _plugins/_search_relevance/judgments/_search
 
 ## 相關文件
 
-- [使用 LLM 自動化搜尋相關性評估]({{site.url}}{{site.baseurl}}/tutorials/llm-as-a-judge-tutorial/)
+- [使用 LLM-as-a-Judge 進行搜尋相關性評估]({{site.url}}{{site.baseurl}}/tutorials/llm-as-a-judge-tutorial/)

@@ -24,14 +24,14 @@ POST /_plugins/_ml/mcp/tools/_remove
 ```json
 POST /_plugins/_ml/mcp/tools/_remove
 [
- "WebSearchTool", "ListIndexTool"
+ "GoogleSearchTool", "ListIndexTool"
 ]
 ```
 {% include copy-curl.html %}
 
 ## 範例回應
 
-OpenSearch 會回應節點 ID 以及每個節點的工具刪除狀態：
+OpenSearch 會回應節點 ID，以及每個節點的工具刪除狀態：
 
 ```json
 {
@@ -43,3 +43,7 @@ OpenSearch 會回應節點 ID 以及每個節點的工具刪除狀態：
     }
 }
 ```
+
+## 必要權限
+
+如果您使用 Security 外掛程式，請確認您具備適當的權限：`cluster:admin/opensearch/ml/mcp_tools/remove`。

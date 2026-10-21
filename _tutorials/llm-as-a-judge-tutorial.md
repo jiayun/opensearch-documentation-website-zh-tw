@@ -14,7 +14,7 @@ LLM-as-a-Judge 是一種使用大型語言模型 (LLM) 自動評估搜尋結果�
 
 ## 先決條件
 
-本教學需要外部 LLM 供應商 (OpenAI、Amazon Bedrock) 的 API 金鑰。
+本教學需要外部 LLM 供應商（OpenAI、Amazon Bedrock）的 API 金鑰。
 
 使用外部 LLM 會依評估的查詢與結果數量產生 API 費用。
 {: .note}
@@ -26,17 +26,15 @@ PUT /_cluster/settings
 {
   "persistent": {
     "plugins.search_relevance.workbench_enabled": true,
-    "plugins.ml_commons.only_run_on_ml_node": "false",
-    "plugins.ml_commons.model_access_control_enabled": "true",
-    "plugins.ml_commons.allow_registering_model_via_url": "true"
+    "plugins.ml_commons.only_run_on_ml_node": "false"
   }
 }
 ```
 {% include copy-curl.html %}
 
-### 步驟 1：設定模型
+## 步驟 1：設定模型
 
-首先，建立與外部託管 LLM 的連接器。本教學使用 OpenAI，但您可以調整為其他供應商，例如 Amazon Bedrock。如需可用藍圖的清單，請參閱 [OpenSearch 提供的連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/supported-connectors/#llm-judgment-blueprints-for-search-relevance-workbench)。將 `<YOUR_API_KEY>` 替換為您的 OpenAI API 金鑰：
+首先，建立連接器以連線至外部託管的 LLM。本教學使用 OpenAI，但您可以調整為適用於其他供應商，例如 Amazon Bedrock。如需可用藍圖的清單，請參閱 [OpenSearch 提供的連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/supported-connectors/#llm-judgment-blueprints-for-search-relevance-workbench)。將 `<YOUR_API_KEY>` 替換為您的 OpenAI API 金鑰：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -73,11 +71,11 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-`client_config` 區塊會針對暫時性的速率限制或伺服器錯誤，啟用搭配指數退避與抖動的自動重試。如果文件在重試後仍失敗，判斷執行會回報該文件，而不是將其捨棄。如需詳細資訊，請參閱[檢視判斷清單]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/judgments/#viewing-a-judgment-list)。
+`client_config` 區塊會針對暫時性的速率限制或伺服器錯誤，啟用採用指數退避與隨機抖動的自動重試。如果文件在重試後仍然失敗，評判執行作業會回報該文件，而不會將其捨棄。如需詳細資訊，請參閱[檢視評判清單]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/judgments/#viewing-a-judgment-list)。
 
-`request_body` 與 `post_process_function` 會將 `system_prompt`、`user_prompt` 及 `response` 參數對應到各供應商的請求與回應格式，因此判斷 API 呼叫在不同供應商之間維持一致。如需這些欄位的資訊，請參閱[連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/#request-body-fields)。
+`request_body` 和 `post_process_function` 會將 `system_prompt`、`user_prompt` 和 `response` 參數對應至各供應商的請求與回應格式，讓評判 API 呼叫在不同供應商之間保持一致。如需這些欄位的相關資訊，請參閱[連接器藍圖]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/blueprints/#request-body-fields)。
 
-接著註冊並部署模型。將 `{connector_id}` 替換為前一個回應所傳回的 ID：
+接著，註冊並部署模型。將 `{connector_id}` 替換為上一個回應傳回的 ID：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
@@ -90,11 +88,11 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-這是非同步操作。若要確認任務狀態，請使用 [Get ML task]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) API。當狀態為 `COMPLETED` 時，OpenSearch 會傳回您將在後續步驟中使用的 `model_id`。
+回應包含您將在後續步驟中使用的 `model_id`。註冊是非同步作業。若要確認任務狀態，請使用回應中的 `task_id` 呼叫 [Get ML task]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) API。當 `state` 為 `COMPLETED` 時，模型即可使用。
 
-### 步驟 2：建立搜尋索引
+## 步驟 2：建立搜尋索引
 
-建立 `products` 索引：
+建立一個 `products` 索引：
 
 ```json
 PUT /products
@@ -112,7 +110,7 @@ PUT /products
 ```
 {% include copy-curl.html %}
 
-將範例文件編製索引至該索引：
+將範例文件編製索引到該索引中：
 
 ```json
 POST /products/_bulk
@@ -129,9 +127,9 @@ POST /products/_bulk
 ```
 {% include copy-curl.html %}
 
-### 步驟 3：建立搜尋組態
+## 步驟 3：建立搜尋組態
 
-_搜尋組態_ 定義要評估的搜尋策略。評估期間，`%SearchText%` 預留位置會替換為查詢集中的每個查詢：
+_搜尋組態_ 會定義要評估的搜尋策略。評估期間，`%SearchText%` 預留位置會替換為查詢集中的每個查詢：
 
 ```json
 PUT /_plugins/_search_relevance/search_configurations
@@ -143,9 +141,9 @@ PUT /_plugins/_search_relevance/search_configurations
 ```
 {% include copy-curl.html %}
 
-### 步驟 4：建立查詢集
+## 步驟 4：建立查詢集
 
-建立包含測試查詢的查詢集以供評估：
+建立包含用於評估之測試查詢的查詢集：
 
 ```json
 PUT /_plugins/_search_relevance/query_sets
@@ -162,9 +160,9 @@ PUT /_plugins/_search_relevance/query_sets
 ```
 {% include copy-curl.html %}
 
-### 步驟 5：產生 LLM 判斷
+## 步驟 5：產生 LLM 評判
 
-建立 LLM 判斷，使用您部署的模型來評估搜尋結果。將 `{model_id}`、`{query_set_id}` 及 `{search_configuration_id}` 替換為先前步驟所傳回的 ID：
+建立 LLM 評判，使用您已部署的模型來評估搜尋結果。將 `{model_id}`、`{query_set_id}` 和 `{search_configuration_id}` 替換為先前步驟傳回的 ID：
 
 ```json
 PUT /_plugins/_search_relevance/judgments
@@ -185,9 +183,9 @@ PUT /_plugins/_search_relevance/judgments
 ```
 {% include copy-curl.html %}
 
-如需所有請求本文參數的說明，請參閱[判斷]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/judgments/#request-body-fields)。
+如需所有請求本文參數的說明，請參閱 [Judgments]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/judgments/#request-body-fields)。
 
-判斷流程以非同步方式執行。若要確認狀態，請依其 ID 擷取判斷：
+評判程序會以非同步方式執行。如要確認狀態，請依 ID 擷取評判：
 
 ```json
 GET /search-relevance-judgment/_doc/{judgment_id}

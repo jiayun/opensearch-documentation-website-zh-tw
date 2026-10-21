@@ -1,13 +1,13 @@
 ---
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: "語意搜尋代理程式記憶"
+title: "語意搜尋代理記憶"
 parent: Agentic memory APIs
 grand_parent: ML Commons APIs
 nav_order: 60
 ---
 
-# 語意搜尋代理程式記憶 API
+# 語意搜尋代理記憶 API
 **3.6 版新增**
 {: .label .label-purple }
 
@@ -97,7 +97,7 @@ POST /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/long-term/_se
 ```
 {% include copy-curl.html %}
 
-## 回應範例
+## 範例回應
 
 ```json
 {
@@ -117,33 +117,37 @@ POST /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/long-term/_se
     "max_score": 0.87,
     "hits": [
       {
-        "_index": "test-memory-long-term",
+        "_index": ".plugins-ml-am-default-memory-long-term",
         "_id": "abc123",
         "_score": 0.87,
         "_source": {
+          "created_time": 1700000000000,
           "memory": "Client plans to retire in five years with a gradual rebalancing strategy",
-          "strategy_type": "SEMANTIC",
+          "last_updated_time": 1700000000000,
+          "namespace_size": 1,
           "namespace": {
             "user_id": "bob"
           },
-          "memory_container_id": "HudqiJkB1SltqOcZusVU",
-          "created_time": 1700000000000,
-          "last_updated_time": 1700000000000
+          "strategy_id": "semantic_53d1751c",
+          "strategy_type": "SEMANTIC",
+          "memory_container_id": "HudqiJkB1SltqOcZusVU"
         }
       },
       {
-        "_index": "test-memory-long-term",
+        "_index": ".plugins-ml-am-default-memory-long-term",
         "_id": "def456",
         "_score": 0.82,
         "_source": {
+          "created_time": 1700000000000,
           "memory": "Client prefers conservative investments and wants to shift away from equities",
-          "strategy_type": "USER_PREFERENCE",
+          "last_updated_time": 1700000000000,
+          "namespace_size": 1,
           "namespace": {
             "user_id": "bob"
           },
-          "memory_container_id": "HudqiJkB1SltqOcZusVU",
-          "created_time": 1700000000000,
-          "last_updated_time": 1700000000000
+          "strategy_id": "user_preference_0771b88e",
+          "strategy_type": "USER_PREFERENCE",
+          "memory_container_id": "HudqiJkB1SltqOcZusVU"
         }
       }
     ]
@@ -153,18 +157,21 @@ POST /_plugins/_ml/memory_containers/HudqiJkB1SltqOcZusVU/memories/long-term/_se
 
 ## 回應欄位
 
-回應使用標準的 OpenSearch 搜尋回應格式。`hits.hits` 陣列中的每個命中結果在 `_source` 中包含下列欄位。
+回應使用標準的 OpenSearch 搜尋回應格式。`hits.hits` 陣列中的每個命中結果都在 `_source` 中包含下列欄位。
 
 | 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `memory` | 字串 | 擷取的記憶文字。 |
+| `memory` | 字串 | 擷取出的記憶文字。 |
 | `strategy_type` | 字串 | 產生此記憶的策略（`SEMANTIC`、`USER_PREFERENCE` 或 `SUMMARY`）。 |
 | `namespace` | 物件 | 與此記憶相關聯的命名空間欄位。 |
+| `namespace_size` | 整數 | 命名空間欄位的數量。 |
+| `strategy_id` | 字串 | 產生此記憶的策略 ID。 |
+| `tags` | 物件 | 與此記憶相關聯的標籤。僅在記憶具有標籤時才會出現。 |
 | `memory_container_id` | 字串 | 記憶容器的 ID。 |
-| `created_time` | Long | 記憶建立的時間戳記。 |
-| `last_updated_time` | Long | 記憶最後更新的時間戳記。 |
+| `created_time` | Long | 建立記憶的時間戳記。 |
+| `last_updated_time` | Long | 記憶最後一次更新的時間戳記。 |
 
-`memory_embedding` 欄位不會包含在回應中。
+回應中不包含 `memory_embedding` 欄位。
 
 ## 相關文件
 

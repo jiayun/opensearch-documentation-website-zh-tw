@@ -57,32 +57,34 @@ POST /_plugins/_ml/model_groups/_register
 
 您可以建立獨立連接器，供 OpenSearch 中多個共用相同外部端點與組態的模型註冊重複使用。或者，您也可以在建立模型時指定連接器，使其僅供該模型使用。如需更多資訊與範例連接器，請參閱[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
 
-Connectors Create API（`/_plugins/_ml/connectors/_create`）會建立連接器，協助在 OpenSearch 中註冊與部署外部模型。透過 `endpoint` 參數，您可以使用特定 API 端點將 ML Commons 連接到任何支援的 ML 工具。例如，您可以使用 `api.openai.com` 端點連接到 ChatGPT 模型：
+Connectors Create API（`/_plugins/_ml/connectors/_create`）用於建立連接器，以便在 OpenSearch 中註冊與部署外部模型。透過 `endpoint` 參數，您可以使用特定 API 端點將 ML Commons 連接至任何支援的 ML 工具。例如，您可以使用 `api.openai.com` 端點連接至 OpenAI 文字嵌入模型：
 
 ```json
 POST /_plugins/_ml/connectors/_create
 {
-    "name": "OpenAI Chat Connector",
-    "description": "The connector to public OpenAI model service for gpt-4o-mini",
+    "name": "OpenAI embedding connector",
+    "description": "The connector to the public OpenAI model service for text-embedding-ada-002",
     "version": 1,
     "protocol": "http",
     "parameters": {
         "endpoint": "api.openai.com",
-        "model": "gpt-4o-mini",
+        "model": "text-embedding-ada-002",
         "input_docs_processed_step_size": 100
     },
     "credential": {
-        "openAI_key": "..."
+        "openAI_key": "<openai_api_key>"
     },
     "actions": [
         {
             "action_type": "predict",
             "method": "POST",
-            "url": "https://${parameters.endpoint}/v1/chat/completions",
+            "url": "https://${parameters.endpoint}/v1/embeddings",
             "headers": {
                 "Authorization": "Bearer ${credential.openAI_key}"
             },
-            "request_body": "{ \"model\": \"${parameters.model}\", \"messages\": ${parameters.messages} }"
+            "request_body": "{ \"input\": ${parameters.input}, \"model\": \"${parameters.model}\" }",
+            "pre_process_function": "connector.pre_process.openai.embedding",
+            "post_process_function": "connector.post_process.openai.embedding"
         }
     ]
 }
@@ -91,7 +93,7 @@ POST /_plugins/_ml/connectors/_create
 
 `parameters.input_docs_processed_step_size` 參數用於設定傳送至遠端伺服器的文件批次大小上限。您可以將此參數設定為遠端伺服器支援的最大批次大小，或設定為較小的數值以獲得最佳效能。
 
-回應中包含新建連接器的連接器 ID：
+回應包含新建立連接器的連接器 ID：
 
 ```json
 {
@@ -101,12 +103,12 @@ POST /_plugins/_ml/connectors/_create
 
 ## 步驟 3：註冊外部託管的模型
 
-若要將外部託管的模型註冊到步驟 1 建立的模型群組，請在以下請求中提供步驟 1 的模型群組 ID 與步驟 2 的連接器 ID。您必須將 `function_name` 指定為 `remote`：
+若要將外部託管的模型註冊到步驟 1 建立的模型群組，請在下列請求中提供步驟 1 的模型群組 ID 以及步驟 2 的連接器 ID。您必須將 `function_name` 指定為 `remote`：
 
 ```json
 POST /_plugins/_ml/models/_register
 {
-    "name": "openAI-gpt-4o-mini",
+    "name": "openAI-text-embedding-ada-002",
     "function_name": "remote",
     "model_group_id": "wlcnb4kBJ1eYAeTMHlV6",
     "description": "test model",
@@ -115,23 +117,24 @@ POST /_plugins/_ml/models/_register
 ```
 {% include copy-curl.html %}
 
-OpenSearch 會傳回註冊作業的任務 ID：
+OpenSearch 會傳回註冊作業的工作 ID：
 
 ```json
 {
   "task_id": "cVeMb4kBJ1eYAeTMFFgj",
-  "status": "CREATED"
+  "status": "CREATED",
+  "model_id": "cleMb4kBJ1eYAeTMFFg4"
 }
 ```
 
-若要檢查作業狀態，請將任務 ID 提供給 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/)：
+若要檢查作業狀態，請將工作 ID 提供給 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/)：
 
 ```json
 GET /_plugins/_ml/tasks/cVeMb4kBJ1eYAeTMFFgj
 ```
 {% include copy-curl.html %}
 
-當作業完成時，狀態會變更為 `COMPLETED`：
+作業完成後，狀態會變更為 `COMPLETED`：
 
 ```json
 {
@@ -148,11 +151,11 @@ GET /_plugins/_ml/tasks/cVeMb4kBJ1eYAeTMFFgj
 }
 ```
 
-請記下傳回的 `model_id`，因為部署模型時需要用到它。
+請記下傳回的 `model_id`，因為部署模型時會需要用到。
 
 ## 步驟 4：部署模型
 
-當您第一次傳送 Predict API 請求時，外部託管的模型會自動部署。若要停用外部託管模型的自動部署，請將 `plugins.ml_commons.model_auto_deploy.enable` 設定為 `false`：
+當您第一次傳送 Predict API 請求時，外部託管模型會自動部署。若要停用外部託管模型的自動部署，請將 `plugins.ml_commons.model_auto_deploy.enable` 設為 `false`：
 
 ```json
 PUT _cluster/settings
@@ -164,30 +167,31 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-若要取消部署模型，請使用 [Undeploy API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/undeploy-model/)：
+若要手動部署模型，請使用 [Deploy API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/deploy-model/)：
 
 ```json
 POST /_plugins/_ml/models/cleMb4kBJ1eYAeTMFFg4/_deploy
 ```
 {% include copy-curl.html %}
 
-回應中包含任務 ID，您可以用它來檢查部署作業的狀態：
+回應包含任務 ID，您可以使用此 ID 檢查部署作業的狀態：
 
 ```json
 {
   "task_id": "vVePb4kBJ1eYAeTM7ljG",
-  "status": "CREATED"
+  "task_type": "DEPLOY_MODEL",
+  "status": "COMPLETED"
 }
 ```
 
-如同上一個步驟，請呼叫 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 來檢查作業狀態：
+如同步驟中的先前操作，呼叫 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 以檢查作業狀態：
 
 ```json
 GET /_plugins/_ml/tasks/vVePb4kBJ1eYAeTM7ljG
 ```
 {% include copy-curl.html %}
 
-當作業完成時，狀態會變更為 `COMPLETED`：
+作業完成時，狀態會變更為 `COMPLETED`：
 
 ```json
 {
@@ -229,10 +233,10 @@ PUT /_ingest/pipeline/nlp-ingest-pipeline
 
 ## 步驟 6：執行大量編製索引
 
-若要大量匯入文件，請呼叫 Bulk API 並提供 `pipeline` 參數。如果您未提供 `pipeline` 參數，則會使用該索引的預設資料匯入管線進行匯入：
+若要大量匯入文件，請呼叫 Bulk API 並提供 `pipeline` 參數。若您未提供 `pipeline` 參數，則會使用該索引的預設資料匯入管線進行匯入。以下請求使用上一個步驟中建立的管線，其 `text_embedding` 處理器的 `batch_size` 為 `5`，因此文件會以每批 5 個的方式傳送至模型：
 
 ```json
-POST _bulk?batch_size=5&pipeline=nlp-ingest-pipeline
+POST _bulk?pipeline=nlp-ingest-pipeline
 { "create": { "_index": "testindex1", "_id": "2" } }
 { "passage_text": "hello world" }
 { "create": { "_index": "testindex1", "_id": "3" } }

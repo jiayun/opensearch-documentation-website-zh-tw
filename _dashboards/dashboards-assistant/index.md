@@ -20,14 +20,14 @@ OpenSearch Assistant 工具組可協助您為 OpenSearch Dashboards 建立 AI �
 
 ## 啟用 OpenSearch Assistant
 
-若要在 OpenSearch Dashboards 中啟用 **OpenSearch Assistant**，請找到您的 `opensearch_dashboards.yml` 檔案副本，並設定下列選項：
+若要在 OpenSearch Dashboards 中啟用 **OpenSearch Assistant**，請找到您的 `opensearch_dashboards.yml` 檔案並設定以下選項：
 
 ```yaml
 assistant.chat.enabled: true
 ```
 {% include copy.html %}
 
-接著透過下列 API 設定根 `agent_id`：
+接著透過下列 API 設定根代理程式 `agent_id`：
 
 ```json
 PUT .plugins-ml-config/_doc/os_chat
@@ -40,14 +40,14 @@ PUT .plugins-ml-config/_doc/os_chat
 ```
 {% include copy-curl.html %}
 
-如需設定根代理程式的詳細資訊，請參閱[建立您自己的聊天機器人教學]({{site.url}}{{site.baseurl}}/ml-commons-plugin/tutorials/build-chatbot/#step-5-configure-a-root-chatbot-agent-in-opensearch-dashboards)。
+如需設定根代理程式的詳細資訊，請參閱[建立您自己的聊天機器人]({{site.url}}{{site.baseurl}}/tutorials/gen-ai/chatbots/build-chatbot/#step-5-configure-a-root-chatbot-agent-in-opensearch-dashboards)。
 
-此範例顯示的是系統索引。在已啟用安全性的網域中，只有超級管理員才有權限執行此程式碼。如需進行超級管理員呼叫的相關資訊，請參閱[系統索引]({{site.url}}{{site.baseurl}}/security/configuration/system-indices/)指南。如需存取權限，請聯絡您的 IT 管理員。
+此範例顯示的是系統索引。在已啟用安全性的網域中，僅超級管理員有權限執行此程式碼。如需進行超級管理員呼叫的相關資訊，請參閱[系統索引]({{site.url}}{{site.baseurl}}/security/configuration/system-indices/)指南。如需存取權限，請聯絡您的 IT 管理員。
 {: .warning}
 
-接下來，請重新啟動 OpenSearch Dashboards 伺服器。成功重新啟動後，**OpenSearch Assistant** 會顯示在 OpenSearch Dashboards 介面中。
+接下來，重新啟動 OpenSearch Dashboards 伺服器。重新啟動成功後，**OpenSearch Assistant** 就會出現在 OpenSearch Dashboards 介面中。
 
-下圖顯示介面的螢幕擷取畫面。
+下列圖片為該介面的螢幕擷取畫面。
 
 ![OpenSearch Assistant 介面]({{site.url}}{{site.baseurl}}/images/dashboards/opensearch-assistant-full-frame.png){: width="700" }
 

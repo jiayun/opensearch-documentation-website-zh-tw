@@ -21,7 +21,7 @@ grand_parent: Agents and tools
 
 若要搭配 `WebSearchTool` 使用 DuckDuckGo 作為搜尋引擎，請依照下列步驟操作。
 
-### 步驟 1：註冊將執行 WebSearchTool 的流程代理程式
+### 步驟 1：註冊將執行 WebSearchTool 的流程代理程式（flow agent）
 
 流程代理程式會依序執行一連串工具，並傳回最後一個工具的輸出。若要建立流程代理程式，請傳送下列註冊代理程式請求：
 
@@ -304,15 +304,15 @@ OpenSearch 會傳回網路搜尋結果：
 
 | 參數 | 類型 | 必要/選用 | 說明 |
 |:---|:---|:---|:---|
-| `engine` | 字串 | 必要 | 要使用的搜尋引擎。有效值為 `google`、`bing`、`duckduckgo` 或 `custom`。 |
+| `engine` | 字串 | 選用 | 要使用的搜尋引擎。有效值為 `google`、`bing`、`duckduckgo` 或 `custom`。預設為 `google`。 |
 | `engine_id` | 字串 | 選用 | Google 的自訂搜尋引擎 ID。當 `engine` 設為 `google` 時為必要。 |
 | `api_key` | 字串 | 選用 | 用於驗證的 API 金鑰。當 `engine` 設為 `google` 或 `bing` 時為必要。 |
 | `endpoint` | 字串 | 選用 | 自訂搜尋 API 的 URL 端點。當 `engine` 設為 `custom` 時為必要。 |
 | `Authorization` | 字串 | 選用 | 自訂 API 的授權標頭值。當 `engine` 設為 `custom` 時為必要。 |
 | `query_key` | 字串 | 選用 | 自訂 API URL 中搜尋查詢的參數名稱（例如 `${endpoint}?my_query_key=${question}`）。預設為 `q`。 |
 | `offset_key` | 字串 | 選用 | 自訂 API URL 中分頁位移的參數名稱（例如 `${endpoint}?q=${question}&start=10`）。預設為 `offset`。 |
-| `limit_key` | 字串 | 選用 | 自訂 API URL 中結果數量限制的參數名稱（例如 `${endpoint}?q=${question}&start=10&limit=10`）。預設為 `limit`。 |
-| `custom_res_url_jsonpath` | 字串 | 選用 | 用於從自訂 API 回應擷取 URL 的 JSONPath 運算式（例如 `$[*].link`）。當 `engine` 設為 `custom` 時為必要。 |
+| `limit_key` | 字串 | 選用 | 自訂 API URL 中結果數量上限的參數名稱（例如 `${endpoint}?q=${question}&start=10&limit=10`）。預設為 `limit`。 |
+| `custom_res_url_jsonpath` | 字串 | 選用 | 用於從自訂 API 回應中擷取 URL 的 JSONPath 運算式（例如 `$[*].link`）。當 `engine` 設為 `custom` 時為必要。 |
 
 ## 執行參數
 
@@ -321,6 +321,7 @@ OpenSearch 會傳回網路搜尋結果：
 參數	| 類型 | 必要/選用 | 說明	
 :--- | :--- | :--- | :---
 `question` | 字串 | 必要 | 要傳送給 LLM 的自然語言問題。 
+`next_page` | 字串 | 選用 | 下一頁搜尋結果的 URL，會在前一次回應的 `next_page` 欄位中傳回。若有提供，此工具會傳回該頁的結果，而不是執行新的搜尋。
 
 ## 測試工具
 

@@ -24,9 +24,9 @@ OpenSearch 支援下列語言分析器：
  "analyzer": "french"
 ```
 
-#### 請求範例
+#### 範例請求
 
-下列查詢指定了索引 `my-index`，其中 `content` 欄位設定為多重欄位 (multi-field)，且名為 `french` 的子欄位設定為使用 `french` 語言分析器：
+下列查詢指定索引 `my-index`，將 `content` 欄位設定為多欄位，並為名為 `french` 的子欄位設定 `french` 語言分析器：
 
 ```json
 PUT my-index
@@ -78,6 +78,8 @@ PUT my-index
 }
 ```
 {% include copy-curl.html %}
+
+若要搜尋以多種語言撰寫的文件，您可以在匯入時偵測每份文件的語言，並將其文字複製到使用對應語言分析器的欄位。完整範例請參閱[辨識文件語言以進行多語言搜尋]({{site.url}}{{site.baseurl}}/tutorials/language-identification/)。
 
 ## 詞幹排除
 

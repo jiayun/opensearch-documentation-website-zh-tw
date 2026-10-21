@@ -7,7 +7,7 @@ grand_parent: ML Commons APIs
 nav_order: 50
 ---
 
-# Get Message API
+# 取得訊息 API
 **於 2.12 版推出**
 {: .label .label-purple }
 
@@ -54,17 +54,14 @@ GET /_plugins/_ml/memory/message/0m8ya40BfUsSoeNTj-pU
   "message_id": "0m8ya40BfUsSoeNTj-pU",
   "create_time": "2024-02-02T19:01:32.113621539Z",
   "updated_time": "2024-02-02T19:01:32.113621539Z",
-  "input": null,
-  "prompt_template": null,
   "response": "Hello, this is OpenAI. Here is the answer to your question.",
-  "origin": null,
   "additional_info": {
     "suggestion": "api.openai.com"
   }
 }
 ```
 
-如需回應欄位的相關資訊，請參閱 [Create Message 請求欄位]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/memory-apis/create-message#request-body-fields)。
+如需回應欄位的相關資訊，請參閱[建立訊息請求欄位]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/memory-apis/create-message#request-body-fields)。
 
 ## 取得記憶內的所有訊息
 
@@ -84,6 +81,17 @@ GET /_plugins/_ml/memory/{memory_id}/messages
 :--- | :--- | :---
 `memory_id` | 字串 | 要擷取訊息的記憶 ID。
 
+### 查詢參數
+
+使用下列查詢參數來自訂結果。所有查詢參數皆為選用。
+
+參數 | 資料類型 | 說明
+:--- | :--- | :---
+`max_results` | 整數 | 要傳回的訊息數量上限。預設為 `10`。
+`next_token` | 整數 | 排序後訊息清單中要傳回的第一則訊息索引。訊息依 `create_time` 排序，從最舊的訊息開始。預設為 `0`。
+
+結果不包含追蹤訊息。若要擷取追蹤訊息，請使用[取得訊息追蹤 API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/memory-apis/get-message-traces/)。
+
 ## 回應本文欄位
 
 下表列出可用的回應欄位。
@@ -97,10 +105,13 @@ GET /_plugins/_ml/memory/{memory_id}/messages
 | `input` | 字串 | 訊息中的問題 (人類輸入)。 |
 | `prompt_template` | 字串 | 訊息所使用的提示範本。 |
 | `response` | 字串 | 問題的答案 (生成式 AI 輸出)。 |
-| `origin` | 字串 | 產生回應的 AI 或其他系統名稱。 |
+| `origin` | 字串 | 產生回應的 AI 或其他系統的名稱。 |
 | `additional_info` | 物件 | 傳送至 `origin` 的任何其他資訊。 |
-| `parent_message_id` | 字串 | 父訊息的 ID (適用於追蹤訊息)。 |
+| `parent_message_id` | 字串 | 上層訊息的 ID (適用於追蹤訊息)。 |
 | `trace_number` | 整數 | 追蹤編號 (適用於追蹤訊息)。 |
+| `next_token` | 整數 | 下一頁結果中第一個要傳回的訊息索引。僅在可能還有更多結果時才會出現。 |
+
+沒有值的欄位會從回應中省略。
 
 ## 範例請求
 
@@ -109,18 +120,7 @@ GET /_plugins/_ml/memory/gW8Aa40BfUsSoeNTvOKI/messages
 ```
 {% include copy-curl.html %}
 
-```json
-POST /_plugins/_ml/message/_search
-{
-  "query": {
-    "match_all": {}
-  },
-  "size": 1000
-}
-```
-{% include copy-curl.html %}
-
-## 範例回應
+## 回應範例
 
 ```json
 {
@@ -143,10 +143,7 @@ POST /_plugins/_ml/message/_search
       "message_id": "0m8ya40BfUsSoeNTj-pU",
       "create_time": "2024-02-02T19:01:32.113621539Z",
       "updated_time": "2024-02-02T19:01:32.113621539Z",
-      "input": null,
-      "prompt_template": null,
       "response": "Hello, this is OpenAI. Here is the answer to your question.",
-      "origin": null,
       "additional_info": {
         "suggestion": "api.openai.com"
       }

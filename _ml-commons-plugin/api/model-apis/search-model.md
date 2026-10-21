@@ -55,7 +55,7 @@ POST /_plugins/_ml/models/_search
 ```
 {% include copy-curl.html %}
 
-#### 範例：排除模型區塊
+## 範例請求：排除模型區塊
 
 ```json
 GET /_plugins/_ml/models/_search
@@ -80,9 +80,9 @@ GET /_plugins/_ml/models/_search
 ```
 {% include copy-curl.html %}
 
-#### 範例：搜尋所有模型區塊
+## 請求範例：搜尋所有模型區塊
 
-下列查詢會搜尋 ID 為 `979y9YwBjWKCe6KgNGTm` 的模型的所有區塊，並以遞增順序排序這些區塊：
+下列查詢會搜尋 ID 為 `9r9w9YwBjWKCe6KgyGST` 之模型的所有區塊，並依遞增順序排序這些區塊：
 
 ```json
 GET /_plugins/_ml/models/_search
@@ -109,7 +109,7 @@ GET /_plugins/_ml/models/_search
 ```
 {% include copy-curl.html %}
 
-#### 範例：依描述搜尋模型
+## 範例請求：依描述搜尋模型
 
 ```json
 GET _plugins/_ml/models/_search
@@ -135,7 +135,7 @@ GET _plugins/_ml/models/_search
 ```
 {% include copy-curl.html %}
 
-## 範例回應
+## 回應範例
 
 ```json
 {
@@ -162,9 +162,9 @@ GET _plugins/_ml/models/_search
           "_primary_term" : 15,
           "_score" : 2.4159138,
           "_source" : {
+            "model_version" : "1.0.0",
             "name" : "FIT_RCF",
-            "version" : 1,
-            "content" : "xxx",
+            "model_state" : "TRAINED",
             "algorithm" : "FIT_RCF"
           }
         },
@@ -176,9 +176,9 @@ GET _plugins/_ml/models/_search
           "_primary_term" : 8,
           "_score" : 2.4159138,
           "_source" : {
+            "model_version" : "1.0.0",
             "name" : "FIT_RCF",
-            "version" : 1,
-            "content" : "xxx",
+            "model_state" : "TRAINED",
             "algorithm" : "FIT_RCF"
           }
         }

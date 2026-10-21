@@ -8,7 +8,7 @@ nav_order: 45
 
 # 管線延遲調校指南
 
-本節提供可有效降低端對端延遲的組態，並包含可直接使用的範例。
+本節提供降低端對端延遲最有效的組態，並包含可直接使用的範例。
 
 延遲分為兩種：
 
@@ -22,12 +22,12 @@ nav_order: 45
 元件 | 設定 | 重要性 | 低延遲起始值 | 取捨
 :--- | :--- | :--- | :--- | :---
 **管線迴圈** | 每個管線中的 `workers` | 提高平行處理可減少 CPU 或 I/O 密集管線中的佇列情形。 | 通常設為 CPU 核心數；若接收端為 I/O 密集，則可再調高。 | CPU 使用率提高，且傳送至接收端的並行請求增加。
-**管線迴圈** | `delay` | 緩衝區讀取之間的暫停時間。 | `0`--`10ms`，以便盡快提取資料。 | 較短的延遲可降低延遲，但會增加輪詢額外負荷、上下文切換及 CPU 啟動次數。請調整以平衡延遲與 CPU 使用率。
-**有界封鎖緩衝區** | `batch_size` | 決定每批次處理的記錄數；較小的批次會較快排清。 | 64--256 | 較小的批次會降低輸送量並增加請求數。
+**管線迴圈** | `delay` | 緩衝區讀取之間的暫停時間。 | `0`--`10ms`，以便盡快提取資料。 | 較短的延遲可降低延遲，但會增加輪詢額外負荷、脈絡切換及 CPU 啟動次數。請調整以平衡延遲與 CPU 使用率。
+**有界阻塞緩衝區** | `batch_size` | 決定每批次處理的記錄數；較小的批次會較快排清。 | 64--256 | 較小的批次會降低輸送量並增加請求數。
 **Peer Forwarder** | `batch_size`、`request_timeout` | 批次大小與請求逾時會影響逐跳延遲。 | 將 `batch_size` 保持在適中值，例如 48--128。 | `batch_size` 太小會降低輸送量，而 `request_timeout` 太短則可能在負載下導致重試或逾時。
-**Peer Forwarder** | `forwarder` [組態]({{site.url}}{{site.baseurl}}/data-prepper/managing-data-prepper/peer-forwarder/#configuration) | 限制轉送前的佇列情形。 | 使用較短的逾時，例如 50–200 ms。 | 較短的逾時會增加進行中的請求與連線數，帶來 CPU、記憶體、TLS 握手及上下文切換的額外負荷。較長的逾時可能導致佇列累積及更高的尾端延遲。
+**Peer Forwarder** | `forwarder` [組態]({{site.url}}{{site.baseurl}}/data-prepper/managing-data-prepper/peer-forwarder/#configuration) | 限制轉送前的佇列情形。 | 使用較短的逾時，例如 50–200 ms。 | 較短的逾時會增加進行中的請求與連線數，帶來 CPU、記憶體、TLS 交握及脈絡切換的額外負荷。較長的逾時可能導致佇列累積及更高的尾端延遲。
 **彙總處理器** | `group_duration` | 決定事件等待彙總視窗關閉的時間長度。 | 建議移除彙總；若有必要，請將視窗保持短暫，例如 `5s`。 | 較小的視窗可能破壞分組語意。
-**OpenSearch 接收端** | `bulk_size` (MiB) | 決定大量請求的大小；較小的大量請求會較快排清。 | 1--5 MiB | `bulk_size` 非常小會增加大量請求數、增加 HTTP/TLS 額外負荷、造成更多執行緒集區競爭、產生較小的 Lucene 批次並降低輸送量。`bulk_size` 非常大則會增加填滿批次的時間，並可能造成記憶體暴增、更大的重試及更高的 p95/p99 延遲。
+**OpenSearch 接收端** | `bulk_size` (MiB) | 決定 bulk 請求的大小；較小的 bulk 請求會較快排清。 | 1--5 MiB | `bulk_size` 非常小會增加 bulk 請求的數量，並增加 HTTP/TLS 額外負荷、造成更多執行緒集區競爭、產生較小的 Lucene 批次並降低輸送量。`bulk_size` 非常大則會增加填滿批次的時間，並可能造成記憶體暴增、更大的重試及更高的 p95/p99 延遲。
 **OpenSearch 接收端** | `index.refresh_interval` | 控制已編製索引的資料變為可搜尋的頻率。 | `1s` (預設) | 較低的值會增加分段更替及索引額外負荷。
 
 `delay` 處理器在設計上會增加延遲。在低延遲管線中請避免使用。
@@ -147,7 +147,7 @@ raw-trace-pipeline:
         hosts: ["https://opensearch:9200"]
         insecure: true
         username: admin
-        password: admin_password
+        password: "<custom-admin-password>"
         index_type: trace-analytics-raw
 ```
 {% include copy.html %}

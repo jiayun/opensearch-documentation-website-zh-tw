@@ -21,18 +21,18 @@ Amazon Bedrock 有 [配額限制](https://docs.aws.amazon.com/bedrock/latest/use
 
 ## 跨帳戶設定
 
-在本教學中，您將使用兩個 AWS 帳戶：帳戶 A (託管 Amazon OpenSearch Service) 與帳戶 B (託管 Amazon Bedrock 模型)。
+在本教學中，您將使用兩個 AWS 帳戶：帳戶 A（託管 Amazon OpenSearch Service）和帳戶 B（託管 Amazon Bedrock 模型）。
 
-若要呼叫託管於與 Amazon OpenSearch Service 所在帳戶不同之帳戶中的模型，您必須在連接器憑證中設定兩個角色：
+若要呼叫託管於不同帳戶（與託管 Amazon OpenSearch Service 的帳戶不同）的模型，您必須在連接器認證資訊中設定兩個角色：
 
-- `roleArn`：帳戶 A 中用於擔任帳戶 B 外部帳戶角色的角色。
-- `externalAccountRoleArn`：帳戶 B 中用於呼叫 Amazon Bedrock 模型的角色。
+- `roleArn`：帳戶 A 中的角色，用於擔任帳戶 B 中的外部帳戶角色。
+- `externalAccountRoleArn`：帳戶 B 中的角色，用於呼叫 Amazon Bedrock 模型。
 
 在本教學中，您將使用下列角色名稱：
 
 - 帳戶 A：`my_cross_account_role_accountA`
 
-  Amazon Resource Name (ARN)：`arn:aws:iam::<your_aws_account_A>:role/my_cross_account_role_accountA`
+  Amazon 資源名稱（ARN）：`arn:aws:iam::<your_aws_account_A>:role/my_cross_account_role_accountA`
 
 - 帳戶 B：`my_invoke_bedrock_role_accountB`
 
@@ -46,7 +46,7 @@ Amazon Bedrock 有 [配額限制](https://docs.aws.amazon.com/bedrock/latest/use
 
 ## 步驟 1：在帳戶 B 中建立 IAM 角色
 
-若要呼叫 Amazon Bedrock 上的模型，您必須建立具有適當權限的 AWS Identity and Access Management (IAM) 角色。連接器將使用此角色來呼叫模型。
+若要在 Amazon Bedrock 上叫用模型，您必須建立具有適當權限的 AWS Identity and Access Management (IAM) 角色。連接器將使用此角色來叫用模型。
 
 前往 IAM 主控台，建立名為 `my_invoke_bedrock_role_accountB` 的新 IAM 角色，並新增下列信任政策與權限：
 
@@ -69,6 +69,9 @@ Amazon Bedrock 有 [配額限制](https://docs.aws.amazon.com/bedrock/latest/use
 ```
 {% include copy.html %}
 
+信任政策只能參照已存在的角色。請先在帳戶 A 中建立 `my_cross_account_role_accountA` 角色（[步驟 2.1](#step-21-create-an-iam-role-for-assuming-externalaccountrolearn)），再建立此角色。
+{: .note}
+
 - 權限：
 
 ```json
@@ -87,11 +90,11 @@ Amazon Bedrock 有 [配額限制](https://docs.aws.amazon.com/bedrock/latest/use
 ```
 {% include copy.html %}
 
-記下角色 ARN；您將在後續步驟中使用它。
+請記下角色 ARN；您將在後續步驟中使用它。
 
-## 2. 在帳戶 A 中建立 IAM 角色
+## 步驟 2：在帳戶 A 中建立 IAM 角色
 
-依照下列步驟在 Amazon OpenSearch Service 中設定 IAM 角色。
+依照下列步驟，在 Amazon OpenSearch Service 中設定 IAM 角色。
 
 ### 步驟 2.1：建立用於擔任 externalAccountRoleArn 的 IAM 角色
 
@@ -137,9 +140,9 @@ Amazon Bedrock 有 [配額限制](https://docs.aws.amazon.com/bedrock/latest/use
 
 ### 步驟 2.2：建立用於簽署連接器請求的 IAM 角色
 
-專門產生一個新的 IAM 角色，用於簽署您的 Create Connector API 請求。
+產生一個新的 IAM 角色，專門用於簽署您的 Create Connector API 請求。
 
-建立名為 `my_create_connector_role_accountA` 的 IAM 角色，並使用下列信任政策與權限：
+建立名為 `my_create_connector_role_accountA` 的 IAM 角色，並套用下列信任政策與權限：
 
 - 自訂信任政策：
 
@@ -175,14 +178,14 @@ Amazon Bedrock 有 [配額限制](https://docs.aws.amazon.com/bedrock/latest/use
         {
             "Effect": "Allow",
             "Action": "es:ESHttpPost",
-            "Resource": "your_opensearch_domain_arn_created"
+            "Resource": "your_opensearch_domain_arn_created/*"
         }
     ]
 }
 ```
 {% include copy.html %}
 
-記下此角色 ARN；您將在後續步驟中使用它。
+請記下此角色的 ARN；您將在後續步驟中使用它。
 
 ### 步驟 2.3：對應後端角色
 
@@ -376,7 +379,7 @@ print(r.text)
 
 ### 步驟 5.1：建立資料匯入管線
 
-首先，建立一個[資料匯入管線]({{site.url}}{{site.baseurl}}/ingest-pipelines/)，使用 Amazon SageMaker 中的模型從輸入文字產生嵌入：
+首先，建立一個[資料匯入管線]({{site.url}}{{site.baseurl}}/ingest-pipelines/)，使用 Amazon Bedrock 上的模型從輸入文字建立嵌入：
 
 ```json
 PUT /_ingest/pipeline/my_bedrock_embedding_pipeline
@@ -405,7 +408,6 @@ PUT my_index
 {
   "settings": {
     "index": {
-      "knn.space_type": "cosinesimil",
       "default_pipeline": "my_bedrock_embedding_pipeline",
       "knn": "true"
     }
@@ -414,7 +416,8 @@ PUT my_index
     "properties": {
       "text_knn": {
         "type": "knn_vector",
-        "dimension": 1536
+        "dimension": 1536,
+        "space_type": "cosinesimil"
       }
     }
   }
@@ -436,7 +439,7 @@ POST /my_index/_doc/1000001
 
 ### 步驟 5.4：搜尋索引
 
-執行向量搜尋以從向量索引擷取文件：
+執行向量搜尋，從向量索引擷取文件：
 
 ```json
 POST /my_index/_search
@@ -455,3 +458,10 @@ POST /my_index/_search
 }
 ```
 {% include copy-curl.html %}
+
+## 相關文件
+
+- [語意搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/semantic-search/)
+- [第三方機器學習平台的連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)
+- [文字嵌入處理器]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/text-embedding/)
+- [神經查詢]({{site.url}}{{site.baseurl}}/query-dsl/specialized/neural/)

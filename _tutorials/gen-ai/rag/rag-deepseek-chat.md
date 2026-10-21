@@ -14,7 +14,9 @@ redirect_from:
 
 本教學說明如何使用 [Amazon OpenSearch Service](https://docs.aws.amazon.com/opensearch-service/) 與 [DeepSeek 聊天模型](https://api-docs.deepseek.com/api/create-chat-completion) 實作檢索增強生成 (RAG)。
 
-如果您使用自行管理的 OpenSearch 而非 Amazon OpenSearch Service，請取得 DeepSeek API 金鑰，並使用[藍圖](https://github.com/opensearch-project/ml-commons/blob/main/docs/remote_inference_blueprints/deepseek_connector_chat_blueprint.md)建立與 DeepSeek 聊天模型的連接器。如需建立連接器的詳細資訊，請參閱[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。接著直接前往[步驟 5](#step-5-create-and-test-the-model)。
+若要從 Jupyter notebook 執行本教學中的步驟，請使用 [DeepSeek RAG 示範筆記本](https://github.com/opensearch-project/ml-commons/blob/main/docs/tutorials/aws/DeepSeek_demo_notebook_for_RAG.ipynb)。
+
+如果您使用的是自行管理的 OpenSearch 而非 Amazon OpenSearch Service，請取得 DeepSeek API 金鑰，並使用[藍圖](https://github.com/opensearch-project/ml-commons/blob/main/docs/remote_inference_blueprints/deepseek_connector_chat_blueprint.md)建立連接至 DeepSeek 聊天模型的連接器。如需建立連接器的更多資訊，請參閱[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。然後直接前往[步驟 5](#step-5-create-and-test-the-model)。
 
 請將以 `your_` 為前綴的預留位置替換為您自己的值。
 {: .note}
@@ -99,7 +101,7 @@ redirect_from:
 
 ### 步驟 3.1：建立用於簽署連接器請求的 IAM 角色
 
-產生新的 IAM 角色，專門用於簽署您的 Create Connector API 請求。
+產生一個新的 IAM 角色，專門用於簽署您的 Create Connector API 請求。
 
 建立名為 `my_create_deepseek_connector_role` 的 IAM 角色，並使用下列信任政策與權限：
 
@@ -137,14 +139,14 @@ redirect_from:
     {
       "Effect": "Allow",
       "Action": "es:ESHttpPost",
-      "Resource": "your_opensearch_domain_arn"
+      "Resource": "your_opensearch_domain_arn/*"
     }
   ]
 }
 ```
 {% include copy.html %}
 
-請記下此角色 ARN；您將在後續步驟中使用它。
+請記下此角色的 ARN；您將在後續步驟中使用它。
 
 ### 步驟 3.2：對應後端角色
 
@@ -161,23 +163,9 @@ IAM 角色現已成功設定於您的 OpenSearch 叢集中。
 
 ## 步驟 4：建立連接器
 
-請依照下列步驟建立 DeepSeek 聊天模型的連接器。如需建立連接器的詳細資訊，請參閱[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
+依照下列步驟為 DeepSeek 聊天模型建立連接器。如需建立連接器的更多資訊，請參閱[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
 
-- 將 DeepSeek API 端點新增至信任的 URL 清單：
-
-```json
-PUT /_cluster/settings
-{
-  "persistent": {
-    "plugins.ml_commons.trusted_connector_endpoints_regex": [
-      """^https://api\.deepseek\.com/.*$"""
-    ]
-  }
-}
-```
-{% include copy-curl.html %}
-
-- 使用從 AWS 取得的臨時憑證執行下列 Python 程式碼。
+使用從 AWS 取得的臨時認證資訊執行下列 Python 程式碼。
  
 ```python
 import boto3
@@ -205,7 +193,7 @@ payload = {
   "protocol": "http",
   "parameters": {
     "endpoint": "api.deepseek.com",
-    "model": "deepseek-chat"
+    "model": "deepseek-flash"
   },
   "credential": {
     "secretArn": "your_secret_arn_created_in_step1",
@@ -215,7 +203,7 @@ payload = {
     {
       "action_type": "predict",
       "method": "POST",
-      "url": "https://${parameters.endpoint}/v1/chat/completions",
+      "url": "https://${parameters.endpoint}/chat/completions",
       "headers": {
         "Content-Type": "application/json",
         "Authorization": "Bearer ${credential.secretArn.my_deepseek_key}"
@@ -233,17 +221,17 @@ print(r.text)
 ```
 {% include copy.html %}
 
-該指令碼會輸出連接器 ID：
+此指令碼會輸出連接器 ID：
 
 ```json
 {"connector_id":"duRJsZQBFSAM-WcznrIw"}
 ```
 
-請記下連接器 ID；您將在下一個步驟中使用它。
+請記下連接器 ID；您會在下一個步驟中使用它。
 
 ## 步驟 5：建立並測試模型
 
-登入 OpenSearch Dashboards，開啟 Dev Tools 主控台，並執行下列請求以建立及測試 DeepSeek 聊天模型。
+登入 OpenSearch Dashboards，開啟 DevTools 主控台，然後執行下列請求以建立並測試 DeepSeek 聊天模型。
 
 1. 建立模型群組：
 
@@ -256,7 +244,7 @@ print(r.text)
     ```
     {% include copy-curl.html %}
 
-    回應包含模型群組 ID：
+    回應中包含模型群組 ID：
 
     ```json
     {
@@ -279,7 +267,7 @@ print(r.text)
     ```
     {% include copy-curl.html %}
 
-    回應包含模型 ID：
+    回應中包含模型 ID：
 
     ```json
     {
@@ -296,7 +284,7 @@ print(r.text)
     ```
     {% include copy-curl.html %}
 
-    回應包含部署作業的工作 ID：
+    回應中包含部署作業的工作 ID：
 
     ```json
     {
@@ -327,7 +315,7 @@ print(r.text)
     ```
     {% include copy-curl.html %}
 
-    回應包含模型產生的文字：
+    回應中包含模型產生的文字：
 
     ```json
     {
@@ -340,7 +328,7 @@ print(r.text)
                 "id": "a351252c-7393-4c5d-9abe-1c47693ad336",
                 "object": "chat.completion",
                 "created": 1738141298,
-                "model": "deepseek-chat",
+                "model": "deepseek-flash",
                 "choices": [
                   {
                     "index": 0,
@@ -403,7 +391,56 @@ PUT /_search/pipeline/my-conversation-search-pipeline-deepseek-chat
 
 ### 步驟 6.2：建立向量資料庫
 
-依照[本教學]({{site.url}}{{site.baseurl}}/search-plugins/neural-search-tutorial/)的步驟 1 和 2 建立嵌入模型與向量索引。然後將範例資料匯入索引：
+首先，建立嵌入模型。Amazon OpenSearch Service 不支援本機模型，因此請使用外部託管的嵌入模型：依照[使用 Amazon Bedrock Titan 進行語意搜尋]({{site.url}}{{site.baseurl}}/tutorials/vector-search/semantic-search/semantic-search-bedrock-titan/)的步驟 1--4 操作。在自行管理的 OpenSearch 中，您也可以改用本機模型，詳情請參閱[語意與混合搜尋入門]({{site.url}}{{site.baseurl}}/tutorials/vector-search/neural-search-tutorial/)。
+
+建立資料匯入管線，使用嵌入模型從 `text` 欄位產生嵌入：
+
+```json
+PUT /_ingest/pipeline/my-nlp-ingest-pipeline
+{
+  "description": "text embedding pipeline",
+  "processors": [
+    {
+      "text_embedding": {
+        "model_id": "your_embedding_model_id",
+        "field_map": {
+          "text": "passage_embedding"
+        }
+      }
+    }
+  ]
+}
+```
+{% include copy-curl.html %}
+
+建立使用此管線的向量索引。`dimension` 必須與嵌入模型的輸出維度相符，Amazon Bedrock Titan Text Embeddings 模型的輸出維度為 1,536：
+
+```json
+PUT /my-nlp-index
+{
+  "settings": {
+    "index": {
+      "default_pipeline": "my-nlp-ingest-pipeline",
+      "knn": "true"
+    }
+  },
+  "mappings": {
+    "properties": {
+      "passage_embedding": {
+        "type": "knn_vector",
+        "dimension": 1536,
+        "space_type": "cosinesimil"
+      },
+      "text": {
+        "type": "text"
+      }
+    }
+  }
+}
+```
+{% include copy-curl.html %}
+
+將範例資料匯入索引：
 
 ```json
 POST _bulk
@@ -433,7 +470,7 @@ GET /my-nlp-index/_search?search_pipeline=my-conversation-search-pipeline-deepse
     "neural": {
       "passage_embedding": {
         "query_text": "What's the population increase of New York City from 2021 to 2023? How is the trending comparing with Miami?",
-        "model_id": "USkHsZQBts7fa6bybx3G",
+        "model_id": "your_embedding_model_id",
         "k": 5
       }
     }
@@ -443,8 +480,8 @@ GET /my-nlp-index/_search?search_pipeline=my-conversation-search-pipeline-deepse
     "text"
   ],
   "ext": {
-    "generative_qa_parameters": {      
-      "llm_model": "deepseek-chat",
+    "generative_qa_parameters": {
+      "llm_model": "deepseek-flash",
       "llm_question": "What's the population increase of New York City from 2021 to 2023? How is the trending comparing with Miami?",
       "context_size": 5,
       "timeout": 15
@@ -454,7 +491,9 @@ GET /my-nlp-index/_search?search_pipeline=my-conversation-search-pipeline-deepse
 ```
 {% include copy-curl.html %}
 
-回應同時包含從向量搜尋擷取的相關文件（位於 `hits` 陣列中），以及由 DeepSeek 模型產生的答案（位於 `ext.retrieval_augmented_generation` 物件中）：
+RAG 處理器會將 `llm_model` 值作為請求中的 `model` 傳送至 DeepSeek API，因此請將其設定為目前的 DeepSeek 模型名稱。
+
+回應同時包含從向量搜尋擷取的相關文件（位於 `hits` 陣列中），以及 DeepSeek 模型產生的答案（位於 `ext.retrieval_augmented_generation` 物件中）：
 
 ```json
 {
@@ -471,38 +510,38 @@ GET /my-nlp-index/_search?search_pipeline=my-conversation-search-pipeline-deepse
       "value": 6,
       "relation": "eq"
     },
-    "max_score": 0.05248103,
+    "max_score": 0.85223955,
     "hits": [
       {
         "_index": "my-nlp-index",
         "_id": "2",
-        "_score": 0.05248103,
+        "_score": 0.85223955,
         "_source": {
-          "text": """Chart and table of population level and growth rate for the New York City metro area from 1950 to 2023. United Nations population projections are also included through the year 2035.\nThe current metro area population of New York City in 2023 is 18,937,000, a 0.37% increase from 2022.\nThe metro area population of New York City in 2022 was 18,867,000, a 0.23% increase from 2021.\nThe metro area population of New York City in 2021 was 18,823,000, a 0.1% increase from 2020.\nThe metro area population of New York City in 2020 was 18,804,000, a 0.01% decline from 2019."""
+          "text": "Chart and table of population level and growth rate for the New York City metro area from 1950 to 2023. United Nations population projections are also included through the year 2035.\\nThe current metro area population of New York City in 2023 is 18,937,000, a 0.37% increase from 2022.\\nThe metro area population of New York City in 2022 was 18,867,000, a 0.23% increase from 2021.\\nThe metro area population of New York City in 2021 was 18,823,000, a 0.1% increase from 2020.\\nThe metro area population of New York City in 2020 was 18,804,000, a 0.01% decline from 2019."
         }
       },
       {
         "_index": "my-nlp-index",
         "_id": "4",
-        "_score": 0.029023321,
+        "_score": 0.7766204,
         "_source": {
-          "text": """Chart and table of population level and growth rate for the Miami metro area from 1950 to 2023. United Nations population projections are also included through the year 2035.\nThe current metro area population of Miami in 2023 is 6,265,000, a 0.8% increase from 2022.\nThe metro area population of Miami in 2022 was 6,215,000, a 0.78% increase from 2021.\nThe metro area population of Miami in 2021 was 6,167,000, a 0.74% increase from 2020.\nThe metro area population of Miami in 2020 was 6,122,000, a 0.71% increase from 2019."""
+          "text": "Chart and table of population level and growth rate for the Miami metro area from 1950 to 2023. United Nations population projections are also included through the year 2035.\\nThe current metro area population of Miami in 2023 is 6,265,000, a 0.8% increase from 2022.\\nThe metro area population of Miami in 2022 was 6,215,000, a 0.78% increase from 2021.\\nThe metro area population of Miami in 2021 was 6,167,000, a 0.74% increase from 2020.\\nThe metro area population of Miami in 2020 was 6,122,000, a 0.71% increase from 2019."
         }
       },
       {
         "_index": "my-nlp-index",
         "_id": "3",
-        "_score": 0.028097045,
+        "_score": 0.73853546,
         "_source": {
-          "text": """Chart and table of population level and growth rate for the Chicago metro area from 1950 to 2023. United Nations population projections are also included through the year 2035.\nThe current metro area population of Chicago in 2023 is 8,937,000, a 0.4% increase from 2022.\nThe metro area population of Chicago in 2022 was 8,901,000, a 0.27% increase from 2021.\nThe metro area population of Chicago in 2021 was 8,877,000, a 0.14% increase from 2020.\nThe metro area population of Chicago in 2020 was 8,865,000, a 0.03% increase from 2019."""
+          "text": "Chart and table of population level and growth rate for the Chicago metro area from 1950 to 2023. United Nations population projections are also included through the year 2035.\\nThe current metro area population of Chicago in 2023 is 8,937,000, a 0.4% increase from 2022.\\nThe metro area population of Chicago in 2022 was 8,901,000, a 0.27% increase from 2021.\\nThe metro area population of Chicago in 2021 was 8,877,000, a 0.14% increase from 2020.\\nThe metro area population of Chicago in 2020 was 8,865,000, a 0.03% increase from 2019."
         }
       },
       {
         "_index": "my-nlp-index",
-        "_id": "6",
-        "_score": 0.026973149,
+        "_id": "5",
+        "_score": 0.71319944,
         "_source": {
-          "text": """Chart and table of population level and growth rate for the Seattle metro area from 1950 to 2023. United Nations population projections are also included through the year 2035.\nThe current metro area population of Seattle in 2023 is 3,519,000, a 0.86% increase from 2022.\nThe metro area population of Seattle in 2022 was 3,489,000, a 0.81% increase from 2021.\nThe metro area population of Seattle in 2021 was 3,461,000, a 0.82% increase from 2020.\nThe metro area population of Seattle in 2020 was 3,433,000, a 0.79% increase from 2019."""
+          "text": "Chart and table of population level and growth rate for the Austin metro area from 1950 to 2023. United Nations population projections are also included through the year 2035.\\nThe current metro area population of Austin in 2023 is 2,228,000, a 2.39% increase from 2022.\\nThe metro area population of Austin in 2022 was 2,176,000, a 2.79% increase from 2021.\\nThe metro area population of Austin in 2021 was 2,117,000, a 3.12% increase from 2020.\\nThe metro area population of Austin in 2020 was 2,053,000, a 3.43% increase from 2019."
         }
       }
     ]
@@ -514,3 +553,11 @@ GET /my-nlp-index/_search?search_pipeline=my-conversation-search-pipeline-deepse
   }
 }
 ```
+
+## 相關文件
+
+- [使用 RAG 的對話式搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/conversational-search/)
+- [第三方機器學習平台的連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)
+- [檢索增強生成處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rag-processor/)
+- [文字嵌入處理器]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/text-embedding/)
+- [神經查詢]({{site.url}}{{site.baseurl}}/query-dsl/specialized/neural/)

@@ -113,7 +113,7 @@ PUT /_ingest/pipeline/test_population_data_pipeline
 
 ### 步驟 1.3：建立向量索引
 
-建立向量索引，並將該資料匯入管線指定為預設管線：
+建立向量索引，並將資料匯入管線指定為預設管線：
 
 ```json
 PUT test_population_data
@@ -125,13 +125,13 @@ PUT test_population_data
       },
       "population_description_embedding": {
         "type": "knn_vector",
-        "dimension": 384
+        "dimension": 384,
+        "space_type": "cosinesimil"
       }
     }
   },
   "settings": {
     "index": {
-      "knn.space_type": "cosinesimil",
       "default_pipeline": "test_population_data_pipeline",
       "knn": "true"
     }
@@ -140,7 +140,7 @@ PUT test_population_data
 ```
 {% include copy-curl.html %}
 
-如需向量索引的更多資訊，請參閱 [建立向量索引]({{site.url}}{{site.baseurl}}/search-plugins/knn/knn-index/)。
+如需向量索引的更多資訊，請參閱[建立向量索引]({{site.url}}{{site.baseurl}}/search-plugins/knn/knn-index/)。
 
 ### 步驟 1.4：匯入資料
 
@@ -174,14 +174,14 @@ POST _bulk
 ```json
 POST /_plugins/_ml/connectors/_create
 {
-  "name": "Bedrock Claude Sonnet 5",
+  "name": "Bedrock Claude Sonnet 4.6",
   "description": "The connector to BedRock service for claude model",
   "version": 1,
   "protocol": "aws_sigv4",
   "parameters": {
     "region": "us-east-1",
     "service_name": "bedrock",
-    "model": "us.anthropic.claude-sonnet-5",
+    "model": "us.anthropic.claude-sonnet-4-6",
     "response_filter": "$.output.message.content[0].text"
   },
   "credential": {
@@ -200,7 +200,7 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-請記下連接器 ID；您將使用它來註冊模型。
+請記下連接器 ID；您將用它來註冊模型。
 
 ### 步驟 2.2：註冊模型
 
@@ -209,15 +209,15 @@ POST /_plugins/_ml/connectors/_create
 ```json
 POST /_plugins/_ml/models/_register
 {
-    "name": "Bedrock Claude Instant model",
+    "name": "Bedrock Claude Sonnet 4.6 model",
     "function_name": "remote",
-    "description": "Bedrock Claude instant-v1 model",
+    "description": "Bedrock Claude Sonnet 4.6 model",
     "connector_id": "your_LLM_connector_id"
 }
 ```
 {% include copy-curl.html %}
 
-請記下 LLM 模型 ID；您將在後續步驟中使用它。
+請記下 LLM 模型 ID；後續步驟會用到。
 
 ### 步驟 2.3：部署模型
 
@@ -236,7 +236,7 @@ POST /_plugins/_ml/models/your_LLM_model_id/_deploy
 POST /_plugins/_ml/models/your_LLM_model_id/_predict
 {
   "parameters": {
-    "prompt": "\n\nHuman: how are you? \n\nAssistant:"
+    "prompt": "how are you?"
   }
 }
 ```
@@ -250,7 +250,7 @@ OpenSearch 提供下列代理程式類型：`flow`、`conversational_flow` 及 `
 
 - 中繼資訊：`name`、`type` 及 `description`。
 - `app_type`：區分應用程式類型。
-- `memory`：將使用者問題與 LLM 回應儲存為對話，讓代理程式可從記憶體擷取對話歷程記錄並繼續相同的對話。
+- `memory`：將使用者問題與 LLM 回應儲存為對話，讓代理程式可從記憶中擷取對話歷程記錄並繼續相同的對話。
 - `tools`：定義要使用的工具清單。代理程式將依序執行這些工具。
 
 若要註冊代理程式，請傳送下列請求：
@@ -309,7 +309,7 @@ OpenSearch 會回應代理程式 ID：
 
 ### 步驟 4.1：開始新的對話
 
-首先，透過向 LLM 詢問問題來開始新的對話：
+首先，向 LLM 提出問題，以開始新的對話：
 
 ```json
 POST /_plugins/_ml/agents/your_agent_id/_execute
@@ -338,10 +338,14 @@ POST /_plugins/_ml/agents/your_agent_id/_execute
         },
         {
           "name": "bedrock_claude_model",
-          "result": """ Based on the context given:
-- The metro area population of Seattle in 2021 was 3,461,000
-- The current metro area population of Seattle in 2023 is 3,519,000
-- So the population increase of Seattle from 2021 to 2023 is 3,519,000 - 3,461,000 = 58,000"""
+          "result": """Based on the context provided, here are the Seattle metro area population figures:
+
+- **2021 population**: 3,461,000
+- **2022 population**: 3,489,000
+- **2023 population**: 3,519,000
+
+**Population increase from 2021 to 2023:**
+3,519,000 - 3,461,000 = **58,000 people**"""
         }
       ]
     }
@@ -351,46 +355,46 @@ POST /_plugins/_ml/agents/your_agent_id/_execute
 
 回應包含下列欄位：
 
-- `memory_id` 是記憶體 (對話) 的識別碼，會將單一對話中的所有訊息分組。請記下此 ID；您將在下一個步驟中使用它。
-- `parent_message_id` 是目前訊息 (一個問題/答案) 的識別碼，代表人類與 LLM 之間的互動。一個記憶體可以包含多個訊息。
+- `memory_id` 是記憶（對話）的識別碼，用於將單一對話中的所有訊息歸為一組。請記下此 ID；您將在下一個步驟中使用它。
+- `parent_message_id` 是人類與 LLM 之間目前訊息（一組問答）的識別碼。一個記憶可以包含多則訊息。
 
-若要取得記憶體詳細資訊，請呼叫 [Get Memory API](ml-commons-plugin/api/memory-apis/get-memory/)：
+若要取得記憶詳細資料，請呼叫 [Get Memory API](ml-commons-plugin/api/memory-apis/get-memory/)：
 
 ```json
 GET /_plugins/_ml/memory/gQ75lI0BHcHmo_cz2acL
 ```
 {% include copy-curl.html %}
 
-若要取得記憶體內的所有訊息，請呼叫 [Get Messages API](ml-commons-plugin/api/memory-apis/get-message/)：
+若要取得記憶中的所有訊息，請呼叫 [Get Messages API](ml-commons-plugin/api/memory-apis/get-message/)：
 
 ```json
 GET /_plugins/_ml/memory/gQ75lI0BHcHmo_cz2acL/messages
 ```
 {% include copy-curl.html %}
 
-若要取得訊息詳細資訊，請呼叫 [Get Message API](ml-commons-plugin/api/memory-apis/get-message/)：
+若要取得訊息詳細資料，請呼叫 [Get Message API](ml-commons-plugin/api/memory-apis/get-message/)：
 
 ```json
 GET /_plugins/_ml/memory/message/gg75lI0BHcHmo_cz2acZ
 ```
 {% include copy-curl.html %}
 
-基於偵錯目的，您可以呼叫 [Get Message Traces API](ml-commons-plugin/api/memory-apis/get-message-traces/) 來取得訊息的追蹤資料：
+為了進行偵錯，您可以呼叫 [Get Message Traces API](ml-commons-plugin/api/memory-apis/get-message-traces/) 來取得訊息的追蹤資料：
 
 ```json
 GET /_plugins/_ml/memory/message/gg75lI0BHcHmo_cz2acZ/traces
 ```
 {% include copy-curl.html %}
 
-### 4.2 透過詢問新問題來繼續對話
+### 4.2 提出新問題以繼續對話
 
-若要繼續相同的對話，請提供上一個步驟中的記憶體 ID。
+若要繼續同一場對話，請提供上一步驟中的記憶 ID。
 
-此外，您可以提供下列參數：
+此外，您也可以提供下列參數：
 
-- `message_history_limit`：指定您希望代理程式在新的問題/答案回合中包含多少歷史訊息。
-- `prompt`：使用此參數來自訂 LLM 提示。例如，下列範例會新增指令 `always learn useful information from chat history` 
-及新參數 `next_action`：
+- `message_history_limit`：指定在代理程式的新一輪問題/回答中，要包含多少筆歷史訊息。
+- `prompt`：使用此參數自訂 LLM 提示。例如，下列範例新增了一條指令 `always learn useful information from chat history` 
+以及一個新參數 `next_action`：
 
 ```json
 POST /_plugins/_ml/agents/your_agent_id/_execute
@@ -406,7 +410,7 @@ POST /_plugins/_ml/agents/your_agent_id/_execute
 ```
 {% include copy-curl.html %}
 
-回應包含 LLM 產生的答案：
+回應中包含 LLM 產生的答案：
 
 ```json
 {
@@ -423,10 +427,17 @@ POST /_plugins/_ml/agents/your_agent_id/_execute
         },
         {
           "name": "bedrock_claude_model",
-          "result": """ Based on the context given:
-- The current metro area population of New York City in 2023 is 18,937,000
-- The current metro area population of Seattle in 2023 is 3,519,000
-- So the population of New York City in 2023 (18,937,000) is much higher than the population of Seattle in 2023 (3,519,000)"""
+          "result": """Based on the context and chat history, here is the comparison:
+
+**New York City Metro Area (2023):**
+- Population: **18,937,000**
+
+**Seattle Metro Area (2023):**
+- Population: **3,519,000** *(from chat history)*
+
+**Comparison:**
+- New York City is larger than Seattle by **15,418,000 people**
+- New York City's population is approximately **5.38 times** larger than Seattle's population in 2023"""
         }
       ]
     }
@@ -434,20 +445,21 @@ POST /_plugins/_ml/agents/your_agent_id/_execute
 }
 ```
 
-如果您知道代理程式應使用哪個工具來執行特定的 Predict API 請求，您可以在執行代理程式時指定該工具。例如，如果您想將上述答案翻譯成中文，就不需要從知識庫擷取任何資料。若只要執行 Claude 模型，請在 `selected_tools` 參數中指定 `bedrock_claude_model` 工具：
+如果您知道代理程式應使用哪個工具來執行特定的 Predict API 請求，可以在執行代理程式時指定該工具。例如，若您想將前述答案翻譯成中文，則不需要從知識庫擷取任何資料。若只要執行 Claude 模型，請在 `selected_tools` 參數中指定 `bedrock_claude_model` 工具：
 
 ```json
 POST /_plugins/_ml/agents/your_agent_id/_execute
 {
   "parameters": {
     "question": "Translate last answer into Chinese?",
+    "memory_id": "gQ75lI0BHcHmo_cz2acL",
     "selected_tools": ["bedrock_claude_model"]
   }
 }
 ```
 {% include copy-curl.html %}
 
-代理程式將依 `selected_tools` 中定義的新順序逐一執行工具。
+代理程式會依照 `selected_tools` 中定義的新順序逐一執行工具。 
 {: .note}
 
 ## 設定多個知識庫
@@ -790,7 +802,7 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-### 步驟 2：使用 NLQ 執行代理程式
+### 步驟 2：以 NLQ 執行代理程式
 
 執行代理程式：
 
@@ -822,7 +834,7 @@ POST /_plugins/_ml/agents/your_agent_id/_execute
                 },
                 {
                     "name": "MLModelTool",
-                    "result": " Based on the given context, the number of orders in the last week is 3992. The data shows a query that counts the number of orders where the order date is greater than 1 week ago. The query result shows the count as 3992."
+                    "result": "Based on the query results, you have **3,534 orders** in the last week.\n\nThis was determined by querying the e-commerce sample data, filtering orders where the `order_date` is within the last 7 days from now, and counting the total number of orders."
                 }
             ]
         }
@@ -836,3 +848,10 @@ POST /_plugins/_ml/agents/your_agent_id/_execute
 GET _plugins/_ml/memory/message/s6IioI0BJhBwrVXYeYOW/traces
 ```
 {% include copy-curl.html %}
+
+## 相關文件
+
+- [對話式流程代理程式 (conversational flow agent)]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/agents/conversational-flow/)
+- [Register Agent API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/agent-apis/register-agent/)
+- [向量資料庫工具 (Vector DB tool)]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/vector-db-tool/)
+- [ML 模型工具 (ML Model tool)]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agents-tools/tools/ml-model-tool/)

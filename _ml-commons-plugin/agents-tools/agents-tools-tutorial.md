@@ -3,7 +3,6 @@
 layout: default
 title: "代理程式與工具教學"
 parent: Agents and tools
-grand_parent: ML Commons APIs
 nav_order: 5
 ---
 
@@ -13,15 +12,15 @@ nav_order: 5
 
 下列教學說明如何建立用於檢索增強生成 (RAG) 的流程代理程式。流程代理程式會依指定的順序，循序執行其設定好的工具。在此範例中，您將建立一個含有兩個工具的代理程式：
 
-1. `VectorDBTool`：代理程式將使用此工具擷取與使用者問題相關的 OpenSearch 文件。您會將補充資訊匯入 OpenSearch 索引。為了協助向量搜尋，您將部署文字嵌入模型，將文字轉譯為向量嵌入。OpenSearch 會將匯入的文件轉譯為嵌入，並儲存在索引中。當您向代理程式提供使用者問題時，代理程式會根據該問題建構查詢、在 OpenSearch 索引上執行向量搜尋，並將擷取到的相關文件傳遞給 `MLModelTool`。
-1. `MLModelTool`：代理程式將執行此工具以連線至大型語言模型 (LLM)，並將以 OpenSearch 文件增補的使用者查詢傳送給模型。在此範例中，您將使用 [託管於 Amazon Bedrock 的 Anthropic Claude 模型](https://aws.amazon.com/bedrock/claude/)。LLM 接著會根據其知識與提供的文件回答問題。
+1. `VectorDBTool`：代理程式將使用此工具檢索與使用者問題相關的 OpenSearch 文件。您會將補充資訊匯入 OpenSearch 索引。為了協助向量搜尋，您將部署文字嵌入模型，將文字轉譯為向量嵌入。OpenSearch 會將匯入的文件轉譯為嵌入，並儲存在索引中。當您向代理程式提供使用者問題時，代理程式會根據該問題建構查詢、在 OpenSearch 索引上執行向量搜尋，並將檢索到的相關文件傳遞給 `MLModelTool`。
+1. `MLModelTool`：代理程式將執行此工具以連線至大型語言模型 (LLM)，並將附加了 OpenSearch 文件內容的使用者查詢傳送給模型。在此範例中，您將使用 [Amazon Bedrock 上代管的 Anthropic Claude 模型](https://aws.amazon.com/bedrock/claude/)。LLM 接著會根據其知識與提供的文件回答問題。
 
 ## 先決條件
 
-若要使用記憶功能，請先設定下列叢集設定。本教學假設您沒有專用的機器學習 (ML) 節點：
+若要使用代理記憶（memory）功能，請先設定下列叢集設定。本教學假設您沒有專用的機器學習 (ML) 節點：
 
 ```json
-PUT _cluster/settings
+PUT /_cluster/settings
 {
   "persistent": {
     "plugins.ml_commons.only_run_on_ml_node": "false",
@@ -49,7 +48,7 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-註冊模型是非同步工作。OpenSearch 會傳回此工作的任務 ID：
+註冊模型是非同步任務。OpenSearch 會傳回此任務的任務 ID：
 
 ```json
 {
@@ -58,14 +57,14 @@ POST /_plugins/_ml/models/_register?deploy=true
 }
 ```
 
-您可以呼叫 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 來查看工作狀態：
+您可以呼叫 [Get ML Task API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/) 來查看任務狀態：
 
 ```json
 GET /_plugins/_ml/tasks/aFeif4oB5Vm0Tdw8yoN7
 ```
 {% include copy-curl.html %}
 
-工作完成後，工作狀態會變更為 `COMPLETED`，且 ML Tasks API 回應會包含已部署模型的模型 ID：
+任務完成後，任務狀態會變更為 `COMPLETED`，且 ML Tasks API 回應會包含已部署模型的模型 ID：
 
 ```json
 {
@@ -109,7 +108,7 @@ PUT /_ingest/pipeline/test-pipeline-local-model
 現在您將把補充資料匯入 OpenSearch 索引。在 OpenSearch 中，向量會儲存在向量索引中。您可以傳送下列請求來建立[向量索引]({{site.url}}{{site.baseurl}}/search-plugins/knn/knn-index/)：
 
 ```json
-PUT my_test_data
+PUT /my_test_data
 {
   "mappings": {
     "properties": {
@@ -118,13 +117,13 @@ PUT my_test_data
       },
       "embedding": {
         "type": "knn_vector",
-        "dimension": 384
+        "dimension": 384,
+        "space_type": "cosinesimil"
       }
     }
   },
   "settings": {
     "index": {
-      "knn.space_type": "cosinesimil",
       "default_pipeline": "test-pipeline-local-model",
       "knn": "true"
     }
@@ -136,7 +135,7 @@ PUT my_test_data
 接著，使用大量請求將資料匯入索引：
 
 ```json
-POST _bulk
+POST /_bulk
 {"index": {"_index": "my_test_data", "_id": "1"}}
 {"text": "Chart and table of population level and growth rate for the Ogden-Layton metro area from 1950 to 2023. United Nations population projections are also included through the year 2035.\nThe current metro area population of Ogden-Layton in 2023 is 750,000, a 1.63% increase from 2022.\nThe metro area population of Ogden-Layton in 2022 was 738,000, a 1.79% increase from 2021.\nThe metro area population of Ogden-Layton in 2021 was 725,000, a 1.97% increase from 2020.\nThe metro area population of Ogden-Layton in 2020 was 711,000, a 2.16% increase from 2019."}
 {"index": {"_index": "my_test_data", "_id": "2"}}
@@ -170,9 +169,9 @@ POST /_plugins/_ml/connectors/_create
       "endpoint": "bedrock.us-east-1.amazonaws.com",
       "auth": "Sig_V4",
       "content_type": "application/json",
-      "max_tokens_to_sample": 8000,
+      "max_tokens": 8000,
       "temperature": 0.0001,
-      "response_filter": "$.completion"
+      "response_filter": "$.content[0].text"
   },
   "credential": {
       "access_key": "<bedrock_access_key>",
@@ -183,12 +182,12 @@ POST /_plugins/_ml/connectors/_create
     {
       "action_type": "predict",
       "method": "POST",
-      "url": "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-v2/invoke",
+      "url": "https://bedrock-runtime.us-east-1.amazonaws.com/model/us.anthropic.claude-sonnet-4-6/invoke",
       "headers": { 
         "content-type": "application/json",
         "x-amz-content-sha256": "required"
       },
-      "request_body": "{\"prompt\":\"${parameters.prompt}\", \"max_tokens_to_sample\":${parameters.max_tokens_to_sample}, \"temperature\":${parameters.temperature},  \"anthropic_version\":\"${parameters.anthropic_version}\" }"
+      "request_body": "{\"messages\":[{\"role\":\"user\",\"content\":\"${parameters.prompt}\"}], \"max_tokens\":${parameters.max_tokens}, \"temperature\":${parameters.temperature}, \"anthropic_version\":\"${parameters.anthropic_version}\" }"
     }
   ]
 }
@@ -203,9 +202,9 @@ POST /_plugins/_ml/connectors/_create
 }
 ```
 
-## 步驟 5：註冊並部署外部託管模型
+## 步驟 5：註冊並部署外部代管模型
 
-如同文字嵌入模型，LLM 也需要註冊並部署到 OpenSearch。若要設定外部託管模型，請先為此模型建立模型群組：
+如同文字嵌入模型，LLM 也需要註冊並部署到 OpenSearch。若要設定外部代管模型，請先為此模型建立模型群組：
 
 ```json
 POST /_plugins/_ml/model_groups/_register
@@ -226,12 +225,12 @@ POST /_plugins/_ml/model_groups/_register
 
 ```
 
-接下來，註冊並部署外部託管的 Claude 模型：
+接下來，註冊並部署外部代管的 Claude 模型：
 
 ```json
 POST /_plugins/_ml/models/_register?deploy=true
 {
-    "name": "Bedrock Claude V2 model",
+    "name": "Bedrock Claude Sonnet 4.6 model",
     "function_name": "remote",
     "model_group_id": "wlcnb4kBJ1eYAeTMHlV6",
     "description": "test model",
@@ -240,20 +239,20 @@ POST /_plugins/_ml/models/_register?deploy=true
 ```
 {% include copy-curl.html %}
 
-與[步驟 1](#step-1-register-and-deploy-a-text-embedding-model)類似，回應包含一個任務 ID，您可以用它來檢查部署狀態。模型部署完成後，狀態會變更為 `COMPLETED`，且回應會包含 Claude 模型的模型 ID：
+與[步驟 1](#step-1-register-and-deploy-a-text-embedding-model) 類似，回應會包含任務 ID，您可以用它來檢查部署狀態。模型部署完成後，狀態會變更為 `COMPLETED`，且回應會包含 Claude 模型的模型 ID：
 
 ```json
 {
   "model_id": "NWR9YIsBUysqmzBdifVJ",
   "task_type": "REGISTER_MODEL",
-  "function_name": "remote",
+  "function_name": "REMOTE",
   "state": "COMPLETED",
   "worker_node": [
     "4p6FVOmJRtu3wehDD74hzQ"
   ],
   "create_time": 1694358489722,
   "last_update_time": 1694358499139,
-  "is_async": true
+  "is_async": false
 }
 ```
 
@@ -263,7 +262,7 @@ POST /_plugins/_ml/models/_register?deploy=true
 POST /_plugins/_ml/models/NWR9YIsBUysqmzBdifVJ/_predict
 {
   "parameters": {
-    "prompt": "\n\nHuman:hello\n\nAssistant:"
+    "prompt": "hello"
   }
 }
 ```
@@ -295,7 +294,7 @@ POST /_plugins/_ml/agents/_register
       "description": "A general tool to answer any question",
       "parameters": {
         "model_id": "NWR9YIsBUysqmzBdifVJ",
-        "prompt": "\n\nHuman:You are a professional data analyst. You will always answer a question based on the given context first. If the answer is not directly shown in the context, you will analyze the data and find the answer. If you don't know the answer, just say you don't know. \n\n Context:\n${parameters.VectorDBTool.output}\n\nHuman:${parameters.question}\n\nAssistant:"
+        "prompt": "You are a professional data analyst. You will always answer a question based on the given context first. If the answer is not directly shown in the context, you will analyze the data and find the answer. If you don't know the answer, just say you don't know. \n\n Context:\n${parameters.VectorDBTool.output}\n\nQuestion: ${parameters.question}"
       }
     }
   ]
@@ -338,6 +337,7 @@ LLM 的知識庫中沒有最新資訊，因此它會根據已匯入的資料推�
     {
       "output": [
         {
+          "name": "MLModelTool",
           "result": """ Based on the given context, the key information is:
 
 The metro area population of Seattle in 2021 was 3,461,000.

@@ -1,17 +1,17 @@
 ---
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: "更新情境管理"
+title: "更新脈絡管理"
 parent: Context management APIs
 grand_parent: ML Commons APIs
 nav_order: 30
 ---
 
-# 更新情境管理 API
+# 更新脈絡管理 API
 **於 3.5 版推出**
 {: .label .label-purple }
 
-使用此 API 更新現有的情境管理組態。您可以修改描述、掛鉤組態以及情境管理員設定。
+使用此 API 更新現有的脈絡管理組態。您可以修改描述、掛鉤組態以及脈絡管理員設定。
 
 ## 端點
 
@@ -25,7 +25,7 @@ PUT /_plugins/_ml/context_management/{context_management_name}
 
 參數 | 資料類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`context_management_name` | 字串 | 必要 | 要更新的情境管理名稱。
+`context_management_name` | 字串 | 必要 | 要更新的脈絡管理名稱。
 
 ## 請求本文欄位
 
@@ -33,10 +33,10 @@ PUT /_plugins/_ml/context_management/{context_management_name}
 
 欄位 | 資料類型 | 必要/選用 | 說明
 :--- | :--- | :--- | :---
-`description` | 字串 | 選用 | 此情境管理用途的人類可讀描述。
-`hooks` | 物件 | 選用 | 掛鉤名稱與情境管理員組態清單的對應關係。請參閱[`hooks` 物件]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/context-management-apis/create-context-management/#the-hooks-object)。
+`description` | 字串 | 選用 | 此脈絡管理用途的易讀說明。
+`hooks` | 物件 | 選用 | 將掛鉤名稱對應至脈絡管理員組態清單的對應表。請參閱[`hooks` 物件]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/context-management-apis/create-context-management/#the-hooks-object)。
 
-請求本文的結構與[建立情境管理 API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/context-management-apis/create-context-management/) 相同。
+請求本文的結構與[建立脈絡管理 API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/context-management-apis/create-context-management/)相同。省略的欄位會保留現有值。在 `hooks` 物件中，您指定的每個掛鉤都會取代該掛鉤的現有組態，省略的掛鉤則維持不變。
 
 ## 範例請求：更新描述
 
@@ -48,32 +48,26 @@ PUT /_plugins/_ml/context_management/advanced-context-management
 ```
 {% include copy-curl.html %}
 
-## 範例請求：更新掛鉤組態
+## 範例請求：更新 hooks 組態
 
 ```json
 PUT /_plugins/_ml/context_management/sliding_window_max_40000_tokens_managers
 {
   "description": "Context management for truncating tool outputs to prevent input length issues",
   "hooks": {
-    "pre_llm": [
+    "PRE_LLM": [
       {
         "type": "SlidingWindowManager",
         "config": {
-          "max_messages": 8,
-          "activation": {
-            "rule_type": "always"
-          }
+          "max_messages": 8
         }
       }
     ],
-    "post_tool": [
+    "POST_TOOL": [
       {
         "type": "ToolsOutputTruncateManager",
         "config": {
-          "max_output_length": 40000,
-          "activation": {
-            "rule_type": "always"
-          }
+          "max_output_length": 40000
         }
       }
     ]
@@ -103,4 +97,4 @@ PUT /_plugins/_ml/context_management/sliding_window_max_40000_tokens_managers
 
 ## 相關文件
 
-如需更多資訊，請參閱[情境管理]({{site.url}}{{site.baseurl}}/ml-commons-plugin/context-management/)。
+如需更多資訊，請參閱[脈絡管理]({{site.url}}{{site.baseurl}}/ml-commons-plugin/context-management/)。

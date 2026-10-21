@@ -33,19 +33,19 @@ POST _plugins/_ml/connectors/_create
   "version": 1,
   "protocol": "aws_sigv4",
   "parameters": {
-    "region": "YOUR AWS REGION",
+    "region": "<YOUR AWS REGION>",
     "service_name": "lambda"
   },
   "credential": {
-    "access_key": "YOUR ACCESS KEY",
-    "secret_key": "YOUR SECRET KEY",
-    "session_token": "YOUR SESSION TOKEN"
+    "access_key": "<YOUR ACCESS KEY>",
+    "secret_key": "<YOUR SECRET KEY>",
+    "session_token": "<YOUR SESSION TOKEN>"
   },
   "actions": [
     {
       "action_type": "execute",
       "method": "POST",
-      "url": "YOUR LAMBDA FUNCTION URL",
+      "url": "<YOUR LAMBDA FUNCTION URL>",
       "headers": {
         "content-type": "application/json"
       },
@@ -90,7 +90,7 @@ POST /_plugins/_ml/agents/_register
       "type": "ConnectorTool",
       "name": "lambda_function",
       "parameters": {
-        "connector_id": "YOUR CONNECTOR ID",
+        "connector_id": "Zz1XEJABXWrLmr4mewEF",
         "response_filter": "$.result"
       }
     }
@@ -114,7 +114,7 @@ OpenSearch 會回應代理程式 ID：
 接著，傳送下列請求來執行代理程式：
 
 ```json
-POST /_plugins/_ml/agents/9X7xWI0Bpc3sThaJdY9i/_execute
+POST /_plugins/_ml/agents/az1XEJABXWrLmr4miAFj/_execute
 {
   "parameters": {
     "number1": 2,
@@ -159,7 +159,7 @@ OpenSearch 會回傳 Lambda 函式執行的輸出。在輸出中，欄位名稱�
     {
       "action_type": "execute",
       "method": "POST",
-      "url": "YOUR LAMBDA FUNCTION URL",
+      "url": "<YOUR LAMBDA FUNCTION URL>",
       "headers": {
         "content-type": "application/json"
       },

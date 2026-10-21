@@ -77,7 +77,7 @@ kafka-pipeline:
 選項 | 類型 | 必要 | 說明
 :--- | :--- | :--- | :---
 `type` | 字串 | 是 | 根據您的註冊服務設定結構描述類型。有效值為 `aws_glue` (AWS Glue 結構描述註冊服務) 與 `confluent` (Confluent 結構描述註冊服務)。使用 `aws_glue` 註冊服務時，請設定任何 [AWS](#aws) 組態選項。
-`basic_auth_credentials_source` | 字串 | 否 | 結構描述註冊服務憑證的來源。提供 `api_key/api_secret` 時請使用 `USER_INFO`。其他有效值為 `URL` 與 `SASL_INHERIT`。預設值通常與底層用戶端一致。
+`basic_auth_credentials_source` | 字串 | 否 | 結構描述註冊服務認證資訊的來源。提供 `api_key/api_secret` 時請使用 `USER_INFO`。其他有效值為 `URL` 與 `SASL_INHERIT`。預設值通常與底層用戶端一致。
 
 下列組態選項僅在使用 `confluent` 註冊服務時才需要。
 
@@ -228,7 +228,7 @@ kafka-pipeline:
     - opensearch:
         hosts: ["https://localhost:9200"]
         username: admin
-        password: admin_password
+        password: "<custom-admin-password>"
         index: kafka-data
 ```
 {% include copy.html %}
@@ -252,7 +252,7 @@ kafka-pipeline:
     - opensearch:
         hosts: ["https://localhost:9200"]
         username: admin
-        password: admin_password
+        password: "<custom-admin-password>"
         index: secure-kafka-data
 ```
 {% include copy.html %}
@@ -281,7 +281,7 @@ kafka-pipeline:
     - opensearch:
         hosts: ["https://localhost:9200"]
         username: admin
-        password: admin_password
+        password: "<custom-admin-password>"
         index: authenticated-kafka-data
 ```
 {% include copy.html %}
@@ -326,7 +326,7 @@ msk-pipeline:
 
 ### 搭配結構描述註冊服務的 Confluent Kafka
 
-下列範例會設定搭配結構描述註冊服務的 Confluent Kafka，使用 SASL 與 Confluent 結構描述註冊服務憑證透過 TLS 連線至 Confluent Cloud，解碼酬載，並將其編製索引至 OpenSearch：
+下列範例會設定搭配結構描述註冊服務的 Confluent Kafka，使用 SASL 與 Confluent 結構描述註冊服務認證資訊透過 TLS 連線至 Confluent Cloud，解碼酬載，並將其編製索引至 OpenSearch：
 
 ```yaml
 confluent-pipeline:
@@ -355,7 +355,7 @@ confluent-pipeline:
     - opensearch:
         hosts: ["https://localhost:9200"]
         username: admin
-        password: admin_password
+        password: "<custom-admin-password>"
         index_type: custom
         index: confluent-data
 ```

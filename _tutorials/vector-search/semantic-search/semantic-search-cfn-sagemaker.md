@@ -125,23 +125,27 @@ OpenSearch 預期的輸入格式如下：
 
 ## 步驟 1：對應後端角色
 
-OpenSearch CloudFormation 範本會使用 Lambda 函式，建立具有 AWS Identity and Access Management (IAM) 角色的 AI 連接器。您必須將 IAM 角色對應至 `ml_full_access`，以授予所需的權限。請依照[使用 SageMaker 嵌入模型的語意搜尋教學的步驟 2.2]({{site.url}}{{site.baseurl}}/vector-search/tutorials/semantic-search/semantic-search-sagemaker/#step-22-map-a-backend-role)對應後端角色。
+OpenSearch CloudFormation 範本使用 Lambda 函式，以具有 AWS Identity and Access Management (IAM) 角色的方式建立 AI 連接器。您必須將該 IAM 角色對應到 `ml_full_access`，才能授予必要的權限。請依照[使用 SageMaker 嵌入模型的語意搜尋教學的步驟 2.2]({{site.url}}{{site.baseurl}}/vector-search/tutorials/semantic-search/semantic-search-sagemaker/#step-22-map-a-backend-role)來對應後端角色。
 
-IAM 角色指定於 CloudFormation 範本中的 **Lambda Invoke OpenSearch ML Commons Role Name** 欄位。預設 IAM 角色為 `LambdaInvokeOpenSearchMLCommonsRole`，因此您必須將 `arn:aws:iam::your_aws_account_id:role/LambdaInvokeOpenSearchMLCommonsRole` 後端角色對應至 `ml_full_access`。
+IAM 角色是在 CloudFormation 範本的 **Lambda Invoke OpenSearch ML Commons Role Name** 欄位中指定。預設的 IAM 角色是 `LambdaInvokeOpenSearchMLCommonsRole`，因此您必須將 `arn:aws:iam::your_aws_account_id:role/LambdaInvokeOpenSearchMLCommonsRole` 後端角色對應到 `ml_full_access`。
 
-若需要更廣泛的對應，您可以使用萬用字元授予所有角色 `ml_full_access`：  
+若要進行更廣泛的對應，您可以使用萬用字元將 `ml_full_access` 授予所有角色：  
 
 ```
 arn:aws:iam::your_aws_account_id:role/*
 ```  
 
-由於 `all_access` 包含的權限比 `ml_full_access` 更多，將後端角色對應至 `all_access` 也是可接受的。
+由於 `all_access` 包含的權限比 `ml_full_access` 更多，因此將後端角色對應到 `all_access` 也是可接受的。
+
+如果您的網域存取政策尚未允許此角色，請將該角色新增至網域存取政策。
 
 ## 步驟 2：執行 CloudFormation 範本  
 
-CloudFormation 範本整合可於 [Amazon OpenSearch Service 主控台](https://console.aws.amazon.com/aos/home)中使用。請從左側導覽窗格選取 **Integrations**，如下圖所示。
+CloudFormation 範本整合可在 [Amazon OpenSearch Service 主控台](https://console.aws.amazon.com/aos/home)中使用。從左側導覽窗格選取 **Integrations**，如下圖所示。
 
 ![語意搜尋 CloudFormation 整合]({{site.url}}{{site.baseurl}}/images/vector-search-tutorials/semantic_search_remote_model_Integration_1.png)  
+
+此整合提供兩個範本：一個適用於公有網域，另一個適用於虛擬私有雲 (VPC) 網域。如果您的網域位於 VPC 中，請選擇 VPC 網域範本，並輸入要用來執行範本 Lambda 函式的 **Security Group Ids** 與 **Subnet Ids**。Lambda 函式必須能夠連線至您的網域。
 
 請選擇下列其中一個選項，將模型部署至 Amazon SageMaker。
 
@@ -151,40 +155,44 @@ CloudFormation 範本整合可於 [Amazon OpenSearch Service 主控台](https://
 
 ![將預先訓練的模型部署至 Amazon SageMaker]({{site.url}}{{site.baseurl}}/images/vector-search-tutorials/semantic_search_remote_model_Integration_2.png)
 
-請填寫下列欄位，其餘欄位全部保留預設值：  
+完成下列欄位，其餘欄位維持預設值：  
 
 1. 輸入您的 **Amazon OpenSearch Endpoint**。  
-2. 使用預設的 **SageMaker Configuration** 快速開始，或視需要修改。如需支援的 Amazon SageMaker 執行個體類型，請參閱 [Amazon SageMaker 文件](https://aws.amazon.com/sagemaker/)。  
-3. 將 **SageMaker Endpoint Url** 欄位留空。如果您提供 URL，模型將不會部署至 Amazon SageMaker，也不會建立新的推論端點。  
-4. 將 **Custom Image** 欄位留空。預設映像為 `djl-inference:0.22.1-cpu-full`。如需可用的映像，請參閱 [AWS Deep Learning Containers](https://docs.aws.amazon.com/deep-learning-containers/latest/devguide/deep-learning-containers-images.html)。  
-5. 將 **Custom Model Data Url** 欄位留空。  
-6. **Custom Model Environment** 欄位預設為 `djl://ai.djl.huggingface.pytorch/sentence-transformers/all-MiniLM-L6-v2`。如需支援的模型清單，請參閱[支援的模型](#supported-models)。  
+2. 輸入 **Model Name**。範本會將此名稱用於 SageMaker 模型與端點，以及 OpenSearch 模型。
+3. 使用預設的 **SageMaker Configuration** 以快速開始，或視需要進行修改。如需支援的 Amazon SageMaker 執行個體類型，請參閱 [Amazon SageMaker 文件](https://aws.amazon.com/sagemaker/)。  
+4. 將 **SageMaker Endpoint Url** 欄位留空。若您提供 URL，模型將不會部署至 Amazon SageMaker，也不會建立新的推論端點。  
+5. 將 **Custom Image** 欄位留空。預設映像為 `djl-inference:0.22.1-cpu-full`。如需可用的映像，請參閱 [AWS Deep Learning Containers](https://docs.aws.amazon.com/deep-learning-containers/latest/devguide/deep-learning-containers-images.html)。  
+6. 將 **Custom Model Data Url** 欄位留空。  
+7. **Custom Model Environment** 欄位預設為 `djl://ai.djl.huggingface.pytorch/sentence-transformers/all-MiniLM-L6-v2`。如需支援的模型清單，請參閱[支援的模型](#supported-models)。  
+8. 輸入 **Model output embedding dimension** 與 **Space type of the model**。對於預設的 `all-MiniLM-L6-v2` 模型，維度為 `384`。這些欄位為必要欄位。
 
 ### 選項 2：使用現有的 SageMaker 推論端點  
 
-如果您已有 SageMaker 推論端點，可以使用該端點設定模型，如下圖所示。  
+如果您已經有 SageMaker 推論端點，即可使用該端點來設定模型，如下圖所示。  
 
 ![使用現有的 SageMaker 推論端點]({{site.url}}{{site.baseurl}}/images/vector-search-tutorials/semantic_search_remote_model_Integration_3.png)
 
-填寫下列欄位，其他欄位則保留預設值：  
+填寫下列欄位，其餘欄位維持預設值：  
 
 1. 輸入您的 **Amazon OpenSearch Endpoint**。  
-2. 輸入您的 **SageMaker Endpoint Url**。  
-3. 將 **Custom Image**、**Custom Model Data Url** 和 **Custom Model Environment** 欄位留空。  
+2. 輸入 **Model Name**。範本會使用此名稱作為 OpenSearch 模型的名稱。
+3. 輸入您的 **SageMaker Endpoint Url**。  
+4. 將 **Custom Image**、**Custom Model Data Url** 與 **Custom Model Environment** 欄位留空。  
+5. 針對端點所服務的模型，輸入 **Model output embedding dimension** 與 **Space type of the model**。這些欄位為必要欄位。
 
 ### 輸出
 
-部署後，您可以在 CloudFormation 堆疊的 **Outputs** 中找到 OpenSearch AI 連接器和模型 ID。  
+部署完成後，您可以在 CloudFormation 堆疊的 **Outputs** 中找到 OpenSearch AI 連接器與模型 ID。
 
 如果發生錯誤，請依照下列步驟檢視記錄檔：
 
-1. 開啟 Amazon SageMaker 主控台。
-1. 前往 **CloudWatch Logs** 區段。
-1. 搜尋包含您的 CloudFormation 堆疊名稱（或與其相關聯）的 **Log Groups**。
+1. 開啟 Amazon CloudWatch 主控台。
+1. 選取 **Log groups**。
+1. 搜尋包含您在範本中輸入的模型名稱的記錄群組。範本的 Lambda 函式會寫入 `/aws/lambda/HelperLambdaFunction-<model_name>` 與 `/aws/lambda/ConnectorLambdaFunction-<model_name>` 記錄群組。
 
 ## 支援的模型
 
-[Deep Java Library 模型儲存庫](https://djl.ai/)提供下列 Hugging Face 句子轉換器嵌入模型：
+下列 Hugging Face 句子轉換器嵌入模型可在 [Deep Java Library 模型儲存庫](https://djl.ai/) 取得：
 
 ```
 djl://ai.djl.huggingface.pytorch/sentence-transformers/LaBSE/
@@ -275,3 +283,9 @@ djl://ai.djl.huggingface.pytorch/sentence-transformers/xlm-r-100langs-bert-base-
 djl://ai.djl.huggingface.pytorch/sentence-transformers/xlm-r-bert-base-nli-stsb-mean-tokens/
 djl://ai.djl.huggingface.pytorch/sentence-transformers/xlm-r-distilroberta-base-paraphrase-v1/
 ```
+
+## 相關文件
+
+- [語意搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/semantic-search/)
+- [連線至外部託管的模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/)
+- [第三方 ML 平台的連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)

@@ -1,25 +1,27 @@
 ---
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: "使用 Amazon SageMaker 中的重新排序器對搜尋結果重新排序"
+title: "使用 Amazon SageMaker 中的重新排名模型對搜尋結果重新排名"
 parent: Reranking search results
 nav_order: 115
 redirect_from:
   - /vector-search/tutorials/reranking/reranking-sagemaker/
 ---
 
-# 使用 Amazon SageMaker 中的重新排序器對搜尋結果重新排序
+# 使用 Amazon SageMaker 中的重新排名模型對搜尋結果重新排名
 
-[重新排序管線]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/reranking-search-results/)可以對搜尋結果重新排序，並針對搜尋結果中的每個文件，計算其相對於搜尋查詢的相關性分數。相關性分數由重新排序器模型計算。
+[重新排名管線]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/reranking-search-results/)可以對搜尋結果重新排名，並針對搜尋結果中的每個文件，計算其相對於搜尋查詢的相關性分數。相關性分數由重新排名模型計算。
 
-本教學說明如何在自管 OpenSearch 與 [Amazon OpenSearch Service](https://docs.aws.amazon.com/opensearch-service/) 中對搜尋結果重新排序。本教學使用託管於 Amazon SageMaker 的 [Hugging Face `BAAI/bge-reranker-v2-m3`](https://huggingface.co/BAAI/bge-reranker-v2-m3) 模型。
+本教學說明如何在自管 OpenSearch 與 [Amazon OpenSearch Service](https://docs.aws.amazon.com/opensearch-service/) 中對搜尋結果重新排名。本教學使用託管於 Amazon SageMaker 的 [Hugging Face `BAAI/bge-reranker-v2-m3`](https://huggingface.co/BAAI/bge-reranker-v2-m3) 模型。
 
 請將以 `your_` 前綴開頭的預留位置替換為您自己的值。
 {: .note}
 
 ## 必要條件：將模型部署至 Amazon SageMaker
 
-請使用下列程式碼將模型部署至 Amazon SageMaker。建議使用 GPU 以獲得更好的效能：  
+部署程式碼使用 SageMaker Python SDK 2.x 版。若要安裝，請執行 `pip install "sagemaker<3"`。如果您在 SageMaker 之外執行程式碼，`sagemaker.get_execution_role()` 可能會傳回您目前登入的 IAM 角色，而 SageMaker 無法擔任該角色，導致部署失敗。此時請將 `role` 設定為您的 SageMaker 執行角色的 Amazon Resource Name (ARN)。
+
+請使用下列程式碼將模型部署至 Amazon SageMaker。建議使用 GPU 以獲得更好的效能：
 
 ```python
 import json
@@ -54,9 +56,9 @@ predictor = huggingface_model.deploy(
 ```
 {% include copy.html %}
 
-如需更多資訊，請參閱[如何使用 Amazon SageMaker 部署此模型](https://huggingface.co/BAAI/bge-reranker-v2-m3?sagemaker_deploy=true)。
+如需更多資訊，請參閱 [如何使用 Amazon SageMaker 部署此模型](https://huggingface.co/BAAI/bge-reranker-v2-m3?sagemaker_deploy=true)。
 
-若要執行重新排序測試，請使用下列程式碼：
+若要執行重新排名測試，請使用下列程式碼：
 
 ```python
 result = predictor.predict(data={
@@ -73,25 +75,25 @@ print(json.dumps(result, indent=2))
 ```
 {% include copy.html %}
 
-回應包含依相關性分數排序的重新排序結果：
+回應包含依相關性分數排序的重新排名結果：
 
 ```json
 [
   {
     "index": 2,
-    "score": 0.92879725
+    "score": 0.9289715
   },
   {
     "index": 0,
-    "score": 0.013636836
+    "score": 0.013589217
   },
   {
     "index": 1,
-    "score": 0.000593021
+    "score": 0.0005943261
   },
   {
     "index": 3,
-    "score": 0.00012148176
+    "score": 0.00012147202
   }
 ]
 ```
@@ -109,24 +111,24 @@ print(json.dumps(sorted(result, key=lambda x: x['index']),indent=2))
 [
   {
     "index": 0,
-    "score": 0.013636836
+    "score": 0.013589217
   },
   {
     "index": 1,
-    "score": 0.000593021
+    "score": 0.0005943261
   },
   {
     "index": 2,
-    "score": 0.92879725
+    "score": 0.9289715
   },
   {
     "index": 3,
-    "score": 0.00012148176
+    "score": 0.00012147202
   }
 ]
 ```
 
-請記下模型推論端點；您將在下一步中使用它來建立連接器。您可以使用下列程式碼確認推論端點 URL：
+請記下模型推論端點；您將在下一步使用它來建立連接器。您可以使用下列程式碼確認推論端點 URL：
 
 ```python
 region_name = boto3.Session().region_name
@@ -140,12 +142,12 @@ print(endpoint_url)
 
 若要為模型建立連接器，請傳送下列請求。
 
-如果您使用的是自管 OpenSearch，請提供您的 AWS 憑證：
+如果您使用自行管理的 OpenSearch，請提供您的 AWS 認證資訊：
 
 ```json
 POST /_plugins/_ml/connectors/_create
 {
-  "name": "Sagemakre cross-encoder model",
+  "name": "Sagemaker cross-encoder model",
   "description": "Test connector for Sagemaker cross-encoder model",
   "version": 1,
   "protocol": "aws_sigv4",
@@ -166,63 +168,21 @@ POST /_plugins/_ml/connectors/_create
       "headers": {
         "content-type": "application/json"
       },
-      "pre_process_function": """
-        def query_text = params.query_text;
-        def text_docs = params.text_docs;
-        def textDocsBuilder = new StringBuilder('[');
-        for (int i=0; i<text_docs.length; i++) {
-          textDocsBuilder.append('"');
-          textDocsBuilder.append(text_docs[i]);
-          textDocsBuilder.append('"');
-          if (i<text_docs.length - 1) {
-            textDocsBuilder.append(',');
-          }
-        }
-        textDocsBuilder.append(']');
-        def parameters = '{ "query": "' + query_text + '",  "texts": ' + textDocsBuilder.toString() + ' }';
-        return  '{"parameters": ' + parameters + '}';
-      """,
-      "request_body": """
-        { 
-          "query": "${parameters.query}",
-          "texts": ${parameters.texts}
-        }
-      """,
-      "post_process_function": """
-        if (params.result == null || params.result.length == 0) {
-          throw new IllegalArgumentException("Post process function input is empty.");
-        }
-        def outputs = params.result;
-        def scores = new Double[outputs.length];
-        for (int i=0; i<outputs.length; i++) {
-          def index = new BigDecimal(outputs[i].index.toString()).intValue();
-          scores[index] = outputs[i].score;
-        }
-        def resultBuilder = new StringBuilder('[');
-        for (int i=0; i<scores.length; i++) {
-          resultBuilder.append(' {"name": "similarity", "data_type": "FLOAT32", "shape": [1],');
-          resultBuilder.append('"data": [');
-          resultBuilder.append(scores[i]);
-          resultBuilder.append(']}');
-          if (i<outputs.length - 1) {
-            resultBuilder.append(',');
-          }
-        }
-        resultBuilder.append(']');
-        return resultBuilder.toString();
-      """
+      "pre_process_function": "def query_text = params.query_text;\ndef text_docs = params.text_docs;\ndef textDocsBuilder = new StringBuilder('[');\nfor (int i=0; i<text_docs.length; i++) {\n  textDocsBuilder.append('\"');\n  textDocsBuilder.append(text_docs[i]);\n  textDocsBuilder.append('\"');\n  if (i<text_docs.length - 1) {\n    textDocsBuilder.append(',');\n  }\n}\ntextDocsBuilder.append(']');\ndef parameters = '{ \"query\": \"' + query_text + '\",  \"texts\": ' + textDocsBuilder.toString() + ' }';\nreturn  '{\"parameters\": ' + parameters + '}';",
+      "request_body": "{ \"query\": \"${parameters.query}\", \"texts\": ${parameters.texts} }",
+      "post_process_function": "if (params.result == null || params.result.length == 0) {\n  throw new IllegalArgumentException(\"Post process function input is empty.\");\n}\ndef outputs = params.result;\ndef scores = new Double[outputs.length];\nfor (int i=0; i<outputs.length; i++) {\n  def index = new BigDecimal(outputs[i].index.toString()).intValue();\n  scores[index] = outputs[i].score;\n}\ndef resultBuilder = new StringBuilder('[');\nfor (int i=0; i<scores.length; i++) {\n  resultBuilder.append(' {\"name\": \"similarity\", \"data_type\": \"FLOAT32\", \"shape\": [1],');\n  resultBuilder.append('\"data\": [');\n  resultBuilder.append(scores[i]);\n  resultBuilder.append(']}');\n  if (i<outputs.length - 1) {\n    resultBuilder.append(',');\n  }\n}\nresultBuilder.append(']');\nreturn resultBuilder.toString();"
     }
   ]
 }
 ```
 {% include copy-curl.html %}
 
-如果您使用的是 Amazon OpenSearch Service，您可以提供允許存取 SageMaker 模型推論端點的 AWS Identity and Access Management (IAM) 角色 Amazon Resource Name (ARN)：
+如果您使用 Amazon OpenSearch Service，您可以提供允許存取 SageMaker 模型推論端點的 AWS Identity and Access Management (IAM) 角色 Amazon Resource Name (ARN)：
 
 ```json
 POST /_plugins/_ml/connectors/_create
 {
-  "name": "Sagemakre cross-encoder model",
+  "name": "Sagemaker cross-encoder model",
   "description": "Test connector for Sagemaker cross-encoder model",
   "version": 1,
   "protocol": "aws_sigv4",
@@ -230,7 +190,7 @@ POST /_plugins/_ml/connectors/_create
     "roleArn": "your_role_arn_which_allows_access_to_sagemaker_model_inference_endpoint"
   },
   "parameters": {
-    "region": "your_sagemkaer_model_region_like_us-west-2",
+    "region": "your_sagemaker_model_region_like_us-west-2",
     "service_name": "sagemaker"
   },
   "actions": [
@@ -241,58 +201,16 @@ POST /_plugins/_ml/connectors/_create
       "headers": {
         "content-type": "application/json"
       },
-      "pre_process_function": """
-        def query_text = params.query_text;
-        def text_docs = params.text_docs;
-        def textDocsBuilder = new StringBuilder('[');
-        for (int i=0; i<text_docs.length; i++) {
-          textDocsBuilder.append('"');
-          textDocsBuilder.append(text_docs[i]);
-          textDocsBuilder.append('"');
-          if (i<text_docs.length - 1) {
-            textDocsBuilder.append(',');
-          }
-        }
-        textDocsBuilder.append(']');
-        def parameters = '{ "query": "' + query_text + '",  "texts": ' + textDocsBuilder.toString() + ' }';
-        return  '{"parameters": ' + parameters + '}';
-      """,
-      "request_body": """
-        { 
-          "query": "${parameters.query}",
-          "texts": ${parameters.texts}
-        }
-      """,
-      "post_process_function": """
-        if (params.result == null || params.result.length == 0) {
-          throw new IllegalArgumentException("Post process function input is empty.");
-        }
-        def outputs = params.result;
-        def scores = new Double[outputs.length];
-        for (int i=0; i<outputs.length; i++) {
-          def index = new BigDecimal(outputs[i].index.toString()).intValue();
-          scores[index] = outputs[i].score;
-        }
-        def resultBuilder = new StringBuilder('[');
-        for (int i=0; i<scores.length; i++) {
-          resultBuilder.append(' {"name": "similarity", "data_type": "FLOAT32", "shape": [1],');
-          resultBuilder.append('"data": [');
-          resultBuilder.append(scores[i]);
-          resultBuilder.append(']}');
-          if (i<outputs.length - 1) {
-            resultBuilder.append(',');
-          }
-        }
-        resultBuilder.append(']');
-        return resultBuilder.toString();
-      """
+      "pre_process_function": "def query_text = params.query_text;\ndef text_docs = params.text_docs;\ndef textDocsBuilder = new StringBuilder('[');\nfor (int i=0; i<text_docs.length; i++) {\n  textDocsBuilder.append('\"');\n  textDocsBuilder.append(text_docs[i]);\n  textDocsBuilder.append('\"');\n  if (i<text_docs.length - 1) {\n    textDocsBuilder.append(',');\n  }\n}\ntextDocsBuilder.append(']');\ndef parameters = '{ \"query\": \"' + query_text + '\",  \"texts\": ' + textDocsBuilder.toString() + ' }';\nreturn  '{\"parameters\": ' + parameters + '}';",
+      "request_body": "{ \"query\": \"${parameters.query}\", \"texts\": ${parameters.texts} }",
+      "post_process_function": "if (params.result == null || params.result.length == 0) {\n  throw new IllegalArgumentException(\"Post process function input is empty.\");\n}\ndef outputs = params.result;\ndef scores = new Double[outputs.length];\nfor (int i=0; i<outputs.length; i++) {\n  def index = new BigDecimal(outputs[i].index.toString()).intValue();\n  scores[index] = outputs[i].score;\n}\ndef resultBuilder = new StringBuilder('[');\nfor (int i=0; i<scores.length; i++) {\n  resultBuilder.append(' {\"name\": \"similarity\", \"data_type\": \"FLOAT32\", \"shape\": [1],');\n  resultBuilder.append('\"data\": [');\n  resultBuilder.append(scores[i]);\n  resultBuilder.append(']}');\n  if (i<outputs.length - 1) {\n    resultBuilder.append(',');\n  }\n}\nresultBuilder.append(']');\nreturn resultBuilder.toString();"
     }
   ]
 }
 ```
 {% include copy-curl.html %}
 
-如需更多資訊，請參閱 [AWS 文件](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ml-amazon-connector.html)、[本教學]({{site.url}}{{site.baseurl}}/vector-search/tutorials/semantic-search/semantic-search-sagemaker/)以及 [AIConnectorHelper 筆記本](https://github.com/opensearch-project/ml-commons/blob/2.x/docs/tutorials/aws/AIConnectorHelper.ipynb)。
+如需詳細資訊，請參閱 [AWS 文件](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ml-amazon-connector.html)、[本教學]({{site.url}}{{site.baseurl}}/vector-search/tutorials/semantic-search/semantic-search-sagemaker/) 和 [AIConnectorHelper 筆記本](https://github.com/opensearch-project/ml-commons/blob/main/docs/tutorials/aws/AIConnectorHelper.ipynb)。
 
 使用回應中的連接器 ID 來註冊並部署模型：
 
@@ -327,7 +245,7 @@ POST _plugins/_ml/models/your_model_id/_predict
 ```
 {% include copy-curl.html %}
 
-或者，您可以依照下列方式測試模型：
+或者，您也可以依照下列方式測試模型：
 
 ```json
 POST _plugins/_ml/_predict/text_similarity/your_model_id
@@ -343,32 +261,32 @@ POST _plugins/_ml/_predict/text_similarity/your_model_id
 ```
 {% include copy-curl.html %}
 
-連接器 `pre_process_function` 會將輸入轉換為先前所示參數所需的格式。
+連接器 `pre_process_function` 會將輸入轉換成先前所示參數所需的格式。
 
-預設情況下，模型輸出具有下列格式：
+根據預設，模型輸出具有下列格式：
 
 ```json
 [
   {
     "index": 2,
-    "score": 0.92879725
+    "score": 0.9289715
   },
   {
     "index": 0,
-    "score": 0.013636836
+    "score": 0.013589217
   },
   {
     "index": 1,
-    "score": 0.000593021
+    "score": 0.0005943261
   },
   {
     "index": 3,
-    "score": 0.00012148176
+    "score": 0.00012147202
   }
 ]
 ```
 
-連接器 `post_process_function` 會將模型的輸出轉換為 [重新排序處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/) 可解讀的格式，並依索引排序結果。轉換後的格式如下：
+連接器 `post_process_function` 會將模型的輸出轉換成[重新排名處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/)可解讀的格式，並依索引排序結果。調整後的格式如下：
 
 ```json
 {
@@ -382,7 +300,7 @@ POST _plugins/_ml/_predict/text_similarity/your_model_id
             1
           ],
           "data": [
-            0.013636836
+            0.013589217
           ]
         },
         {
@@ -392,7 +310,7 @@ POST _plugins/_ml/_predict/text_similarity/your_model_id
             1
           ],
           "data": [
-            0.013636836
+            5.943261E-4
           ]
         },
         {
@@ -402,7 +320,7 @@ POST _plugins/_ml/_predict/text_similarity/your_model_id
             1
           ],
           "data": [
-            0.92879725
+            0.9289715
           ]
         },
         {
@@ -412,7 +330,7 @@ POST _plugins/_ml/_predict/text_similarity/your_model_id
             1
           ],
           "data": [
-            0.00012148176
+            1.2147202E-4
           ]
         }
       ],
@@ -422,32 +340,32 @@ POST _plugins/_ml/_predict/text_similarity/your_model_id
 }
 ```
 
-回應包含兩個 `similarity` 物件。對於每個 `similarity` 物件，`data` 陣列包含每份文件相對於查詢的相關性分數。`similarity` 物件會依輸入文件的順序提供——第一個物件對應第一份文件。
+回應包含四個 `similarity` 物件。對於每個 `similarity` 物件，`data` 陣列會包含每份文件相對於查詢的相關性分數。`similarity` 物件會依輸入文件的順序提供——第一個物件對應第一份文件。
 
-## 步驟 2：設定重新排序管線
+## 步驟 2：設定重新排名管線
 
-請依照下列步驟設定重新排序管線。
+請依照下列步驟設定重新排名管線。
 
 ### 步驟 2.1：匯入測試資料
 
-傳送大量請求以匯入測試資料：
+傳送 bulk 請求以匯入測試資料：
 
 ```json
 POST _bulk
-{ "index": { "_index": "my-test-data" } }
+{ "index": { "_index": "my-test-data", "_id": "1" } }
 { "passage_text" : "Carson City is the capital city of the American state of Nevada." }
-{ "index": { "_index": "my-test-data" } }
+{ "index": { "_index": "my-test-data", "_id": "2" } }
 { "passage_text" : "The Commonwealth of the Northern Mariana Islands is a group of islands in the Pacific Ocean. Its capital is Saipan." }
-{ "index": { "_index": "my-test-data" } }
+{ "index": { "_index": "my-test-data", "_id": "3" } }
 { "passage_text" : "Washington, D.C. (also known as simply Washington or D.C., and officially as the District of Columbia) is the capital of the United States. It is a federal district." }
-{ "index": { "_index": "my-test-data" } }
+{ "index": { "_index": "my-test-data", "_id": "4" } }
 { "passage_text" : "Capital punishment (the death penalty) has existed in the United States since beforethe United States was a country. As of 2017, capital punishment is legal in 30 of the 50 states." }
 ```
 {% include copy-curl.html %}
 
-### 步驟 2.2：建立重新排序管線
+### 步驟 2.2：建立重新排名管線
 
-使用 cross-encoder 模型建立重新排序管線：
+使用 cross-encoder 模型建立重新排名管線：
 
 ```json
 PUT /_search/pipeline/rerank_pipeline_sagemaker
@@ -469,14 +387,14 @@ PUT /_search/pipeline/rerank_pipeline_sagemaker
 ```
 {% include copy-curl.html %}
 
-如果您在 `document_fields` 中提供多個欄位名稱，會先串接所有欄位的值，然後再執行重新排序。
+如果您在 `document_fields` 中提供多個欄位名稱，會先串接所有欄位的值，然後再執行重新排名。
 {: .note}
 
-### 步驟 2.3：測試重新排序
+### 步驟 2.3：測試重新排名
 
 若要限制傳回的結果數量，您可以指定 `size` 參數。例如，將 `"size": 2` 設為傳回前兩份文件。
 
-首先，在不使用重新排序管線的情況下測試查詢：
+首先，在不使用重新排名管線的情況下測試查詢：
 
 ```json
 POST my-test-data/_search
@@ -497,7 +415,7 @@ POST my-test-data/_search
 ```
 {% include copy-curl.html %}
 
-回應中的第一份文件是 `Carson City is the capital city of the American state of Nevada`，這是錯誤的：
+回應中的第一份文件是 `Carson City is the capital city of the American state of Nevada`，這是不正確的：
 
 ```json
 {
@@ -514,12 +432,12 @@ POST my-test-data/_search
       "value": 4,
       "relation": "eq"
     },
-    "max_score": 2.5045562,
+    "max_score": 1.1384345,
     "hits": [
       {
         "_index": "my-test-data",
         "_id": "1",
-        "_score": 2.5045562,
+        "_score": 1.1384345,
         "fields": {
           "passage_text": [
             "Carson City is the capital city of the American state of Nevada."
@@ -534,7 +452,7 @@ POST my-test-data/_search
       {
         "_index": "my-test-data",
         "_id": "2",
-        "_score": 0.5807494,
+        "_score": 0.263977,
         "fields": {
           "passage_text": [
             "The Commonwealth of the Northern Mariana Islands is a group of islands in the Pacific Ocean. Its capital is Saipan."
@@ -550,7 +468,7 @@ POST my-test-data/_search
       {
         "_index": "my-test-data",
         "_id": "3",
-        "_score": 0.5261191,
+        "_score": 0.23914504,
         "fields": {
           "passage_text": [
             "Washington, D.C. (also known as simply Washington or D.C., and officially as the District of Columbia) is the capital of the United States. It is a federal district."
@@ -567,7 +485,7 @@ POST my-test-data/_search
       {
         "_index": "my-test-data",
         "_id": "4",
-        "_score": 0.5083029,
+        "_score": 0.23104677,
         "fields": {
           "passage_text": [
             "Capital punishment (the death penalty) has existed in the United States since beforethe United States was a country. As of 2017, capital punishment is legal in 30 of the 50 states."
@@ -585,7 +503,7 @@ POST my-test-data/_search
 }
 ```
 
-接著，使用重新排序管線測試查詢：
+接著，使用重新排名管線測試查詢：
 
 ```json
 POST my-test-data/_search?search_pipeline=rerank_pipeline_sagemaker
@@ -630,12 +548,12 @@ POST my-test-data/_search?search_pipeline=rerank_pipeline_sagemaker
       "value": 4,
       "relation": "eq"
     },
-    "max_score": 0.92879725,
+    "max_score": 0.9289715,
     "hits": [
       {
         "_index": "my-test-data",
         "_id": "3",
-        "_score": 0.92879725,
+        "_score": 0.9289715,
         "fields": {
           "passage_text": [
             "Washington, D.C. (also known as simply Washington or D.C., and officially as the District of Columbia) is the capital of the United States. It is a federal district."
@@ -652,7 +570,7 @@ POST my-test-data/_search?search_pipeline=rerank_pipeline_sagemaker
       {
         "_index": "my-test-data",
         "_id": "1",
-        "_score": 0.013636836,
+        "_score": 0.013589217,
         "fields": {
           "passage_text": [
             "Carson City is the capital city of the American state of Nevada."
@@ -667,7 +585,7 @@ POST my-test-data/_search?search_pipeline=rerank_pipeline_sagemaker
       {
         "_index": "my-test-data",
         "_id": "2",
-        "_score": 0.013636836,
+        "_score": 5.943261E-4,
         "fields": {
           "passage_text": [
             "The Commonwealth of the Northern Mariana Islands is a group of islands in the Pacific Ocean. Its capital is Saipan."
@@ -683,7 +601,7 @@ POST my-test-data/_search?search_pipeline=rerank_pipeline_sagemaker
       {
         "_index": "my-test-data",
         "_id": "4",
-        "_score": 0.00012148176,
+        "_score": 1.2147202E-4,
         "fields": {
           "passage_text": [
             "Capital punishment (the death penalty) has existed in the United States since beforethe United States was a country. As of 2017, capital punishment is legal in 30 of the 50 states."
@@ -704,7 +622,7 @@ POST my-test-data/_search?search_pipeline=rerank_pipeline_sagemaker
 }
 ```
 
-若要避免將查詢寫兩次，請使用 `query_text_path` 而非 `query_text`，如下所示：
+若要避免重複撰寫查詢，請改用 `query_text_path` 而非 `query_text`，如下所示：
 
 ```json
 POST my-test-data/_search?search_pipeline=rerank_pipeline_sagemaker
@@ -731,3 +649,9 @@ POST my-test-data/_search?search_pipeline=rerank_pipeline_sagemaker
 }
 ```
 {% include copy-curl.html %}
+
+## 相關文件
+
+- [重新排名搜尋結果]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/reranking-search-results/)
+- [重新排名處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/)
+- [第三方機器學習平台的連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)

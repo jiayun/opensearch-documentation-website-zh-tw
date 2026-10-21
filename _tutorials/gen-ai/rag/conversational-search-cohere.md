@@ -43,13 +43,12 @@ POST _bulk
 
 ## 步驟 1：建立連接器並註冊模型
 
-對話式搜尋僅支援 [OpenAI](https://github.com/opensearch-project/ml-commons/blob/2.x/docs/remote_inference_blueprints/open_ai_connector_chat_blueprint.md) 
-與 [Amazon Bedrock Claude](https://github.com/opensearch-project/ml-commons/blob/2.x/docs/remote_inference_blueprints/bedrock_connector_anthropic_claude_blueprint.md) 的輸入／輸出樣式。
+RAG 處理器會依據搜尋請求中 `llm_model` 參數的前置字串，格式化模型輸入並讀取模型輸出。如需詳細資訊，請參閱[步驟 6：使用管線進行 RAG]({{site.url}}{{site.baseurl}}/vector-search/ai-search/conversational-search/#step-6-use-the-pipeline-for-rag)。
 {: .important}
 
-本教學依循 Amazon Bedrock Claude 模型的輸入／輸出樣式，方式如下：
-- 將 Cohere Command 的 `message` 輸入參數對應到 `inputs` 參數，以符合 Cohere Claude 模型的輸入樣式。
-- 使用後處理函式，將 Cohere Command 模型的輸出轉換為 Claude 模型的輸出樣式。
+本教學採用 [Amazon Bedrock Claude](https://github.com/opensearch-project/ml-commons/blob/2.x/docs/remote_inference_blueprints/bedrock_connector_anthropic_claude_blueprint.md) 的模型輸入/輸出風格（`bedrock/` 前置字串），做法如下：
+- 將 Cohere Command 的 `message` 輸入參數對應至 `inputs` 參數，以符合 Claude 模型的輸入風格。
+- 使用後處理函式，將 Cohere Command 模型的輸出轉換為 Claude 模型的輸出風格。
 
 為 Cohere Command 模型建立連接器：
 
@@ -64,7 +63,7 @@ POST _plugins/_ml/connectors/_create
         "cohere_key": "your_cohere_api_key"
     },
     "parameters": {
-        "model": "command"
+        "model": "command-a-03-2025"
     },
     "actions": [
         {
@@ -90,7 +89,7 @@ POST _plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-請記下連接器 ID；您將使用它來註冊模型。
+請記下連接器 ID；您將用它來註冊模型。
 
 註冊 Cohere Command 模型：
 
@@ -196,7 +195,7 @@ GET /qa_demo/_search?search_pipeline=my-conversation-search-pipeline-cohere
 ```
 {% include copy-curl.html %}
 
-回應中包含模型的答案：
+回應包含模型的答案：
 
 ```json
 {
@@ -213,12 +212,12 @@ GET /qa_demo/_search?search_pipeline=my-conversation-search-pipeline-cohere
       "value": 6,
       "relation": "eq"
     },
-    "max_score": 9.042081,
+    "max_score": 4.110037,
     "hits": [
       {
         "_index": "qa_demo",
         "_id": "2",
-        "_score": 9.042081,
+        "_score": 4.110037,
         "_source": {
           "text": """Chart and table of population level and growth rate for the New York City metro area from 1950 to 2023. United Nations population projections are also included through the year 2035.\nThe current metro area population of New York City in 2023 is 18,937,000, a 0.37% increase from 2022.\nThe metro area population of New York City in 2022 was 18,867,000, a 0.23% increase from 2021.\nThe metro area population of New York City in 2021 was 18,823,000, a 0.1% increase from 2020.\nThe metro area population of New York City in 2020 was 18,804,000, a 0.01% decline from 2019."""
         }
@@ -232,3 +231,10 @@ GET /qa_demo/_search?search_pipeline=my-conversation-search-pipeline-cohere
   }
 }
 ```
+
+## 相關文件
+
+- [使用 RAG 進行對話式搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/conversational-search/)
+- [檢索增強生成處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rag-processor/)
+- [第三方機器學習平台的連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)
+- [記憶 API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/memory-apis/)

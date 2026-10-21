@@ -1,7 +1,7 @@
 ---
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: "使用 Amazon Bedrock 模型重新排序搜尋結果"
+title: "使用 Amazon Bedrock 模型重新排名搜尋結果"
 parent: Reranking search results
 nav_order: 100
 redirect_from:
@@ -9,18 +9,18 @@ redirect_from:
   - /vector-search/tutorials/reranking/reranking-bedrock/
 ---
 
-# 使用 Amazon Bedrock 模型重新排序搜尋結果
+# 使用 Amazon Bedrock 模型重新排名搜尋結果
 
-[重新排序管線]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/reranking-search-results/)可以重新排序搜尋結果，為搜尋結果中的每份文件提供相對於搜尋查詢的相關性分數。相關性分數由交叉編碼器模型計算。
+[重新排名管線]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/reranking-search-results/)可以重新排名搜尋結果，為搜尋結果中的每份文件提供相對於搜尋查詢的相關性分數。相關性分數由交叉編碼器模型計算。
 
-本教學說明如何使用 [Amazon Bedrock Rerank API](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent-runtime_Rerank.html)，以託管於 Amazon Bedrock 的模型重新排序搜尋結果。
+本教學說明如何使用 [Amazon Bedrock Rerank API](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent-runtime_Rerank.html)，以託管於 Amazon Bedrock 的模型重新排名搜尋結果。
 
 請將開頭為前置字元 `your_` 的預留位置取代為您自己的值。
 {: .note}
 
 ## 先決條件：在 Amazon Bedrock 上測試模型
 
-使用模型之前，請先在 Amazon Bedrock 上進行測試。如需支援的重新排序器模型，請參閱 [Amazon Bedrock 中重新排序的支援區域與模型](https://docs.aws.amazon.com/bedrock/latest/userguide/rerank-supported.html)。如需模型 ID，請參閱 [Amazon Bedrock 中支援的基礎模型](https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html)。若要執行重新排序測試，請使用下列程式碼：
+使用模型之前，請先在 Amazon Bedrock 上進行測試。如需支援的重新排名模型，請參閱 [Amazon Bedrock 中重新排名的支援區域與模型](https://docs.aws.amazon.com/bedrock/latest/userguide/rerank-supported.html)。如需模型 ID，請參閱 [Amazon Bedrock 中支援的基礎模型](https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html)。若要執行重新排名測試，請使用下列程式碼：
 
 ```python
 import json
@@ -92,7 +92,7 @@ print(json.dumps(results, indent=2))
 ```
 {% include copy.html %}
 
-重新排序後的結果會依最高分數排序：
+重新排名後的結果會依最高分數排序：
 
 ```json
 [
@@ -150,9 +150,9 @@ print(json.dumps(sorted(results, key=lambda x: x['index']),indent=2))
 
 ### 步驟 1.1：為模型建立連接器
 
-首先，為模型建立連接器。
+首先，為模型建立連接器。連接器所使用的 AWS 身分必須獲准對所有資源（`"Resource": "*"`）執行 `bedrock:Rerank` 動作，並對重新排名模型（例如 `arn:aws:bedrock:us-west-2::foundation-model/amazon.rerank-v1:0`）執行 `bedrock:InvokeModel` 動作。`bedrock:Rerank` 動作無法限定於特定模型。如需範例政策，請參閱 [Amazon Bedrock 中重新排名的權限](https://docs.aws.amazon.com/bedrock/latest/userguide/rerank-prereq.html)。
 
-如果您使用自我管理的 OpenSearch，請提供您的 AWS 憑證：
+如果您使用的是自行管理的 OpenSearch，請提供您的 AWS 認證資訊：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -204,7 +204,7 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-如果您使用 Amazon OpenSearch Service，則可以提供允許存取 Amazon Bedrock 的 AWS Identity and Access Management (IAM) 角色 Amazon Resource Name (ARN)。如需詳細資訊，請參閱 [AWS 文件](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ml-amazon-connector.html)。使用下列請求建立連接器：
+如果您使用的是 Amazon OpenSearch Service，您可以提供允許存取 Amazon Bedrock 的 AWS Identity and Access Management (IAM) 角色 Amazon Resource Name (ARN)。如需詳細資訊，請參閱 [AWS 文件](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ml-amazon-connector.html)。使用下列請求建立連接器：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -289,7 +289,7 @@ POST _plugins/_ml/_predict/text_similarity/your_model_id
 ```
 {% include copy-curl.html %}
 
-或者，您也可以使用下列查詢來測試模型。此查詢會略過 `pre_process_function`，直接呼叫 Rerank API：
+或者，您也可以使用下列查詢來測試模型。此查詢會略過 `pre_process_function`，並直接呼叫 Rerank API：
 
 ```json
 POST _plugins/_ml/models/your_model_id/_predict
@@ -354,26 +354,26 @@ POST _plugins/_ml/models/your_model_id/_predict
 [
   {
     "index": 2,
-    "relevanceScore": 0.7711548724998493
+    "relevanceScore": 0.7711548805236816
   },
   {
     "index": 0,
-    "relevanceScore": 0.0025114635138098534
+    "relevanceScore": 0.0025114635936915874
   },
   {
     "index": 1,
-    "relevanceScore": 2.4876490010363496e-05
+    "relevanceScore": 2.4876489987946115e-05
   },
   {
     "index": 3,
-    "relevanceScore": 6.339210403977635e-06
+    "relevanceScore": 6.339210358419223e-06
   }
 ]
 ```
 
-連接器 `post_process_function` 會將模型的輸出轉換為 [Reranker 處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/) 可以解讀的格式，並依索引排序結果。
+連接器 `post_process_function` 會將模型的輸出轉換為 [Reranker 處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/) 可以解讀的格式，並依索引排列結果。
 
-回應包含四個 `similarity` 輸出。對於每個 `similarity` 輸出，`data` 陣列包含每份文件相對於查詢的相關性分數。`similarity` 輸出會依照輸入文件的順序提供；第一個相似度結果對應第一份文件：
+回應包含四個 `similarity` 輸出。對於每個 `similarity` 輸出，`data` 陣列會針對每份文件與查詢的相關性提供分數。`similarity` 輸出會依照輸入文件的順序提供；第一個相似度結果對應第一份文件：
 
 ```json
 {
@@ -387,7 +387,7 @@ POST _plugins/_ml/models/your_model_id/_predict
             1
           ],
           "data": [
-            0.0025114636
+            0.0025114635936915874
           ]
         },
         {
@@ -397,7 +397,7 @@ POST _plugins/_ml/models/your_model_id/_predict
             1
           ],
           "data": [
-            2.487649e-05
+            2.4876489987946115E-5
           ]
         },
         {
@@ -407,7 +407,7 @@ POST _plugins/_ml/models/your_model_id/_predict
             1
           ],
           "data": [
-            0.7711549
+            0.7711548805236816
           ]
         },
         {
@@ -417,7 +417,7 @@ POST _plugins/_ml/models/your_model_id/_predict
             1
           ],
           "data": [
-            6.3392104e-06
+            6.339210358419223E-6
           ]
         }
       ],
@@ -427,9 +427,9 @@ POST _plugins/_ml/models/your_model_id/_predict
 }
 ```
 
-## 步驟 2：建立重新排序管線
+## 步驟 2：建立重新排名管線
 
-若要建立重新排序管線，請依照下列步驟操作。
+若要建立重新排名管線，請依照下列步驟操作。
 
 ### 步驟 2.1：匯入測試資料
 
@@ -448,9 +448,9 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-### 步驟 2.2：建立重新排序管線
+### 步驟 2.2：建立重新排名管線
 
-使用 Amazon Bedrock 重新排序模型建立重新排序管線：
+使用 Amazon Bedrock 重新排名模型建立重新排名管線：
 
 ```json
 PUT /_search/pipeline/rerank_pipeline_bedrock
@@ -472,12 +472,12 @@ PUT /_search/pipeline/rerank_pipeline_bedrock
 ```
 {% include copy-curl.html %}
 
-如果您在 `document_fields` 中提供多個欄位名稱，所有欄位的值會先串連，然後再執行重新排序。
+如果您在 `document_fields` 中提供多個欄位名稱，所有欄位的值會先串連，然後再執行重新排名。
 {: .note}
 
-### 步驟 2.3：測試重新排序
+### 步驟 2.3：測試重新排名
 
-首先，測試不使用重新排序管線的查詢：
+首先，在不使用重新排名管線的情況下測試查詢：
 
 ```json
 POST my-test-data/_search
@@ -498,7 +498,7 @@ POST my-test-data/_search
 ```
 {% include copy-curl.html %}
 
-回應中的第一份文件是 `Carson City is the capital city of the American state of Nevada`，這是不正確的：
+回應中的第一份文件是 `Carson City is the capital city of the American state of Nevada`，這是錯誤的：
 
 ```json
 {
@@ -515,12 +515,12 @@ POST my-test-data/_search
       "value": 4,
       "relation": "eq"
     },
-    "max_score": 2.5045562,
+    "max_score": 1.1384345,
     "hits": [
       {
         "_index": "my-test-data",
         "_id": "1",
-        "_score": 2.5045562,
+        "_score": 1.1384345,
         "fields": {
           "passage_text": [
             "Carson City is the capital city of the American state of Nevada."
@@ -535,7 +535,7 @@ POST my-test-data/_search
       {
         "_index": "my-test-data",
         "_id": "2",
-        "_score": 0.5807494,
+        "_score": 0.263977,
         "fields": {
           "passage_text": [
             "The Commonwealth of the Northern Mariana Islands is a group of islands in the Pacific Ocean. Its capital is Saipan."
@@ -551,7 +551,7 @@ POST my-test-data/_search
       {
         "_index": "my-test-data",
         "_id": "3",
-        "_score": 0.5261191,
+        "_score": 0.23914504,
         "fields": {
           "passage_text": [
             "Washington, D.C. (also known as simply Washington or D.C., and officially as the District of Columbia) is the capital of the United States. It is a federal district."
@@ -568,7 +568,7 @@ POST my-test-data/_search
       {
         "_index": "my-test-data",
         "_id": "4",
-        "_score": 0.5083029,
+        "_score": 0.23104677,
         "fields": {
           "passage_text": [
             "Capital punishment (the death penalty) has existed in the United States since beforethe United States was a country. As of 2017, capital punishment is legal in 30 of the 50 states."
@@ -586,7 +586,7 @@ POST my-test-data/_search
 }
 ```
 
-接著，測試使用重新排序管線的查詢：
+接著，使用重新排名管線測試查詢：
 
 ```json
 POST my-test-data/_search?search_pipeline=rerank_pipeline_bedrock
@@ -668,7 +668,7 @@ POST my-test-data/_search?search_pipeline=rerank_pipeline_bedrock
       {
         "_index": "my-test-data",
         "_id": "2",
-        "_score": 02.487649e-05,
+        "_score": 2.487649e-05,
         "fields": {
           "passage_text": [
             "The Commonwealth of the Northern Mariana Islands is a group of islands in the Pacific Ocean. Its capital is Saipan."
@@ -705,7 +705,7 @@ POST my-test-data/_search?search_pipeline=rerank_pipeline_bedrock
 }
 ```
 
-您可以指定 `query_text_path` 而非 `query_text`，藉此重複使用相同的查詢：
+您可以指定 `query_text_path` 而非 `query_text` 來重複使用相同的查詢：
 
 ```json
 POST my-test-data/_search?search_pipeline=rerank_pipeline_bedrock
@@ -733,3 +733,8 @@ POST my-test-data/_search?search_pipeline=rerank_pipeline_bedrock
 ```
 {% include copy-curl.html %}
 
+## 相關文件
+
+- [重新排名搜尋結果]({{site.url}}{{site.baseurl}}/search-plugins/search-relevance/reranking-search-results/)
+- [Rerank 處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/rerank-processor/)
+- [第三方機器學習平台的連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)

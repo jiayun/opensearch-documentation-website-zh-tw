@@ -28,7 +28,7 @@ grand_parent: Agents and tools
 
 ## 步驟 1：註冊執行 DataDistributionTool 的流程代理程式
 
-流程代理程式會依序執行一系列工具，並傳回最後一個工具的輸出。若要建立流程代理程式，請傳送下列註冊代理程式請求：
+流程代理程式會依序執行一連串工具，並傳回最後一個工具的輸出。若要建立流程代理程式，請傳送下列註冊代理程式請求：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -36,9 +36,6 @@ POST /_plugins/_ml/agents/_register
   "name": "Test_Agent_For_Data_Distribution_Tool",
   "type": "flow",
   "description": "this is a test agent for the DataDistributionTool",
-  "memory": {
-    "type": "demo"
-  },
   "tools": [
     {
       "type": "DataDistributionTool",
@@ -49,7 +46,7 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-註冊此工具不需要任何參數。此工具會在執行時動態驗證參數。 
+註冊此工具不需要任何參數。此工具會在執行時進行動態參數驗證。
 
 OpenSearch 會回應代理程式 ID：
 
@@ -65,7 +62,7 @@ OpenSearch 會回應代理程式 ID：
 
 ### 比較分析
 
-若要對兩個時段進行比較分布分析，請同時提供基準與選取時間範圍：
+若要對兩個時間範圍執行比較分佈分析，請同時提供基準與選取的時間範圍：
 
 ```json
 POST /_plugins/_ml/agents/OQutgJYBAc35E4_KvI1q/_execute
@@ -85,7 +82,7 @@ POST /_plugins/_ml/agents/OQutgJYBAc35E4_KvI1q/_execute
 ```
 {% include copy-curl.html %}
 
-OpenSearch 會傳回逐一欄位的比較結果，顯示時段之間的分布變化：
+OpenSearch 會傳回逐欄位比較，顯示各時間範圍之間的分佈變化：
 
 ```json
 {
@@ -94,7 +91,7 @@ OpenSearch 會傳回逐一欄位的比較結果，顯示時段之間的分布變
       "output": [
         {
           "name": "response",
-          "result": "{\"comparisonAnalysis\": [{\"field\": \"status\", \"divergence\": 0.2, \"topChanges\": [{\"value\": \"error\", \"selectionPercentage\": 0.3, \"baselinePercentage\": 0.1}, {\"value\": \"success\", \"selectionPercentage\": 0.7, \"baselinePercentage\": 0.9}]}]}"
+          "result": "{\"comparisonAnalysis\":[{\"field\":\"response_time\",\"divergence\":0.6666666666666667,\"topChanges\":[{\"value\":\"120\",\"selectionPercentage\":0.33,\"baselinePercentage\":1.0},{\"value\":\"200\",\"selectionPercentage\":0.67,\"baselinePercentage\":0.0}]},{\"field\":\"host\",\"divergence\":0.33333333333333337,\"topChanges\":[{\"value\":\"web-1\",\"selectionPercentage\":0.67,\"baselinePercentage\":1.0},{\"value\":\"web-2\",\"selectionPercentage\":0.33,\"baselinePercentage\":0.0}]}]}"
         }
       ]
     }
@@ -104,7 +101,7 @@ OpenSearch 會傳回逐一欄位的比較結果，顯示時段之間的分布變
 
 ### 單一資料集分析
 
-若要進行單一資料集分布分析，請僅提供選取時間範圍：
+若要執行單一資料集的分佈分析，只需提供選取的時間範圍：
 
 ```json
 POST /_plugins/_ml/agents/OQutgJYBAc35E4_KvI1q/_execute
@@ -121,7 +118,7 @@ POST /_plugins/_ml/agents/OQutgJYBAc35E4_KvI1q/_execute
 ```
 {% include copy-curl.html %}
 
-OpenSearch 會傳回所分析資料集的分布模式：
+OpenSearch 會傳回所分析資料集的分佈模式：
 
 ```json
 {
@@ -130,7 +127,7 @@ OpenSearch 會傳回所分析資料集的分布模式：
       "output": [
         {
           "name": "response",
-          "result": "{\"singleAnalysis\": [{\"field\": \"status\", \"divergence\": 0.7, \"topChanges\": [{\"value\": \"error\", \"selectionPercentage\": 0.3}, {\"value\": \"success\", \"selectionPercentage\": 0.7}]}]}"
+          "result": "{\"singleAnalysis\":[{\"field\":\"status\",\"divergence\":0.7,\"topChanges\":[{\"value\":\"success\",\"selectionPercentage\":0.7,\"baselinePercentage\":null},{\"value\":\"error\",\"selectionPercentage\":0.3,\"baselinePercentage\":null}]},{\"field\":\"host\",\"divergence\":0.6,\"topChanges\":[{\"value\":\"web-1\",\"selectionPercentage\":0.6,\"baselinePercentage\":null},{\"value\":\"web-2\",\"selectionPercentage\":0.4,\"baselinePercentage\":null}]}]}"
         }
       ]
     }
@@ -180,20 +177,20 @@ POST /_plugins/_ml/agents/OQutgJYBAc35E4_KvI1q/_execute
 
 ## 執行參數
 
-下表列出執行代理程式時可用的工具參數。
+下表列出執行代理程式可用的工具參數。
 
-| 參數 | 類型 | 必要／選用 | 說明 |
+| 參數 | 類型 | 必要/選用 | 說明 |
 |:----------|:-----|:------------------|:------------|
 | `index` | 字串 | 必要 | 包含待分析資料的 OpenSearch 索引名稱。 |
-| `timeField` | 字串 | 必要 | 用於依時間篩選的日期／時間欄位。 |
-| `selectionTimeRangeStart` | 字串 | 必要 | 分析時段的開始時間，採用 UTC 日期字串格式（例如，`2025-01-15 10:00:00`）。 |
-| `selectionTimeRangeEnd` | 字串 | 必要 | 分析時段的結束時間，採用 UTC 日期字串格式（例如，`2025-01-15 11:00:00`）。 |
-| `baselineTimeRangeStart` | 字串 | 選用 | 基準比較時段的開始時間，採用 UTC 日期字串格式（例如，`2025-01-15 10:00:00`）。比較分析模式需要此參數。 |
-| `baselineTimeRangeEnd` | 字串 | 選用 | 基準比較時段的結束時間，採用 UTC 日期字串格式（例如，`2025-01-15 11:00:00`）。比較分析模式需要此參數。 |
+| `timeField` | 字串 | 選用 | 用於依時間篩選的日期/時間欄位。預設為 `@timestamp`。 |
+| `selectionTimeRangeStart` | 字串 | 必要 | 分析期間的開始時間，採用 UTC 日期字串格式（例如 `2025-01-15 10:00:00`）。 |
+| `selectionTimeRangeEnd` | 字串 | 必要 | 分析期間的結束時間，採用 UTC 日期字串格式（例如 `2025-01-15 11:00:00`）。 |
+| `baselineTimeRangeStart` | 字串 | 選用 | 基準比較期間的開始時間，採用 UTC 日期字串格式（例如 `2025-01-15 10:00:00`）。比較分析模式必須提供。 |
+| `baselineTimeRangeEnd` | 字串 | 選用 | 基準比較期間的結束時間，採用 UTC 日期字串格式（例如 `2025-01-15 11:00:00`）。比較分析模式必須提供。 |
 | `size` | 整數 | 選用 | 要分析的文件數量上限。預設為 `1000`。上限為 `10000`。 |
-| `queryType` | 字串 | 選用 | 查詢類型。有效值為 `ppl` 與 `dsl`。預設為 `dsl`。 |
-| `filter` | 陣列 | 選用 | 用於篩選的額外 DSL 查詢條件，以 JSON 字串指定（例如，`["{\"term\": {\"status\": \"error\"}}", "{\"range\": {\"level\": {\"gte\": 3}}}"]`）。 |
-| `dsl` | 字串 | 選用 | 以 JSON 字串表示的完整原始 DSL 查詢。若提供此參數，則優先於 `filter` 參數。 |
+| `queryType` | 字串 | 選用 | 查詢類型。有效值為 `ppl` 和 `dsl`。預設為 `dsl`。 |
+| `filter` | 陣列 | 選用 | 用於篩選的其他 DSL 查詢條件，以 JSON 字串指定（例如 `["{\"term\": {\"status\": \"error\"}}", "{\"range\": {\"level\": {\"gte\": 3}}}"]`）。 |
+| `dsl` | 字串 | 選用 | 以 JSON 字串表示的完整原始 DSL 查詢。若提供此參數，其優先順序高於 `filter` 參數。 |
 | `ppl` | 字串 | 選用 | 不含時間資訊的完整 PPL 陳述式。當 `queryType` 為 `ppl` 時使用。 |
 
 ## 測試工具

@@ -160,7 +160,7 @@ s3-log-pipeline:
          hosts: [ "https://localhost:9200" ]
          # Change to your credentials
          username: "admin"
-         password: "admin"
+         password: "<custom-admin-password>"
          index: s3_logs
 ```
 {% include copy-curl.html %}

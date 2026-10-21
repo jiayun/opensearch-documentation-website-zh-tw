@@ -118,7 +118,7 @@ OpenSearch 為[機器學習（ML）]({{site.url}}{{site.baseurl}}/ml-commons-plu
 靜態收集器作業會擷取所建立的不同類型模型和代理程式的下列指標：
 
 - **模型**：部署類型（遠端、預先訓練或自訂）、服務提供者、演算法、模型名稱和模型類型
-- **代理程式**：LLM 介面、模型部署類型、服務提供者、模型類型、記憶體類型和模型識別碼
+- **代理程式**：LLM 介面、模型部署類型、服務提供者、模型類型、記憶類型和模型識別碼
 
 
 以下是所擷取模型指標的範例：
@@ -130,7 +130,7 @@ OpenSearch 為[機器學習（ML）]({{site.url}}{{site.baseurl}}/ml-commons-plu
 以下是所擷取代理程式指標的範例：
 
 ```
-{_llm_interface=bedrock/converse/claude, model_deployment=remote, is_hidden=false, model_service_provider=bedrock, model_type=llm, memory_type=conversation_index, model=us.anthropic.claude-3-7-sonnet-20250219-v1:0, type=CONVERSATIONAL}
+{_llm_interface=bedrock/converse/claude, model_deployment=remote, is_hidden=false, model_service_provider=bedrock, model_type=llm, memory_type=conversation_index, model=us.anthropic.claude-sonnet-4-6, type=CONVERSATIONAL}
 ```
 
 若要啟用 ML 可觀測性，請在 `opensearch.yml` 中指定下列設定：
