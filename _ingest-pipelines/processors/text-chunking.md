@@ -57,50 +57,32 @@ nav_order: 258
 
 | 參數  | 資料類型 | 必要/選用  | 說明  |
 |:---|:----------|:---|:---|
-| `token_limit`	     | 整數	  | 選用	 | 分塊演算法的詞元上限。有效值為至少 `1` 的整數。預設為 `384`。	                                                  |
-| `tokenizer`	       | 字串	   | 選用	 | [單字斷詞器]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/index/#word-tokenizers)名稱。預設為 `standard`。	 |
-| `overlap_rate`	    | 浮點數     | 選用	 | 詞元演算法中的重疊程度。有效值為介於 `0` 與 `0.5` 之間（含）的浮點數。預設為 `0`。	                                              |
-| `max_chunk_limit`	 | 整數   | 選用	 | 分塊演算法的分塊數量上限。預設為 `100`。若要停用此參數，請將其設為 `-1`。	|
-
-`token_limit` 的預設值計算方式為 `512 (tokens) * 0.75 = 384`，使輸出段落不會超過下游文字嵌入模型的詞元上限限制。對於 [OpenSearch 支援的預先訓練模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/#supported-pretrained-models)，例如 `msmarco-distilbert-base-tas-b` 與 `opensearch-neural-sparse-encoding-v1`，輸入詞元上限為 `512`。`standard` 斷詞器會將文字斷詞為單字。根據 [OpenAI](https://platform.openai.com/docs/introduction)，1 個詞元約等於 0.75 個英文單字。
-{: .note}
-
-您可以將 `overlap_rate` 設為 0--0.5 範圍（含）內的小數百分比值。如 [Amazon Bedrock](https://aws.amazon.com/blogs/aws/knowledge-bases-now-delivers-fully-managed-rag-experience-in-amazon-bedrock/) 所建議，我們建議將此參數設為 0–0.2 以提升準確度。
-{: .note}
-
-`max_chunk_limit` 參數會限制分塊段落的數量。若處理器產生的段落數超過上限，多出的文字會加入最後一個分塊。
-{: .note}
+| `token_limit`	     | 整數	  | 選用	 | 每個區塊中的詞元數量上限。有效值為至少 `1` 的整數。預設為 `384`，其計算方式為 `512 (tokens) * 0.75`，以確保區塊不會超過 [OpenSearch 支援的預先訓練模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/#supported-pretrained-models) 的 512 詞元輸入限制。`standard` 斷詞器會將文字拆分為單字，根據 [OpenAI](https://platform.openai.com/docs/introduction) 的說法，1 個詞元約等於 0.75 個英文字。	 |
+| `tokenizer`	       | 字串	   | 選用	 | [單字斷詞器]({{site.url}}{{site.baseurl}}/analyzers/tokenizers/index/#word-tokenizers) 的名稱。預設為 `standard`。	 |
+| `overlap_rate`	    | 浮點數     | 選用	 | 區塊之間的重疊程度。有效值為介於 `0` 與 `0.5` 之間（含）的浮點數。預設為 `0`。依照 [Amazon Bedrock](https://aws.amazon.com/blogs/aws/knowledge-bases-now-delivers-fully-managed-rag-experience-in-amazon-bedrock/) 的建議，建議使用 0--0.2 的值以提升準確度。	 |
+| `max_chunk_limit`	 | 整數   | 選用	 | 區塊數量上限。如果處理器產生的區塊數超過此限制，多餘的文字會加入最後一個區塊。預設為 `100`。若要停用此參數，請將其設為 `-1`。	|
 
 ### 固定字元長度演算法
 
 下表列出 `fixed_char_length` 演算法的選用參數。
 
-| 參數  | 資料類型 | 必要／選用  | 說明  |
+| 參數  | 資料類型 | 必要/選用  | 說明  |
 |:---|:----------|:---|:---|
-| `char_limit`	     | 整數	  | 選用	 | 分段演算法的字元上限。有效值為至少 `1` 的整數。預設為 `2048`。	                                                  |
-| `overlap_rate`	    | 浮點數     | 選用	 | 詞元演算法中的重疊程度。有效值為介於 `0` 與 `0.5` 之間（含）的浮點數。預設為 `0`。	                                              |
-| `max_chunk_limit`	 | 整數   | 選用	 | 分段演算法的分段上限。預設為 `100`。若要停用此參數，請將其設為 `-1`。	|
+| `char_limit`	     | 整數	  | 選用	 | 每個分塊的最大字元數。有效值為至少 `1` 的整數。預設為 `2048`，其計算方式為 `512 (tokens) * 4 (chars)`，因為 512 個詞元是文字嵌入模型的常見上限。根據 [OpenAI](https://platform.openai.com/docs/concepts#tokens)，1 個詞元大約等於 4 個英文字元。	 |
+| `overlap_rate`	    | 浮點數     | 選用	 | 分塊之間的重疊程度。有效值為介於 `0` 與 `0.5` 之間（含端點）的浮點數。預設為 `0`。如 [Amazon Bedrock](https://aws.amazon.com/blogs/aws/knowledge-bases-now-delivers-fully-managed-rag-experience-in-amazon-bedrock/) 所建議，我們建議使用 0--0.2 的值以提升準確度。	 |
+| `max_chunk_limit`	 | 整數   | 選用	 | 分塊的最大數量。如果處理器產生的分塊數超過此上限，多出來的文字會加入最後一個分塊。預設為 `100`。若要停用此參數，請將其設為 `-1`。	|
 
-`char_limit` 的預設值計算方式為 `512 (tokens) * 4 (chars) = 2048`，因為 512 個詞元是文字嵌入模型的常見上限。根據 [OpenAI](https://platform.openai.com/docs/concepts#tokens)，1 個詞元約等於 4 個英文字元。
-{: .note}
-
-您可以將 `overlap_rate` 設為 0--0.5 範圍（含）內的小數百分比值。如 [Amazon Bedrock](https://aws.amazon.com/blogs/aws/knowledge-bases-now-delivers-fully-managed-rag-experience-in-amazon-bedrock/) 所建議，我們建議將此參數設為 0–0.2 以提升準確度。
-{: .note}
-
-`max_chunk_limit` 參數會限制分段段落的數量。若處理器產生的段落數超過上限，多出的文字會加入最後一個分段。
-{: .note}
+每個詞元 4 個字元的估算不適用於中文、日文或韓文文字，這些文字中 1 個詞元通常只涵蓋 1--2 個字元。例如，一個 2,048 字元的中文分塊，對 `bert-base-multilingual-uncased` 斷詞器而言約含 2,000 個詞元，對 XLM-RoBERTa 斷詞器而言約含 1,200 個詞元。文字嵌入模型會忽略超出其詞元上限的文字且不會回傳錯誤，因此這類分塊的大部分內容不會呈現在其嵌入中。對於中文、日文或韓文文字，請將 `char_limit` 設為大約等於模型的詞元上限（例如，對於詞元上限為 512 的模型，設為 `500`）。
+{: .important}
 
 ### 分隔符演算法
 
 下表列出 `delimiter` 演算法的選用參數。
 
-| 參數  | 資料類型 | 必要／選用  | 說明  |
+| 參數  | 資料類型 | 必要/選用  | 說明  |
 |:---|:---|:---|:---|
-| `delimiter`	| 字串	    | 選用	 | 用於分割文字的字串分隔符。您可以將 `delimiter` 設定為任何字串，例如 `\n`（以換行將文字分割為段落）或 `.`（以句點將文字分割成句子）。預設為 `\n\n`（以兩個換行字元將文字分割為段落）。 |
-| `max_chunk_limit`	 | 整數	   | 選用	 | 分段演算法的分段上限。預設為 `100`。若要停用此參數，請將其設定為 `-1`。	 |
-
-`max_chunk_limit` 參數限制分段段落的數量。如果處理器產生的段落數量超過上限，多出的文字會加入最後一個分段。
-{: .note}
+| `delimiter`	| 字串	    | 選用	 | 用於分割文字的字串分隔符。您可以將 `delimiter` 設為任何字串，例如 `\n`（以換行字元將文字分割為段落）或 `.`（將文字分割為句子）。預設為 `\n\n`（以兩個換行字元將文字分割為段落）。 |
+| `max_chunk_limit`	 | 整數	   | 選用	 | 分段數量上限。若處理器產生的分段數超過此上限，多出的文字會附加到最後一個分段。預設為 `100`。若要停用此參數，請將其設為 `-1`。	 |
 
 ## 使用處理器
 
@@ -227,11 +209,11 @@ PUT _ingest/pipeline/text-chunking-cascade-ingest-pipeline
 ```
 {% include copy-curl.html %}
 
-### 使用級聯處理器的遞迴文字分塊
+### 使用串接處理器進行遞迴文字分塊
 
 若需要更進階的控制，您可以串連兩個以上的處理器，以建立遞迴分塊效果。此策略會將文字逐步解構為更小、更具語意意義的單元。
 
-例如，您可以先將文件分割為段落 (`\n\n`)，再將每個段落分割為句子 (`. `)。最後，您可以使用 `fixed_char_length` 演算法對每個句子進行分塊，以確保最終段落不超過特定長度。這種階層式方法有助於在最終大小限制內盡可能保留語意上下文。
+例如，您可以先將文件分割為段落 (`\n\n`)，再將每個段落分割為句子 (`. `)。最後，您可以使用 `fixed_char_length` 演算法對每個句子進行分塊，以確保最終段落不超過特定長度。這種階層式方法有助於在最終大小限制內盡可能保留語意脈絡。
 
 下列範例設定了一個三階段遞迴分塊管線：
 

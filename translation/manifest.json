@@ -1,5 +1,5 @@
 {
- "baseline_commit": "4a3a535c884008720e0c51664cc0829395c9b6c5",
+ "baseline_commit": "3946a2e52c86e030bcd0c1a4d4e6fa1edb283296",
  "pages": {
   "404.md": {
    "attempts": 1,
@@ -5381,7 +5381,7 @@
    "updated_at": "2026-10-08T03:08:40+00:00"
   },
   "_analyzers/supported-analyzers/dl-model-analyzers.md": {
-   "attempts": 1,
+   "attempts": 2,
    "last_error": null,
    "original_front_matter": {
     "parent": "Analyzers",
@@ -5389,21 +5389,21 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-08T03:08:22+00:00",
-    "family": "agy",
+    "at": "2026-10-22T03:04:34+00:00",
+    "family": "xai:grok",
     "issues": [],
-    "model": "gemini-3.1-pro-high",
-    "prompt_version": "969e9ac2fc469d77",
-    "provider": "agy",
-    "target_sha256": "42fa65e849aed00f6000bd08b63fcd8a3b62b29340c48c4c1755b7e886173890"
+    "model": "grok-4.7-build-fast",
+    "prompt_version": "862d758d2919ce04",
+    "provider": "grok",
+    "target_sha256": "16ee65ed3404059af3ae0cd264f15254d244a6528f77c7af297ac8ced7d92494"
    },
-   "source_sha256": "87f2c7a4611133b1261943cc7fe5e5c2ad96421cf08260498d0ed6340f63fbe3",
+   "source_sha256": "30130b5e3af5d9a8ffffd2bce8e7d33cbc57499e528d9707635246f48dbbe02f",
    "status": "reviewed",
-   "target_sha256": "42fa65e849aed00f6000bd08b63fcd8a3b62b29340c48c4c1755b7e886173890",
-   "translated_source_sha256": "87f2c7a4611133b1261943cc7fe5e5c2ad96421cf08260498d0ed6340f63fbe3",
+   "target_sha256": "16ee65ed3404059af3ae0cd264f15254d244a6528f77c7af297ac8ced7d92494",
+   "translated_source_sha256": "30130b5e3af5d9a8ffffd2bce8e7d33cbc57499e528d9707635246f48dbbe02f",
    "translator": {
-    "at": "2026-10-08T00:19:43+00:00",
-    "prompt_version": "cd85573eb34b49f2",
+    "at": "2026-10-22T03:04:07+00:00",
+    "prompt_version": "862d758d2919ce04",
     "providers": [
      {
       "chunks": [
@@ -5412,10 +5412,59 @@
       "family": "claude",
       "model": "claude-opus-5-5",
       "provider": "claude"
+     },
+     {
+      "family": "ollama",
+      "model": "glm-5.3-flash:cloud",
+      "provider": "ollama-cloud-glm",
+      "upstream_section": 1
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "upstream_section": 3
+     },
+     {
+      "family": "ollama",
+      "model": "glm-5.3-flash:cloud",
+      "provider": "ollama-cloud-glm",
+      "upstream_section": 4
+     },
+     {
+      "family": "ollama",
+      "model": "deepseek-v4.1-flash:cloud",
+      "provider": "ollama-cloud",
+      "upstream_section": 5
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.001"
+      ]
      }
-    ]
+    ],
+    "upstream_patch": {
+     "from": "4a3a535c884008720e0c51664cc0829395c9b6c5",
+     "from_path": "_analyzers/supported-analyzers/dl-model-analyzers.md",
+     "kind": "unchanged_sections_reused",
+     "reused_sections": [
+      0,
+      2,
+      6
+     ],
+     "to": "3946a2e52c86e030bcd0c1a4d4e6fa1edb283296",
+     "translated_sections": [
+      1,
+      3,
+      4,
+      5
+     ]
+    }
    },
-   "updated_at": "2026-10-08T03:08:22+00:00"
+   "updated_at": "2026-10-22T03:04:34+00:00"
   },
   "_analyzers/supported-analyzers/fingerprint.md": {
    "attempts": 1,
@@ -38578,7 +38627,7 @@
    "updated_at": "2026-10-19T08:17:43+00:00"
   },
   "_ingest-pipelines/processors/text-chunking.md": {
-   "attempts": 1,
+   "attempts": 2,
    "last_error": null,
    "original_front_matter": {
     "parent": "Ingest processors",
@@ -38586,34 +38635,21 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-21T03:30:54+00:00",
-    "family": "xai:grok",
-    "issues": [
-     {
-      "id": "front_matter",
-      "problem": "同一概念 text chunking／chunk 譯法不一致：標題與開頭用「文字分段」「段落」，後文與連結改為「文字分塊」「分塊」。分段在詞彙表中專指 Lucene segment，同一頁混用會讓讀者以為是兩種功能。",
-      "severity": "minor",
-      "suggestion": "全文統一：標題「文字分塊」、開頭「`text_chunking` 處理器會將長文件分割成較短的段落」，後續 chunk 皆用「分塊」（Lucene segment 才用「分段」）。連結文字「文字分塊」可維持。"
-     },
-     {
-      "id": "section.009",
-      "problem": "「more than two」譯為「兩個以上」。在 zh-TW「以上」常含本數，會變成「兩個或更多」，與原文「超過兩個」不完全相同。",
-      "severity": "minor",
-      "suggestion": "您可以串接超過兩個處理器，以建立遞迴分塊效果。"
-     }
-    ],
-    "model": "grok-4.7-build-fast",
-    "prompt_version": "d10572ab0e7dc79b",
-    "provider": "grok",
-    "target_sha256": "e507a4be299d6804d6bf7c7598045ef4885eb57d0bb1c3d77e4147cb4facf7e6"
+    "at": "2026-10-22T03:04:16+00:00",
+    "family": "codex:gpt-6-sol",
+    "issues": [],
+    "model": "gpt-6-sol",
+    "prompt_version": "862d758d2919ce04",
+    "provider": "codex-review",
+    "target_sha256": "44b02dbf404de755aaa3f941133dc74dfe8b223b1ab056461b91f985dc55ff51"
    },
-   "source_sha256": "d18fde9f20417a676d4fcafa8f7f740cdda8f122f434661e681ca5b8aab5c51d",
+   "source_sha256": "acb57f7837e5fb13d4e905dd34ff098a0eeaffac89c7ce2bd1a5e1e0dd2c433d",
    "status": "reviewed",
-   "target_sha256": "e507a4be299d6804d6bf7c7598045ef4885eb57d0bb1c3d77e4147cb4facf7e6",
-   "translated_source_sha256": "d18fde9f20417a676d4fcafa8f7f740cdda8f122f434661e681ca5b8aab5c51d",
+   "target_sha256": "44b02dbf404de755aaa3f941133dc74dfe8b223b1ab056461b91f985dc55ff51",
+   "translated_source_sha256": "acb57f7837e5fb13d4e905dd34ff098a0eeaffac89c7ce2bd1a5e1e0dd2c433d",
    "translator": {
-    "at": "2026-10-21T03:29:55+00:00",
-    "prompt_version": "d10572ab0e7dc79b",
+    "at": "2026-10-22T03:04:02+00:00",
+    "prompt_version": "862d758d2919ce04",
     "providers": [
      {
       "chunks": [
@@ -38666,31 +38702,57 @@
       "model": "gpt-6.1-sol",
       "provider": "codex",
       "upstream_section": 10
+     },
+     {
+      "family": "ollama",
+      "model": "glm-5.3-flash:cloud",
+      "provider": "ollama-cloud-glm",
+      "upstream_section": 3
+     },
+     {
+      "family": "ollama",
+      "model": "glm-5.3-flash:cloud",
+      "provider": "ollama-cloud-glm",
+      "upstream_section": 4
+     },
+     {
+      "family": "ollama",
+      "model": "deepseek-v4.1-flash:cloud",
+      "provider": "ollama-cloud",
+      "upstream_section": 5
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.009"
+      ]
      }
     ],
     "upstream_patch": {
-     "from": "390f28e96b3de986e5cd7abcdd79ada0501bc840",
+     "from": "4a3a535c884008720e0c51664cc0829395c9b6c5",
      "from_path": "_ingest-pipelines/processors/text-chunking.md",
      "kind": "unchanged_sections_reused",
      "reused_sections": [
       0,
       1,
       2,
-      3,
-      4,
-      5,
       6,
       7,
       8,
-      9
-     ],
-     "to": "4a3a535c884008720e0c51664cc0829395c9b6c5",
-     "translated_sections": [
+      9,
       10
+     ],
+     "to": "3946a2e52c86e030bcd0c1a4d4e6fa1edb283296",
+     "translated_sections": [
+      3,
+      4,
+      5
      ]
     }
    },
-   "updated_at": "2026-10-21T03:30:54+00:00"
+   "updated_at": "2026-10-22T03:04:16+00:00"
   },
   "_ingest-pipelines/processors/text-embedding.md": {
    "attempts": 2,
@@ -103651,21 +103713,28 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-09T05:45:31+00:00",
-    "family": "agy",
-    "issues": [],
-    "model": "gemini-3.1-pro-high",
-    "prompt_version": "0343516bacbffe7a",
-    "provider": "agy",
-    "target_sha256": "1cdd784fbb1f270afc1520c2fbe25489776ab2da35cb36c55f231a0c10716eba"
+    "at": "2026-10-22T03:04:06+00:00",
+    "family": "xai:grok",
+    "issues": [
+     {
+      "id": "section.004",
+      "problem": "「父文件的分數會以其分數的平均值計算」的「其」容易被讀成父文件本身，原文的 their 是指各巢狀文件的分數。",
+      "severity": "minor",
+      "suggestion": "父文件的分數會以這些巢狀文件分數的平均值計算。"
+     }
+    ],
+    "model": "grok-4.7-build-fast",
+    "prompt_version": "862d758d2919ce04",
+    "provider": "grok",
+    "target_sha256": "3afac7e52c8315d61f0a624d3081251fa90e209f940609c1da4529046b3e43f8"
    },
-   "source_sha256": "441c85524252252a539973453819188ebd4c0f650fb291111f3ad20597e0b03e",
+   "source_sha256": "21d6b9a46bf8e85394c08cd29f9af3bfe5cb81665a893bb510c007c97035580a",
    "status": "reviewed",
-   "target_sha256": "1cdd784fbb1f270afc1520c2fbe25489776ab2da35cb36c55f231a0c10716eba",
-   "translated_source_sha256": "441c85524252252a539973453819188ebd4c0f650fb291111f3ad20597e0b03e",
+   "target_sha256": "3afac7e52c8315d61f0a624d3081251fa90e209f940609c1da4529046b3e43f8",
+   "translated_source_sha256": "21d6b9a46bf8e85394c08cd29f9af3bfe5cb81665a893bb510c007c97035580a",
    "translator": {
-    "at": "2026-10-09T05:45:01+00:00",
-    "prompt_version": "0343516bacbffe7a",
+    "at": "2026-10-22T03:03:31+00:00",
+    "prompt_version": "862d758d2919ce04",
     "providers": [
      {
       "chunks": [
@@ -103682,10 +103751,39 @@
       "family": "ollama",
       "model": "glm-5.3-flash:cloud",
       "provider": "ollama-cloud-glm"
+     },
+     {
+      "family": "ollama",
+      "model": "deepseek-v4.1-flash:cloud",
+      "provider": "ollama-cloud",
+      "upstream_section": 5
+     },
+     {
+      "family": "ollama",
+      "model": "deepseek-v4.1-flash:cloud",
+      "provider": "ollama-cloud",
+      "upstream_section": 6
      }
-    ]
+    ],
+    "upstream_patch": {
+     "from": "4a3a535c884008720e0c51664cc0829395c9b6c5",
+     "from_path": "_vector-search/specialized-operations/nested-search-knn.md",
+     "kind": "unchanged_sections_reused",
+     "reused_sections": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "to": "3946a2e52c86e030bcd0c1a4d4e6fa1edb283296",
+     "translated_sections": [
+      5,
+      6
+     ]
+    }
    },
-   "updated_at": "2026-10-09T05:45:31+00:00"
+   "updated_at": "2026-10-22T03:04:06+00:00"
   },
   "_vector-search/specialized-operations/radial-search-knn.md": {
    "attempts": 3,
