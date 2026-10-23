@@ -13,140 +13,163 @@ redirect_from:
 
 # Logstash
 
-Logstash 是即時事件處理引擎。它是 OpenSearch 技術堆疊的一部分，此堆疊包含 OpenSearch、Beats 和 OpenSearch Dashboards。
+Logstash 是一個開源的即時事件處理引擎，可從一或多個來源接收事件、加以處理，然後傳送至一或多個目的地。例如，您可以將網頁伺服器的存取記錄檔傳送至 Logstash，從每行記錄擷取欄位，再將產生的事件傳送至 OpenSearch。
 
-您可以從許多不同來源將事件傳送至 Logstash。Logstash 會處理事件，並將其傳送至一個或多個目的地。例如，您可以將網頁伺服器的存取記錄檔傳送至 Logstash。Logstash 會從每筆記錄擷取有用的資訊，並將其傳送至 OpenSearch 等目的地。
+將事件傳送至 Logstash 可讓事件處理與您的應用程式解耦。您的應用程式只需將事件傳送至 Logstash，不需要知道事件後續的處理方式。
 
-將事件傳送至 Logstash 可讓您將事件處理與應用程式分離。您的應用程式只需要將事件傳送至 Logstash，不需要知道事件後續如何處理。
+Logstash 最初是為了處理記錄資料而設計，但它可以處理任何類型的事件，包括 XML 或 JSON 格式的事件。
 
-開放原始碼社群最初建立 Logstash 是為了處理記錄資料，但現在您可以處理任何類型的事件，包括 XML 或 JSON 格式的事件。
+若要將事件傳送至 OpenSearch，請安裝 [OpenSearch 輸出外掛程式](https://github.com/opensearch-project/logstash-output-opensearch)。若要從 OpenSearch 讀取資料至 Logstash，請安裝 [OpenSearch 輸入外掛程式](https://github.com/opensearch-project/logstash-input-opensearch)。
 
 ## 管線結構
 
-Logstash 的運作方式是由您設定包含三個階段的管線：輸入、篩選和輸出。
+Logstash 管線有三個階段：輸入、篩選與輸出。每個階段會使用一個或多個外掛程式。Logstash 內含超過 200 個外掛程式，您也可以安裝社群提供的外掛程式，或自行撰寫。
 
-每個階段會使用一個或多個外掛程式。Logstash 有超過 200 個內建外掛程式，因此您很可能找到所需的外掛程式。除了內建外掛程式，您也可以使用社群提供的外掛程式，甚至自行撰寫。
+管線組態的結構如下：
 
-管線的結構如下：
-
-```yml
+```ruby
 input {
-  input_plugin => {}
+  <input-plugin> {
+    <setting> => <value>
+  }
 }
 
 filter {
-  filter_plugin => {}
+  <filter-plugin> {
+    <setting> => <value>
+  }
 }
 
 output {
-  output_plugin => {}
+  <output-plugin> {
+    <setting> => <value>
+  }
 }
 ```
 
-其中：
+各階段執行下列工作：
 
-* `input` 同時接收來自多個來源的事件，例如記錄檔。Logstash 支援多種輸入外掛程式，可用於 TCP/UDP、檔案、syslog、Microsoft Windows EventLogs、`stdin`、HTTP 等。您也可以使用稱為 Beats 的開放原始碼輸入工具集合來收集事件。輸入外掛程式會將事件傳送至篩選器。
-* `filter` 以各種方式剖析事件並豐富事件內容。Logstash 有大量篩選器外掛程式，可修改事件並將其傳送至輸出。例如，`grok` 篩選器會將非結構化事件剖析為欄位，而 `mutate` 篩選器會變更欄位。篩選器會依序執行。
-* `output` 將篩選後的事件傳送至一個或多個目的地。Logstash 支援多種輸出外掛程式，可用於 OpenSearch、TCP/UDP、電子郵件、檔案、`stdout`、HTTP、Nagios 等目的地。
+- `input`：從一個或多個來源接收事件，例如記錄檔。輸入外掛程式包括 `tcp`、`udp`、`file`、`syslog`、`stdin` 與 `http`。您也可以使用 Beats 代理程式收集事件並傳送至 Logstash。
+- `filter`：剖析並擴充事件。例如，`grok` 篩選器會將非結構化文字剖析為欄位，而 `mutate` 篩選器會修改欄位。篩選器會依其在組態中出現的順序執行。
+- `output`：將處理後的事件傳送至一個或多個目的地，例如 OpenSearch、檔案、`stdout`、HTTP 端點、TCP 或 UDP 通訊端、電子郵件地址或 Nagios。
 
-輸入和輸出階段都支援編解碼器，可在事件進入或離開管線時處理事件。
-常用的編解碼器包括 `json` 和 `multiline`。`json` 編解碼器會處理 JSON 格式的資料，而 `multiline` 編解碼器會將多行事件合併為單行。
+輸入與輸出可以使用編解碼器，在事件進入或離開管線時進行解碼或編碼。例如，`json` 編解碼器會剖析 JSON 格式的輸入，而 `multiline` 編解碼器會將多行合併為單一事件。
 
-您也可以在管線組態中撰寫條件陳述式，在符合特定條件時執行某些動作。
+若只想將外掛程式套用至符合條件的事件，請使用條件陳述式。如需詳細資訊，請參閱[條件陳述式]({{site.url}}{{site.baseurl}}/tools/logstash/advanced-config/#conditional-statements)。
 
 ## 安裝 Logstash
 
-若要在 OpenSearch 上安裝 Logstash，請先在您的叢集上安裝 Logstash，再安裝 OpenSearch Logstash 外掛程式，如下列步驟所述。
+若要安裝 Logstash，請先安裝 Logstash 發行版，再安裝 OpenSearch 外掛程式。下列指示使用 Logstash 的開放原始碼（OSS）發行版。
 
-### tar 封存檔
+### 先決條件
 
-請確認您已安裝 [Java Development Kit（JDK）](https://www.oracle.com/java/technologies/javase-downloads.html) 8 或 11 版。
+安裝 Logstash 之前，請先檢閱 [Logstash 相容性對照表]({{site.url}}{{site.baseurl}}/tools/#compatibility-matrix-for-logstash)，並選擇與您的 OpenSearch 版本相容的 Logstash 版本。
 
-1. 從 [Logstash 下載頁面](https://www.elastic.co/downloads/logstash)下載 Logstash tar 封存檔。
+### Tarball 壓縮檔
 
-2. 在終端機中前往下載的資料夾，並解壓縮檔案。請確認您的 Logstash 版本和平台與下載的版本和平台相符：
+Logstash 內附 JDK，因此您不需要另外安裝 Java。
 
-     ```bash
-     tar -zxvf logstash-8.8.2-linux-x86_64.tar.gz
-     ```
-     {% include copy.html %}
+若要從 tarball 安裝 Logstash，請依照下列步驟操作：
 
-3. 前往 `logstash-8.8.2` 目錄。
+1. 下載適用於您平台的 Logstash OSS tarball。在此範例中，版本為 8.19.23：
 
-4. 使用下列命令安裝外掛程式：
+    ```bash
+    curl -O https://artifacts.elastic.co/downloads/logstash/logstash-oss-8.19.23-linux-x86_64.tar.gz
+    ```
+    {% include copy.html %}
 
-     ```bash
-     bin/logstash-plugin install logstash-output-opensearch
-     ```
-     {% include copy.html %}
-  
-   您應該會收到下列輸出：
+    其他平台請參閱 [下載 Logstash OSS](https://www.elastic.co/downloads/logstash-oss)。
 
-     ```
-     Validating logstash-output-opensearch
-     Resolving mixin dependencies
-     Updating mixin dependencies logstash-mixin-ecs_compatibility_support
-     Bundler attempted to update logstash-mixin-ecs_compatibility_support but its version stayed the same
-     Installing logstash-output-opensearch
-     Installation successful
-     ```
+1. 解壓縮檔案：
 
-您可以將管線組態新增至 `config` 目錄。Logstash 會將外掛程式的所有資料儲存在 `data` 目錄中。`bin` 目錄包含用於啟動 Logstash 和管理外掛程式的二進位檔。
+    ```bash
+    tar -zxvf logstash-oss-8.19.23-linux-x86_64.tar.gz
+    ```
+    {% include copy.html %}
+
+1. 切換至 Logstash 目錄：
+
+    ```bash
+    cd logstash-8.19.23
+    ```
+    {% include copy.html %}
+
+1. 安裝 OpenSearch 輸出外掛程式：
+
+    ```bash
+    bin/logstash-plugin install logstash-output-opensearch
+    ```
+    {% include copy.html %}
+
+    此命令會傳回下列輸出：
+
+    ```
+    Validating logstash-output-opensearch
+    Resolving mixin dependencies
+    Updating mixin dependencies logstash-mixin-ecs_compatibility_support
+    Bundler attempted to update logstash-mixin-ecs_compatibility_support but its version stayed the same
+    Installing logstash-output-opensearch
+    Installation successful
+    ```
+
+1. 如果您打算從 OpenSearch 讀取資料，請安裝 OpenSearch 輸入外掛程式：
+
+    ```bash
+    bin/logstash-plugin install logstash-input-opensearch
+    ```
+    {% include copy.html %}
+
+Logstash 目錄包含下列子目錄：
+
+- `bin`：包含用於啟動 Logstash 及管理外掛程式的執行檔。
+- `config`：包含 Logstash 的設定。您可以將管線組態檔存放在此目錄中。
+- `data`：包含 Logstash 及其外掛程式在執行之間儲存的資料。
 
 ### Docker
 
-您可以使用自訂 Dockerfile 建置 Logstash 映像檔，或使用標準 Logstash 映像檔。
+Logstash Docker 映像檔並未包含 OpenSearch 外掛程式，因此您需要建置包含這些外掛程式的映像檔。
 
-#### 選項 1：使用自訂 Dockerfile（建議）
+若要在 Docker 中執行 Logstash 與 OpenSearch，請依照下列步驟操作：
 
-1. 建立自訂 Dockerfile，以建置包含必要 OpenSearch 外掛程式的 Logstash 映像檔：
+1. 建立名為 `Dockerfile` 的檔案，內容如下。在此範例中，版本為 8.19.23：
 
     ```
-    FROM logstash:<LATEST_VERSION>
+    FROM docker.elastic.co/logstash/logstash-oss:8.19.23
     RUN bin/logstash-plugin install logstash-output-opensearch
     RUN bin/logstash-plugin install logstash-input-opensearch
     ```
     {% include copy.html %}
 
-1. 建置映像檔：
+1. 在包含 `Dockerfile` 的目錄中建置映像檔：
 
-    ```
+    ```bash
     docker build -t logstash-with-opensearch-plugins .
     ```
     {% include copy.html %}
 
-#### 選項 2：使用標準 Logstash 映像檔
+1. 建立 Docker 網路，讓 Logstash 容器能夠連線至 OpenSearch 容器：
 
-1. 依照 [Logstash 下載頁面](https://www.elastic.co/downloads/logstash)所述，下載最新的 Logstash 映像檔。
-
-    ```
-    docker pull docker.elastic.co/logstash/logstash:8.8.2
+    ```bash
+    docker network create opensearch-net
     ```
     {% include copy.html %}
 
-1. 建立 Docker 網路：
+1. 在此網路上啟動 OpenSearch。請將 `<admin-password>` 替換為 `admin` 使用者的高強度密碼：
 
-    ```
-    docker network create test
-    ```
-    {% include copy.html %}
-
-1. 使用此網路啟動 OpenSearch：
-
-    ```
-    docker run -p 9200:9200 -p 9600:9600 --name opensearch --net test -e "discovery.type=single-node" opensearchproject/opensearch:1.2.0
+    ```bash
+    docker run -d -p 9200:9200 --name opensearch --net opensearch-net -e "discovery.type=single-node" -e "OPENSEARCH_INITIAL_ADMIN_PASSWORD=<admin-password>" opensearchproject/opensearch:latest
     ```
     {% include copy.html %}
 
-1. 啟動 Logstash：
+1. 在相同網路上啟動 Logstash。下列管線會從終端機讀取事件，並將其傳送至 OpenSearch：
 
-    ```
-    docker run -it --rm --name logstash --net test opensearchproject/logstash-oss-with-opensearch-output-plugin:7.16.2 -e 'input { stdin { } } output {
+    ```bash
+    docker run -it --rm --name logstash --net opensearch-net logstash-with-opensearch-plugins -e 'input { stdin { } } output {
       opensearch {
         hosts => ["https://opensearch:9200"]
         index => "opensearch-logstash-docker-%{+YYYY.MM.dd}"
         user => "admin"
-        password => "admin"
+        password => "<admin-password>"
         ssl => true
         ssl_certificate_verification => false
       }
@@ -154,62 +177,89 @@ output {
     ```
     {% include copy.html %}
 
-## 處理終端機中的文字
+    OpenSearch 示範組態使用自簽憑證，因此此範例會停用憑證驗證。在正式環境中，請改為在 `cacert` 設定中提供憑證授權單位檔案。如需詳細資訊，請參閱[設定 OpenSearch 輸出外掛程式]({{site.url}}{{site.baseurl}}/tools/logstash/ship-to-opensearch/#configuring-the-opensearch-output-plugin)。
+    {: .warning }
 
-您可以定義管線，在 `stdin` 接聽事件，並在 `stdout` 輸出事件。`stdin` 和 `stdout` 指的是您執行 Logstash 的終端機。
+1. 當 Logstash 記錄 `Pipeline started` 時，請在終端機中輸入一些文字，例如 `hello world`。然後按下 `Ctrl+C` 以停止 Logstash。
 
-若要在終端機中輸入一些文字，並在輸出中查看事件資料：
+1. 確認 Logstash 已建立索引：
 
-1. 使用 `-e` 引數，將管線組態直接傳遞至 Logstash 二進位檔。在此情況下，`stdin` 是輸入外掛程式，而 `stdout` 是輸出外掛程式：
+    ```bash
+    curl -k -u 'admin:<admin-password>' "https://localhost:9200/_cat/indices/opensearch-logstash-docker-*?v"
+    ```
+    {% include copy.html %}
+
+    回應會列出該索引及其文件數量：
+
+    ```bash
+    health status index                                 uuid                   pri rep docs.count docs.deleted store.size pri.store.size
+    yellow open   opensearch-logstash-docker-2026.10.16 6WKKD-CuTiqV7vIu8puyaA   1   1          1            0      6.9kb          6.9kb
+    ```
+
+## 處理來自終端機的文字
+
+以下各節中的範例使用 tarball 安裝方式，並從 Logstash 目錄執行。`stdin` 輸入會從執行 Logstash 的終端機讀取事件，而 `stdout` 輸出會將事件列印到同一個終端機。
+
+若要處理來自終端機的文字，請依照下列步驟操作：
+
+1. 使用 `-e` 引數將管線組態傳遞給 Logstash。在此管線中，`stdin` 是輸入外掛程式，`stdout` 是輸出外掛程式：
 
     ```bash
     bin/logstash -e "input { stdin { } } output { stdout { } }"
     ```
     {% include copy.html %}
 
-    新增 `—debug` 旗標，以查看更詳細的輸出。
+    若要取得更詳細的記錄檔，請加入 `--log.level=debug` 引數。
 
-2. 在您的終端機中輸入「hello world」。Logstash 會處理文字，並將其輸出回終端機：
+1. 當 Logstash 記錄 `Pipeline started` 時，請在終端機中輸入 `hello world`。Logstash 會處理該文字並列印產生的事件：
 
-    ```yml
+    ```
     {
-     "message" => "hello world",
-     "host" => "a483e711a548.ant.amazon.com",
-     "@timestamp" => 2021-05-30T05:15:56.816Z,
-     "@version" => "1"
+             "event" => {
+            "original" => "hello world"
+        },
+           "message" => "hello world",
+          "@version" => "1",
+        "@timestamp" => 2026-10-16T17:55:22.401258801Z,
+              "host" => {
+            "hostname" => "my-host"
+        }
     }
     ```
 
-    `message` 欄位包含您的原始輸入。當您未在本機執行 Logstash 時，`host` 欄位是 IP 位址。`@timestamp` 顯示事件處理時的日期和時間。Logstash 使用 `@version` 欄位進行內部處理。
+    該事件包含下列欄位：
 
-3. 按下 `Ctrl + C` 以關閉 Logstash。
+    - `message`：您輸入的文字。
+    - `event.original`：原始、未經修改的輸入。
+    - `host.hostname`：執行 Logstash 的主機名稱。
+    - `@timestamp`：Logstash 處理該事件的時間。
+    - `@version`：事件格式版本，供 Logstash 內部使用。
+
+1. 按下 `Ctrl+C` 以停止 Logstash。
 
 ### 疑難排解
 
-如果您已經有正在執行的 Logstash 程序，就會收到錯誤。若要修正此問題：
+Logstash 在執行期間會鎖定其 `data` 目錄。如果另一個 Logstash 程序已在使用該目錄，Logstash 將無法啟動，並記錄以下訊息：
 
-1. 從 `data` 目錄刪除 `.lock` 檔案：
+```
+Logstash could not be started because there is already another instance using the configured data directory.
+```
 
-    ```bash
-    cd data
-    rm -rf .lock
-    ```
-    {% include copy.html %}
+若要解決此問題，請停止另一個 Logstash 程序。若要同時執行兩個 Logstash 程序，請使用 `--path.data` 引數，以不同的資料目錄啟動第二個程序。
 
-2. 重新啟動 Logstash。
+## 處理 JSON 輸入並將其寫入檔案
 
-## 處理 JSON 或 HTTP 輸入並將其輸出至檔案
+若要定義處理 JSON 輸入的管線，請依照下列步驟操作：
 
-若要定義處理 JSON 請求的管線：
+1. 建立名為 `config/pipeline.conf` 的檔案，並使用下列組態。`json` 編解碼器會將每一行輸入解析為 JSON，而 `file` 輸出會將處理後的事件寫入 `output.txt` 檔案：
 
-1. 用您喜歡的任何文字編輯器開啟 `config/pipeline.conf` 檔案。您可以用任何副檔名建立管線組態檔，`.conf` 副檔名是 Logstash 的慣例。新增 `json` 編解碼器以接受 JSON 作為輸入，並新增 `file` 外掛程式，將處理後的事件輸出至 `.txt` 檔案：
-
-    ```json
+    ```ruby
     input {
       stdin {
         codec => json
       }
     }
+
     output {
       file {
         path => "output.txt"
@@ -218,59 +268,57 @@ output {
     ```
     {% include copy.html %}
 
-    若要處理來自檔案的輸入，請將輸入檔案新增至 `events-data` 目錄，然後在輸入時將其路徑傳遞給 `file` 外掛程式：
+    您可以為管線組態檔指定任何名稱與副檔名。依照慣例，管線組態檔會使用 `.conf` 副檔名。
 
-    ```json
-    input {
-      file {
-        path => "events-data/input_data.log"
-      }
-    }
-    ```
-    {% include copy.html %}
-
-2. 啟動 Logstash：
+1. 啟動 Logstash：
 
     ```bash
     bin/logstash -f config/pipeline.conf
     ```
     {% include copy.html %}
 
-    `config/pipeline.conf` 是 `pipeline.conf` 檔案的相對路徑。您也可以使用絕對路徑。
+    `config/pipeline.conf` 路徑是相對於 Logstash 目錄。您也可以提供絕對路徑。
 
-3. 在終端機中新增 JSON 物件：
+1. 在終端機中以單行輸入 JSON 物件：
 
     ```json
-    { "amount": 10, "quantity": 2}
+    { "amount": 10, "quantity": 2 }
     ```
     {% include copy.html %}
 
-    此管線只會處理單行輸入。如果您貼上跨越多行的 JSON，就會收到錯誤。
+    `json` 編解碼器會分別解析每一行。如果您輸入無效的 JSON，例如跨越多行的 JSON 物件，Logstash 將無法解析，並會為該事件加上 `_jsonparsefailure` 標籤。Logstash 不會捨棄解析失敗的事件，因此您可以另行處理這些事件，例如傳送電子郵件或傳送通知至 Slack 頻道。
 
-4. 檢查 JSON 物件中的欄位是否已新增至 `output.txt` 檔案：
+1. 在另一個終端機中，檢視 Logstash 目錄中的 `output.txt` 檔案：
 
     ```bash
     cat output.txt
     ```
     {% include copy.html %}
 
+    該檔案包含該事件，包括解析後的 `amount` 與 `quantity` 欄位：
+
     ```json
-    {
-      "@version": "1",
-      "@timestamp": "2021-05-30T05:52:52.421Z",
-      "host": "a483e711a548.ant.amazon.com",
-      "amount": 10,
-      "quantity": 2
-    }
+    {"host":{"hostname":"my-host"},"@version":"1","amount":10,"quantity":2,"@timestamp":"2026-10-16T17:56:05.320077410Z","event":{"original":"{ \"amount\": 10, \"quantity\": 2 }\n"}}
     ```
 
-    如果您輸入一些無效的 JSON 作為輸入，就會看到 JSON 剖析錯誤。Logstash 不會捨棄無效的 JSON，因為您可能仍想對它做些處理。例如，您可以觸發電子郵件或傳送通知至 Slack 頻道。
+若要從檔案而非終端機讀取事件，請使用 `file` 輸入外掛程式。`file` 輸入需要絕對路徑：
 
-若要定義處理 HTTP 請求的管線：
+```ruby
+input {
+  file {
+    path => "/path/to/logstash/events-data/input_data.log"
+  }
+}
+```
+{% include copy.html %}
 
-1. 使用 `http` 外掛程式，透過 HTTP 將事件傳送至 Logstash：
+## 處理 HTTP 輸入
 
-    ```json
+若要定義透過 HTTP 接收事件的管線，請依照下列步驟操作：
+
+1. 將 `config/pipeline.conf` 的內容替換為以下組態。`http` 輸入會在連接埠 8080 上監聽 HTTP 請求：
+
+    ```ruby
     input {
       http {
         host => "127.0.0.1"
@@ -286,139 +334,119 @@ output {
     ```
     {% include copy.html %}
 
-    如果您未指定任何選項，`http` 外掛程式會繫結至 `localhost` 並在連接埠 8080 上接聽。
+    如果您未指定 `host` 與 `port` 設定，`http` 輸入會在連接埠 8080 上監聽所有網路介面 (`0.0.0.0`)。
 
-2. 啟動 Logstash：
+1. 啟動 Logstash：
 
     ```bash
     bin/logstash -f config/pipeline.conf
     ```
     {% include copy.html %}
 
-3. 使用 Postman 傳送 HTTP 請求。將 `Content-Type` 設為 HTTP 標頭，其值為 `application/json`：
-
-    ```json
-    PUT 127.0.0.1:8080
-    {
-      "amount": 10,
-      "quantity": 2
-    }
-    ```
-    {% include copy.html %}
-
-    或者，您可以使用 `curl` 命令：
+1. 在另一個終端機中，傳送一個包含 JSON 本文的 HTTP 請求：
 
     ```bash
-    curl -XPUT -H "Content-Type: application/json" -d ' {"amount": 7, "quantity": 3 }' http://localhost:8080 (http://localhost:8080/)
+    curl -XPUT -H "Content-Type: application/json" -d '{"amount": 7, "quantity": 3}' http://localhost:8080
     ```
     {% include copy.html %}
 
-    即使我們未將 `json` 外掛程式新增至輸入，管線組態仍可運作，因為 HTTP 外掛程式會根據 `Content-Type` 標頭自動套用適當的編解碼器。
-    如果您指定值為 `applications/json`，Logstash 會將請求本文剖析為 JSON。
+    Logstash 會傳回 `ok`。
 
-    `headers` 欄位包含 Logstash 收到的 HTTP 標頭：
+`http` 輸入會根據 `Content-Type` 標頭選擇編解碼器。由於此請求的 `Content-Type` 為 `application/json`，即使管線未指定 `json` 編解碼器，Logstash 也會將請求本文剖析為 JSON。如果 `Content-Type` 不是 `application/json`，Logstash 會將請求本文以文字形式儲存在 `message` 欄位中。
 
-    ```json
-    {
-      "host": "127.0.0.1",
-      "quantity": "3",
-      "amount": 10,
-      "@timestamp": "2021-05-30T06:05:48.135Z",
-      "headers": {
-        "http_version": "HTTP/1.1",
-        "request_method": "PUT",
-        "http_user_agent": "PostmanRuntime/7.26.8",
-        "connection": "keep-alive",
-        "postman_token": "c6cd29cf-1b37-4420-8db3-9faec66b9e7e",
-        "http_host": "127.0.0.1:8080",
-        "cache_control": "no-cache",
-        "request_path": "/",
-        "content_type": "application/json",
-        "http_accept": "*/*",
-        "content_length": "41",
-        "accept_encoding": "gzip, deflate, br"
-      },
-    "@version": "1"
-    }
-    ```
+Logstash 會將請求的相關資訊加入事件中。以下事件以 `stdout` 輸出所列印的格式顯示這些資訊：
 
+```
+{
+      "@version" => "1",
+    "@timestamp" => 2026-10-16T17:57:09.851542204Z,
+         "event" => {
+        "original" => "{\"amount\": 7, \"quantity\": 3}"
+    },
+          "host" => {
+        "ip" => "127.0.0.1"
+    },
+    "user_agent" => {
+        "original" => "curl/8.7.1"
+    },
+          "http" => {
+        "request" => {
+                 "body" => {
+                "bytes" => "28"
+            },
+            "mime_type" => "application/json"
+        },
+        "version" => "HTTP/1.1",
+         "method" => "PUT"
+    },
+           "url" => {
+          "port" => 8080,
+          "path" => "/",
+        "domain" => "localhost"
+    },
+        "amount" => 7,
+      "quantity" => 3
+}
+```
 
 ## 自動重新載入管線組態
 
-您可以設定 Logstash 偵測管線組態檔或輸入記錄檔的任何變更，並自動重新載入組態。
+Logstash 可以偵測管線組態檔案的變更，並在不重新啟動的情況下重新載入管線。
 
-`stdin` 外掛程式不支援自動重新載入。
+`stdin` 輸入不支援自動重新載入。
 {: .note }
 
-1. 在輸入外掛程式中新增名為 `start_position` 的選項，其值為 `beginning`：
+若要為從檔案讀取的管線設定自動重新載入，請依照下列步驟操作：
 
-    ```json
+1. 在 Logstash 目錄中建立名為 `events-data/input_file.log` 的輸入檔案，並在其中新增一行文字。
+
+1. 將 `config/pipeline.conf` 的內容替換為下列組態。將 `<path-to-logstash>` 替換為您的 Logstash 目錄絕對路徑：
+
+    ```ruby
     input {
       file {
-        path => "/Users/<user>/Desktop/logstash7-12.1/events-data/input_file.log"
+        path => "<path-to-logstash>/events-data/input_file.log"
         start_position => "beginning"
       }
+    }
+
+    output {
+      stdout { }
     }
     ```
     {% include copy.html %}
 
-    Logstash 只會處理新增至輸入檔案的新事件，並忽略已處理過的事件，以避免在重新啟動時重複處理相同的事件。
+    依預設，`file` 輸入只會讀取 Logstash 啟動後新增至檔案的行。將 `start_position` 設為 `beginning`，可讓 Logstash 在第一次處理該檔案時從頭開始讀取。
 
-    Logstash 會將其進度記錄在稱為 `sinceDB` 檔案的檔案中。Logstash 會為其監看的每個檔案建立一個 `sinceDB` 檔案。
-
-2. 開啟 `sinceDB` 檔案，以檢查輸入檔案已處理多少：
-
-    ```bash
-    cd data/plugins/inputs/file/
-    ls -al
-
-    -rw-r--r--  1 user  staff   0 Jun 13 10:50 .sincedb_9e484f2a9e6c0d1bdfe6f23ac107ffc5
-
-    cat .sincedb_9e484f2a9e6c0d1bdfe6f23ac107ffc5
-
-    51575938 1 4 7727
-    ```
-    {% include copy.html %}
-
-    `sinceDB` 檔案中的最後一個數字 (7727) 是上次已知已處理事件的位元組位移。
-
-5. 若要從頭開始處理輸入檔案，請刪除 `sinceDB` 檔案：
-
-    ```bash
-    rm .sincedb_*
-    ```
-    {% include copy.html %}
-
-2. 使用 `—-config.reload.automatic` 引數啟動 Logstash：
+1. 使用 `--config.reload.automatic` 引數啟動 Logstash：
 
     ```bash
     bin/logstash -f config/pipeline.conf --config.reload.automatic
     ```
     {% include copy.html %}
 
-    只有在您於管線組態檔結尾新增一行時，`reload` 選項才會重新載入。
+    Logstash 會為輸入檔案中的每一行印出一個事件。
 
-    範例輸出：
+1. 在輸入檔案中新增一行。Logstash 會偵測到變更，並將新增的行作為事件處理。
 
-    ```json
-    {
-       "message" => "216.243.171.38 - - [20/Sep/2017:19:11:52 +0200] \"GET /products/view/123 HTTP/1.1\" 200 12798 \"https://codingexplained.com/products\" \"Mozilla/5.0 (compatible; YandexBot/3.0; +http://yandex.com/bots)\"",
-       "@version" => "1",
-          "host" => "a483e711a548.ant.amazon.com",
-          "path" => "/Users/kumarjao/Desktop/odfe1/logstash-7.12.1/events-data/input_file.log",
-       "@timestamp" => 2021-06-13T18:03:30.423Z
-    }
-    {
-       "message" => "91.59.108.75 - - [20/Sep/2017:20:11:43 +0200] \"GET /js/main.js HTTP/1.1\" 200 588 \"https://codingexplained.com/products/view/863\" \"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101 Firefox/45.0\"",
-      "@version" => "1",
-          "host" => "a483e711a548.ant.amazon.com",
-          "path" => "/Users/kumarjao/Desktop/odfe1/logstash-7.12.1/events-data/input_file.log",
-    "@timestamp" => 2021-06-13T18:03:30.424Z
-    }
-    ```
+1. 變更 `config/pipeline.conf` 檔案，例如在 `stdout` 輸出中新增 `codec => rubydebug`。Logstash 會偵測到變更、記錄 `Reloading pipeline`，並套用新的組態。
 
-7. 在輸入檔案中新增一行。
-    - Logstash 會立即偵測到變更，並將新行處理為事件。
+為避免重複處理相同的行，`file` 輸入會將其讀取之每個檔案的位置記錄在 `sincedb` 檔案中。Logstash 會將 `sincedb` 檔案儲存在 `data/plugins/inputs/file` 目錄中：
 
-8. 變更 `pipeline.conf` 檔案。
-    - Logstash 會立即偵測到變更，並重新載入修改後的管線。
+```bash
+cat data/plugins/inputs/file/.sincedb_*
+```
+{% include copy.html %}
+
+`sincedb` 檔案中的每一行對應一個輸入檔案，並包含該檔案的 inode 編號、主裝置與次裝置編號、Logstash 已讀取該檔案的位元組位移、最後更新時間，以及檔案路徑：
+
+```
+51956745 0 66305 29 1792174306.332788 /opt/logstash/events-data/input_file.log
+```
+
+若要從頭重新處理輸入檔案，請停止 Logstash、刪除 `sincedb` 檔案，然後重新啟動 Logstash：
+
+```bash
+rm data/plugins/inputs/file/.sincedb_*
+```
+{% include copy.html %}

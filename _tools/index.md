@@ -78,16 +78,18 @@ ecs_compatibility => disabled
 
 ### Logstash 相容性矩陣
 
-| | Logstash OSS 7.0.0 至 7.11.x | Logstash OSS 7.12.x\* | Logstash 7.13.x-7.16.x (不含 OpenSearch output 外掛程式) | Logstash 7.13.x-7.16.x (含 OpenSearch output 外掛程式) | Logstash 8.x+ (含 OpenSearch output 外掛程式) 
-| :---| :--- | :--- | :--- | :--- | :--- |
-| Elasticsearch OSS 7.0.0 至 7.9.x | *是* | *是* | *否* | *是* | *是* |
-| Elasticsearch OSS 7.10.2 | *是* | *是* | *否* | *是* | *是* |
-| ODFE 1.0 至 1.12 | *是* | *是* | *否* | *是* | *是* |
-| ODFE 1.13 | *是* | *是* | *否* | *是* | *是* |
-| OpenSearch 1.x 至 2.x | 透過版本設定可支援 | 透過版本設定可支援 | *否* | *是* | 是，需使用 Elastic Common Schema 設定 |
-| OpenSearch 3.x | *否* | *否* | *否* | *是* | 是，需使用 Elastic Common Schema 設定 |
+| | Logstash OSS 7.0.0 至 7.11.x | Logstash OSS 7.12.x\* | Logstash 7.13.x-7.16.x（不含 OpenSearch output 外掛程式） | Logstash 7.13.x-7.16.x（含 OpenSearch output 外掛程式） | Logstash 8.x 至 9.3.x（含 OpenSearch output 外掛程式） | Logstash 9.4.x 及更新版本（含 OpenSearch output 外掛程式） |
+| :---| :--- | :--- | :--- | :--- | :--- | :--- |
+| Elasticsearch OSS 7.0.0 至 7.9.x | *是* | *是* | *否* | *是* | *是* | *部分支援*\*\* |
+| Elasticsearch OSS 7.10.2 | *是* | *是* | *否* | *是* | *是* | *部分支援*\*\* |
+| ODFE 1.0 至 1.12 | *是* | *是* | *否* | *是* | *是* | *部分支援*\*\* |
+| ODFE 1.13 | *是* | *是* | *否* | *是* | *是* | *部分支援*\*\* |
+| OpenSearch 1.x 至 2.x | 透過 version 設定支援 | 透過 version 設定支援 | *否* | *是* | *是* | *部分支援*\*\* |
+| OpenSearch 3.x | *否* | *否* | *否* | *是* | 是 | 部分支援\*\* |
 
-\* 與 Elasticsearch OSS 相容的最新版本。
+\* 目前與 Elasticsearch OSS 相容的最新版本。
+
+\*\* OpenSearch output 外掛程式可將事件編製索引，但無法安裝其索引範本。如需更多資訊，請參閱外掛程式儲存庫中的 [issue #288](https://github.com/opensearch-project/logstash-output-opensearch/issues/288)。
 
 
 <!-- vale off -->

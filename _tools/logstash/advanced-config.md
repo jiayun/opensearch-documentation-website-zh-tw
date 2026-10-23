@@ -10,55 +10,37 @@ redirect_from:
 
 # 進階組態
 
-本節說明如何為 Logstash 設定進階組態選項，例如參照欄位值與條件陳述式。
+管線組態可以參照每個事件的欄位。使用欄位參照與字串展開，從事件資料建構值，並使用條件陳述式依據事件內容以不同方式處理事件。諸如 `date`、`useragent` 與 `geoip` 等篩選外掛程式會設定事件時間戳記，並為事件新增瀏覽器與位置資訊。
 
 ## 參照欄位值
 
-若要存取欄位，請使用 `- field` 語法。
-您也可以用方括號 `- [field]` 包住欄位名稱，讓您參照欄位這件事更加明確。
+若要參照欄位，請將欄位名稱放在方括號中，例如 `[request]`。若要參照巢狀欄位，請指定欄位的路徑，並將每一層都放在方括號中。
 
+例如，請參考下列事件：
 
-例如，如果您有下列事件：
-
-```bash
+```json
 {
   "request": "/products/view/123",
   "verb": "GET",
   "response": 200,
-  "headers": {
-  "request_path" => "/"
+  "http": {
+    "method": "PUT"
   }
 }
 ```
 
-若要存取 `request` 欄位，請使用 `- request` 或 `- [request]`。
+若要參照 `request` 欄位，請使用 `[request]`。若要參照巢狀的 `method` 欄位，請使用 `[http][method]`。
 
-如果您想參照巢狀欄位，請使用方括號語法並指定欄位的路徑。每一層都包在方括號內：`- [headers][request_path]`。
+若要將欄位值插入字串中，請使用 `sprintf` 格式，此格式也稱為_字串展開 (string expansion)_：加上百分比符號（`%`），並將欄位參照放在大括號中，例如 `%{[request]}`。
 
-您可以使用 `sprintf` 格式來參照欄位。這也稱為字串展開。您需要加上 % 符號，然後將欄位參照包在花括號內。
+`type` 選項通常用於根據所處理事件的類型，有條件地套用篩選器外掛程式。例如，下列管線會在每個事件中加入名為 `type`、值為 `access` 的欄位。`file` 輸出使用字串展開，以 `type` 欄位的值來命名輸出檔案：
 
-使用條件陳述式時，您需要參照欄位值。
-
-例如，您可以讓檔案名稱變成動態，並包含已處理事件的類型 - 也就是 `access` 或 `error`。`type` 選項主要用於根據正在處理的事件類型，以條件方式套用篩選外掛程式。
-
-讓我們新增一個 `type` 選項，並指定值為 `access`。
-
-
-```yml
+```ruby
 input {
-  file {
-    path => ""
-  start_position => "beginning"
-  type => "access"
-  }
   http {
+    host => "127.0.0.1"
+    port => 8080
     type => "access"
-  }
-}
-
-filter {
-  mutate {
-    remove_field => {"host"}
   }
 }
 
@@ -66,184 +48,195 @@ output {
   stdout {
     codec => rubydebug
   }
-file {
-  path => "%{[type]}.log"
+  file {
+    path => "%{[type]}.log"
   }
 }
 ```
+{% include copy.html %}
 
-啟動 Logstash 並傳送 HTTP 請求。已處理的事件會輸出到終端機。該事件現在包含一個名為 `type` 的欄位。
-
-您會看到 Logstash 目錄中建立了 `access.log` 檔案。
+啟動 Logstash，並將 HTTP 請求傳送至連接埠 8080。Logstash 會將包含 `type` 欄位的事件輸出至終端機，並將其寫入 Logstash 目錄中的 `access.log` 檔案。
 
 ## 條件陳述式
 
-您可以使用條件陳述式，根據某些條件控制程式碼執行的流程。
+使用條件陳述式，將 filter 或 output 外掛程式僅套用至符合條件的事件。條件陳述式的語法如下：
 
-語法：
-
-```yml
-if EXPR {
+```ruby
+if <expression> {
   ...
-} else if EXPR {
+} else if <expression> {
   ...
 } else {
   ...
 }
 ```
 
-`EXPR` 是任何可評估為布林值的有效 Logstash 語法。
-例如，您可以檢查事件類型是否設為 `access` 或 `error`，並據此執行某些動作：
+每個 `<expression>` 都必須評估為布林值。例如，下列陳述式會根據 `type` 欄位的值，將事件寫入不同的檔案：
 
-```yml
-if [type] == "access" {
-...
-} else if [type] == "error" {
-file { .. }
-} else {
-...
+```ruby
+output {
+  if [type] == "access" {
+    file { path => "access.log" }
+  } else if [type] == "error" {
+    file { path => "error.log" }
+  } else {
+    stdout { }
+  }
+}
+```
+{% include copy.html %}
+
+若要比較欄位值與數字，請使用比較運算子。如果事件不包含該欄位，比較會失敗，Logstash 會捨棄該事件。若要保留這些事件，請先檢查欄位是否存在：
+
+```ruby
+if [amount] and [amount] >= 1000 {
+  ...
 }
 ```
 
-您可以將欄位值與某個任意值進行比較：
+若要檢查欄位值是否符合規則運算式，請使用 `=~` 運算子：
 
-```yml
-if [headers][content_length] >= 1000 {
-...
+```ruby
+if [some_field] =~ /^[0-9]+$/ {
+  # some_field contains only digits
 }
 ```
 
-您可以使用正規表達式：
+若要檢查欄位值是否存在於陣列中，請使用 `in` 運算子：
 
-```yml
-if [some_field =~ /[0-9]+/ {
-  //some field only contains digits
-}
-```
-
-您可以使用陣列：
-
-```yml
+```ruby
 if [some_field] in ["one", "two", "three"] {
-  some field is either "one", "two", or "three"
+  # some_field is "one", "two", or "three"
 }
 ```
 
-您可以使用布林運算子：
+若要合併多個條件，請使用 `and`、`or` 與 `not` 布林運算子：
 
-```yml
+```ruby
 if [type] == "access" or [type] == "error" {
   ...
 }
 ```
 
-
 ## 格式化日期
 
-您可以使用 `sprintf` 格式或字串展開來格式化日期。
-例如，您可能希望目前的日期成為檔案名稱的一部分。
+若要將事件日期插入字串中，請使用字串展開，並在加號後接上日期格式，例如 `%{+yyyy-MM-dd}`。Logstash 會格式化儲存在事件 `@timestamp` 欄位中的日期。
 
-若要格式化日期，請在花括號中加上加號，後面接著日期格式 - `%{+yyyy-MM-dd}`。
+例如，下列 `file` 輸出會在檔案名稱中包含事件日期：
 
-```yml
+```ruby
 file {
   path => "%{[type]}_%{+yyyy_MM_dd}.log"
 }
 ```
+{% include copy.html %}
 
-這是儲存在 @timestamp 欄位內的日期，也就是事件的時間與日期。
-傳送請求至管線，並確認輸出的檔案名稱包含事件日期。
+您可以在其他輸出中使用相同的模式，例如在 OpenSearch 索引的名稱中。
 
-您也可以將日期嵌入其他輸出，例如嵌入 OpenSearch 中的索引名稱。
+## 設定事件時間戳記
 
-## 傳送時間資訊
+當輸入外掛程式收到事件時，Logstash 會將事件的 `@timestamp` 欄位設為目前時間。在某些情況下，您需要不同的時間戳記。例如，如果您在午夜處理前一天的訂單，您可能希望每個事件的時間戳記是下訂單的時間，而不是 Logstash 收到該事件的時間。
 
-您可以設定事件的時間。
+若要使用事件中的欄位來設定事件時間戳記，請使用 `date` 篩選器。`match` 設定會指定來源欄位及其值的日期格式。在下列範例中，日期儲存在 `timestamp` 欄位中，而格式中的 `Z` 代表時區位移：
 
-Logstash 在輸入外掛程式收到事件時，已經將時間設定在 @timestamp 欄位內。
-在某些情況下，您可能需要使用不同的時間戳記。
-例如，如果您有一間電子商務商店，且您每天午夜處理訂單。當 Logstash 在午夜收到事件時，會將時間戳記設為目前時間。
-但您希望時間是下單的時間，而不是 Logstash 收到事件的時間。
+```ruby
+filter {
+  date {
+    match => [ "timestamp", "dd/MMM/yyyy:HH:mm:ss Z" ]
+  }
+}
+```
+{% include copy.html %}
 
-讓我們將事件時間戳記改為網頁伺服器收到請求的日期。您可以使用名為 `dates` 的篩選外掛程式來完成。
-`dates` 篩選器會從欄位傳遞 `date` 或 `datetime` 值，並將結果用作事件時間戳記。
+例如，如果事件的 `timestamp` 欄位包含 `20/Sep/2017:13:22:22 +0200`，篩選器會將 `@timestamp` 設為 `2017-09-20T11:22:22.000Z`。如果您同時使用上一節中的 `file` 輸出，Logstash 會將此事件寫入 `access_2017_09_20.log` 檔案。
 
-在 `filter` 區塊底部新增 `date` 外掛程式：
+如果篩選器無法剖析日期，便會將 `_dateparsefailure` 標籤新增至事件。
 
-```yml
-date {
-  match => [ "timestamp", "dd/MMM/yyyy:HH:mm:ss Z" ]
+篩選器設定 `@timestamp` 欄位後，您可能不再需要原始的 `timestamp` 欄位。若要移除該欄位，請新增 `remove_field` 選項：
+
+```ruby
+filter {
+  date {
+    match => [ "timestamp", "dd/MMM/yyyy:HH:mm:ss Z" ]
+    remove_field => [ "timestamp" ]
+  }
+}
+```
+{% include copy.html %}
+
+只有在篩選器成功剖析日期時，`remove_field` 選項才會生效。
+
+## 剖析使用者代理 (user agent)
+
+使用者代理 (user agent) 字串可識別傳送請求的瀏覽器、瀏覽器版本、作業系統與裝置。由於使用者代理字串的格式差異很大，`grok` 模式無法可靠地擷取這些資訊。
+
+請使用 `useragent` 篩選器將使用者代理字串剖析為獨立的欄位。`source` 設定用來指定包含使用者代理字串的欄位。預設情況下，篩選器會將剖析後的欄位加入 `user_agent` 欄位。若要將欄位儲存在其他欄位，請在 `target` 設定中指定欄位名稱：
+
+```ruby
+filter {
+  useragent {
+    source => "agent"
+    target => "ua"
+  }
+}
+```
+{% include copy.html %}
+
+例如，若 `agent` 欄位包含 `Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36`，篩選器會將下列 `ua` 物件加入事件：
+
+```
+"ua" => {
+         "os" => {
+           "name" => "Windows",
+        "version" => "10",
+           "full" => "Windows 10"
+    },
+       "name" => "Chrome",
+     "device" => {
+        "name" => "Other"
+    },
+    "version" => "120.0"
 }
 ```
 
-timestamp 是 `grok` 模式建立的欄位。
-`Z` 是時區 (UTC 位移)。
-
-啟動 Logstash 並傳送 HTTP 請求。
-
-您可以看到檔案名稱包含請求的日期，而不是目前的日期。
-
-如果日期傳遞失敗，`filter` 外掛程式會將名為 `_datepassfailure` 的標籤新增至文字欄位。
-
-將 @timestamp 欄位設為新值之後，您其實就不再需要另一個 `timestamp` 欄位了。您可以使用 `remove_field` 選項將其移除。
-
-```yml
-date {
-  match => [ "timestamp", "dd/MMM/yyyy:HH:mm:ss Z" ]
-  remove_field => [ "timestamp" ]
-}
-```
-
-## 剖析使用者代理程式
-
-使用者代理程式是記錄項目最後一部分，由瀏覽器名稱、瀏覽器版本及裝置的作業系統組成。
-
-使用者可能使用各式各樣的瀏覽器、裝置及作業系統。手動處理這件事很困難。
-
-您無法使用 `grok` 模式，因為 `grok` 模式只會比對字串整體的用法，例如無法判斷訪客使用的是哪個瀏覽器。
-
-Logstash 隨附一個內含正規表達式的檔案來達成此目的。這讓擷取使用者代理程式資訊變得非常容易，您可以將這些資訊傳送至 OpenSearch 並執行彙總。
-
-若要這麼做，請新增一個包含欄位名稱的 `source` 選項。在此情況下，就是 `agent` 欄位。
-根據預設，使用者代理程式外掛程式會在事件的頂層新增多個欄位。
-由於這可能會變得相當混亂，我們可以新增一個名為 `target` 的選項，其值為 `ua`，也就是 user agent 的縮寫。這麼做會將這些欄位巢狀置於名為 `ua` 的物件內，讓內容更有條理。
-
-```yml
-useragent {
-  source => "agent"
-  target => "ua"
-}
-```
-
-啟動 Logstash 並傳送 HTTP 請求。
-
-您可以看到一個名為 `ua` 的欄位，其中包含多個索引鍵，包括瀏覽器名稱與版本、作業系統及裝置。
-
-您可以使用 OpenSearch Dashboards 建立圓餅圖，顯示有多少訪客使用行動裝置，以及有多少是桌上型電腦使用者。或者，您也可以取得哪些瀏覽器版本受歡迎的統計資料。
+您可以將這些欄位傳送至 OpenSearch，然後進行彙總。例如，在 OpenSearch Dashboards 中建立圓餅圖，顯示使用各種瀏覽器或作業系統的訪客比例，或建立長條圖顯示最常見的瀏覽器版本。
 
 ## 擴充地理資料
 
-您可以使用 `geoip` 篩選器取得 IP 位址並執行地理查閱，以解析使用者的地理位置。
+使用 `geoip` 篩選器查詢 IP 位址的地理位置。此篩選器使用 MaxMind 的 GeoLite2 資料庫。
 
-`geoip` 篩選外掛程式隨附一個名為 `geolite 2` 的資料庫，該資料庫由名為 MaxMind 的公司提供。`geolite 2` 是熱門的地理資料來源，且可免費取得。
-在 `else` 區塊底部新增 `geoip` 外掛程式。
+`source` 設定指定包含 IP 位址的欄位，`target` 設定指定用來儲存位置資訊的欄位。若要從記錄檔行擷取 IP 位址至欄位，請使用 `grok` 模式，例如 `%{IP:clientip}`。如需詳細資訊，請參閱 [grok]({{site.url}}{{site.baseurl}}/tools/logstash/common-filters/#grok)。除非 `source` 欄位是 `ip` 子欄位（例如 `[client][ip]`），否則必須提供 `target` 設定：
 
-`source` 選項的值是包含 IP 位址的欄位名稱，在此情況下就是 `clientip`。您可以使用 `grok` 模式讓此欄位可供使用。
+```ruby
+filter {
+  geoip {
+    source => "clientip"
+    target => "client"
+  }
+}
+```
+{% include copy.html %}
 
-```yml
-geoip {
-  source => "clientip"
+此篩選器會將包含位置資訊（例如國家、洲、時區與座標）的 `geo` 物件新增至 `target` 欄位：
+
+```
+"client" => {
+    "geo" => {
+          "continent_code" => "NA",
+            "country_name" => "United States",
+        "country_iso_code" => "US",
+                "timezone" => "America/Chicago",
+                "location" => {
+            "lon" => -97.822,
+            "lat" => 37.751
+        }
+    },
+     "ip" => "8.8.8.8"
 }
 ```
 
-啟動 Logstash 並傳送 HTTP 請求。
+若只要新增部分位置欄位，請在 `fields` 設定中列出這些欄位，例如 `fields => ["country_name"]`。
 
-在終端機中，您會看到一個名為 `geoip` 的新欄位，其中包含時區、國家、洲、城市、郵遞區號及經緯度配對等資訊。
+並非所有欄位（例如城市名稱與地區）都適用於每個 IP 位址。如果篩選器找不到 IP 位址的位置（例如因為該位址是私人位址），就會將 `_geoip_lookup_failure` 標籤新增至事件。
 
-例如，如果您只需要國家名稱，請加入一個名為 `fields` 的選項，其中包含您希望 `geoip` 外掛程式傳回的欄位名稱陣列。
-
-有些欄位 (例如城市名稱與地區) 並非總是可用，因為將 IP 位址轉譯為地理位置通常不是那麼準確。如果 `geoip` 外掛程式查閱地理位置失敗，會新增一個名為 `geoip_lookup_failure` 的標籤。
-
-您可以將 `geoip` 外掛程式與 OpenSearch 輸出搭配使用，因為 `geoip` 物件內的 `location` 物件，是在 JSON 中表示地理空間資料的標準格式。這與 OpenSearch 用於其 `geo_point` 資料類型的格式相同。
-
-您可以使用 OpenSearch 強大的地理空間查詢來處理地理資料。
+`location` 物件包含 `lat` 與 `lon` 欄位，這是 OpenSearch `geo_point` 欄位類型接受的格式之一。若要對位置執行地理空間查詢，請在索引中將 `location` 欄位對應為 `geo_point`。如需詳細資訊，請參閱 [Geopoint 欄位類型]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/geo-point/)。

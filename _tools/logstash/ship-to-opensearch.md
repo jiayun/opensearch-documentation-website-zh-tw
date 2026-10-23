@@ -10,34 +10,40 @@ redirect_from:
 
 # 將事件傳送至 OpenSearch
 
-您可以將 Logstash 事件傳送至 OpenSearch 叢集，然後使用 OpenSearch Dashboards 將事件視覺化。
+使用 [OpenSearch 輸出外掛程式](https://github.com/opensearch-project/logstash-output-opensearch)將 Logstash 事件傳送至 OpenSearch 叢集。接著，您可以在 OpenSearch 中搜尋這些事件，並在 OpenSearch Dashboards 中將其視覺化。
 
-請確認您已安裝 [Logstash]({{site.url}}{{site.baseurl}}/tools/logstash/index#install-logstash)、[OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/) 與 [OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/)。
-{: .note }
+開始之前，請安裝 [Logstash 和 OpenSearch 輸出外掛程式]({{site.url}}{{site.baseurl}}/tools/logstash/index/#installing-logstash)、[OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/)，並視需要安裝 [OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/)。
 
-## OpenSearch output 外掛程式
+## 設定 OpenSearch 輸出外掛程式
 
-若要執行 OpenSearch output 外掛程式，請在您的 `pipeline.conf` 檔案中加入以下組態：
+若要將事件傳送至 OpenSearch，請將 `opensearch` 外掛程式新增至管線組態檔案的 `output` 區段。將 `<admin-password>` 替換為 `admin` 使用者的密碼，並將 `<path-to-root-ca>` 替換為簽署 OpenSearch 節點憑證的憑證授權單位檔案路徑：
 
-```yml
+```ruby
 output {
   opensearch {
-    hosts       => "https://localhost:9200"
-    user        => "admin"
-    password    => "admin"
-    index       => "logstash-logs-%{+YYYY.MM.dd}"
-    ssl_certificate_verification => false
+    hosts    => ["https://localhost:9200"]
+    user     => "admin"
+    password => "<admin-password>"
+    index    => "logstash-logs-%{+YYYY.MM.dd}"
+    ssl      => true
+    cacert   => "<path-to-root-ca>"
   }
 }
 ```
+{% include copy.html %}
 
-## 範例逐步解說
+`index` 設定使用 `%{+YYYY.MM.dd}` 日期模式，因此 Logstash 會將每天的事件寫入各自的索引，例如 `logstash-logs-2026.10.16`。日期取自每個事件的 `@timestamp` 欄位。
 
-以下逐步解說示範如何傳送 Logstash 事件的範例。
+如果您正在使用示範安全性組態的叢集上進行測試，而該組態使用自我簽署憑證，您可以將 `cacert` 設定替換為 `ssl_certificate_verification => false`。請勿在正式環境中停用憑證驗證。
+{: .warning }
 
-1.  開啟 `config/pipeline.conf` 檔案並加入以下組態：
+## 範例：將 JSON 事件傳送至 OpenSearch
 
-    ```yml
+若要將您在終端機中輸入的事件傳送至 OpenSearch，請依照下列步驟操作：
+
+1. 在 Logstash 目錄中建立名為 `config/pipeline.conf` 的檔案，並使用下列組態：
+
+    ```ruby
     input {
       stdin {
         codec => json
@@ -46,134 +52,157 @@ output {
 
     output {
       opensearch {
-        hosts       => "https://localhost:9200"
-        user        => "admin"
-        password    => "admin"
-        index       => "logstash-logs-%{+YYYY.MM.dd}"
+        hosts    => ["https://localhost:9200"]
+        user     => "admin"
+        password => "<admin-password>"
+        index    => "logstash-logs-%{+YYYY.MM.dd}"
+        ssl      => true
         ssl_certificate_verification => false
       }
     }
     ```
+{% include copy.html %}
 
-此 Logstash 管線透過終端機接受 JSON 輸入，並將事件傳送至在本機執行的 OpenSearch 叢集。Logstash 會依照 `logstash-logs-%{+YYYY.MM.dd}` 命名慣例將事件寫入索引。
+    此管線會接受來自終端機的 JSON 輸入，並將事件寫入在 `localhost` 上執行的 OpenSearch 叢集中的 `logstash-logs-%{+YYYY.MM.dd}` 索引。
 
-2. 啟動 Logstash：
+1. 啟動 Logstash：
 
     ```bash
-    $ bin/logstash -f config/pipeline.conf --config.reload.automatic
+    bin/logstash -f config/pipeline.conf
     ```
+{% include copy.html %}
 
-    `config/pipeline.conf` 是 `pipeline.conf` 檔案的相對路徑。您也可以使用絕對路徑。
-
-3. 在終端機中加入 JSON 物件：
+1. 當 Logstash 記錄 `Pipeline started` 時，請在終端機中以單行輸入 JSON 物件：
 
     ```json
-    { "amount": 10, "quantity": 2}
+    { "amount": 10, "quantity": 2 }
     ```
+{% include copy.html %}
 
-4. 啟動 OpenSearch Dashboards 並選擇 **Dev Tools**：
+1. 確認 Logstash 已建立索引。在 OpenSearch Dashboards 中，前往 **Dev Tools** 並傳送下列請求：
 
     ```json
-    GET _cat/indices?v
+    GET _cat/indices/logstash-logs-*?v
+    ```
+{% include copy-curl.html %}
 
-    health | status | index | uuid | pri | rep | docs.count | docs.deleted | store.size | pri.store.size
-    green | open | logstash-logs-2021.07.01 | iuh648LYSnmQrkGf70pplA | 1 | 1 | 1 | 0 | 10.3kb | 5.1kb
+    回應會列出索引及其文件數量：
+
+    ```
+    health status index                    uuid                   pri rep docs.count docs.deleted store.size pri.store.size
+    yellow open   logstash-logs-2026.10.16 iuh648LYSnmQrkGf70pplA   1   1          1            0      5.2kb          5.2kb
     ```
 
-## 在 Output 外掛程式中加入不同的驗證機制
+## 驗證
 
-除了現有的驗證機制之外，您可以使用 `auth_type` 設定加入新的驗證機制，如下列範例組態所示：
+OpenSearch 輸出外掛程式支援基本驗證和 AWS Identity and Access Management（IAM）驗證。
 
-```yml
-output {    
-    opensearch {        
-          hosts  => ["https://hostname:port"]     
-          auth_type => {            
-              type => 'basic'           
-              user => 'admin'           
-              password => 'admin'           
-          }             
-          index => "logstash-logs-%{+YYYY.MM.dd}"       
-   }            
-}               
-```
-### auth_type 內的參數
+### 基本驗證
 
-`auth_type` 設定支援下列參數：
+若要使用基本驗證，請提供 `user` 和 `password` 設定，如前述範例所示。您也可以在 `auth_type` 設定中指定認證資訊：
 
-- `type` (字串)：驗證類型。
-- `user`：使用者名稱。
-- `password`：用於基本驗證的密碼。
-
-## AWS IAM 驗證的組態
-
-若要使用 `aws_iam` 驗證執行 Logstash Output OpenSearch 外掛程式，請加入以下組態：
-
-```yml
-output {        
-   opensearch {     
-          hosts => ["https://hostname:port"]              
-          auth_type => {    
-              type => 'aws_iam'     
-              aws_access_key_id => 'ACCESS_KEY'     
-              aws_secret_access_key => 'SECRET_KEY'     
-              region => 'us-west-2'    
-              service_name => 'es'     
-          }         
-          index  => "logstash-logs-%{+YYYY.MM.dd}"      
-   }            
+```ruby
+output {
+  opensearch {
+    hosts => ["https://<hostname>:<port>"]
+    auth_type => {
+      type => "basic"
+      user => "admin"
+      password => "<admin-password>"
+    }
+    index => "logstash-logs-%{+YYYY.MM.dd}"
+  }
 }
 ```
+{% include copy.html %}
 
-### 必要參數
+下表列出基本驗證的 `auth_type` 設定。
 
-- `hosts` (字串陣列)：`AmazonOpensearchService` 網域端點與連接埠號碼。
-- `auth_type` (JSON 物件)：驗證設定。
-    - `type` (字串)："aws_iam"。
-    - `aws_access_key_id` (字串)：AWS 存取金鑰。
-    - `aws_secret_access_key` (字串)：AWS 私密存取金鑰。
-    - `region` (字串，:default => "us-east-1")：網域所在的區域。
-- port (字串)：AmazonOpensearchService 在連接埠 443 上監聽 `HTTPS`。
-- protocol (字串)：用於連線的通訊協定。對於 `AmazonOpensearchService`，通訊協定為 `https`。
+設定 | 資料類型 | 說明
+:--- | :--- | :---
+`type` | 字串 | 驗證類型。設為 `basic`。
+`user` | 字串 | 使用者名稱。
+`password` | 字串 | 密碼。
 
-### 選用參數
+### AWS IAM 驗證
 
-- `template` (路徑)：您可以在此設定自己的範本路徑。若未指定範本，外掛程式會使用預設範本。
-- `template_name` (字串，default => `logstash`)：定義範本在 OpenSearch 內部的命名方式。
-- `service_name` (字串)：定義用於 `aws_iam` 驗證的服務名稱。
-- `legacy_template` (布林值，default => `true`)：選取 OpenSearch 範本 API。當為 `true` 時，使用衍生自 `_template` API 的舊版範本。當為 `false` 時，使用 `index_template` API。
-- `default_server_major_version` (數字)：當無法從 OpenSearch 根 URL 取得時所要使用的 OpenSearch 伺服器主要版本。若未設定，當無法取得版本時，外掛程式會擲回例外狀況。
-- `target_bulk_bytes` (數字)：緩衝區的最大位元組數。達到上限時，Logstash 會將資料排清至 OpenSearch。當大量請求對 OpenSearch 叢集而言過大，且叢集傳回 `429` 錯誤時，此設定很有用。
+若要使用 AWS IAM 驗證將事件傳送至 Amazon OpenSearch Service 網域，請在 `auth_type` 設定中將 `type` 設為 `aws_iam`。外掛程式會使用 AWS Signature Version 4 簽署每個請求：
 
-### 憑證解析邏輯
+```ruby
+output {
+  opensearch {
+    hosts => ["https://<domain-endpoint>:443"]
+    auth_type => {
+      type => "aws_iam"
+      region => "us-west-2"
+      service_name => "es"
+    }
+    index => "logstash-logs-%{+YYYY.MM.dd}"
+  }
+}
+```
+{% include copy.html %}
 
-下列清單提供憑證解析邏輯的詳細資訊：
+將 `<domain-endpoint>` 替換為網域端點，不含 `https://` 前綴。Amazon OpenSearch Service 網域會透過連接埠 443 上的 HTTPS 接受請求。網域的存取政策必須允許 Logstash 使用的 IAM 身分將 HTTP 請求傳送至該網域。
 
-- 使用者在組態中傳遞 `aws_access_key_id` 與 `aws_secret_access_key`。
-- 建議使用環境變數，例如 `AWS_ACCESS_KEY_ID` 與 `AWS_SECRET_ACCESS_KEY`，因為除了 `.NET` 之外，所有 AWS SDK 與 CLI 都能識別這些變數。您也可以使用 Java SDK 能識別的 `AWS_ACCESS_KEY` 與 `AWS_SECRET_KEY`。
-- 位於 `~/.aws/credentials` 目錄中的憑證設定檔，由所有 AWS SDK 與 AWS CLI 共用。
-- 執行個體設定檔憑證透過 Amazon EC2 中繼資料服務傳遞。
+下表列出 AWS IAM 驗證的 `auth_type` 設定。
+
+設定 | 資料類型 | 說明
+:--- | :--- | :---
+`type` | 字串 | 驗證類型。設為 `aws_iam`。必要。
+`region` | 字串 | 網域所在的 AWS 區域。預設為 `us-east-1`。如果網域位於其他區域，您必須設定此值。
+`service_name` | 字串 | 用於簽署請求的服務名稱。預設為 `es`。
+`aws_access_key_id` | 字串 | AWS 存取金鑰 ID。如果未指定，外掛程式會依照[認證資訊解析](#credential-resolution)中的說明解析認證資訊。
+`aws_secret_access_key` | 字串 | AWS 私密存取金鑰。
+`session_token` | 字串 | 工作階段權杖。當 `aws_access_key_id` 和 `aws_secret_access_key` 包含臨時認證資訊（例如從 AWS Security Token Service（AWS STS）取得的認證資訊）時，此項為必要。
+`profile` | 字串 | 要使用的 AWS 認證資訊檔案中的設定檔。預設為 `default`。
+
+#### 認證資訊解析
+
+如果您未在 `auth_type` 設定中指定認證資訊，外掛程式會依序在下列位置尋找，並使用最先找到的認證資訊：
+
+1. `auth_type` 設定中的 `aws_access_key_id` 和 `aws_secret_access_key` 設定。
+1. `AWS_ACCESS_KEY_ID`、`AWS_SECRET_ACCESS_KEY` 和 `AWS_SESSION_TOKEN` 環境變數。外掛程式也會辨識 `AWS_ACCESS_KEY` 和 `AWS_SECRET_KEY` 環境變數。
+1. 預設位置（`~/.aws/credentials`）中的認證資訊檔案。
+1. Amazon EC2 執行個體中繼資料服務提供的執行個體設定檔認證資訊。
+
+若要避免將認證資訊儲存在管線組態檔案中，請使用環境變數；如果 Logstash 在 Amazon EC2 上執行，則可使用執行個體設定檔。
+
+## 選用設定
+
+下表列出 OpenSearch 輸出外掛程式的選用設定。
+
+設定 | 資料類型 | 說明
+:--- | :--- | :---
+`cacert` | 字串 | 用於驗證 OpenSearch 節點憑證的憑證授權單位檔案路徑。
+`ssl_certificate_verification` | 布林值 | 是否驗證 OpenSearch 節點憑證。預設為 `true`。
+`template` | 字串 | 自訂索引範本檔案的路徑。如果未指定，外掛程式會使用其預設範本。
+`template_name` | 字串 | OpenSearch 中的索引範本名稱。
+`legacy_template` | 布林值 | 是否使用舊版 `_template` API 安裝索引範本。如果為 `false`，外掛程式會使用 `_index_template` API。預設為 `true`。
+`manage_template` | 布林值 | 外掛程式是否在 OpenSearch 中安裝索引範本。預設為 `true`。
+`default_server_major_version` | 整數 | 當外掛程式無法從叢集的根端點擷取版本時，要使用的 OpenSearch 主要版本。如果未指定且無法擷取版本，外掛程式就會失敗。
+`target_bulk_bytes` | 整數 | 大量請求的大小上限，以位元組為單位。當緩衝的事件達到此大小時，Logstash 會將其傳送至 OpenSearch。如果 OpenSearch 因大量請求過大而以 `429` 狀態碼拒絕請求，請降低此值。
 
 ## 資料串流
 
-OpenSearch output 外掛程式可以將時間序列資料集 (例如記錄檔、事件與指標) 以及非時間序列資料儲存在 OpenSearch 中。
-建議使用資料串流將時間序列資料集 (例如記錄檔、指標與事件) 編製索引至 OpenSearch。
+對於僅附加的時間序列資料，例如記錄資料、事件和指標，建議使用資料串流。如需詳細資訊，請參閱[資料串流]({{site.url}}{{site.baseurl}}/im-plugin/data-streams/)。
 
-若要進一步了解資料串流，請參閱[資料串流文件]({{site.url}}{{site.baseurl}}/opensearch/data-streams/)。
+若要將事件傳送至資料串流，請先在 OpenSearch 中建立資料串流。接著將 `index` 設為資料串流名稱，並將 `action` 設為 `create`：
 
-若要透過 Logstash 將資料匯入資料串流，請建立資料串流、指定資料串流的名稱，並將 `action` 設定設為 `create`，如下列範例組態所示：
-
-```yml
-output {    
-    opensearch {        
-          hosts  => ["https://hostname:port"]     
-          auth_type => {            
-              type => 'basic'           
-              user => 'admin'           
-              password => 'admin'           
-          }
-          index => "my-data-stream"
-          action => "create"
-   }            
-}               
+```ruby
+output {
+  opensearch {
+    hosts => ["https://<hostname>:<port>"]
+    auth_type => {
+      type => "basic"
+      user => "admin"
+      password => "<admin-password>"
+    }
+    index => "my-data-stream"
+    action => "create"
+  }
+}
 ```
+{% include copy.html %}
+
+資料串流僅接受 `create` 操作。如果您未將 `action` 設為 `create`，OpenSearch 會以 `400` 狀態碼拒絕事件。
