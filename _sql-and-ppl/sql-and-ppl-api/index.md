@@ -22,8 +22,8 @@ redirect_from:
 
 參數 | 資料類型 | 說明
 :--- | :--- | :---
-[format]({{site.url}}{{site.baseurl}}/search-plugins/sql/response-formats/) | 字串 | 回應的格式。`_sql` 端點支援 `jdbc`、`csv`、`raw` 與 `json` 格式。`_ppl` 端點支援 `jdbc`、`csv` 與 `raw` 格式。預設為 `jdbc`。
-`sanitize` | 布林值 | 指定是否在結果中逸出特殊字元。如需更多資訊，請參閱[回應格式]({{site.url}}{{site.baseurl}}/search-plugins/sql/response-formats/)。預設為 `true`。
+[format]({{site.url}}{{site.baseurl}}/search-plugins/sql/response-formats/) | 字串 | 回應的格式。`_sql` 與 `_ppl` 端點支援 `jdbc`、`csv` 及 `raw` 格式。預設為 `jdbc`。
+`sanitize` | 布林值 | 指定是否在結果中跳脫特殊字元。如需更多資訊，請參閱[回應格式]({{site.url}}{{site.baseurl}}/search-plugins/sql/response-formats/)。預設為 `true`。
 
 ### 請求本文欄位
 
@@ -377,9 +377,9 @@ POST /_plugins/_sql
 若巢狀欄位被扁平化，`datarows` 可能會有超過 `fetch_size` 筆記錄。
 {: .note }
 
-最後一頁結果只有 `datarows`，沒有 `cursor`。`cursor` 內容會在最後一頁自動清除。
+最後一頁結果只有 `datarows`，沒有 `cursor`。`cursor` 脈絡 (cursor context) 會在最後一頁自動清除。
 
-若要明確清除游標內容，請使用 `_plugins/_sql/close` 端點操作：
+若要明確清除 cursor 脈絡，請使用 `_plugins/_sql/close` 端點操作：
 
 ```json
 POST /_plugins/_sql/close

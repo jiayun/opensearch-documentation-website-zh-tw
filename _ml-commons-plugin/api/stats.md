@@ -2,16 +2,16 @@
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: "統計資料"
-parent: ML Commons APIs
+parent: ML APIs
 nav_order: 120
 ---
 
-# ML Commons Stats API
+# ML Stats API
 
-Stats API 提供 ML Commons 的基本統計資訊，例如正在執行的工作數量。若要使用更詳細的時間序列指標來監控機器學習工作流程，請參閱[監控機器學習工作流程]({{site.url}}{{site.baseurl}}/monitoring-your-cluster/metrics/getting-started/#monitoring-machine-learning-workflows)。
+Stats API 會傳回基本的機器學習 (ML) 統計資料，例如正在執行的任務數量。若要使用更詳細的時間序列指標來監控機器學習工作流程，請參閱[監控機器學習工作流程]({{site.url}}{{site.baseurl}}/monitoring-your-cluster/metrics/getting-started/#monitoring-machine-learning-workflows)。
 {: .note }
 
-回應包含叢集層級的統計資訊，例如 ML 索引狀態與模型數量，以及節點層級的統計資訊，例如依演算法與模型細分的請求數量。
+回應包含叢集層級的統計資料（例如 ML 索引狀態和模型數量），以及節點層級的統計資料（例如請求數量），並依演算法和模型細分。
 
 ## 端點
 

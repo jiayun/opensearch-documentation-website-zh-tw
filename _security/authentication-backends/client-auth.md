@@ -25,7 +25,7 @@ redirect_from:
 plugins.security.ssl.http.clientauth_mode: OPTIONAL
 ```
 
-接著，在 `config.yml` 的 `client_auth_domain` 區段中啟用用戶端憑證驗證。
+接著，在 `config.yml` 的 `clientcert_auth_domain` 區段中啟用用戶端憑證驗證。此檔案的位置請參閱 [設定安全後端]({{site.url}}{{site.baseurl}}/security/configuration/configuration/)。
 
 ```yml
 clientcert_auth_domain:

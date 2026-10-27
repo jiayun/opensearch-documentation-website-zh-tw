@@ -45,7 +45,7 @@ redirect_from:
 ### create_connector_1
 <!-- vale on -->
 
-工作流程的第一步是建立連接至外部託管模型的連接器（在下列範例中，此步驟稱為 `create_connector_1`）。`user_inputs` 欄位的內容與 ML Commons [Create Connector API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/connector-apis/create-connector/) 完全相符：
+工作流程的第一步是建立連接器，連線至外部託管的模型（在下列範例中，此步驟稱為 `create_connector_1`）。`user_inputs` 欄位的內容與 [Create Connector API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/connector-apis/create-connector/) 完全相符：
 
 ```yaml
 nodes:
@@ -67,7 +67,7 @@ nodes:
       url: https://${parameters.endpoint}/v1/chat/completions
 ```
 
-建立連接器後，OpenSearch 會傳回 `connector_id`，您需要用它來註冊模型。
+建立連接器時，OpenSearch 會傳回 `connector_id`，您需要此值才能註冊模型。
 
 <!-- vale off -->
 ### register_model_2

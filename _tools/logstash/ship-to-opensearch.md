@@ -37,6 +37,44 @@ output {
 如果您正在使用示範安全性組態的叢集上進行測試，而該組態使用自我簽署憑證，您可以將 `cacert` 設定替換為 `ssl_certificate_verification => false`。請勿在正式環境中停用憑證驗證。
 {: .warning }
 
+## 設定 TLS
+
+當 `hosts` 包含 `https://` URL 時，此外掛程式會透過 TLS 連線至 OpenSearch，並驗證 OpenSearch 節點憑證。請以下列任一方式提供簽署節點憑證的憑證授權單位 (CA)：
+
+- 將 `cacert` 設為 PEM 格式 CA 憑證的路徑，如前述範例所示。
+- 將 `truststore` 設為包含 CA 憑證的 Java KeyStore (JKS) 檔案路徑，並將 `truststore_password` 設為信任儲存庫密碼。
+
+您無法同時指定 `cacert` 與 `truststore`。
+
+### 使用用戶端憑證進行驗證
+
+如果 OpenSearch 已設定為使用[用戶端憑證驗證]({{site.url}}{{site.baseurl}}/security/authentication-backends/client-auth/)，Logstash 可以向 OpenSearch 出示用戶端憑證。請將 `tls_certificate` 設為 PEM 格式用戶端憑證的路徑，並將 `tls_key` 設為其私密金鑰的路徑。您必須同時指定這兩項設定：
+
+```ruby
+output {
+  opensearch {
+    hosts           => ["https://localhost:9200"]
+    index           => "logstash-logs-%{+YYYY.MM.dd}"
+    ssl             => true
+    cacert          => "<path-to-root-ca>"
+    tls_certificate => "<path-to-client-cert>"
+    tls_key         => "<path-to-client-key>"
+  }
+}
+```
+{% include copy.html %}
+
+私密金鑰必須是 PKCS #8 格式且未加密的 PEM 檔案，其開頭為 `-----BEGIN PRIVATE KEY-----`。開頭為 `-----BEGIN RSA PRIVATE KEY-----` 的 PKCS #1 格式金鑰會遭到拒絕。若要轉換 PKCS #1 金鑰，請執行下列命令：
+
+```bash
+openssl pkcs8 -topk8 -nocrypt -in <client-key> -out <client-key-pkcs8>
+```
+{% include copy.html %}
+
+或者，您也可以將用戶端憑證和私密金鑰儲存在金鑰儲存區（keystore）中。請將 `keystore` 設為 JKS 或 PKCS #12（`.p12`）檔案的路徑，並將 `keystore_password` 設為金鑰儲存區的密碼。
+
+Security 外掛程式會根據憑證的辨別名稱（DN）將用戶端憑證對應至使用者。此範例省略了 `user` 和 `password` 設定，因此 OpenSearch 僅使用憑證來驗證 Logstash。
+
 ## 範例：將 JSON 事件傳送至 OpenSearch
 
 若要將您在終端機中輸入的事件傳送至 OpenSearch，請依照下列步驟操作：
@@ -61,7 +99,7 @@ output {
       }
     }
     ```
-{% include copy.html %}
+    {% include copy.html %}
 
     此管線會接受來自終端機的 JSON 輸入，並將事件寫入在 `localhost` 上執行的 OpenSearch 叢集中的 `logstash-logs-%{+YYYY.MM.dd}` 索引。
 
@@ -70,21 +108,21 @@ output {
     ```bash
     bin/logstash -f config/pipeline.conf
     ```
-{% include copy.html %}
+    {% include copy.html %}
 
 1. 當 Logstash 記錄 `Pipeline started` 時，請在終端機中以單行輸入 JSON 物件：
 
     ```json
     { "amount": 10, "quantity": 2 }
     ```
-{% include copy.html %}
+    {% include copy.html %}
 
 1. 確認 Logstash 已建立索引。在 OpenSearch Dashboards 中，前往 **Dev Tools** 並傳送下列請求：
 
     ```json
     GET _cat/indices/logstash-logs-*?v
     ```
-{% include copy-curl.html %}
+    {% include copy-curl.html %}
 
     回應會列出索引及其文件數量：
 
@@ -176,12 +214,18 @@ output {
 :--- | :--- | :---
 `cacert` | 字串 | 用於驗證 OpenSearch 節點憑證的憑證授權單位檔案路徑。
 `ssl_certificate_verification` | 布林值 | 是否驗證 OpenSearch 節點憑證。預設為 `true`。
-`template` | 字串 | 自訂索引範本檔案的路徑。如果未指定，外掛程式會使用其預設範本。
-`template_name` | 字串 | OpenSearch 中的索引範本名稱。
-`legacy_template` | 布林值 | 是否使用舊版 `_template` API 安裝索引範本。如果為 `false`，外掛程式會使用 `_index_template` API。預設為 `true`。
+`truststore` | 字串 | 包含憑證授權單位（用於驗證 OpenSearch 節點憑證）的 JKS 信任儲存庫路徑。不能與 `cacert` 一起使用。
+`truststore_password` | 字串 | 信任儲存庫密碼。
+`tls_certificate` | 字串 | PEM 格式的用戶端憑證路徑。需要 `tls_key`。請參閱[使用用戶端憑證進行驗證](#authenticating-using-a-client-certificate)。
+`tls_key` | 字串 | 用戶端憑證私密金鑰的路徑，為 PKCS #8 格式的未加密 PEM 檔案。需要 `tls_certificate`。
+`keystore` | 字串 | 包含用戶端憑證及其私密金鑰的 JKS 或 PKCS #12 金鑰儲存庫路徑。
+`keystore_password` | 字串 | 金鑰儲存庫密碼。
+`template` | 字串 | 自訂索引範本檔案的路徑。若未指定，外掛程式會使用其預設範本。
+`template_name` | 字串 | OpenSearch 中索引範本的名稱。
+`legacy_template` | 布林值 | 是否使用舊版 `_template` API 安裝索引範本。若為 `false`，外掛程式會使用 `_index_template` API。預設為 `true`。
 `manage_template` | 布林值 | 外掛程式是否在 OpenSearch 中安裝索引範本。預設為 `true`。
-`default_server_major_version` | 整數 | 當外掛程式無法從叢集的根端點擷取版本時，要使用的 OpenSearch 主要版本。如果未指定且無法擷取版本，外掛程式就會失敗。
-`target_bulk_bytes` | 整數 | 大量請求的大小上限，以位元組為單位。當緩衝的事件達到此大小時，Logstash 會將其傳送至 OpenSearch。如果 OpenSearch 因大量請求過大而以 `429` 狀態碼拒絕請求，請降低此值。
+`default_server_major_version` | 整數 | 當外掛程式無法從叢集的根端點取得版本時，要使用的 OpenSearch 主要版本。若未指定且無法取得版本，外掛程式會失敗。
+`target_bulk_bytes` | 整數 | 大量請求的大小上限（以位元組為單位）。當緩衝的事件達到此大小時，Logstash 會將其傳送至 OpenSearch。若 OpenSearch 因大量請求過大而以 `429` 狀態碼拒絕，請降低此值。
 
 ## 資料串流
 

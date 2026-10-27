@@ -91,23 +91,25 @@ GET /_search
 
 ## 搜尋切片
 
-將 `search_after` 與 PIT 搭配使用進行分頁，可讓您控制結果的排序。如果您不需要結果依特定順序排列，或者您希望能夠從某一頁跳到非連續的頁面，您可以使用搜尋切片。搜尋切片會將 PIT 搜尋分割成多個切片，供用戶端應用程式獨立取用。
+使用 `search_after` 搭配 PIT 進行分頁，可讓您控制結果的順序。如果您不需要依特定順序取得結果，或希望能從某一頁跳至不連續的另一頁，可以使用搜尋切片。搜尋切片會將 PIT 搜尋分割成多個切片，供用戶端應用程式各自獨立讀取。
 
-例如，如果您有一個包含 1,000,000 筆結果的 PIT 搜尋查詢，而您想要一次傳回 50,000 筆結果，您的用戶端應用程式必須進行 20 次連續呼叫，才能接收每一批結果。如果您使用搜尋切片，可以將這 20 次呼叫平行化。在多執行緒的用戶端應用程式中，您可以為每個 PIT 使用五個切片。如此一來，您將會有 5 個各 10,000 筆命中的切片，可由用戶端中的五個不同執行緒取用，而不是由單一執行緒取用 50,000 筆結果。
+例如，符合 1,000,000 份文件的 PIT 搜尋可以分割成 2 個切片，每個切片約有 500,000 份文件，讓用戶端應用程式中的兩個執行緒平行讀取。每個執行緒都使用 `search_after` 逐頁讀取自己的切片。所有切片都使用相同的 PIT ID。
 
-若要使用搜尋切片，您必須指定兩個參數：
-- `slice.id` 是您所要求的切片 ID。
-- `slice.max` 是要將搜尋回應分割成的切片數。
+若要使用搜尋切片，請在 `slice` 物件中指定下列參數：
 
-下列 PIT 搜尋查詢說明了搜尋切片：
+- `slice.max` 是要將搜尋分割成的切片數量。此數量不得超過 `index.max_slices_per_pit` 索引設定（預設為 `1024`）。
+- `slice.id` 是您請求的切片 ID，範圍從 `0` 到 `slice.max` - 1。
+
+OpenSearch 會根據每份文件的分片與文件 ID，將文件指派至切片，因此各切片包含的文件數量大致相同，但不會完全相等。
+
+下列請求會傳回兩個切片中的第一個：
 
 ```json
-
 GET /_search
 {
   "slice": {
-    "id": 0,  // id is the slice (page) number being requested. In every request we can only query for one slice                    
-    "max": 2  // max is the total number of slices (pages) the search response will be broken down into                  
+    "id": 0,
+    "max": 2
   },
   "query": {
     "match": {
@@ -119,15 +121,18 @@ GET /_search
   }
 }
 ```
+{% include copy-curl.html %}
 
-在每個請求中，您只能查詢一個切片，因此下一個查詢會與前一個相同，差別在於 `slice.id` 會是 `1`。
+每個請求會傳回一個切片。若要請求第二個切片，請傳送相同的請求，並將 `slice.id` 設為 `1`。
+
+每個切片的分頁方式與其他搜尋相同。使用 `from` 和 `size` 逐頁讀取切片時，會受到 `index.max_result_window` 索引設定（預設為 `10000`）的限制：`from` 與 `size` 的總和不得超過此值。若要從切片讀取更多文件，請在請求中加入 `sort`，並使用 `search_after` 進行分頁，如[使用 PIT 與 `search_after` 進行分頁](#pagination-with-pit-and-search_after)所述。如需索引設定的詳細資訊，請參閱[索引設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/)。
 
 
 ## API
 
 下表列出所有 [Point in Time API]({{site.url}}{{site.baseurl}}/api-reference/search-apis/point-in-time-api/) 函式。
 
-Function | API | Description
+功能 | API | 說明
 :--- | :--- | :---
 [Create PIT]({{site.url}}{{site.baseurl}}/api-reference/search-apis/point-in-time-api/#create-a-pit) | `POST /<target_indexes>/_search/point_in_time?keep_alive=1h` | 建立 PIT。
 [List PIT]({{site.url}}{{site.baseurl}}/api-reference/search-apis/point-in-time-api/#list-all-pits) | `GET /_search/point_in_time/_all` | 列出所有 PIT。
@@ -140,7 +145,7 @@ Function | API | Description
 
 您可以為 PIT 指定下列設定。
 
-Setting | Description | Default 
+設定 | 說明 | 預設值 
 :--- | :--- | :---
 `point_in_time.max_keep_alive` | 叢集層級設定，用於指定 `keep_alive` 參數的最大值。 | `24h`
-`search.max_open_pit_context` | 節點層級設定，用於指定該節點開啟的 PIT 內容最大數量。 | `300`
+`search.max_open_pit_context` | 節點層級設定，用於指定該節點可開啟的 PIT 脈絡數量上限。 | `300`

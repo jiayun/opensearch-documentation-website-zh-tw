@@ -3,7 +3,7 @@
 layout: default
 title: "搜尋 ML 任務"
 parent: ML Tasks APIs
-grand_parent: ML Commons APIs
+grand_parent: ML APIs
 nav_order: 15
 ---
 

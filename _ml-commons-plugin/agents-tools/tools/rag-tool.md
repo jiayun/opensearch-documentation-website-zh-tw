@@ -15,13 +15,13 @@ grand_parent: Agents and tools
 {: .label .label-purple }
 <!-- vale on -->
 
-`RAGTool` 會執行檢索增強生成 (RAG)。如需 RAG 的更多資訊，請參閱[對話式搜尋]({{site.url}}{{site.baseurl}}/search-plugins/conversational-search/)。
+`RAGTool` 會執行檢索增強生成 (RAG)。如需更多關於 RAG 的資訊，請參閱[對話式搜尋]({{site.url}}{{site.baseurl}}/search-plugins/conversational-search/)。
 
-RAG 會呼叫大型語言模型 (LLM)，並透過在使用者問題之外一併提供相關的 OpenSearch 文件來補充其知識。若要從 OpenSearch 索引擷取相關文件，您需要一個能協助向量搜尋的文字嵌入模型。
+RAG 會呼叫大型語言模型 (LLM)，並在使用者提問時一併提供相關的 OpenSearch 文件，以補充其知識。若要從 OpenSearch 索引擷取相關文件，您需要一個有助於向量搜尋的文字嵌入模型。
 
 RAG 工具支援下列搜尋方法：
 
-- [神經搜尋]({{site.url}}{{site.baseurl}}/search-plugins/neural-search/)：密集向量擷取，使用文字嵌入模型。
+- [語意搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/semantic-search/)：稠密向量擷取，使用文字嵌入模型。
 - [神經稀疏搜尋]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-search/)：稀疏向量擷取，使用稀疏編碼模型。
 
 ## 開始之前
@@ -181,16 +181,16 @@ POST /_plugins/_ml/agents/Gn8yWI0Bpc3sThaJeZ2k/_execute
 
 參數	| 類型 | 必要/選用 | 說明	
 :--- | :--- | :--- | :---
-`embedding_model_id` | 字串 | 必要 | 用於產生向量嵌入之模型的模型 ID。
-`inference_model_id` | 字串 | 當 `enable_content_generation` 為 `true` 時為必要 | 用於推論之 LLM 的模型 ID。
+`embedding_model_id` | 字串 | 必要 | 用於產生向量嵌入的模型 ID。
+`inference_model_id` | 字串 | 當 `enable_content_generation` 為 `true` 時為必要 | 用於推論的 LLM 模型 ID。
 `index` | 字串 | 必要 | 從中擷取相關文件以傳遞給 LLM 的索引。
-`embedding_field` | 字串 | 必要 | 當模型對原始文字文件進行編碼時，編碼結果會儲存在某個欄位中。請將此欄位指定為 `embedding_field`。神經搜尋會計算查詢文字與文件 `embedding_field` 中文字之間的相似度分數，藉此將文件與查詢進行比對。
+`embedding_field` | 字串 | 必要 | 當模型將原始文字文件編碼時，編碼結果會儲存在某個欄位中。請將此欄位指定為 `embedding_field`。OpenSearch 會計算查詢文字與文件 `embedding_field` 中文字的相似性分數，藉此將文件與查詢進行比對。
 `source_field` | 字串 | 必要 | 要傳回的文件欄位。您可以提供多個欄位，以字串陣列的形式表示，例如 `["field1", "field2"]`。
 `input` | 字串 | 流程代理程式為必要 | 來自流程代理程式參數的執行階段輸入。若使用 LLM，此欄位會填入 LLM 的回應。
-`query_type` | 字串 | 選用 | 指定執行神經搜尋時要執行的查詢類型。有效值為 `neural`（用於稠密擷取）與 `neural_sparse`（用於稀疏擷取）。預設為 `neural`。
-`doc_size` | 整數 | 選用 | 要擷取的文件數。預設為 `2`。
+`query_type` | 字串 | 選用 | 指定要執行的查詢類型。有效值為 `neural`（用於稠密檢索）和 `neural_sparse`（用於稀疏檢索）。預設為 `neural`。
+`doc_size` | 整數 | 選用 | 要擷取的文件數量。預設為 `2`。
 `prompt` | 字串 | 選用 | 提供給 LLM 的提示。若要將擷取到的文件插入提示中，請使用 `${parameters.output_field}` 預留位置。
-`k` | 整數 | 選用 | 執行神經搜尋時要搜尋的最近鄰數量。預設為 10。
+`k` | 整數 | 選用 | 要搜尋的最近鄰數量。預設為 `10`。
 `enable_content_generation` | 布林值 | 選用 | 若為 `true`，則傳回由 LLM 產生的結果。若為 `false`，則直接傳回結果，不進行 LLM 輔助的內容產生。預設為 `true`。
 `nested_path` | 字串 | 選用 | 巢狀查詢所用巢狀物件的路徑。僅用於巢狀欄位。預設為 `null`。
 

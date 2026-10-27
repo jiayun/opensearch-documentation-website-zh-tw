@@ -15,23 +15,23 @@ redirect_from:
 
 OpenSearch 提供兩種類型的連接器藍圖：
 
-- **標準藍圖 (建議用於 OpenSearch 2.14+)**:
+- **標準藍圖（建議用於 OpenSearch 2.14+）**：
 
   - 專為直接將輸入傳遞至模型並傳回其原始輸出、不需要額外轉換的連接器所設計。
-  - 使用已註冊的模型，且不需要任何前處理或後處理函式。
-  - 與機器學習 (ML) 推論處理器相容：[資料匯入處理器]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/processors/ml-inference/)、[搜尋請求處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/ml-inference-search-request/) 及 [搜尋回應處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/ml-inference-search-response/)。
-  - 非常適合 OpenSearch 2.14 及更新版本中的新實作。
+  - 使用已註冊的模型，不需任何前處理或後處理函式。
+  - 相容於機器學習（ML）推論處理器：[匯入處理器]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/processors/ml-inference/)、[搜尋請求處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/ml-inference-search-request/) 及[搜尋回應處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/ml-inference-search-response/)。
+  - 適合在 OpenSearch 2.14 及更新版本中進行新的實作。
 
-- **舊版藍圖**:
+- **舊版藍圖**：
 
   - 適用於特定的輸入與輸出格式需求。
   - 包含前處理與後處理函式。
   - 建議用於現有的實作。
-  - 與[神經搜尋]({{site.url}}{{site.baseurl}}/neural-search-plugin/index/)查詢相容。
+  - 相容於[語意搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/semantic-search/)。
 
 ## 尋找您的模型與平台
 
-OpenSearch 為下列平台與模型提供連接器藍圖。每個藍圖連結都會提供建立連接器的範例請求 (包含所有必要參數)，以及範例 Predict API 請求。**Protocol** 欄會連結至該平台驗證方法的憑證欄位與叢集先決條件。如需可用通訊協定的概觀，請參閱[連接器驗證]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connector-authentication/)。
+OpenSearch 為下列平台與模型提供連接器藍圖。每個藍圖連結都會提供建立連接器的範例請求（包含所有必要參數），以及範例 Predict API 請求。**通訊協定**欄會連結至該平台驗證方法的認證資訊欄位與叢集先決條件。如需可用通訊協定的概觀，請參閱[連接器驗證]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connector-authentication/)。
 
 | 平台                                                                                                         | 模型                                                                                                                                                                    | 通訊協定 | 舊版藍圖                                                                                                                                                             | 標準藍圖                                                                                                                                                                                                 |
 |:-------------------------------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:---|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|

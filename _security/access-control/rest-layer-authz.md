@@ -13,7 +13,7 @@ REST 層授權透過在 REST 層提供授權檢查機制，為外掛程式與擴
 
 對使用 REST 層授權的使用者而言，指派角色、對應使用者與角色的方式，以及外掛程式與擴充功能的一般用法都維持不變——唯一額外的需求是使用者必須熟悉新的權限方案。
 
-另一方面，開發人員則需要了解 `NamedRoute` 背後的概念，以及新路徑方案的建構方式。詳細資訊請參閱 [外掛程式的 REST 層授權](https://github.com/opensearch-project/security/blob/main/REST_AUTHZ_FOR_PLUGINS.md)。
+另一方面，開發人員則需要了解 `NamedRoute` 背後的概念，以及新路徑方案的建構方式。詳細資訊請參閱 [外掛程式的 REST 層授權](https://github.com/opensearch-project/security/blob/main/docs/REST_AUTHZ_FOR_PLUGINS.md)。
 
 使用 REST 層進行授權的好處包括能在 REST 層授權請求並過濾未經授權的請求。如此一來，可減輕傳輸層的處理負擔，同時對 API 的存取進行細緻的控制。
 

@@ -59,7 +59,7 @@ PUT /_plugins/_replication/follower-01/_start
 ```
 {% include copy-curl.html %}
 
-### 範例回應
+### 回應範例
 
 ```json
 {
@@ -115,9 +115,9 @@ POST /_plugins/_replication/follower-01/_pause
 ```
 {% include copy-curl.html %}
 
-若暫停時間超過保留租約期間，您將無法繼續複寫。若要復原，請使用 [force-resume]({{site.url}}{{site.baseurl}}/tuning-your-cluster/replication-plugin/force-resume/)，其會從領導叢集的快照還原跟隨索引。
+若暫停時間超過保留租約期間，您將無法繼續複寫。若要復原，請使用[強制繼續複寫]({{site.url}}{{site.baseurl}}/tuning-your-cluster/replication-plugin/force-resume/)，此功能會從領導索引的快照還原跟隨索引。
 
-### 範例回應
+### 回應範例
 
 ```json
 {
@@ -153,7 +153,7 @@ POST /_plugins/_replication/follower-01/_resume
 ```
 {% include copy-curl.html %}
 
-### 範例回應
+### 回應範例
 
 ```json
 {
@@ -331,11 +331,11 @@ GET /_plugins/_replication/follower_stats
 }
 ```
 
-## 取得 auto-follow 統計資料
+## 取得自動跟隨統計資料
 **於 1.1 版推出**
 {: .label .label-purple }
 
-取得 auto-follow 活動以及指定叢集上所設定之任何複寫規則的相關資訊。
+取得自動跟隨活動以及指定叢集上所設定之任何複寫規則的相關資訊。
 
 ### 端點
 
@@ -416,7 +416,7 @@ PUT /_plugins/_replication/follower-01/_update
 
 將此請求傳送至跟隨叢集。
 
-建立所有 auto-follow 模式後，請務必記下其名稱。複寫外掛程式目前並未包含可擷取現有模式清單的 API 操作。
+建立所有自動跟隨模式後，請務必記下其名稱。複寫外掛程式目前並未包含可擷取現有模式清單的 API 操作。
 {: .tip }
 
 ### 端點
@@ -431,11 +431,11 @@ POST /_plugins/_replication/_autofollow
 
 | 欄位 | 資料類型 | 說明 | 必要 |
 | :--- | :--- | :--- | :--- |
-| `leader_alias` | 字串 | 跨叢集連線的名稱。您可以在[設定跨叢集連線]({{site.url}}{{site.baseurl}}/replication-plugin/get-started/#set-up-a-cross-cluster-connection)時定義此別名。 | 是 |
-| `name` | 字串 | auto-follow 模式的名稱。 | 是 |
-| `pattern` | 字串 | 要與指定領導叢集中索引比對的索引模式陣列。支援萬用字元。例如 `leader-*`。 | 是 |
-| `follower_index_pattern` | 字串 | 跟隨索引名稱的模式。使用 `{% raw %}{{leader_index}}{% endraw %}` 預留位置來包含領導索引名稱。例如，`{% raw %}{{leader_index}}{% endraw %}-replica` 會建立名為 `<leader_index_name>-replica` 的跟隨索引。當跟隨叢集上已存在同名索引，或從多個領導叢集複寫索引時，請使用此欄位以避免名稱衝突。若省略，跟隨索引會使用與領導索引相同的名稱。 | 否 |
-| `use_roles` | 物件 | 索引之間所有後續後端複寫工作要使用的角色。請指定 `leader_cluster_role` 和 `follower_cluster_role`。請參閱[對應領導與跟隨叢集角色]({{site.url}}{{site.baseurl}}/replication-plugin/permissions/#map-the-leader-and-follower-cluster-roles)。 | 若已啟用 Security 外掛程式 |
+| `leader_alias` | 字串 | 跨叢集連線的名稱。您在[設定跨叢集連線]({{site.url}}{{site.baseurl}}/replication-plugin/get-started/#set-up-a-cross-cluster-connection)時定義此別名。 | 是 |
+| `name` | 字串 | 自動跟隨模式的名稱。 | 是 |
+| `pattern` | 字串 | 用來比對指定領導者叢集中索引的索引模式。支援萬用字元。例如 `leader-*`。若要比對多個模式，請為每個模式建立個別的複寫規則。 | 是 |
+| `follower_index_pattern` | 字串 | 跟隨者索引名稱的模式。使用 `{% raw %}{{leader_index}}{% endraw %}` 預留位置以包含領導者索引名稱。例如，`{% raw %}{{leader_index}}{% endraw %}-replica` 會建立名為 `<leader_index_name>-replica` 的跟隨者索引。當跟隨者叢集上已存在同名索引，或從多個領導者叢集複寫索引時，可使用此欄位避免名稱衝突。若省略，跟隨者索引會使用與領導者索引相同的名稱。 | 否 |
+| `use_roles` | 物件 | 用於索引之間所有後續後端複寫任務的角色。請指定 `leader_cluster_role` 與 `follower_cluster_role`。請參閱[對應領導者與跟隨者叢集角色]({{site.url}}{{site.baseurl}}/replication-plugin/permissions/#map-the-leader-and-follower-cluster-roles)。 | 若已啟用 Security 外掛程式 |
 
 ### 範例請求
 

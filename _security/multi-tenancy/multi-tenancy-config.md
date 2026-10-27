@@ -9,7 +9,7 @@ nav_order: 145
 
 # 多租用戶組態
 
-OpenSearch Dashboards 預設會啟用多租用戶。如果您需要停用或變更與多租用戶相關的設定，請參閱 `config/opensearch-security/config.yml` 中的 `kibana` 設定，如下列範例所示：
+OpenSearch Dashboards 預設會啟用多租用戶。如果您需要停用多租用戶或變更相關設定，請參閱 `config/opensearch-security/config.yml` 中的 `kibana` 設定，如下列範例所示：
 
 ```yml
 config:
@@ -20,17 +20,15 @@ config:
       default_tenant: global tenant
       server_username: kibanaserver
       index: '.kibana'
-    do_not_fail_on_forbidden: false
 ```
 
 | 設定 | 說明 |
 | :--- | :--- |
 | `multitenancy_enabled` | 啟用或停用多租用戶。預設為 `true`。 |
-| `private_tenant_enabled` | 啟用或停用私有租用戶。預設為 `true`。 |
-| `default_tenant` | 用於設定使用者登入時可用的租用戶。 |
-| `server_username` | 必須與 `opensearch_dashboards.yml` 中 OpenSearch Dashboards 伺服器使用者的名稱相符。預設為 `kibanaserver`。如果設定了其他使用者，請確保該使用者已透過 `role_mappings.yml` 檔案對應至 `kibana_server` 角色，以取得 [kibana_server 角色詳細資料]({{site.url}}{{site.baseurl}}/security/multi-tenancy/multi-tenancy-config/#kibana_server-role-details) 中列出的適當權限。 |
-| `index` | 必須與 `opensearch_dashboards.yml` 中的 OpenSearch Dashboards 索引名稱相符。預設為 `.kibana`。 |
-| `do_not_fail_on_forbidden` | 當設定為 `true` 時，Security 外掛程式會從搜尋結果中移除使用者無權檢視的任何內容。當設定為 `false` 時，外掛程式會回傳安全性例外。預設為 `false`。 |
+| `private_tenant_enabled` | 啟用或停用私人租用戶。預設為 `true`。 |
+| `default_tenant` | 用來設定使用者登入時可用的租用戶。 |
+| `server_username` | 必須與 `opensearch_dashboards.yml` 中 OpenSearch Dashboards 伺服器使用者的名稱相符。預設為 `kibanaserver`。如果設定了不同的使用者，請務必透過 `role_mappings.yml` 檔案將該使用者對應至 `kibana_server` 角色，以授予 [kibana_server 角色詳細資料]({{site.url}}{{site.baseurl}}/security/multi-tenancy/multi-tenancy-config/#kibana_server-role-details) 中列出的適當權限。 |
+| `index` | 必須與 `opensearch_dashboards.yml` 中 OpenSearch Dashboards 索引的名稱相符。預設為 `.kibana`。 |
 
 `opensearch_dashboards.yml` 檔案包含其他設定：
 
@@ -47,11 +45,11 @@ opensearch_security.multitenancy.enable_filter: false
 
 | 設定 | 說明 |
 | :--- | :--- |
-| `opensearch.requestHeadersAllowlist` | OpenSearch Dashboards 要求您將所有 HTTP 標頭加入允許清單，以便這些標頭傳遞至 OpenSearch。多租用戶使用特定的標頭 `securitytenant`，該標頭必須與標準的 `Authorization` 標頭一併存在。如果 `securitytenant` 標頭不在允許清單中，OpenSearch Dashboards 會以紅色狀態啟動。
+| `opensearch.requestHeadersAllowlist` | OpenSearch Dashboards 要求您將所有 HTTP 標頭加入允許清單，以便標頭傳遞至 OpenSearch。多租用戶會使用特定標頭 `securitytenant`，該標頭必須與標準 `Authorization` 標頭同時存在。如果 `securitytenant` 標頭不在允許清單中，OpenSearch Dashboards 啟動時會顯示紅色狀態。 |
 | `opensearch_security.multitenancy.enabled` | 啟用或停用 OpenSearch Dashboards 中的多租用戶。預設為 `true`。 |
 | `opensearch_security.multitenancy.tenants.enable_global` | 啟用或停用全域租用戶。預設為 `true`。 |
-| `opensearch_security.multitenancy.tenants.enable_private` | 啟用或停用私有租用戶。預設為 `true`。 |
-| `opensearch_security.multitenancy.tenants.preferred` | 可讓您變更 OpenSearch Dashboards 中 **Tenants** 索引標籤的排序。預設情況下，清單會以 Global 和 Private (如果已啟用) 開頭，然後按字母順序排列。您可以在此新增租用戶，將它們移至清單頂端。 |
+| `opensearch_security.multitenancy.tenants.enable_private` | 啟用或停用私人租用戶。預設為 `true`。 |
+| `opensearch_security.multitenancy.tenants.preferred` | 可讓您變更 OpenSearch Dashboards **Tenants** 索引標籤中的排序。根據預設，清單會先顯示 Global 和 Private（若已啟用），然後依字母順序排列。您可以在此新增租用戶，將其移至清單頂端。 |
 | `opensearch_security.multitenancy.enable_filter` | 如果您有許多租用戶，可以在清單頂端新增搜尋列。預設為 `false`。 |
 
 

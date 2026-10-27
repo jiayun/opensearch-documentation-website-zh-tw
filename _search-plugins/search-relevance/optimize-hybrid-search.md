@@ -16,8 +16,8 @@ Search Relevance Workbench 可協助您有系統地找出符合需求的理想�
 
 ## 需求
 
-在內部，最佳化混合搜尋涉及執行多個搜尋品質評估實驗。進行這些實驗時，您需要一組查詢集、判斷結果與搜尋組態。
-Search Relevance Workbench 支援混合搜尋最佳化，但僅限於恰好兩個查詢子句。雖然混合搜尋通常結合向量與詞彙查詢，您也可以使用兩個詞彙查詢子句執行混合搜尋最佳化：
+在內部，最佳化混合搜尋涉及執行多個搜尋品質評估實驗。進行這些實驗時，您需要查詢集、判斷結果與搜尋組態。
+Search Relevance Workbench 支援僅包含兩個查詢子句的混合搜尋最佳化。雖然混合搜尋通常結合向量查詢與詞彙查詢，但您也可以使用兩個詞彙查詢子句執行混合搜尋最佳化：
 
 ```json
 PUT _plugins/_search_relevance/search_configurations
@@ -29,7 +29,7 @@ PUT _plugins/_search_relevance/search_configurations
 ```
 {% include copy-curl.html %}
 
-混合搜尋最佳化在結合詞彙搜尋與向量搜尋結果時最有價值。為獲得最佳結果，請將混合搜尋查詢設定為兩個子句：一個文字查詢子句與一個 neural 查詢子句。您不需要設定搜尋管線來結合結果，因為混合搜尋最佳化程序會自動處理。以下是一個適合混合搜尋最佳化的搜尋組態範例：
+混合搜尋最佳化在結合詞彙搜尋與向量搜尋結果時最有價值。為獲得最佳結果，請使用兩個子句設定混合搜尋查詢：一個文字查詢子句和一個 neural 查詢子句。您不需要設定搜尋管線來合併結果，因為混合搜尋最佳化程序會自動處理。以下是一個適合混合搜尋最佳化的搜尋組態範例：
 
 ```json
 PUT _plugins/_search_relevance/search_configurations
@@ -41,7 +41,7 @@ PUT _plugins/_search_relevance/search_configurations
 ```
 {% include copy-curl.html %}
 
-`query` 中指定的模型 ID，必須是已在 OpenSearch 中部署之模型的有效模型 ID。目標索引必須包含用於神經搜尋嵌入的欄位（在本範例中為 `title_embedding`）。
+`query` 中指定的模型 ID 必須是已在 OpenSearch 中部署之模型的有效模型 ID。目標索引必須包含儲存嵌入的欄位（在此範例中為 `title_embedding`）。
 
 如需端對端範例，請參閱 [`search-relevance` 儲存庫](https://github.com/opensearch-project/search-relevance)。
 
@@ -80,15 +80,15 @@ PUT _plugins/_search_relevance/experiments
 
 ## 實驗流程
 
-混合搜尋最佳化實驗會評估查詢集中每個查詢的下列參數變體的所有組合，並根據判斷清單為結果評分：
+混合搜尋最佳化實驗會針對查詢集中的每個查詢，評估下列參數變體的所有組合，並依據評判清單為結果評分：
 
-- 分數型變體：
-  - 正規化技術：`l2`、`min_max` 與 `z_score`。由於 [正規化處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/normalization-processor/#request-body-fields) 的限制，`z_score` 技術只能與 `arithmetic_mean` 結合使用。
-  - 結合技術：`arithmetic_mean`、`harmonic_mean` 與 `geometric_mean`。
-  - 詞彙與神經搜尋權重範圍從 `0.0` 到 `1.0`，以 `0.1` 為遞增單位。
+- 以分數為基礎的變體：
+  - 正規化技術：`l2`、`min_max` 與 `z_score`。由於[正規化處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/normalization-processor/#request-body-fields)的限制，`z_score` 技術只能與 `arithmetic_mean` 合併使用。
+  - 合併技術：`arithmetic_mean`、`harmonic_mean` 與 `geometric_mean`。
+  - 詞彙搜尋與向量搜尋的權重範圍從 `0.0` 到 `1.0`，以 `0.1` 為增量。
 
-- 排名型變體：
-  - `rrf` ([Reciprocal Rank Fusion (RRF)]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/score-ranker-processor/)) 結合技術，使用 `rank_constant` 值 `1`、`5`、`10`、`20` 與 `60` 進行評估。RRF 變體在所有子查詢中使用相等權重。
+- 以排名為基礎的變體：
+  - `rrf`（[Reciprocal Rank Fusion (RRF)]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/score-ranker-processor/)）合併技術，使用 `1`、`5`、`10`、`20` 與 `60` 等 `rank_constant` 值進行評估。RRF 變體在所有子查詢中皆使用相同權重。
 
 ## 評估結果
 

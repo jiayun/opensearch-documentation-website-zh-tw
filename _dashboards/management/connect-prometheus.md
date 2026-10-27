@@ -6,49 +6,74 @@ parent: Connecting data sources
 nav_order: 60
 ---
 
-# 將 Prometheus 連接至 OpenSearch
-於 2.16 版引入
+# 將 Prometheus 連線至 OpenSearch
+於 2.16 版推出
 {: .label .label-purple }
 
-本文件說明如何使用 OpenSearch Dashboards 介面將 Prometheus 連接至 OpenSearch 的主要步驟，包括設定資料來源連線、修改連線詳細資料，以及為 Prometheus 資料建立索引模式。
+您可以將 OpenSearch 連線至 Prometheus 伺服器，並在 OpenSearch Dashboards 中查詢其指標。OpenSearch 不會複製指標。而是由 SQL 外掛程式在您執行查詢時，將每個查詢傳送至 Prometheus，因此 Prometheus URI 必須可從 OpenSearch 節點連線。
 
-## 先決條件與權限
+## 先決條件
 
-連接資料來源之前，請確認您已符合[先決條件]({{site.url}}{{site.baseurl}}/dashboards/management/data-sources/#prerequisites)並具備必要的[權限]({{site.url}}{{site.baseurl}}/dashboards/management/data-sources/#permissions)。
+建立連線前，請確認您已完成下列先決條件：
 
-## 建立 Prometheus 資料來源連線
+- 在所有 OpenSearch 節點上設定 `plugins.query.datasources.encryption.masterkey` 設定。OpenSearch 使用此金鑰加密儲存的連線認證資訊，若未設定金鑰，則會拒絕建立或更新連線的請求。如需詳細資訊，請參閱[先決條件]({{site.url}}{{site.baseurl}}/dashboards/management/data-sources/#prerequisites)。
+- 確認您具有必要的[權限]({{site.url}}{{site.baseurl}}/dashboards/management/data-sources/#permissions)。
 
-資料來源連線會指定連接至資料來源所需的參數。這些參數會組成該資料來源的連線字串。您可以使用 OpenSearch Dashboards 新增 **Prometheus** 資料來源連線，或管理現有的連線。
+## 建立 Prometheus 連線
 
-請依照下列步驟連接您的資料來源：
+若要建立 Prometheus 連線，請依照下列步驟操作：
 
-1. 在 OpenSearch Dashboards 主選單中，前往 **Management** > **Data sources** > **New data source** > **Prometheus**。
+1. 在主選單中，前往 **Management** > **Dashboards Management** > **Data sources**。
+1. 選取 **Create direct query connection** > **Prometheus**。
+1. 在 **Data source details** 區段中，輸入 **Data source name**，並可選擇性輸入描述。您會在查詢中使用此名稱來參照該連線，例如 `source = my_prometheus.prometheus_http_requests_total`。
+1. 在 **Prometheus data location** 區段中，輸入 **Prometheus URI**，例如 `http://prometheus.example.com:9090`。
+1. 在 **Authentication details** 區段中，選取 **Authentication method**：
+    - **No authentication**：OpenSearch 不使用認證資訊連線至 Prometheus。
+    - **Basic authentication**：輸入 **Username** 與 **Password**。
+    - **AWS Signature Version 4**：輸入 **Auth Region**、**Access Key** 與 **Secret Key**。Amazon Managed Service for Prometheus 請使用此方法。
+1. 在 **Query permissions** 區段中，選取 **Query access level**：
+    - **Admin only**：只有管理員使用者可以查詢該連線。此為預設值。
+    - **Restricted**：具有您所選 OpenSearch 角色的使用者可以查詢該連線。此選項僅在已安裝 Security 外掛程式時提供。
+1. 選取 **Connect to Prometheus**。
 
-2. 在 **Configure Prometheus data source** 區段中：
-   
-   - 在 **Data source details** 下，提供標題及選用的描述。
-   - 在 **Prometheus data location** 下，輸入 Prometheus URI。
-   - 在 **Authentication details** 下，從下拉式清單中選取適當的驗證方法，並輸入必要的詳細資料：
-       - **Basic authentication**：輸入使用者名稱和密碼。
-       - **AWS Signature Version 4**：指定 **Region**，從 **Service Name** 清單中選取 OpenSearch 服務（**Amazon OpenSearch Service** 或 **Amazon OpenSearch Serverless**），然後輸入 **Access Key** 和 **Secret Key**。
-   - 在 **Query permissions** 下，選擇搜尋資料及將資料編製索引所需的角色。如果您選取 **Restricted**，將會出現一個額外的欄位，供您設定所需的角色。
+新連線會出現在資料來源清單中。
 
-3. 選取 **Review Configuration** > **Connect to Prometheus** 以儲存您的設定。新的連線將會出現在資料來源清單中。
+您也可以使用 `_plugins/_query/_datasources` API 建立連線。如需範例，請參閱[指標分析]({{site.url}}{{site.baseurl}}/observing-your-data/prometheusmetrics/#configuring-a-prometheus-connection-using-the-api)。
 
-## 修改資料來源連線
+## 查詢 Prometheus 指標
 
-若要修改資料來源連線，請依照下列步驟操作：
+若要查詢指標，請在 **Data sources** 頁面選取連線，然後選取 **Query data**。Observability 的 **Metrics** 頁面會開啟，您可以在其中將 Prometheus 指標視覺化。您也可以使用 Piped Processing Language (PPL) 查詢這些指標。如需更多資訊，請參閱[指標分析]({{site.url}}{{site.baseurl}}/observing-your-data/prometheusmetrics/)。
 
-1. 在 **Data sources** 主頁面的清單中選取所需的連線。這會開啟 **Connection Details** 視窗。
-2. 在 **Connection Details** 視窗中，編輯 **Title** 和 **Description** 欄位。選取 **Save changes** 按鈕以套用變更。
-3. 若要更新 **Authentication Method**，請從下拉式清單中選擇方法，並輸入任何必要的憑證資訊。選取 **Save changes** 以套用變更。
-    - 若要更新 **Basic authentication** 驗證方法，請選取 **Update stored password** 按鈕。在快顯視窗中輸入更新後的密碼並加以確認，然後選取 **Update stored password** 以儲存變更。若要測試連線，請選取 **Test connection** 按鈕。
-    - 若要更新 **AWS Signature Version 4** 驗證方法，請選取 **Update stored AWS credential** 按鈕。在快顯視窗中輸入更新後的存取金鑰和秘密金鑰，然後選取 **Update stored AWS credential** 以儲存變更。若要測試連線，請選取 **Test connection** 按鈕。
+## 變更連線的存取權
 
-## 刪除資料來源連線
+若要變更哪些使用者可以查詢連線，請在 **Data sources** 頁面選取該連線。在 **Access control** 索引標籤上，選取 **Edit**、更新 **Query access level**，然後儲存您的變更。
 
-若要刪除資料來源連線，請選取 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/dashboards/trash-can-icon.png" class="inline-icon" alt="delete icon"/>{:/}（刪除）圖示。
+## 更新連線
 
-## 建立索引模式
+OpenSearch Dashboards 不支援編輯現有連線的 Prometheus URI 或認證資訊。若要更新這些項目，請向 `_plugins/_query/_datasources` API 傳送請求。下列請求會變更 `my_prometheus` 連線的 Prometheus URI：
 
-建立資料來源連線之後，下一步是為該資料來源建立索引模式。如需索引模式的詳細資訊和教學，請參閱[索引模式]({{site.url}}{{site.baseurl}}/dashboards/management/index-patterns/)。 
+```json
+PATCH _plugins/_query/_datasources
+{
+  "name": "my_prometheus",
+  "properties": {
+    "prometheus.uri": "http://prometheus.example.com:9090"
+  }
+}
+```
+{% include copy-curl.html %}
+
+## 刪除連線
+
+如果在 OpenSearch Dashboards 中啟用了[多個資料來源]({{site.url}}{{site.baseurl}}/dashboards/management/multi-data-sources/)，您可以在 **Data sources** 頁面刪除連線。在 **Direct query connections** 索引標籤上，選取該連線，選取 **Delete 1 connection**，然後確認刪除。此索引標籤只會列出在 OpenSearch Dashboards 中建立的連線。
+
+否則，請使用 API 刪除連線：
+
+```json
+DELETE _plugins/_query/_datasources/my_prometheus
+```
+{% include copy-curl.html %}
+
+## 相關文件
+
+- [指標分析]({{site.url}}{{site.baseurl}}/observing-your-data/prometheusmetrics/)

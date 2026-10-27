@@ -5,6 +5,9 @@ title: "限制"
 nav_order: 99
 redirect_from:
   - /search-plugins/sql/limitation/
+  - /sql-and-ppl/sql/delete/
+  - /search-plugins/sql/delete/
+  - /search-plugins/sql/sql/delete/
 ---
 
 # SQL 與 PPL 限制
@@ -30,6 +33,10 @@ FROM (
 
 
 但若外部查詢含有 `GROUP BY` 或 `ORDER BY`，則不支援。
+
+## 不支援 DELETE 陳述式
+
+SQL 不支援 `DELETE` 陳述式。若要刪除符合查詢的文件，請使用 [Delete by Query API]({{site.url}}{{site.baseurl}}/api-reference/document-apis/delete-by-query/)。
 
 ## JOIN 查詢
 
@@ -130,18 +137,17 @@ POST _plugins/_sql/
 
 這類查詢會由 `V2` 引擎成功執行，除非它們含有 `V1` 專屬的函式。您很可能永遠不會遇到這些限制。
 
-### V2 引擎限制
+### V2 引擎的限制
 
-`V2` 查詢引擎可處理大多數現代 SQL 查詢模式。然而，它有一些限制可能會影響您的查詢開發，尤其是複雜的分析工作負載。了解這些限制有助於您設計出能與 OpenSearch 最佳搭配運作的查詢：
+`V2` 查詢引擎支援大多數現代 SQL 查詢模式。不過，它仍有某些限制，可能影響您的查詢開發，尤其是複雜的分析工作負載。瞭解這些限制有助您設計能與 OpenSearch 最佳搭配運作的查詢：
 
-* [游標功能](#pagination-only-supports-basic-queries)僅由 `V1` 引擎支援。
-  * 如需 `V2` 引擎中對 `cursor`/`pagination` 的支援，請追蹤 [GitHub issue #656](https://github.com/opensearch-project/sql/issues/656)。
-* `json` 格式化輸出僅在 `V1` 引擎中受支援。 
+* [游標功能](#pagination-only-supports-basic-queries) 僅由 `V1` 引擎支援。
+  * 若要在 `V2` 引擎中支援 `cursor`/`pagination`，請追蹤 [GitHub issue #656](https://github.com/opensearch-project/sql/issues/656)。
 * `V2` 引擎不會追蹤查詢執行時間，因此不會回報慢速查詢。
-* `V2` 查詢引擎不僅在 OpenSearch 引擎中執行查詢，也支援複雜查詢的後處理。因此，`explain` 輸出不再是 OpenSearch 領域特定語言 (DSL)，而是也包含來自 `V2` 查詢引擎的查詢計畫資訊。
+* `V2` 查詢引擎不僅在 OpenSearch 引擎中執行查詢，還支援對複雜查詢進行後處理。因此，`explain` 輸出不再是 OpenSearch 領域特定語言 (DSL)，還包含來自 `V2` 查詢引擎的查詢計畫資訊。
 * `V2` 查詢引擎不支援彙總查詢，例如 `histogram`、`date_histogram`、`percentiles`、`topHits`、`stats`、`extended_stats`、`terms` 或 `range`。
-* 不支援 JOIN 與子查詢。若要掌握 JOIN 與子查詢的最新開發進度，請追蹤 [GitHub issue #1441](https://github.com/opensearch-project/sql/issues/1441) 與 [GitHub issue #892](https://github.com/opensearch-project/sql/issues/892)。
-* OpenSearch 原生不支援陣列資料類型，但隱含允許多重值欄位。SQL/PPL 外掛程式嚴格遵循索引對應中定義的資料類型語意。在剖析 OpenSearch 回應時，它預期資料符合宣告的類型，且不會將陣列中的所有資料都解譯。若啟用 [`plugins.query.field_type_tolerance`](https://github.com/opensearch-project/sql/blob/main/docs/user/admin/settings.rst#plugins-query-field-type-tolerance) 設定，SQL/PPL 外掛程式會以傳回純量資料類型的方式處理陣列資料集，允許基本查詢 (例如 `SELECT * FROM tbl WHERE condition`)。然而，在運算式或函式中使用多重值欄位會導致例外狀況。若停用或未設定此設定，則只會傳回陣列的第一個元素，保留預設行為。
+* 不支援 JOIN 與子查詢。若要掌握 JOIN 與子查詢的開發進度，請追蹤 [GitHub issue #1441](https://github.com/opensearch-project/sql/issues/1441) 與 [GitHub issue #892](https://github.com/opensearch-project/sql/issues/892)。
+* OpenSearch 原生不支援陣列資料類型，但隱含允許多值欄位。SQL/PPL 外掛程式嚴格遵循索引對應中定義的資料類型語意。解析 OpenSearch 回應時，它預期資料符合宣告的類型，並不會解譯陣列中的所有資料。若啟用 [`plugins.query.field_type_tolerance`](https://github.com/opensearch-project/sql/blob/main/docs/user/admin/settings.rst#plugins-query-field-type-tolerance) 設定，SQL/PPL 外掛程式會以傳回純量資料類型的方式處理陣列資料集，允許基本查詢（例如 `SELECT * FROM tbl WHERE condition`）。不過，在運算式或函式中使用多值欄位將導致例外狀況。若此設定已停用或未設定，則只會傳回陣列的第一個元素，維持預設行為。
 * 不支援 `nested` 查詢的 PartiQL 語法。
 
 ### V3 引擎限制與限制條件

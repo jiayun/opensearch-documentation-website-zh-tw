@@ -3,7 +3,7 @@
 layout: default
 title: "混合搜尋代理記憶"
 parent: Agentic memory APIs
-grand_parent: ML Commons APIs
+grand_parent: ML APIs
 nav_order: 70
 ---
 
@@ -36,7 +36,7 @@ GET /_plugins/_ml/memory_containers/{memory_container_id}/memories/long-term/_hy
 
 | 參數 | 資料類型 | 必要/選用 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `memory_container_id` | String | 必要 | 記憶容器的 ID。 |
+| `memory_container_id` | 字串 | 必要 | 記憶容器的 ID。 |
 
 ## 請求欄位
 
@@ -44,14 +44,14 @@ GET /_plugins/_ml/memory_containers/{memory_container_id}/memories/long-term/_hy
 
 | 欄位 | 資料類型 | 必要/選用 | 預設 | 說明 |
 | :--- | :--- | :--- | :--- | :--- |
-| `query` | String | 必要 | 不適用 | 用於 BM25 關鍵字比對與語意搜尋的自然語言搜尋查詢。 |
-| `k` | Integer | 選用 | 10 | 要傳回的結果數量。有效值為 `1`–`10000`（含）。 |
-| `namespace` | Object | 選用 | 不適用 | 依命名空間欄位篩選結果。例如 `{"user_id": "alice"}`。 |
-| `tags` | Object | 選用 | 不適用 | 依標籤欄位篩選結果。例如 `{"topic": "food"}`。 |
-| `min_score` | Float | 選用 | 不適用 | 最低相關性分數閾值。低於此分數的結果會被排除。 |
-| `filter` | Object | 選用 | 不適用 | 與混合查詢一併套用的額外 [Query DSL]({{site.url}}{{site.baseurl}}/query-dsl/) 篩選條件。 |
-| `bm25_weight` | Float | 選用 | 0.5 | BM25 關鍵字搜尋元件的權重。有效值為 `0.0`–`1.0`。`bm25_weight` 與 `neural_weight` 的總和必須等於 `1.0`。 |
-| `neural_weight` | Float | 選用 | 0.5 | 神經向量搜尋元件的權重。有效值為 `0.0`–`1.0`。`bm25_weight` 與 `neural_weight` 的總和必須等於 `1.0`。 |
+| `query` | 字串 | 必要 | 不適用 | 用於 BM25 關鍵字比對與語意搜尋的自然語言搜尋查詢。 |
+| `k` | 整數 | 選用 | 10 | 要傳回的結果數量。有效值為 `1`–`10000`（含）。 |
+| `namespace` | 物件 | 選用 | 不適用 | 依命名空間欄位篩選結果。例如 `{"user_id": "alice"}`。 |
+| `tags` | 物件 | 選用 | 不適用 | 依標籤欄位篩選結果。例如 `{"topic": "food"}`。 |
+| `min_score` | 浮點數 | 選用 | 不適用 | 最低相關性分數閾值。低於此分數的結果會被排除。 |
+| `filter` | 物件 | 選用 | 不適用 | 與混合查詢一併套用的額外 [Query DSL]({{site.url}}{{site.baseurl}}/query-dsl/) 篩選條件。 |
+| `bm25_weight` | 浮點數 | 選用 | 0.5 | BM25 關鍵字搜尋元件的權重。有效值為 `0.0`–`1.0`。`bm25_weight` 與 `neural_weight` 的總和必須等於 `1.0`。 |
+| `neural_weight` | 浮點數 | 選用 | 0.5 | 神經向量搜尋元件的權重。有效值為 `0.0`–`1.0`。`bm25_weight` 與 `neural_weight` 的總和必須等於 `1.0`。 |
 
 ## 範例請求：基本混合搜尋
 

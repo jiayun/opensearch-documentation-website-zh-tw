@@ -78,7 +78,7 @@ OpenSearch 提供下列 REST API。
 
 | API | 用途 |
 | :--- | :--- |
-| [Index Rollups API]({{site.url}}{{site.baseurl}}/im-plugin/index-rollups/rollup-api/) | 建立及管理將歷史資料彙整為較小索引的彙整工作。 |
+| [Index Rollups API]({{site.url}}{{site.baseurl}}/im-plugin/index-rollups/rollup-api/) | 建立及管理將歷史資料彙總至較小索引的索引彙總工作。 |
 | [Index State Management API]({{site.url}}{{site.baseurl}}/im-plugin/ism/api/) | 建立及管理可自動化索引生命週期操作的政策。 |
 | [ISM Error Prevention API]({{site.url}}{{site.baseurl}}/im-plugin/ism/error-prevention/api/) | 開啟 Index State Management 錯誤防護，並讀取其驗證結果。 |
 | [Refresh Search Analyzer API]({{site.url}}{{site.baseurl}}/im-plugin/refresh-analyzer/) | 在不關閉已開啟索引的情況下，重新載入其搜尋分析器。 |
@@ -110,7 +110,7 @@ OpenSearch 提供下列 REST API。
 | [Notifications API]({{site.url}}{{site.baseurl}}/observing-your-data/notifications/api/) | 定義傳遞通知的頻道，以及傳送通知的來源。 |
 | [Performance Analyzer API]({{site.url}}{{site.baseurl}}/monitoring-your-cluster/pa/api/) | 擷取節點或叢集的效能指標。 |
 | [Query Insights APIs]({{site.url}}{{site.baseurl}}/observing-your-data/query-insights/) | 讀取前 N 名查詢、即時查詢與查詢洞察健康狀態統計資料，並變更查詢洞察設定。 |
-| [Reporting API]({{site.url}}{{site.baseurl}}/reporting/api/) | 定義報告，並從儀表板、視覺化、已儲存的搜尋與筆記本產生報告。下載算繪後的內容會使用 OpenSearch Dashboards 端點。 |
+| [Reporting API]({{site.url}}{{site.baseurl}}/dashboards/reporting/api/) | 定義報告，並從儀表板、視覺化、已儲存的搜尋與筆記本產生報告。下載算繪後的內容會使用 OpenSearch Dashboards 端點。 |
 | [Root Cause Analysis API]({{site.url}}{{site.baseurl}}/monitoring-your-cluster/pa/rca/api/) | 擷取叢集的根本原因分析結果。 |
 
 ### 安全性與安全分析 API

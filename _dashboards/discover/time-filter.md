@@ -22,17 +22,27 @@ redirect_from:
 
 雖然大多數應用程式（例如資料記錄檔）處理的是過去的日期和時間，但相對和絕對時間間隔可以同時包含過去和未來的日期和時間。例如，相對時間間隔可以設定為從 _現在_ 到未來 24 小時。
 
-預設的時間範圍是相對間隔的 **Last 15 minutes**。您可以在 [**Dashboards Management** > **Advanced Settings** > **Time filter defaults**]({{site.url}}{{site.baseurl}}/dashboards/management/advanced-settings/#general-settings) 變更預設值，或按照 [Selecting a time range](#selecting-a-time-range) 中所述在應用程式層級選取時間範圍。
+預設的時間範圍是相對間隔的 **Last 15 minutes**。您可以在 [**Dashboards Management** > **Advanced Settings** > **Time filter defaults**]({{site.url}}{{site.baseurl}}/dashboards/management/advanced-settings/#general-settings) 變更預設值，或按照 [選取時間範圍](#selecting-a-time-range) 中所述在應用程式層級選取時間範圍。
 {: .note}
+
+## 時間篩選器使用的時間欄位
+
+時間篩選器僅套用至一個日期欄位：也就是您在[建立索引模式]({{site.url}}{{site.baseurl}}/dashboards/management/index-patterns/#step-2-configure-the-settings)時選取的時間欄位，例如 `@timestamp`。如果您的文件包含多個日期欄位，時間篩選器只會使用該時間欄位，並忽略其他日期欄位。在 **Dashboards Management** > **Index patterns** 中的索引模式頁面上，時間欄位會以時鐘圖示標示。
+
+視覺化與儀表板面板會使用其所依據之索引模式的時間欄位。一個儀表板可以包含依據不同索引模式建立的面板，而每個面板會將時間範圍套用至其本身索引模式的時間欄位。
+
+如果您建立不含時間欄位的索引模式（透過選取 **I don't want to use the time filter**），資料將不會依時間篩選。**Discover** 不會為該索引模式顯示時間篩選器，而 **Visualize** 只會顯示重新整理間隔控制項。在儀表板上，使用此類索引模式的面板會忽略時間範圍。
+
+您無法變更現有索引模式的時間欄位。若要依其他日期欄位篩選，或要為建立時未設定時間欄位的索引模式加入時間篩選功能，請建立新的索引模式，並在 **Time field** 清單中選取該欄位。
 
 ## 操作時間篩選器
 
-![Time filter interface]({{site.url}}{{site.baseurl}}/images/dashboards/time-filter-callouts.png)
+![時間篩選器介面]({{site.url}}{{site.baseurl}}/images/dashboards/time-filter-callouts.png)
 
 時間篩選器由下列元件組成：
 
 - _捷徑選取器 (shortcut selector)_ (A) 會開啟一個對話方塊，您可以在其中選取相對時間間隔或最近使用的時間間隔，並設定時間重新整理間隔。
-- _時間範圍顯示 (time range display)_ (B) 以絕對（例如：_Mar 22, 2024 @12:00:01.000 → now_）或相對（例如：_Last 2 years_）術語顯示選取的時間範圍。
+- _時間範圍顯示 (time range display)_ (B) 以絕對形式（例如：_Mar 22, 2024 @12:00:01.000 → now_）或相對形式（例如：_Last 2 years_）顯示選取的時間範圍。
 - **Show dates** 連結 (C) 會強制 _時間範圍顯示_ 以 _from → to_ 格式顯示時間間隔。
 - **Refresh** 按鈕 (D) 會根據新的篩選或查詢值更新應用程式中顯示的資料。**Refresh** 會更新查詢、資料篩選器以及時間篩選器。
 
@@ -52,7 +62,7 @@ redirect_from:
 
 1. 在時間選取彈出視窗中，選擇 **Absolute** 索引標籤，如下圖所示。
 
-   ![Absolute time filter]({{site.url}}{{site.baseurl}}/images/dashboards/absolute-time-filter.png){: width="56%" }
+   ![絕對時間篩選器]({{site.url}}{{site.baseurl}}/images/dashboards/absolute-time-filter.png){: width="56%" }
 
 1. 使用日曆和時間捲動工具來選擇開始時間，或在 **Start date** 文字方塊中編輯開始時間。
 
@@ -77,7 +87,7 @@ redirect_from:
 
 1. 在時間選取彈出視窗中，選擇 **Relative** 索引標籤，如下圖所示。
 
-   ![Relative time filter]({{site.url}}{{site.baseurl}}/images/dashboards/relative-time-filter.png){: width="56%" }
+   ![相對時間篩選器]({{site.url}}{{site.baseurl}}/images/dashboards/relative-time-filter.png){: width="56%" }
 
 1. 在數字組合方塊中，選取或輸入間隔數量。
 
@@ -124,7 +134,7 @@ redirect_from:
 
 1. 從捷徑彈出視窗中，選取時間篩選選項之一，如下圖所示。
 
-   ![Time range interface]({{site.url}}{{site.baseurl}}/images/dashboards/time-range.png){: width="59%" }
+   ![時間範圍介面]({{site.url}}{{site.baseurl}}/images/dashboards/time-range.png){: width="59%" }
 
    - **Quick select**：選擇從 _現在_ 到過去 (**Last**) 或未來 (**Next**) 時間的間隔。
 
@@ -170,8 +180,8 @@ redirect_from:
 
 ## 設定時區
 
-預設情況下，時間篩選器使用您的瀏覽器偵測到的時區。若要變更時區，請前往 **Dashboards Management** > **Advanced settings** 並更新 **Timezone for date formatting** (**dateFormat:tz**) 設定。如需更多資訊，請參閱 [Advanced settings]({{site.url}}{{site.baseurl}}/dashboards/management/advanced-settings/)。
+預設情況下，時間篩選器使用您的瀏覽器偵測到的時區。若要變更時區，請前往 **Dashboards Management** > **Advanced settings** 並更新 **Timezone for date formatting** (**dateFormat:tz**) 設定。如需更多資訊，請參閱 [進階設定]({{site.url}}{{site.baseurl}}/dashboards/management/advanced-settings/)。
 
 ## 相關文件
 
-- [Advanced settings]({{site.url}}{{site.baseurl}}/dashboards/management/advanced-settings/)
+- [進階設定]({{site.url}}{{site.baseurl}}/dashboards/management/advanced-settings/)

@@ -3,7 +3,7 @@
 layout: default
 title: "列出連接器 MCP 工具"
 parent: MCP client APIs
-grand_parent: ML Commons APIs
+grand_parent: ML APIs
 nav_order: 10
 ---
 

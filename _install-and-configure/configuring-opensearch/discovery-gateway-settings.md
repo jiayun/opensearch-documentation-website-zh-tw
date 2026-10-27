@@ -34,7 +34,7 @@ nav_order: 30
   - **建議**：將此值設定為叢集中實際的資料節點數量，以便在所有資料節點都執行後立即開始復原。
 
 - `gateway.recover_after_time`（靜態，時間單位）：若尚未達到預期的資料節點數量，在開始復原前等待的最長時間。超過此時間後，即會進行復原。
-  - **預設值**：若已設定 `expected_data_nodes` 或 `recover_after_nodes`，則為 `5m`。否則停用。
+  - **預設值**：若已設定 `expected_data_nodes` 或 `recover_after_data_nodes`，則為 `5m`。否則停用。
   - **建議**：設定為略高於一般節點加入所需的時間；較大型的叢集通常需要較長的時間復原，並會根據觀察到的啟動行為進行調整。
 
 - `gateway.write_dangling_indices_info`（靜態，布林值）：控制 OpenSearch 在保存叢集狀態時，是否將懸置 (dangling) 索引的相關資訊寫入磁碟。啟用時，系統會維護存在於磁碟上但不屬於目前叢集狀態之索引的中繼資料，有助於復原與疑難排解。預設值為 `true`。

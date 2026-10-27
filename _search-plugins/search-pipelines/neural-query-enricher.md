@@ -8,11 +8,11 @@ parent: User-defined search processors
 grand_parent: Search pipelines
 ---
 
-# 神經查詢擴充處理器
-於 2.11 版推出
+# Neural query enricher 處理器
+於 2.11 版導入
 {: .label .label-purple }
 
-`neural_query_enricher` 搜尋請求處理器用於為[神經搜尋]({{site.url}}{{site.baseurl}}/search-plugins/neural-search/)查詢在索引或欄位層級設定預設機器學習 (ML) 模型 ID。如要進一步了解 ML 模型，請參閱[在 OpenSearch 中使用 ML 模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/)和[連線至遠端模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/)。
+`neural_query_enricher` 搜尋請求處理器的設計目的，是在索引或欄位層級為 [`neural`]({{site.url}}{{site.baseurl}}/query-dsl/specialized/neural/) 與 [`neural_sparse`]({{site.url}}{{site.baseurl}}/query-dsl/specialized/neural-sparse/) 查詢設定預設的機器學習 (ML) 模型 ID。若要進一步了解 ML 模型，請參閱 [Using ML models within OpenSearch]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/) 與 [Connecting to remote models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/)。
 
 ## 請求本文欄位
 

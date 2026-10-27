@@ -80,7 +80,7 @@ OpenSearch Dashboards 中的資源共用功能，可針對外掛程式所定義�
 | Flow Framework | [工作流程]({{site.url}}{{site.baseurl}}/vector-search/ai-search/workflows/workflow-access-control/) |
 | ML Commons | [模型群組]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-sharing-access-control/) |
 | Notifications | [通道]({{site.url}}{{site.baseurl}}/observing-your-data/notifications/notification-access-control/) |
-| Reporting | [報表定義]({{site.url}}{{site.baseurl}}/reporting/report-definition-access-control/)和[報表]({{site.url}}{{site.baseurl}}/reporting/report-instance-access-control/) |
+| Reporting | [報表定義]({{site.url}}{{site.baseurl}}/dashboards/reporting/report-definition-access-control/)和[報表]({{site.url}}{{site.baseurl}}/dashboards/reporting/report-instance-access-control/) |
 | Security Analytics | [偵測器和關聯規則]({{site.url}}{{site.baseurl}}/security-analytics/resource-access-control/) |
 
 只有當您是資源的擁有者、超級管理員，或擁有者已授予共用權限的使用者時，才能共用該資源。

@@ -7,9 +7,9 @@ redirect_from:
   - /search-plugins/sql/response-formats/
 ---
 
-# SQL 與 PPL 查詢回應格式
+# SQL 和 PPL 查詢回應格式
 
-OpenSearch 為 SQL 與 PPL 查詢提供 `jdbc`、`csv`、`raw` 與 `json` 回應格式，各有不同的用途。`jdbc` 格式被廣泛使用，因為它提供結構描述資訊，並增加更多功能，例如分頁。除了 JDBC 驅動程式之外，各種用戶端都能受益於詳細且格式良好的回應。
+OpenSearch 為 SQL 和 PPL 查詢提供 `jdbc`、`csv` 和 `raw` 回應格式，各自適用於不同用途。`jdbc` 格式廣泛使用，因為它提供結構描述資訊，並新增分頁等更多功能。除了 JDBC 驅動程式之外，各種用戶端也能受益於詳細且格式良好的回應。
 
 ## JDBC 格式
 
@@ -29,7 +29,7 @@ POST _plugins/_sql
 
 #### 範例回應
 
-在回應中，`schema` 包含欄位名稱與類型，而 `datarows` 欄位包含查詢傳回的下列結果：
+在回應中，`schema` 包含欄位名稱與類型，`datarows` 欄位則包含結果集：
 
 ```json
 {
@@ -86,75 +86,6 @@ POST /_plugins/_sql
     "type": "SemanticAnalysisException"
   },
   "status": 400
-}
-```
-
-## OpenSearch DSL JSON 格式
-
-如果您將格式設定為 `json`，則會以 JSON 格式傳回原始的 OpenSearch 回應。由於這是來自 OpenSearch 的原生回應，因此需要額外的功夫來解析與解讀。
-
-#### 範例請求
-
-下列查詢將回應格式設定為 `json`：
-
-```json
-POST _plugins/_sql?format=json
-{
-  "query" : "SELECT firstname, lastname, age FROM accounts ORDER BY age LIMIT 2"
-}
-```
-{% include copy-curl.html %}
-
-#### 範例回應
-
-回應是來自 OpenSearch 的原始回應：
-
-```json
-{
-  "_shards": {
-    "total": 5,
-    "failed": 0,
-    "successful": 5,
-    "skipped": 0
-  },
-  "hits": {
-    "hits": [{
-        "_index": "accounts",
-        "_type": "account",
-        "_source": {
-          "firstname": "Nanette",
-          "age": 28,
-          "lastname": "Bates"
-        },
-        "_id": "13",
-        "sort": [
-          28
-        ],
-        "_score": null
-      },
-      {
-        "_index": "accounts",
-        "_type": "account",
-        "_source": {
-          "firstname": "Amber",
-          "age": 32,
-          "lastname": "Duke"
-        },
-        "_id": "1",
-        "sort": [
-          32
-        ],
-        "_score": null
-      }
-    ],
-    "total": {
-      "value": 4,
-      "relation": "eq"
-    },
-    "max_score": null
-  },
-  "took": 100,
-  "timed_out": false
 }
 ```
 

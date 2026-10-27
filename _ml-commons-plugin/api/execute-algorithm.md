@@ -2,7 +2,7 @@
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: "執行演算法"
-parent: ML Commons APIs
+parent: ML APIs
 nav_order: 90
 ---
 

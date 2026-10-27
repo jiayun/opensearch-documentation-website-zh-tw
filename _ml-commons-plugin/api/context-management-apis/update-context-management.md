@@ -3,7 +3,7 @@
 layout: default
 title: "更新脈絡管理"
 parent: Context management APIs
-grand_parent: ML Commons APIs
+grand_parent: ML APIs
 nav_order: 30
 ---
 

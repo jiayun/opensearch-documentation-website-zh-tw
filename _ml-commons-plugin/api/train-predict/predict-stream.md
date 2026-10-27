@@ -3,7 +3,7 @@
 layout: default
 title: "預測串流"
 parent: Model APIs
-grand_parent: ML Commons APIs
+grand_parent: ML APIs
 nav_order: 65
 ---
 

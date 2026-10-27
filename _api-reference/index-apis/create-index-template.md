@@ -42,14 +42,14 @@ POST _index_template/{template-name}
 
 參數 | 類型 | 說明
 :--- | :--- | :---
-`index_patterns` | 字串陣列 | 萬用字元運算式的陣列，用於比對範本建立期間所建立的資料串流與索引名稱。必要。
-`composed_of` | 字串陣列 | 元件範本名稱的有序清單。這些範本會依指定的順序合併。如需詳細資訊，請參閱[使用多個元件範本](#using-multiple-component-templates)。選用。
-`data_stream` | 物件 | 使用此選項時，請求會根據範本建立資料串流與任何後備索引。此設定需要相符的索引範本。此選項也可搭配 `hidden` 設定使用；當該設定設為 `true` 時，會隱藏資料串流的後備索引。選用。
+`index_patterns` | 字串陣列 | 萬用字元運算式陣列，用於比對建立範本時所建立的資料串流與索引名稱。必要。
+`composed_of` | 字串陣列 | 元件範本名稱的有序清單。這些範本會依指定順序合併。如需詳細資訊，請參閱[使用多個元件範本](#using-multiple-component-templates)。選用。
+`data_stream` | 物件 | 使用此選項時，請求會根據範本建立資料串流及任何後端索引。此設定需要相符的索引範本。它也可以搭配 `hidden` 設定使用；當該設定設為 `true` 時，會隱藏資料串流的後端索引。選用。
 `_meta` | 物件 | 提供索引範本詳細資訊的選用中繼資料。選用。
-`priority` | 整數 | 決定建立新索引或資料串流時，哪些索引範本優先套用的數字。OpenSearch 會選擇優先順序最高的範本。未指定優先順序時，範本會被指派 `0`，表示最低優先順序。選用。
-`template` | 物件 | 包含索引的 `aliases`、`mappings` 或 `settings` 的範本。如需詳細資訊，請參閱 [#template]。選用。
+`priority` | 整數 | 決定建立新索引或資料串流時，哪些索引範本優先套用的數字。OpenSearch 會選擇優先順序最高的範本。若未指定優先順序，範本會獲指派 `0`，表示最低優先順序。選用。
+`template` | 物件 | 包含索引的 `aliases`、`mappings` 或 `settings` 的範本。如需詳細資訊，請參閱[範本](#template)。選用。
 `version` | 整數 | 用於管理索引範本的版本號碼。OpenSearch 不會自動設定版本號碼。選用。
-`context` | 物件 | （實驗性）`context` 參數提供針對特定使用案例的預先定義範本，可套用至索引。在範本宣告的所有設定與對應中，情境範本具有最高優先順序。如需詳細資訊，請參閱[索引情境]({{site.url}}{{site.baseurl}}/im-plugin/index-context/)。
+`context` | 物件 | （實驗性）`context` 參數提供針對特定使用案例的預先定義範本，可套用至索引。在範本宣告的所有設定與對應中，脈絡範本具有最高優先順序。如需詳細資訊，請參閱 [index-context]({{site.url}}{{site.baseurl}}/im-plugin/index-context/)。
 
 ### 範本
 

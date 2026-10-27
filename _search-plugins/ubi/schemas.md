@@ -32,9 +32,11 @@ User Behavior Insights (UBI) 資料收集過程包括追蹤與記錄使用者提
 
 ## 重要的 UBI 角色
 
-下圖說明**使用者**與 **Search client** 及 **UBI client** 互動的過程，以及它們接下來與**OpenSearch 叢集**互動的方式，該叢集存放著 **UBI events** 與 **UBI queries** 索引。
+下圖說明**使用者**與**搜尋用戶端（Search client）** 及 **UBI 用戶端（UBI client）** 互動的過程，
+以及它們接下來與 **OpenSearch 叢集**互動的方式，該叢集存放著 **UBI 事件（UBI events）** 與 **UBI 查詢（UBI queries）** 索引。
 
-藍色箭頭表示標準搜尋，粗虛線表示 UBI 特有的新增項目，紅色箭頭則表示 `query_id` 與 OpenSearch 之間的往來流程。
+藍色箭頭表示標準搜尋，粗虛線表示 UBI 特有的新增項目，
+紅色箭頭則表示 `query_id` 與 OpenSearch 之間的往來流程。
 
 ![]({{site.url}}{{site.baseurl}}/images/ubi/ubi-schema-interactions_legend.png)
 ![]({{site.url}}{{site.baseurl}}/images/ubi/ubi-schema-interactions.png)
@@ -114,26 +116,26 @@ linkStyle 3,4,5,8 stroke-width:2px,fill:none,stroke:red
 ```
 {% endcomment %}
 以下是關於這些角色的一些重點：
-- **Search client** 負責搜尋，然後從 OpenSearch 文件索引接收 *物件*（前圖中的 1、2、**5** 與 7）。
+- **搜尋用戶端**負責搜尋，然後從 OpenSearch 文件索引接收*物件*（前圖中的 1、2、**5** 與 7）。
 
 步驟 **5** 以粗體顯示，因為它表示對標準 OpenSearch 互動的 UBI 特有新增項目，例如 `query_id`。
  {: .note}
-- 如果在搜尋請求的 `ext.ubi` 區段中啟用，**User Behavior Insights** 外掛程式會在背景管理 **UBI queries** 儲存區，為每個查詢編製索引、確保所有傳回的 `object_id` 值都有唯一的 `query_id`，然後將 `query_id` 傳回給 **Search client**，以便將事件連結至查詢（前圖中的 3、4 與 **5**）。
+- 如果在搜尋請求的 `ext.ubi` 區段中啟用，**User Behavior Insights** 外掛程式會在背景管理 **UBI 查詢**儲存區，為每個查詢編製索引、確保所有傳回的 `object_id` 值都有唯一的 `query_id`，然後將 `query_id` 傳回給**搜尋用戶端**，以便將事件連結至查詢（前圖中的 3、4 與 **5**）。
 - **物件**代表使用者透過查詢搜尋的項目。啟用 UBI 需要將您的真實世界物件（使用其識別碼，例如 `isbn` 或 `sku`）對應至所搜尋索引中的 `object_id` 欄位。
-- **Search client** 若與 **UBI client** 分開，會將已編製索引的 `query_id` 轉送給 **UBI client**。
-    雖然在此圖中 *搜尋* 與 *UBI 事件索引* 的角色是分開的，但許多實作可以對這兩個角色使用同一個 OpenSearch 用戶端執行個體（前圖中的 6）。
-- **UBI client** 接著會以指定的 `query_id` 為所有使用者事件編製索引，直到執行新的搜尋。此時，**User Behavior Insights** 外掛程式會產生新的 `query_id` 並傳回給 **UBI client**。
-- 如果 **UBI client** 與結果**物件**互動，例如在**加入購物車**事件期間，則 `object_id`、`add_to_cart` `action_name` 與 `query_id` 會一起編製索引，表示 *搜尋* 與 *物件* 之間的因果關聯（前圖中的 8 與 9）。
+- **搜尋用戶端**若與 **UBI 用戶端**分開，會將已編製索引的 `query_id` 轉送給 **UBI 用戶端**。
+    雖然在此圖中*搜尋*與 *UBI 事件編製索引*的角色是分開的，但許多實作可以對這兩個角色使用同一個 OpenSearch 用戶端執行個體（前圖中的 6）。
+- **UBI 用戶端**接著會以指定的 `query_id` 為所有使用者事件編製索引，直到執行新的搜尋。此時，**User Behavior Insights** 外掛程式會產生新的 `query_id` 並傳回給 **UBI 用戶端**。
+- 如果 **UBI 用戶端**與結果**物件**互動，例如在**加入購物車**事件期間，則 `object_id`、`add_to_cart` `action_name` 與 `query_id` 會一起編製索引，表示*搜尋*與*物件*之間的因果關聯（前圖中的 8 與 9）。
 
 
 
 ## UBI 儲存區
 
 支援 UBI 資料收集涉及兩個獨立的儲存區：
-* UBI queries
-* UBI events
+* UBI 查詢（UBI queries）
+* UBI 事件（UBI events）
 
-### UBI queries 索引
+### UBI 查詢索引
 
 所有底層查詢資訊與結果（`object_ids`）都儲存在 `ubi_queries` 索引中，並且在背景中大多不可見。
 
@@ -142,18 +144,18 @@ linkStyle 3,4,5,8 stroke-width:2px,fill:none,stroke:red
 
 - `timestamp`（事件與查詢）：ISO 8601 格式的時間戳記，表示收到查詢的時間。
 
-- `query_id`（事件與查詢）：由用戶端應用程式提供或由搜尋引擎產生的查詢唯一 ID。具有相同文字的不同查詢會產生不同的 `query_id` 值。
+- `query_id`（事件與查詢）：由用戶端提供或由搜尋引擎產生的查詢唯一 ID。具有相同文字的不同查詢會產生不同的 `query_id` 值。
 
 - `client_id`（事件與查詢）：由用戶端應用程式提供的用戶端 ID。
 
-- `query_response_objects_ids`（查詢）：物件 ID 的陣列。ID 可以與 `_id` 具有相同的值，但它是指文件、項目或產品的外部有效 ID。
+- `query_response_hit_ids`（查詢）：物件 ID 的陣列。ID 可以與 `_id` 具有相同的值，但它是指文件、項目或產品的外部有效 ID。
 
 由於 UBI 會管理 `ubi_queries` 索引，您應該永遠不需要直接寫入此索引（匯入資料時除外）。
 
 ### UBI 事件索引
 
-用戶端會直接將事件編製索引至 `ubi_events` 索引，並連結事件 [`action_name`](#action_name)、物件 (每個物件都有一個 `object_id`) 以及查詢 (每個查詢都有一個 `query_id`)，以及任何其他重要的事件資訊。
-由於此結構描述是動態的，您可以在編製索引時新增任何目前 **UBI events** [結構描述](https://github.com/opensearch-project/user-behavior-insights/tree/main/src/main/resources/events-mapping.json) 中沒有的新欄位或結構 (例如使用者資訊或地理位置資訊)。
+用戶端會直接將事件編製索引至 `ubi_events` 索引，並連結事件 [`action_name`](#action_name)、物件（每個物件都有一個 `object_id`）以及查詢（每個查詢都有一個 `query_id`），以及任何其他重要的事件資訊。
+由於此結構描述是動態的，您可以在編製索引時新增任何目前 **UBI 事件**[結構描述](https://github.com/opensearch-project/user-behavior-insights/tree/main/src/main/resources/events-mapping.json)中沒有的新欄位或結構（例如使用者資訊或地理位置資訊）。
 
 開發人員可以在 [`event_attributes`](#event_attributes) 下定義新欄位。
 {: .note}
@@ -162,42 +164,42 @@ linkStyle 3,4,5,8 stroke-width:2px,fill:none,stroke:red
 
  <p id="application"> </p>
 
-- `application` (大小 100)：追蹤 UBI 事件的應用程式名稱 (例如 `amazon-shop` 或 `ABC-microservice`)。
+- `application`（大小 100）：追蹤 UBI 事件的應用程式名稱（例如 `amazon-shop` 或 `ABC-microservice`）。
  
  <p id="action_name"> </p>
 
-- `action_name` (大小 100)：觸發事件的動作名稱。UBI 規格定義了一些常見的動作名稱，但您可以使用任何名稱。
+- `action_name`（大小 100）：觸發事件的動作名稱。UBI 規格定義了一些常見的動作名稱，但您可以使用任何名稱。
 
  <p id="query_id"> </p>
 
-- `query_id` (大小 100)：查詢的唯一識別碼，通常是 UUID，但可以是任何字串。
- `query_id` 由用戶端提供，或由 UBI 外掛程式在查詢時產生。**UBI queries** 和 **UBI events** 索引中的 `query_id` 值必須一致。
+- `query_id`（大小 100）：查詢的唯一識別碼，通常是 UUID，但可以是任何字串。
+ `query_id` 由用戶端提供，或由 UBI 外掛程式在查詢時產生。**UBI 查詢**和 **UBI 事件**索引中的 `query_id` 值必須一致。
 
 <p id="client_id"> </p>
 
 - `client_id`：發出查詢的用戶端。這通常是唯一使用者所使用的網頁瀏覽器。
- **UBI queries** 和 **UBI events** 索引中的 `client_id` 必須一致。
+ **UBI 查詢**和 **UBI 事件**索引中的 `client_id` 必須一致。
 
 - `timestamp`：事件發生的時間，採用 ISO 8601 格式，例如 `2018-11-13T20:20:39+00:00Z`。
 
-- `message_type` (大小 100)：用於將動作分組的邏輯分類 (每個動作都有一個 `action_name`)。例如，`QUERY` 或 `CONVERSION`。 
+- `message_type`（大小 100）：用於將動作分組的邏輯分類（每個動作都有一個 `action_name`）。例如，`QUERY` 或 `CONVERSION`。 
 
-- `message` (大小 1,024)：記錄項目的選用文字訊息。例如，對於 `message_type` `QUERY`，`message` 可以包含與使用者搜尋相關的文字。
+- `message`（大小 1,024）：記錄項目的選用文字訊息。例如，對於 `message_type` `QUERY`，`message` 可以包含與使用者搜尋相關的文字。
 
  <p id="event_attributes"> </p>
 
-- `event_attributes`：描述事件重要內容的可擴充結構。此結構由兩個主要結構組成：`position` 和 `object`。此結構可擴充，因此您可以新增事件的自訂資訊，例如事件的時間、使用者或工作階段。
+- `event_attributes`：描述事件重要脈絡的可擴充結構。此結構由兩個主要結構組成：`position` 和 `object`。此結構可擴充，因此您可以新增事件的自訂資訊，例如事件的時間、使用者或工作階段。
   
  由於 `ubi_events` 索引已設定為執行動態對應，索引可能會因為許多新欄位而變得過於龐大。
   {: .warning} 
 
  - `event_attributes.position`：包含事件來源位置相關資訊的結構，例如螢幕 x、y 座標，或物件在結果清單中的位置：
  
-   - `event_attributes.position.ordinal`：追蹤使用者可選取的清單位置 (例如，選取第三個元素可以描述為 `event{onClick, results[4]}`)。
+   - `event_attributes.position.ordinal`：追蹤使用者可選取的清單位置（例如，選取第三個元素可以描述為 `event{onClick, results[4]}`）。
 
     - `event_attributes.position.xy.{x,y}`：追蹤由用戶端定義的 x 和 y 值。
     
-  - `event_attributes.object`：包含查詢所傳回物件 (例如書籍、產品或貼文) 的識別資訊。
+  - `event_attributes.object`：包含查詢所傳回物件（例如書籍、產品或貼文）的識別資訊。
    `object` 結構可以透過內部 ID 或物件 ID 來參照物件。`object_id` 是將先前的查詢連結至此物件的 ID。此欄位包含下列子欄位：
   
     - `event_attributes.object.internal_id`：OpenSearch 用來在內部將物件編製索引的唯一 ID，例如索引中的 `_id` 欄位。

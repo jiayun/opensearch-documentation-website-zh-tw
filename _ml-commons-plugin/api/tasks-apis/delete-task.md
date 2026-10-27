@@ -3,7 +3,7 @@
 layout: default
 title: "刪除 ML 任務"
 parent: ML Tasks APIs
-grand_parent: ML Commons APIs
+grand_parent: ML APIs
 nav_order: 20
 ---
 
@@ -11,7 +11,7 @@ nav_order: 20
 
 根據 `task_id` 刪除機器學習 (ML) 任務。
 
-ML Commons 在執行刪除請求時不會檢查任務狀態。目前正在執行的任務有可能在完成前就被刪除。若要檢查任務狀態，請在刪除任務前執行 `GET /_plugins/_ml/tasks/<task_id>`。
+OpenSearch 在執行刪除請求時不會檢查任務狀態。目前仍在執行中的任務有可能在完成前就被刪除。若要檢查任務狀態，請在刪除任務前先執行 `GET /_plugins/_ml/tasks/<task_id>`。
 {: .note}
 
 ## 端點

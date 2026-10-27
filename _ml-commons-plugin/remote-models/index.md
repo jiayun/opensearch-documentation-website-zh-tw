@@ -97,12 +97,12 @@ PUT /_cluster/settings
 
 ## 步驟 1：註冊模型群組
 
-若要註冊模型，您有下列選項：
+若要註冊模型，您有以下選項：
 
 - 您可以使用 `model_group_id` 將模型版本註冊到現有的模型群組。
-- 如果您不使用 `model_group_id`，ML Commons 會以新的模型群組建立模型。
+- 如果您未使用 `model_group_id`，OpenSearch 會建立一個模型以及一個新的模型群組。
 
-若要註冊模型群組，請傳送下列請求：
+若要註冊模型群組，請傳送以下請求：
 
 ```json
 POST /_plugins/_ml/model_groups/_register
@@ -113,7 +113,7 @@ POST /_plugins/_ml/model_groups/_register
 ```
 {% include copy-curl.html %}
 
-回應包含模型群組 ID，您將使用它把模型註冊到此模型群組：
+回應中包含模型群組 ID，您將使用此 ID 將模型註冊到此模型群組：
 
 ```json
 {
@@ -122,16 +122,16 @@ POST /_plugins/_ml/model_groups/_register
 }
 ```
 
-若要進一步了解模型群組，請參閱[模型存取控制]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/)。
+若要深入了解模型群組，請參閱[模型存取控制]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/)。
 
 ## 步驟 2：建立連接器
 
-您可以建立獨立連接器，供 OpenSearch 中共用相同外部端點和組態的多個模型註冊重複使用。或者，您可以在建立模型時指定連接器，讓該連接器僅供該模型使用。如需詳細資訊和連接器範例，請參閱[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
+您可以建立獨立的連接器，供 OpenSearch 中多個共用相同外部端點與組態的模型註冊重複使用。或者，您也可以在建立模型時指定連接器，使其僅供該模型使用。如需更多資訊與範例連接器，請參閱[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
 
-如果您使用 Amazon OpenSearch Service，建立連接器的程序會有所不同。如需詳細資訊，請參閱[在 Amazon OpenSearch Service 中建立連接器](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ml-amazon-connector.html)。
+如果您使用 Amazon OpenSearch Service，建立連接器的程序有所不同。如需更多資訊，請參閱[在 Amazon OpenSearch Service 中建立連接器](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ml-amazon-connector.html)。
 {: .note}
 
-Connectors Create API（`/_plugins/_ml/connectors/_create`）會建立連接器，協助您在 OpenSearch 中註冊和部署外部模型。您可以使用 `endpoint` 參數，透過任何受支援機器學習工具的專用 API 端點，將 ML Commons 連接至該工具。例如，您可以使用 `api.openai.com` 端點連接至 ChatGPT 模型：
+Connectors Create API（`/_plugins/_ml/connectors/_create`）可建立連接器，以便在 OpenSearch 中註冊與部署外部模型。透過 `endpoint` 參數，您可以使用特定 API 端點將 OpenSearch 連線至任何支援的 ML 工具。例如，您可以使用 `api.openai.com` 端點連線至 ChatGPT 模型：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -162,7 +162,7 @@ POST /_plugins/_ml/connectors/_create
 ```
 {% include copy-curl.html %}
 
-回應包含新建立連接器的連接器 ID：
+回應包含新建連接器的連接器 ID：
 
 ```json
 {

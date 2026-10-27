@@ -184,7 +184,7 @@ Carrier: "OpenSearch-Air"
 
 ## 匯出資料
 
-您可以將 **Results** 表格中的資料匯出至 CSV 檔案，或複製代表單一文件的 JSON 物件。若要依排程或透過指令碼匯出相同資料，請將您的查詢儲存為已儲存的搜尋，並從中產生 CSV 報表。這樣就能不經由介面匯出資料。如需詳細資訊，請參閱[報表 API]({{site.url}}{{site.baseurl}}/reporting/api/)。
+您可以將 **Results** 表格中的資料匯出至 CSV 檔案，或複製代表單一文件的 JSON 物件。若要依排程或透過指令碼匯出相同資料，請將您的查詢儲存為已儲存的搜尋，並從中產生 CSV 報表。這樣就能不經由介面匯出資料。如需詳細資訊，請參閱[報表 API]({{site.url}}{{site.baseurl}}/dashboards/reporting/api/)。
 
 ### 將資料下載至 CSV 檔案
 

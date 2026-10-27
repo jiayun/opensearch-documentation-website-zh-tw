@@ -37,11 +37,12 @@ redirect_from:
 
 ## 執行升級
 
-1. 開始之前，請先確認 OpenSearch 叢集的健康狀態。您應在升級前解決任何索引或分片分配問題，以確保資料不會遺失。**green** 狀態表示所有主要分片與副本分片皆已分配。如需更多資訊，請參閱 [Cluster health]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-health/)。下列指令查詢 `_cluster/health` API 端點：
+1. 開始之前，請先確認您的 OpenSearch 叢集的健康狀態。升級之前，您應該解決所有索引或分片配置問題，以確保您的資料得以保留。狀態為 **green** 表示所有主要分片和副本分片皆已配置。如需詳細資訊，請參閱[叢集健康狀態]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-health/)。下列命令會查詢 `_cluster/health` API 端點：
    ```json
-   GET "/_cluster/health?pretty"
+   GET /_cluster/health
    ```
-   回應應類似於下列範例：
+{% include copy-curl.html %}
+   回應應類似下列範例：
    ```json
    {
        "cluster_name":"opensearch-dev-cluster",
@@ -61,16 +62,17 @@ redirect_from:
        "active_shards_percent_as_number":100.0
    }
    ```
-1. 停用分片複寫，以防止在節點離線期間建立分片副本。這會停止叢集中節點上 Lucene 索引分段的移動。您可以透過查詢 `_cluster/settings` API 端點來停用分片複寫：
+1. 停用分片複寫，以防止在節點離線期間建立分片副本。這會停止 Lucene 索引分段在叢集節點之間移動。您可以透過查詢 `_cluster/settings` API 端點來停用分片複寫：
    ```json
-   PUT "/_cluster/settings?pretty"
+   PUT /_cluster/settings
    {
        "persistent": {
            "cluster.routing.allocation.enable": "primaries"
        }
    }
    ```
-   回應應類似於下列範例：
+{% include copy-curl.html %}
+   回應應類似下列範例：
    ```json
    {
      "acknowledged" : true,
@@ -87,11 +89,12 @@ redirect_from:
    }
    ```
 
-1. 對叢集執行排清作業，將異動記錄項目提交至 Lucene 索引：
+1. 對叢集執行排清 (flush) 作業，將交易記錄檔項目提交至 Lucene 索引：
    ```json
-   POST "/_flush?pretty"
+   POST /_flush
    ```
-   回應應類似於下列範例：
+{% include copy-curl.html %}
+   回應應類似下列範例：
    ```json
    {
      "_shards" : {
@@ -101,20 +104,21 @@ redirect_from:
      }
    }
    ```
-1. 檢查您的叢集並找出第一個要升級的節點。節點應依照下列順序升級：
+1. 檢查您的叢集，並找出第一個要升級的節點。節點應依下列順序升級：
 
     1. 資料節點
-    1. 資料匯入／機器學習（ML）／協調節點
+    1. 匯入/機器學習 (ML)/協調節點
     1. 叢集管理員節點
 
-    符合資格的叢集管理員節點應最後升級，因為 OpenSearch 節點可以加入執行較舊版本的叢集管理員節點所在的叢集，但無法加入所有叢集管理員節點都執行較新版本的叢集。
-    {: .important}
+    符合資格的叢集管理員節點應最後升級，因為 OpenSearch 節點可以加入叢集管理員節點執行舊版的叢集，但無法加入所有叢集管理員節點都執行新版的叢集。
+{: .important}
 
-1. 查詢 `_cat/nodes` 端點，以確認哪個節點被提升為叢集管理員。下列指令包含額外的查詢參數，僅請求 name、version、node.role 與 master 標頭。請注意，OpenSearch 1.x 版本使用「master」一詞，該詞已被棄用，並在 OpenSearch 2.x 及之後的版本中由「cluster_manager」取代。
-   ```bash
-   GET "/_cat/nodes?v&h=name,version,node.role,master" | column -t
+1. 查詢 `_cat/nodes` 端點，找出哪個節點已升格為叢集管理員。下列命令包含額外的查詢參數，僅請求 name、version、node.role 和 master 標頭。請注意，OpenSearch 1.x 版使用「master」一詞，此用語已被棄用，並在 OpenSearch 2.x 及更新版本中由「cluster_manager」取代。
+   ```json
+   GET /_cat/nodes?v&h=name,version,node.role,master
    ```
-   回應應類似於下列範例：
+{% include copy-curl.html %}
+   回應應類似下列範例：
    ```bash
    name        version  node.role  master
    os-node-01  7.10.2   dimr       -
@@ -122,22 +126,23 @@ redirect_from:
    os-node-03  7.10.2   dimr       -
    os-node-02  7.10.2   dimr       *
    ```
-1. 停止您要升級的節點。如果在 Docker 中執行，刪除容器時請勿刪除與該容器關聯的儲存區。新的 OpenSearch 容器將使用現有的儲存區。**刪除儲存區將導致資料遺失**。
-1. 透過查詢 `_cat/nodes` API 端點，確認相關節點已從叢集中移除：
-   ```bash
-   GET "/_cat/nodes?v&h=name,version,node.role,master" | column -t
+1. 停止您要升級的節點。如果在 Docker 中執行，刪除容器時請勿刪除與該容器相關聯的磁碟區。新的 OpenSearch 容器將使用現有的磁碟區。**刪除磁碟區會導致資料遺失**。
+1. 查詢 `_cat/nodes` API 端點，確認相關節點已從叢集中移除：
+   ```json
+   GET /_cat/nodes?v&h=name,version,node.role,master
    ```
-   回應應類似於下列範例：
+{% include copy-curl.html %}
+   回應應類似下列範例：
    ```bash
    name        version  node.role  master
    os-node-02  7.10.2   dimr       *
    os-node-04  7.10.2   dimr       -
    os-node-03  7.10.2   dimr       -
    ```
-   `os-node-01` 已不再列出，因為容器已被停止並刪除。
+   `os-node-01` 已不再列出，因為該容器已停止並刪除。
 1. 升級節點：
-     - 如果在 Docker 中執行，請部署一個執行所需 OpenSearch 版本的新容器，並對應到與您刪除的容器相同的儲存區。
-     - 如果使用 [Debian]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/debian/) 或 [RPM]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/rpm/) 套件升級，請使用 `rpm`、`yum` 或 `dpkg` 安裝 OpenSearch，並啟動服務。由於位置與檔案都會保留，因此無需進一步設定。
+     - 如果在 Docker 中執行，請部署一個執行所需 OpenSearch 版本的新容器，並對應至與您已刪除容器相同的磁碟區。
+     - 如果使用 [Debian]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/debian/) 或 [RPM]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/rpm/) 套件升級，請使用 `rpm`、`yum` 或 `dpkg` 安裝 OpenSearch 並啟動服務。由於位置和檔案皆會保留，因此不需要進一步設定。
      - 如果使用 [Tarball]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/tar/) 升級，則需要執行下列動作：
         - 備份 `jvm.options`、`opensearch.yml`、憑證以及 `data` 資料夾。
         - 解壓縮新的 tarball。
@@ -146,11 +151,12 @@ redirect_from:
         - 將先前的 `jvm.options` 檔案複製到新的 `config/jvm.options` 檔案。
         - 將 `opensearch.yml` 檔案中列出的 TLS 憑證複製到 `./config/` 目錄。
         - 啟動 OpenSearch。
-1. 在新節點上執行 OpenSearch 後，查詢 `_cat/nodes` 端點以確認它已加入叢集：
-   ```bash
-   GET "/_cat/nodes?v&h=name,version,node.role,master" | column -t
+1. 在新節點上執行 OpenSearch 後，查詢 `_cat/nodes` 端點，確認該節點已加入叢集：
+   ```json
+   GET /_cat/nodes?v&h=name,version,node.role,master
    ```
-   回應應類似於下列範例：
+{% include copy-curl.html %}
+   回應應類似下列範例：
    ```bash
    name        version  node.role  master
    os-node-02  7.10.2   dimr       *
@@ -158,24 +164,33 @@ redirect_from:
    os-node-01  7.10.2   dimr       -
    os-node-03  7.10.2   dimr       -
    ```
-   在範例輸出中，新的 OpenSearch 節點向叢集回報的執行版本為 `7.10.2`。這是 `compatibility.override_main_response_version` 的結果，用於連線至會檢查版本的舊式用戶端所在的叢集。您可以透過呼叫 `/_nodes` API 端點手動確認節點的版本，如下列指令所示。請將 `<nodeName>` 取代為您的節點名稱。如需更多資訊，請參閱 [Nodes API]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/index/)。
-   ```bash
-   GET "/_nodes/{nodeName}?pretty=true" | jq -r '.nodes | .[] | "\(.name) v\(.version)"'
+   在範例輸出中，新的 OpenSearch 節點向叢集回報的執行版本為 `7.10.2`。這是 `compatibility.override_main_response_version` 造成的結果，此設定用於透過會檢查版本的舊版用戶端連線至叢集時。您可以呼叫 `/_nodes` API 端點來手動確認節點的版本，如下列命令所示。請將 `<nodeName>` 替換為您的節點名稱。如需詳細資訊，請參閱 [Nodes API]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/index/)。
+   ```json
+   GET /_nodes/<nodeName>?filter_path=nodes.*.name,nodes.*.version
    ```
-   回應應類似於下列範例：
-   ```bash
-   os-node-01 v1.3.7
+{% include copy-curl.html %}
+   回應應類似下列範例：
+   ```json
+   {
+     "nodes" : {
+       "WbhwdqH3T8ShpE7AhXNfqw" : {
+         "name" : "os-node-01",
+         "version" : "1.3.7"
+       }
+     }
+   }
    ```
 1. 重新啟用分片複寫：
    ```json
-   PUT "/_cluster/settings?pretty"
+   PUT /_cluster/settings
    {
        "persistent": {
            "cluster.routing.allocation.enable": "all"
        }
    }
    ```
-   回應應類似於下列範例：
+{% include copy-curl.html %}
+   回應應類似下列範例：
    ```json
    {
      "acknowledged" : true,
@@ -191,11 +206,12 @@ redirect_from:
      "transient" : { }
    }
    ```
-1. 確認叢集健康狀態良好：
-   ```bash
-   GET "/_cluster/health?pretty"
+1. 確認叢集狀態健康：
+   ```json
+   GET /_cluster/health
    ```
-   回應應類似於下列範例：
+{% include copy-curl.html %}
+   回應應類似下列範例：
    ```json
    {
      "cluster_name" : "opensearch-dev-cluster",
@@ -216,11 +232,12 @@ redirect_from:
      "active_shards_percent_as_number" : 100.0
    }
    ```
-1. 對叢集中的每個節點重複步驟 2 至 11。請記得最後升級符合資格的叢集管理員節點。取代最後一個節點後，查詢 `_cat/nodes` 端點以確認所有節點都已加入叢集。此時叢集已完成新版本 OpenSearch 的引導。您可以透過查詢 `_cat/nodes` API 端點來驗證叢集版本：
-   ```bash
-   GET "/_cat/nodes?v&h=name,version,node.role,master" | column -t
+1. 對叢集中的每個節點重複步驟 2 至 11。請記得最後再升級符合資格的叢集管理員節點。替換最後一個節點後，查詢 `_cat/nodes` 端點，確認所有節點皆已加入叢集。叢集現已啟動為新版本的 OpenSearch。您可以查詢 `_cat/nodes` API 端點來驗證叢集版本：
+   ```json
+   GET /_cat/nodes?v&h=name,version,node.role,master
    ```
-   回應應類似於下列範例：
+{% include copy-curl.html %}
+   回應應類似下列範例：
    ```bash
    name        version  node.role  master
    os-node-04  1.3.7    dimr       -
@@ -228,7 +245,7 @@ redirect_from:
    os-node-01  1.3.7    dimr       -
    os-node-03  1.3.7    dimr       -
    ```
-1. 升級現已完成，您可以開始使用最新的功能與修正。
+1. 升級現已完成，您可以開始使用最新的功能和修正。
 
 ## 輪流重新啟動
 

@@ -151,7 +151,7 @@ GET /company/_search
     "acc_employees": {
       "doc_count": 2,
       "avg_salary": {
-        "value": 110000
+        "value": 130000
       }
     }
   }

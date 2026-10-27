@@ -8,13 +8,13 @@ nav_order: 10
 
 # OpenSearch Dashboards 中的進階設定
 
-使用 **Advanced settings** 頁面修改控制 OpenSearch Dashboards 行為的設定。這些設定可用於自訂應用程式的外觀與風格、變更特定功能的行為等。下圖顯示此介面的畫面。
+使用 **Advanced settings** 頁面來修改控管 OpenSearch Dashboards 行為的設定。這些設定可用於自訂應用程式的外觀與風格、變更特定功能的行為等。介面檢視如下圖所示。
 
 ![OpenSearch 2.14 中的進階設定介面]({{site.url}}{{site.baseurl}}/images/dashboards/advanced-settings.png){: width="700" }
 
-若要存取 **Advanced settings**，請前往 **Dashboards Management** 並選取 **Advanced settings**。此頁面分為以下區段：[General](#general-settings)、[Appearance](#appearance-settings)、[Discover](#discover-settings)、[Notifications](#notifications-settings)、[Search](#search-settings)、[Timeline](#timeline-settings) 和 [Visualization](#visualization-settings)。每個區段都包含各自的一組設定。您可以編輯這些設定的欄位來修改設定。完成變更後，選取 **Save** 以套用變更。
+若要存取 **Advanced settings**，請前往 **Dashboards Management** 並選取 **Advanced settings**。此頁面分為下列區段：[一般](#general-settings)、[外觀](#appearance-settings)、[Discover](#discover-settings)、[通知](#notifications-settings)、[搜尋](#search-settings)、[時間軸](#timeline-settings) 及 [視覺化](#visualization-settings)。每個區段都包含一組各自的設定。您可以編輯這些設定的欄位來進行修改。完成變更後，請選取 **Save** 以套用變更。
 
-{::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/alert-icon.png" class="inline-icon" alt="alert icon"/>{:/} **注意**<br>某些設定需要您修改 [`opensearch_dashboards.yml` 檔案](https://github.com/opensearch-project/OpenSearch-Dashboards/blob/main/config/opensearch_dashboards.yml)並重新啟動 OpenSearch Dashboards。
+{::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/alert-icon.png" class="inline-icon" alt="alert icon"/>{:/} **注意**<br>某些設定需要您修改 `opensearch_dashboards.yml` 檔案並重新啟動 OpenSearch Dashboards。如需詳細資訊，請參閱[設定 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-dashboards/)。
 {: .note}
 
 ## 必要權限
@@ -31,43 +31,43 @@ nav_order: 10
 
 設定 | 說明
 :--- | :---
-`csv:quoteValues`  | 定義是否將包含特殊字元的值或多行值以雙引號 `"` 括住。預設為 `On`。  |
+`csv:quoteValues`  | 定義是否將包含特殊字元或多行內容的值以雙引號 `"` 括住。預設為 `On`。  |
 `csv:separator`  | 定義是否使用特定字元或字串來分隔匯出的值。預設為 `,`。  |
 `dateFormat`  | 定義日期的顯示格式。預設為 `MMM D, YYYY @ HH:mm:ss.SSS`。  |
-`dateFormat:dow`  | 定義一週的起始日。預設為 `Sunday`。  |
-`dateFormat:scaled`  | 定義時間戳記的格式。時間戳記格式會依測量之間的時間長度（小時、分鐘、秒和毫秒）而變更。鍵為 [ISO8601](https://www.iso.org/iso-8601-date-and-time-format.html) 格式的時間週期：`YYYY-MM-DD`。   |
-`dateFormat:tz`  | 定義 OpenSearch Dashboards 的時區。預設為您的瀏覽器偵測到的時區。  |
+`dateFormat:dow`  | 定義一週從哪一天開始。預設為 `Sunday`。  |
+`dateFormat:scaled`  | 定義時間戳記的格式。時間戳記格式會依測量之間的時間長度（小時、分鐘、秒與毫秒）而改變。鍵值為 [ISO8601](https://www.iso.org/iso-8601-date-and-time-format.html) 格式的時間期間：`YYYY-MM-DD`。   |
+`dateFormat:tz`  | 定義 OpenSearch Dashboards 的時區。預設為瀏覽器偵測到的時區。  |
 `dateNanosFormat`  | 定義以奈秒表示日期的格式。預設為 `MMM D, YYYY @ HH:mm:ss.SSSSSSSSS`。  |
-`defaultIndex`  | 定義 OpenSearch 叢集中所有索引的預設索引。若未新增任何索引，`defaultIndex` 會設為 `null`。但若新增了一個或多個索引，`defaultIndex` 會被指派為清單中第一個索引的值。預設為 `null`。  |
-`defaultRoute`  | 定義入口點。使用此設定可變更 OpenSearch Dashboards 的登陸頁面。此設定必須是相對 URL。預設為 `/app/home`。 |
-`fields:popularLimit` | 定義要顯示的欄位數量 N。預設為 `10`。  |
-`filterEditor:suggestValues` | 定義篩選器編輯器是否建議欄位值。預設為 `Off`。  |
+`defaultIndex`  | 定義 OpenSearch 叢集中所有索引的預設索引。若未新增任何索引，`defaultIndex` 會設為 `null`。但若新增了一或多個索引，`defaultIndex` 會被指派為清單中第一個索引的值。預設為 `null`。  |
+`defaultRoute`  | 定義入口點。使用此設定可變更 OpenSearch Dashboards 的起始頁面。此設定必須是相對 URL。預設為 `/app/home`。 |
+`fields:popularLimit` | 定義要顯示的 N 個欄位數量。預設為 `10`。  |
+`filterEditor:suggestValues` | 定義篩選編輯器是否建議欄位值。預設為 `Off`。  |
 `filters:pinnedByDefault`  | 定義是否自動釘選篩選器。若要讓篩選器在所有應用程式中保持可見，您可以選取該篩選器，然後選取 **Pin across all apps** 選項。預設為 `Off.`  |
 `format:bytes:defaultPattern`  | 定義位元組格式的預設數字格式。預設為 `0,0.[0]b`。  |
 `format:currency:defaultPattern` | 定義貨幣格式的預設數字格式。預設為 `($0,0.[00])`。  |
-`format:defaultTypeMap` | 使用對應定義每種欄位類型的預設格式名稱。若未指定欄位類型，則使用 `_default_`。  |
-`format:number:defaultLocale`  | 定義數字的語言地區設定。預設為 `en`。  |
-`format:number:defaultPattern`  | 定義數值格式的預設數字格式。預設為 `0,0.[000]`。  |
+`format:defaultTypeMap` | 使用對應來定義每個欄位類型的預設格式名稱。若未指定欄位類型，則使用 `_default_`。  |
+`format:number:defaultLocale`  | 定義數字的語言地區設定。預設為 `en`。若要變更 OpenSearch Dashboards 介面的語言，請在 `opensearch_dashboards.yml` 中設定 `i18n.locale`。如需更多資訊，請參閱[語言設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-dashboards/#language-settings)。  |
+`format:number:defaultPattern`  | 定義數字格式的預設數字格式。預設為 `0,0.[000]`。  |
 `format:percent:defaultPattern`  | 定義百分比格式的預設數字格式。預設為 `0,0.[000]%`。  |
 `histogram:barTarget`  |  為使用 `auto` 間隔的日期長條圖定義指定的長條數量。預設為 `50`。  |
-`histogram:maxBars`  | 定義日期長條圖中顯示的最大長條數量。預設為 `100`。  |
-`history:limit` | 定義要在歷史記錄中儲存多少個最近的值。預設為 `10`。  |
-`indexPattern:placeholder`  | 定義建立索引模式時使用的預留位置值。  |
-`metaFields` | 允許將不屬於 `_source` 欄位的欄位合併至文件中。預設為 `_source`、`_id`、`_type`、`_index` 和 `_score`。  |
-`metrics:max_buckets` | 定義單一資料來源可傳回的最大桶 (bucket) 數量。預設為 `2000`。  |
+`histogram:maxBars`  | 定義日期長條圖中要顯示的最大長條數量。預設為 `100`。  |
+`history:limit` | 定義要在歷程記錄中儲存多少個最近的值。預設為 `10`。  |
+`indexPattern:placeholder`  | 定義建立索引樣式時要使用的預留位置值。  |
+`metaFields` | 啟用將不屬於 `_source` 欄位的欄位合併至文件。預設為 `_source`、`_id`、`_type`、`_index` 與 `_score`。  |
+`metrics:max_buckets` | 定義單一資料來源可傳回的最大桶數。預設為 `2000`。  |
 `query:allowLeadingWildcards`  | 定義是否允許 `*` 作為查詢子句的第一個字元。預設為 `On`。  | 
 `query:queryString:options`  |  定義 Lucene 查詢字串剖析器的選項。預設為 `{ "analyze_wildcard": true }`。  |
-`reporting:useFOR`  | 啟用或停用 `ForeignObject` 轉譯，以將外部內容嵌入報表中。只有在安裝報表外掛程式後，才會顯示 `reporting:useFOR` 和 `reporting:useOcr` 選項。預設為 `On`。  |
-`reporting:useOcr`  | 啟用或停用 PDF 報表的光學字元辨識（OCR）。只有在安裝報表外掛程式後，才會顯示 `reporting:useFOR` 和 `reporting:useOcr` 選項。預設為 `Off`。  |
+`reporting:useFOR`  | 啟用或停用 `ForeignObject` 轉譯，以便將外部內容嵌入報告。`reporting:useFOR` 與 `reporting:useOcr` 選項只有在安裝 reporting 外掛程式後才會顯示。預設為 `On`。  |
+`reporting:useOcr`  | 啟用或停用 PDF 報告的光學字元辨識 (OCR)。`reporting:useFOR` 與 `reporting:useOcr` 選項只有在安裝 reporting 外掛程式後才會顯示。預設為 `Off`。  |
 `savedObjects:listingLimit`  | 定義檢視清單頁面時要擷取的物件數量。預設為 `1000`。  |
-`savedObjects:perPage`  | 定義載入對話方塊每頁顯示的物件數量。預設為 `20`。  |
+`savedObjects:perPage`  | 定義載入對話方塊每頁要顯示的物件數量。預設為 `20`。  |
 `search:queryLanguage`  | 定義 OpenSearch Dashboards 的查詢語言。預設為 `DQL`。  |
-`shortDots:enable`  | 啟用或停用縮短長欄位。預設為 `Off`。  |
+`shortDots:enable`  | 啟用或停用縮短過長欄位。預設為 `Off`。  |
 `sort:options`  | 定義 sort 參數的選項。預設為 `boolean`。  |
-`state:storeInSessionStorage`  | 啟用或停用 URL 工作階段儲存空間。預設為 `Off`。  |
-`timepicker:quickRanges`  | 定義時間篩選器中顯示的快速選取時間範圍。  |
-`timepicker:refreshIntervalDefaults` | 定義時間篩選器的預設重新整理間隔，以毫秒為單位。預設為 `0`。  |
-`timepicker:timeDefaults`  | 定義資料分析的預設時間週期。預設為 `Last 15 minutes`。  |
+`state:storeInSessionStorage`  | 啟用或停用 URL 工作階段儲存。預設為 `Off`。  |
+`timepicker:quickRanges`  | 定義時間篩選器中要顯示的快速選取時間範圍。  |
+`timepicker:refreshIntervalDefaults` | 定義時間篩選器的預設重新整理間隔，單位為毫秒。預設為 `0`。  |
+`timepicker:timeDefaults`  | 定義資料分析的預設時間期間。預設為 `Last 15 minutes`。  |
 `truncate:maxHeight`  | 定義表格儲存格的最大高度。預設為 `115` 像素。
 
 ## 外觀設定
@@ -87,8 +87,8 @@ nav_order: 10
 
 設定 | 說明
 :--- | :---
-`context:defaultSize`  | 定義在內容檢視中顯示的周圍項目數量。預設為 `5`。  |
-`context:step`  | 定義增加或減少內容大小時的增減數量。預設為 `5`。  |
+`context:defaultSize`  | 定義在前後文檢視中顯示的周圍項目數量。預設為 `5`。  |
+`context:step`  | 定義增加或減少前後文大小時的增減數量。預設為 `5`。  |
 `context:tieBreakerFields`  | 定義當文件具有相同時間戳記值時，用來決定先後順序的欄位。系統會使用目前索引模式中第一個存在且可排序的欄位。預設為 `_doc`。  |
 `defaultColumns`  | 定義 **Discover** 頁面上預設顯示的欄。預設為 `_source`。  |
 `discover:aggs:terms:size`  | 定義在欄位下拉式選單中選取 **Visualize** 按鈕時，要視覺化的詞彙數量。預設為 `20`。  |
@@ -121,7 +121,7 @@ nav_order: 10
 `courier:customRequestPreference`  | 指定是否搭配 `custom` 設定使用[請求偏好設定]({{site.url}}{{site.baseurl}}/api-reference/popular-api/)。預設為 `_local`。  |
 `courier:ignoreFilterIfFieldNotInIndex`  | 啟用或停用對包含使用不同索引之視覺化的儀表板的支援。停用時，所有篩選條件都會套用至所有視覺化。啟用時，若視覺化的索引不包含要篩選的欄位，則會忽略該視覺化的篩選條件。預設為 `Off`。  |
 `courier:maxConcurrentShardRequests`  | 定義 OpenSearch Dashboards 針對 `_msearch` 請求可發起的並行分片請求數量上限。設為 `0` 可停用此設定，並使用 OpenSearch 設定的預設值。預設為 `0`。  |
-`courier:setRequestPreference`  | 定義由哪些分片處理您的搜尋請求。選項包括 **Session ID**、**Custom** 和 **None**。**Session ID** 會限制作業，讓所有搜尋請求都在同一個分片上執行，並在請求之間重複使用分片快取，這可提升效能。**Custom** 用於定義您自己的偏好設定。請使用 `courier:customRequestPreference` 自訂您的偏好設定值。**None** 表示未設定任何偏好設定。此選項可提供較佳的效能，因為請求可以分散到所有分片複本上。不過，由於不同分片可能處於不同的重新整理狀態，結果可能會不一致。預設為 `Session ID`。  |
+`courier:setRequestPreference`  | 定義由哪些分片處理您的搜尋請求。選項包括 **Session ID**、**Custom** 和 **None**。**Session ID** 會限制作業，讓所有搜尋請求都在同一個分片上執行，並在請求之間重複使用分片快取，這可提升效能。**Custom** 用於定義您自己的偏好設定。請使用 `courier:customRequestPreference` 自訂您的偏好設定值。**None** 表示未設定任何偏好設定。此選項可提供較佳的效能，因為請求可以分散到所有分片副本上。不過，由於不同分片可能處於不同的重新整理狀態，結果可能會不一致。預設為 `Session ID`。  |
 `search:includeFrozen`  | 指定是否在搜尋結果中包含凍結索引。若啟用，搜尋結果會包含凍結索引。搜尋凍結索引可能會增加搜尋時間。預設為 `Off`。  |
 
 ## 時間軸設定

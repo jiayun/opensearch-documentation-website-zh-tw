@@ -3,7 +3,7 @@
 layout: default
 title: "MCP Streamable HTTP 伺服器"
 parent: MCP server APIs
-grand_parent: ML Commons APIs
+grand_parent: ML APIs
 nav_order: 50
 ---
 

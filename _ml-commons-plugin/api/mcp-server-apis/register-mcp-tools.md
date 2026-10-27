@@ -3,7 +3,7 @@
 layout: default
 title: "註冊 MCP 工具"
 parent: MCP server APIs
-grand_parent: ML Commons APIs
+grand_parent: ML APIs
 nav_order: 10
 ---
 

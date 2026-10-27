@@ -41,17 +41,17 @@ nav_order: 10
 
 ![索引模式步驟 1 使用者介面]({{site.url}}{{site.baseurl}}/images/dashboards/index-patterns-step1.png){: width="700" }
 
-### 步驟 2：設定各項設定
+### 步驟 2：設定組態
 
-1. 從下拉式選單中選取 `@timestamp`，以指定 OpenSearch 依時間篩選文件時要使用的時間欄位。選取此時間篩選條件會決定時間篩選條件要套用至哪個欄位。該欄位可以是請求的時間戳記，或任何相關的時間戳記欄位。如果您不想使用時間篩選條件，請從下拉式選單中選取該選項。如果您選取此選項，OpenSearch 會傳回符合該模式之索引中的所有資料。
+1. 在 **Time field** 清單中，選取要用於時間篩選的日期欄位，例如 `@timestamp`。此清單包含相符索引中的日期欄位，因此如果您的索引沒有 `@timestamp` 欄位，請選取其他日期欄位，例如事件或訂單發生的時間。[時間篩選器]({{site.url}}{{site.baseurl}}/dashboards/discover/time-filter/) 僅適用於此欄位。如果您的索引不包含日期欄位，或您不想依時間篩選，請選取 **I don't want to use the time filter**。在這種情況下，資料不會依時間篩選，因此會傳回相符索引中的所有資料。建立索引樣式後，您無法變更時間欄位。
 
 2. 選取 **Create index pattern.**。下圖顯示一個範例。
 
-    ![索引模式步驟 2 使用者介面]({{site.url}}{{site.baseurl}}/images/dashboards/index-pattern-step2.png){: width="700" }
+    ![Index pattern step 2 UI ]({{site.url}}{{site.baseurl}}/images/dashboards/index-pattern-step2.png){: width="700" }
 
-建立索引模式後，您可以檢視相符索引的對應。在表格中，您可以看到欄位清單，以及欄位的資料類型和屬性。下圖顯示一個範例。
+建立索引樣式後，您可以檢視相符索引的對應。在表格中，您可以看到欄位清單，以及各欄位的資料類型與屬性。下圖顯示一個範例。
 
-![索引模式表格使用者介面]({{site.url}}{{site.baseurl}}/images/dashboards/index-pattern-table.png){: width="700" }
+![Index pattern table UI ]({{site.url}}{{site.baseurl}}/images/dashboards/index-pattern-table.png){: width="700" }
 
 ## 最佳實務
 

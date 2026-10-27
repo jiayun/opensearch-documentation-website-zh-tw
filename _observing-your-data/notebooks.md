@@ -11,17 +11,17 @@ has_children: false
 
 # 筆記本
 
-OpenSearch Dashboards 筆記本是一種介面，可讓您輕鬆地在單一筆記本介面中結合程式碼片段、即時視覺化與敘述文字。
+OpenSearch Dashboards 的筆記本是一種介面，可讓您輕鬆地在單一筆記本介面中結合程式碼片段、即時視覺化與敘述文字。
 
-筆記本可讓您以互動方式探索資料，方法是執行不同的視覺化，並可與團隊成員分享，以便在專案上協作。
+筆記本可讓您透過執行不同的視覺化來互動式探索資料，並與團隊成員分享以協作專案。
 
-筆記本是由兩種元素組成的文件：程式碼區塊 (Markdown/SQL/Piped Processing Language (PPL)) 與視覺化。您可以選擇多個時間軸來比較與對照視覺化。
+筆記本是由兩種元素組成的文件：程式碼區塊（Markdown/SQL/Piped Processing Language (PPL)）與視覺化。您可以選取多個時間軸來比較與對照視覺化。
 
-您也可以直接從筆記本產生[報告]({{site.url}}{{site.baseurl}}/dashboards/reporting/)。
+您也可以直接從筆記本產生[報告]({{site.url}}{{site.baseurl}}/dashboards/reporting/report-dashboard-index/)。
 
-常見的使用案例包括建立事後檢討報告、設計執行手冊、建置即時基礎架構報告，以及撰寫文件。
+常見的使用案例包括建立事後檢討報告、設計維運手冊、建置即時基礎架構報告，以及撰寫文件。
 
-OpenSearch Dashboards 中的租用戶是儲存筆記本與其他 OpenSearch Dashboards 物件的空間。如需詳細資訊，請參閱 [OpenSearch Dashboards 多租用戶]({{site.url}}{{site.baseurl}}/security/multi-tenancy/tenant-index/)。
+OpenSearch Dashboards 中的租用戶是儲存筆記本與其他 OpenSearch Dashboards 物件的空間。如需更多資訊，請參閱 [OpenSearch Dashboards 多租用戶]({{site.url}}{{site.baseurl}}/security/multi-tenancy/tenant-index/)。
 {: .note }
 
 
@@ -116,12 +116,12 @@ source=opensearch_dashboards_sample_data_logs | head 20
 
 您可以使用筆記本建立 PNG 與 PDF 報告：
 
-1. 從頂端功能表列，選擇 **Reporting actions**。
+1. 從頂端功能表列選擇 **Reporting actions**。
 1. 您可以選擇 **Download PDF** 或 **Download PNG**。
 
-   報告會在背景以非同步方式產生，視報告大小而定，可能需要幾分鐘。報告可供下載時會出現通知。
+   報告會在背景以非同步方式產生，視報告大小而定，可能需要幾分鐘。報告可供下載時會顯示通知。
 
-1. 若要建立以排程為基礎的報告，請選擇 **Create report definition**。如需建立報告定義的步驟，請參閱[使用定義建立報告]({{site.url}}{{site.baseurl}}/dashboards/reporting#creating-reports-using-a-definition)。
+1. 若要建立依排程產生的報告，請選擇 **Create report definition**。建立報告定義的步驟，請參閱[使用定義建立報告]({{site.url}}{{site.baseurl}}/dashboards/reporting/report-dashboard-index/#creating-reports-using-a-definition)。
 1. 若要查看您的所有報告，請選擇 **View all reports**。
 
 ![報告筆記本]({{site.url}}{{site.baseurl}}/images/report_notebooks.gif)

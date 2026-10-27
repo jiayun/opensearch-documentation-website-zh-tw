@@ -3,7 +3,7 @@
 layout: default
 title: "註冊代理程式"
 parent: Agent APIs
-grand_parent: ML Commons APIs
+grand_parent: ML APIs
 nav_order: 10
 ---
 

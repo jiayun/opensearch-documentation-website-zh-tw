@@ -19,7 +19,7 @@ _資源_是儲存在外掛程式系統索引中的文件。資源共享資訊儲
 
 資源共享需要外掛程式開發人員、管理員和使用者之間的協調。外掛程式開發人員必須先在其外掛程式中實作資源共享支援，並定義可共享的資源類型（例如 `ml-model-group` 或 `anomaly-detector`）。安裝支援資源共享的外掛程式後，管理員可在整個叢集啟用此功能，並設定使用資源層級授權的資源類型。最後，使用者只要具備必要的叢集權限，即可透過 UI 或 API 建立與共享資源。
 
-本文件適用於想要設定與使用資源共享的**使用者**和**管理員**。如果您是正在為外掛程式實作資源共享支援的**外掛程式開發人員**，請參閱[開發人員文件](https://github.com/opensearch-project/security/blob/main/RESOURCE_SHARING_AND_ACCESS_CONTROL.md)。
+本文件適用於想要設定與使用資源共享的**使用者**和**管理員**。如果您是正在為外掛程式實作資源共享支援的**外掛程式開發人員**，請參閱[開發人員文件](https://github.com/opensearch-project/security/blob/main/docs/RESOURCE_SHARING_AND_ACCESS_CONTROL.md)。
 
 資源共享可執行下列操作：
 
@@ -32,7 +32,7 @@ _資源_是儲存在外掛程式系統索引中的文件。資源共享資訊儲
 
 資源共享預設為停用。若要設定資源共享，請依照下列步驟操作。
 
-在設定資源共享之前，請確認您要搭配資源共享使用的外掛程式已實作資源共享支援。如果您需要為外掛程式新增資源共享支援，請參閱[開發人員文件](https://github.com/opensearch-project/security/blob/main/RESOURCE_SHARING_AND_ACCESS_CONTROL.md)。
+在設定資源共享之前，請確認您要搭配資源共享使用的外掛程式已實作資源共享支援。如果您需要為外掛程式新增資源共享支援，請參閱[開發人員文件](https://github.com/opensearch-project/security/blob/main/docs/RESOURCE_SHARING_AND_ACCESS_CONTROL.md)。
 {: .note}
 
 ### 步驟 1：啟用資源共享
@@ -86,8 +86,8 @@ plugins.security.resource_sharing.protected_types: ["sample-resource", "ml-model
 | Flow Framework | `workflow-state` | [工作流程狀態存取控制]({{site.url}}{{site.baseurl}}/vector-search/ai-search/workflows/workflow-state-access-control/) |
 | ML Commons | `ml-model-group` | [透過資源共享進行模型存取控制]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-sharing-access-control/) |
 | Notifications | `notification_config` | [通知存取控制]({{site.url}}{{site.baseurl}}/observing-your-data/notifications/notification-access-control/) |
-| Reporting | `report-definition` | [報告定義存取控制]({{site.url}}{{site.baseurl}}/reporting/report-definition-access-control/) |
-| Reporting | `report-instance` | [報告執行個體存取控制]({{site.url}}{{site.baseurl}}/reporting/report-instance-access-control/) |
+| Reporting | `report-definition` | [報告定義存取控制]({{site.url}}{{site.baseurl}}/dashboards/reporting/report-definition-access-control/) |
+| Reporting | `report-instance` | [報告執行個體存取控制]({{site.url}}{{site.baseurl}}/dashboards/reporting/report-instance-access-control/) |
 | Security Analytics | `detector`, `correlation-rule` | [Security Analytics 資源存取控制]({{site.url}}{{site.baseurl}}/security-analytics/resource-access-control/) |
 
 Security Analytics 的 `detector` 資源類型與 Anomaly Detection 的 `anomaly-detector` 資源類型不同，Alerting 的 `alerting-workflow` 資源類型也與 Flow Framework 的 `workflow` 資源類型不同。
@@ -218,4 +218,4 @@ PUT _plugins/_security/api/resource/share
 - [資源共享 API]({{site.url}}{{site.baseurl}}/security/access-control/resource-sharing-api/) -- 以程式化管理為目的的 REST API 參考
 - [資源存取管理]({{site.url}}{{site.baseurl}}/dashboards/management/resource-sharing/) -- UI 工作流程與使用者指引
 - [各外掛程式的資源類型](#resource-types-by-plugin) -- 各外掛程式的存取層級與遷移步驟
-- [開發人員文件](https://github.com/opensearch-project/security/blob/main/RESOURCE_SHARING_AND_ACCESS_CONTROL.md) -- 適用於外掛程式開發人員、使用者與管理員的詳細技術文件
+- [開發人員文件](https://github.com/opensearch-project/security/blob/main/docs/RESOURCE_SHARING_AND_ACCESS_CONTROL.md) -- 適用於外掛程式開發人員、使用者與管理員的詳細技術文件

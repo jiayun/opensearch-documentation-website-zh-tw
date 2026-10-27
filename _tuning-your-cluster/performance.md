@@ -16,13 +16,13 @@ has_children: false
 
 較大的 Java 堆積大小對編製索引很有幫助。將 Java 最小與最大堆積大小設為 RAM 大小的 50%，在 EC2 執行個體上可展現更好的編製索引效能。
 
-## 排清 translog 閾值
+## 排清 translog 門檻值
 
-`flush_threshold_size` 的預設值為 512 MB。這表示 translog 在達到 512 MB 時會排清。編製索引負載的權重決定了 translog 的頻率。當您增加 `index.translog.flush_threshold_size` 時，節點執行 translog 作業的頻率會降低。由於排清是耗用大量資源的作業，降低 translog 的頻率可改善編製索引效能。藉由增加排清閾值大小，OpenSearch 叢集也會建立較少的大型分段，而非多個小型分段。大型分段合併的頻率較低，且會有更多執行緒用於編製索引，而非用於合併。
+`flush_threshold_size` 的預設值為 512 MB。這表示 translog 在達到 512 MB 時會排清。索引負載的權重決定 translog 的頻率。當您增加 `index.translog.flush_threshold_size` 時，節點執行 translog 作業的頻率會降低。由於排清是資源密集的作業，降低 translog 的頻率可改善索引效能。藉由增加排清門檻值大小，OpenSearch 叢集也會建立較少的大型分段，而不是多個小型分段。大型分段較少進行合併，因此會有更多執行緒用於索引而非合併。
 
-對於純編製索引的工作負載，請考慮將 `flush_threshold_size` 增加至 Java 堆積大小的 25%，以改善編製索引效能。
+對於純索引工作負載，可考慮將 `flush_threshold_size` 增加至例如 Java 堆積大小的 25%，以改善索引效能。
 
-增加 `index.translog.flush_threshold_size` 也可能增加 translog 完成所需的時間。如果分片失敗，由於 translog 較大，復原會耗費更多時間。
+增加 `index.translog.flush_threshold_size` 也可能增加 translog 完成所需的時間。如果分片失敗，則復原需要更多時間，因為 translog 較大。
 {: .note}
 
 在增加 `index.translog.flush_threshold_size` 之前，請呼叫下列 API 作業以取得目前的排清作業統計資料：
@@ -32,7 +32,7 @@ GET /{index}/_stats/flush?pretty
 ```
 {% include copy-curl.html %}
 
-在輸出中，請留意排清次數與總時間。下列範例輸出顯示有 124 次排清，耗時 17,690 毫秒：
+在輸出中，記下排清次數與總時間。下列範例輸出顯示有 124 次排清，耗時 17,690 毫秒：
 
 ```json
 {
@@ -43,7 +43,7 @@ GET /{index}/_stats/flush?pretty
 }
 ```
 
-若要增加排清閾值大小，請呼叫下列 API 作業：
+若要增加排清門檻值大小，請呼叫下列 API 作業：
 
 ```json
 PUT /{index}/_settings 
@@ -56,9 +56,9 @@ PUT /{index}/_settings
 ```
 {% include copy-curl.html %}
 
-在此範例中，排清閾值大小設為 1024 MB，這對記憶體超過 32 GB 的執行個體而言最為理想。
+在此範例中，排清門檻值大小設為 1024 MB，即 4 GB Java 堆積的 25%。
 
-請為您的叢集選擇適當的閾值大小。
+為您的叢集選擇適當的門檻值大小。
 {: .note}
 
 再次執行 stats API 作業，以查看排清活動是否有所改變：
@@ -68,7 +68,7 @@ GET /{index}/_stats/flush
 ```
 {% include copy-curl.html %}
 
-最佳做法是僅為目前的索引增加 `index.translog.flush_threshold_size`。確認結果之後，再將變更套用至索引範本。
+最佳做法是僅對目前的索引增加 `index.translog.flush_threshold_size`。確認結果後，再將變更套用至索引範本。
 {: .note}
 
 ## 索引重新整理間隔
@@ -103,9 +103,9 @@ GET /{index}/_stats/flush
 如果在停用副本時節點失敗，您可能會遺失資料。只有在您可以容忍短時間內遺失資料時，才停用副本。
 {: .important }
 
-## 實驗以找出最佳的 bulk 請求大小
+## 實驗以找出最佳的批次請求大小
 
-請從 5 MiB 至 15 MiB 的 bulk 請求大小開始。然後慢慢增加請求大小，直到編製索引效能不再改善為止。 
+請從 5 MiB 至 15 MiB 的批次請求大小開始。然後慢慢增加請求大小，直到編製索引效能不再改善為止。 
 
 ## 使用具有 SSD 執行個體儲存磁碟區的執行個體類型 (例如 I3)
 

@@ -27,7 +27,7 @@ curl -k -u admin:<password> "https://localhost:5601/api/saved_objects/_find?type
 
 若 OpenSearch Dashboards 從基底路徑提供服務，請在請求中包含該基底路徑，例如 `https://<host>/_dashboards/api/saved_objects/_find`。在代理伺服器後方或在受管服務上執行時，通常就是這種情況。
 
-這些 API 會傳回視覺化的定義，例如其彙總和索引模式參照。它們不會執行視覺化，也不會傳回視覺化所顯示的資料。若要將已儲存搜尋的底層資料列匯出為 CSV 或 Excel 檔案，請參閱 [Reporting API]({{site.url}}{{site.baseurl}}/reporting/api/)。
+這些 API 會傳回視覺化的定義，例如其彙總和索引模式參照。它們不會執行視覺化，也不會傳回視覺化所顯示的資料。若要將已儲存搜尋的底層資料列匯出為 CSV 或 Excel 檔案，請參閱 [Reporting API]({{site.url}}{{site.baseurl}}/dashboards/reporting/api/)。
 {: .note}
 
 若要改從 OpenSearch Dashboards 匯出及匯入相同的物件，請參閱[匯出及匯入已儲存物件]({{site.url}}{{site.baseurl}}/dashboards/management/saved-objects/)。
@@ -615,6 +615,6 @@ Document "test-viz" has property "visualization" which belongs to a more recent 
 ## 相關文件
 
 - [匯出與匯入已儲存物件]({{site.url}}{{site.baseurl}}/dashboards/management/saved-objects/)
-- [Reporting API]({{site.url}}{{site.baseurl}}/reporting/api/)
+- [Reporting API]({{site.url}}{{site.baseurl}}/dashboards/reporting/api/)
 - [已儲存物件的存取控制清單]({{site.url}}{{site.baseurl}}/dashboards/management/acl/)
 - [索引模式]({{site.url}}{{site.baseurl}}/dashboards/management/index-patterns/)

@@ -2,7 +2,10 @@
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: "報告 API"
-nav_order: 8
+nav_order: 30
+parent: Reporting
+redirect_from:
+  - /reporting/api/
 ---
 
 # 報告 API
@@ -11,7 +14,7 @@ nav_order: 8
 
 報告定義與報告實例由 OpenSearch 管理，但檔案本身由 OpenSearch Dashboards 產生。建立定義與列出實例使用連接埠 9200 上的 OpenSearch 端點，而下載報告內容則使用連接埠 5601 上的 OpenSearch Dashboards 端點。如需更多資訊，請參閱[下載報告內容](#downloading-report-content)。
 
-若要瞭解這些操作在 OpenSearch Dashboards 介面中的對應方式，請參閱[使用 OpenSearch Dashboards 產生報告]({{site.url}}{{site.baseurl}}/reporting/report-dashboard-index/)。
+若要瞭解這些操作在 OpenSearch Dashboards 介面中的對應方式，請參閱[使用 OpenSearch Dashboards 產生報告]({{site.url}}{{site.baseurl}}/dashboards/reporting/report-dashboard-index/)。
 
 ## 報告來源類型與檔案格式
 
@@ -532,7 +535,7 @@ curl -X POST \
 
 ## 相關文件
 
-- [使用 OpenSearch Dashboards 產生報告]({{site.url}}{{site.baseurl}}/reporting/report-dashboard-index/)
+- [使用 OpenSearch Dashboards 產生報告]({{site.url}}{{site.baseurl}}/dashboards/reporting/report-dashboard-index/)
 - [Saved Objects API]({{site.url}}{{site.baseurl}}/dashboards/management/saved-objects-api/)
-- [報告定義存取控制]({{site.url}}{{site.baseurl}}/reporting/report-definition-access-control/)
-- [報告執行個體存取控制]({{site.url}}{{site.baseurl}}/reporting/report-instance-access-control/)
+- [報告定義存取控制]({{site.url}}{{site.baseurl}}/dashboards/reporting/report-definition-access-control/)
+- [報告執行個體存取控制]({{site.url}}{{site.baseurl}}/dashboards/reporting/report-instance-access-control/)

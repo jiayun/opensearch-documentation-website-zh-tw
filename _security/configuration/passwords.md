@@ -22,14 +22,14 @@ nav_order: 12
 
 由外部後端 (例如 LDAP 或 Active Directory) 驗證的使用者，其密碼是在該後端中管理，而不是在 OpenSearch 中管理。如需更多資訊，請參閱[驗證後端]({{site.url}}{{site.baseurl}}/security/authentication-backends/authc-index/)。
 
-`OPENSEARCH_PASSWORD` 環境變數不是 OpenSearch 設定。用戶端與工具 (例如 [Reporting CLI]({{site.url}}{{site.baseurl}}/reporting/rep-cli-options/)) 會讀取它，以取得連線至叢集時所使用的認證。
+`OPENSEARCH_PASSWORD` 環境變數不是 OpenSearch 設定。用戶端與工具 (例如 [Reporting CLI]({{site.url}}{{site.baseurl}}/dashboards/reporting/rep-cli-options/)) 會讀取它，以取得連線至叢集時所使用的認證資訊。
 {: .note}
 
 ## 管理員密碼
 
 `admin` 使用者是由安全性示範組態建立，並具有叢集的完整存取權。其密碼會在安裝示範組態時透過環境變數設定一次，之後若要變更則需要不同的程序。
 
-沒有預設的管理員密碼。除非您提供一個，否則叢集不會啟動，而且舊版本所使用的 `admin:admin` 認證已不再有效。
+沒有預設的管理員密碼。除非您提供一個，否則叢集不會啟動，而且舊版本所使用的 `admin:admin` 認證資訊已不再有效。
 
 ### 設定初始管理員密碼
 
@@ -101,7 +101,7 @@ PUT /_plugins/_security/api/account
 
 OpenSearch Dashboards 會以內部使用者身分向 OpenSearch 進行驗證，並透過 `opensearch_dashboards.yml` 中的 `opensearch.username` 與 `opensearch.password` 設定進行設定。示範組態會使用 `kibanaserver` 使用者來達成此目的。變更此密碼需要兩個步驟：先在 OpenSearch 中更新 `kibanaserver` 使用者的密碼，然後在 `opensearch_dashboards.yml` 中設定相符的值，並重新啟動 OpenSearch Dashboards。
 
-這是服務帳戶，而不是登入帳戶。終端使用者會以自己的認證登入 OpenSearch Dashboards。如需更多資訊，請參閱[設定登入選項]({{site.url}}{{site.baseurl}}/security/configuration/multi-auth/)。
+這是服務帳戶，而不是登入帳戶。終端使用者會以自己的認證資訊登入 OpenSearch Dashboards。如需更多資訊，請參閱[設定登入選項]({{site.url}}{{site.baseurl}}/security/configuration/multi-auth/)。
 
 ## Keystore 與 truststore 密碼
 
@@ -109,7 +109,7 @@ Keystore 與 truststore 密碼會保護 TLS 憑證存放區，與使用者驗證
 
 ## 示範組態密碼
 
-除了 `admin` 使用者之外，示範組態還會建立 `kibanaserver`、`kibanaro`、`logstash`、`readall` 與 `snapshotrestore` 使用者。只有 `admin` 密碼來自 `OPENSEARCH_INITIAL_ADMIN_PASSWORD`。其他使用者會保留 `internal_users.yml` 中公布的預設密碼，因此其認證是公開資訊。
+除了 `admin` 使用者之外，示範組態還會建立 `kibanaserver`、`kibanaro`、`logstash`、`readall` 與 `snapshotrestore` 使用者。只有 `admin` 密碼來自 `OPENSEARCH_INITIAL_ADMIN_PASSWORD`。其他使用者會保留 `internal_users.yml` 中公布的預設密碼，因此其認證資訊是公開資訊。
 
 在將叢集移入正式環境之前，請變更您保留的每個示範使用者密碼，並刪除您不需要的使用者。示範憑證同樣不適合用於正式環境。如需更多資訊，請參閱[最佳實務]({{site.url}}{{site.baseurl}}/security/configuration/best-practices/)。
 {: .warning}

@@ -121,16 +121,27 @@ response = client.dangling_indices.delete_dangling_index(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## 範例回應 
+## 回應範例 
 
-````json
+列出懸空索引的請求會傳回以下回應：
+
+```json
 {
-    "_nodes": {
-        "total": 1,
-        "successful": 1,
-        "failed": 0
-    },
-    "cluster_name": "opensearch-cluster",
-    "dangling_indices": [msdjernajxAT23RT-BupMB]
+  "_nodes": {
+    "total": 1,
+    "successful": 1,
+    "failed": 0
+  },
+  "cluster_name": "opensearch-cluster",
+  "dangling_indices": [
+    {
+      "index_name": "my-index",
+      "index_uuid": "msdjernajxAT23RT-BupMB",
+      "creation_date_millis": 1729699200000,
+      "node_ids": [
+        "pVUx3kTqRmOBuFtvDwQK1A"
+      ]
+    }
+  ]
 }
-````
+```

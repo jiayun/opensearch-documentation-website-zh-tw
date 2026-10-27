@@ -220,13 +220,13 @@ sample-alias1 sample-index-1
 
 ### 依標頭排序
 
-若要依標頭排序輸出，請使用 `s` 參數：
+若要依標頭排序輸出結果，請使用 `s` 參數：
 
 ```json
 GET _cat/{operation_name}?s={header_name_1},{header_name_2}
 ```
 
-例如，若要先依別名再依索引排序別名，請傳送下列請求：
+例如，若要先依索引再依別名排序別名，請傳送以下請求：
 
 <!-- spec_insert_start
 component: example_code
@@ -250,7 +250,7 @@ response = client.cat.aliases(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-回應包含所請求的資訊：
+回應包含所要求的資訊：
 
 ```
 sample-alias2 sample-index-1

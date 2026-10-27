@@ -13,12 +13,12 @@ nav_order: 26
 
 <!-- vale on -->
 
-`kmeans` 命令已棄用，請改用 [`ml` 命令]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/commands/ml/)。
+[`ml` 命令]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/commands/ml/) 已取代 `kmeans` 命令。
 {: .warning}
 
-`kmeans` 命令會將 ML Commons 外掛程式中的 k-means 演算法套用至 PPL 命令傳回的搜尋結果。
+`kmeans` 命令會對 PPL 命令傳回的搜尋結果套用 k-means 演算法。
 
-若要使用 `kmeans` 命令，必須將 `plugins.calcite.enabled` 設為 `false`。
+若要使用 `kmeans` 命令，`plugins.calcite.enabled` 必須設定為 `false`。
 {: .note}
 
 ## 語法

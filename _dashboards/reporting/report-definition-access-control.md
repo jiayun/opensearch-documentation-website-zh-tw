@@ -2,7 +2,10 @@
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: "報表定義存取控制"
-nav_order: 15
+nav_order: 40
+parent: Reporting
+redirect_from:
+  - /reporting/report-definition-access-control/
 ---
 
 # 報表定義存取控制
@@ -135,4 +138,4 @@ POST _plugins/_security/api/resources/migrate
 - [資源共用與存取控制]({{site.url}}{{site.baseurl}}/security/access-control/resources/) -- 後端概念、組態與設定
 - [資源共用 API]({{site.url}}{{site.baseurl}}/security/access-control/resource-sharing-api/) -- 以程式化管理所需的 REST API 參考
 - [資源存取管理]({{site.url}}{{site.baseurl}}/dashboards/management/resource-sharing/) -- UI 工作流程與使用者指引
-- [報表執行個體存取控制]({{site.url}}{{site.baseurl}}/reporting/report-instance-access-control/) -- 報表執行個體的存取控制
+- [報表執行個體存取控制]({{site.url}}{{site.baseurl}}/dashboards/reporting/report-instance-access-control/) -- 報表執行個體的存取控制

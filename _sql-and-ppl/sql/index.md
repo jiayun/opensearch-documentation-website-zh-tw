@@ -29,7 +29,7 @@ SQL | OpenSearch
 
 如需 SQL 外掛程式的完整 REST API 參考，請參閱 [SQL/PPL API]({{site.url}}{{site.baseurl}}/search-plugins/sql/sql-ppl-api/)。
 
-若要將 SQL 外掛程式與您自己的應用程式搭配使用，請將請求傳送至 `_plugins/_sql` 端點：
+若要在您自己的應用程式中使用 SQL 外掛程式，請將請求傳送至 `_plugins/_sql` 端點：
 
 ```json
 POST _plugins/_sql
@@ -59,7 +59,7 @@ POST _plugins/_sql
 ```
 {% include copy-curl.html %}
 
-若要在命令列中執行上述查詢，請使用 [cURL](https://curl.haxx.se/) 命令：
+若要在命令列執行上述查詢，請使用 [cURL](https://curl.haxx.se/) 命令：
 
 ```bash
 curl -XPOST https://localhost:9200/_plugins/_sql -u 'admin:<custom-admin-password>' -k -H 'Content-Type: application/json' -d '{"query": "SELECT * FROM my-index* LIMIT 50"}'
@@ -67,10 +67,10 @@ curl -XPOST https://localhost:9200/_plugins/_sql -u 'admin:<custom-admin-passwor
 {% include copy.html %}
 
 
-您可以將[回應格式]({{site.url}}{{site.baseurl}}/search-plugins/sql/response-formats/)指定為 JDBC、標準 OpenSearch JSON、CSV 或 raw。根據預設，查詢會以 JDBC 格式傳回資料。下列查詢會將格式設為 JSON：
+您可以將[回應格式]({{site.url}}{{site.baseurl}}/search-plugins/sql/response-formats/)指定為 JDBC、CSV 或 raw。預設情況下，查詢會以 JDBC 格式傳回資料。下列查詢會將格式設為 CSV：
 
 ```json
-POST _plugins/_sql?format=json
+POST _plugins/_sql?format=csv
 {
   "query": "SELECT * FROM my-index LIMIT 50"
 }

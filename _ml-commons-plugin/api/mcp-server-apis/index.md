@@ -2,7 +2,7 @@
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: "MCP 伺服器 API"
-parent: ML Commons APIs
+parent: ML APIs
 has_children: true
 has_toc: false
 nav_order: 40

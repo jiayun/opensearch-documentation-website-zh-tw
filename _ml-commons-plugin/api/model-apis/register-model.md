@@ -3,27 +3,27 @@
 layout: default
 title: "註冊模型"
 parent: Model APIs
-grand_parent: ML Commons APIs
+grand_parent: ML APIs
 nav_order: 10
 ---
 
-# 註冊模型 API
+# Register Model API
 
-特定模型的所有版本都存放在一個模型群組中。您可以先[註冊模型群組]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-group-apis/register-model-group/)，再將模型註冊到該群組；或者直接註冊模型的第一個版本，藉此建立群組。叢集中的每個模型群組名稱都必須是全域唯一的。
+特定模型的所有版本都存放在同一個模型群組中。您可以先[註冊模型群組]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-group-apis/register-model-group/)，再將模型註冊至該群組，或註冊模型的第一個版本，藉此建立群組。叢集中的每個模型群組名稱都必須全域唯一。 
 
-如果您在未先註冊模型群組的情況下註冊模型的第一個版本，系統會自動建立一個新的模型群組，其名稱與存取層級如下：
+如果您在未先註冊模型群組的情況下註冊模型的第一個版本，系統會自動建立新的模型群組，並使用下列名稱與存取層級：
 
-- 名稱：新的模型群組會與模型同名。由於模型群組名稱必須唯一，請確認您的模型名稱與叢集中任何模型群組的名稱都不相同。
-- 存取層級：新模型群組的存取層級由您在請求中傳入的 `access_mode`、`backend_roles` 和 `add_all_backend_roles` 參數決定。如果這三個參數都未提供，當叢集已啟用模型存取控制時，新的模型群組會是 `private`；當模型存取控制已停用時，則會是 `public`。新註冊的模型是指派給該模型群組的第一個模型版本。
+- 名稱：新模型群組的名稱將與模型相同。由於模型群組名稱必須唯一，請確保您的模型名稱不會與叢集中的任何模型群組同名。 
+- 存取層級：新模型群組的存取層級取決於您在請求中傳入的 `access_mode`、`backend_roles` 和 `add_all_backend_roles` 參數。如果您未提供這三個參數中的任何一個，則當叢集已啟用模型存取控制時，新模型群組將為 `private`；當模型存取控制已停用時，則為 `public`。新註冊的模型會是指派給該模型群組的第一個模型版本。 
 
-模型群組建立後，請提供其 `model_group_id`，以將新的模型版本註冊到該模型群組。在這種情況下，模型名稱不需要是唯一的。
+建立模型群組後，請提供其 `model_group_id`，以將新的模型版本註冊至該模型群組。在此情況下，模型名稱不必唯一。
 
-如果您使用 OpenSearch 提供的[預先訓練模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models#supported-pretrained-models)，建議您先為這些模型註冊一個具有唯一名稱的模型群組，然後再將預先訓練模型註冊為該模型群組的版本。這樣可確保每個模型群組都有全域唯一的模型群組名稱。
+如果您使用 OpenSearch 提供的[預先訓練模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models#supported-pretrained-models)，建議您先為這些模型註冊具有唯一名稱的模型群組。接著，將預先訓練模型註冊為該模型群組的版本。這可確保每個模型群組都具有全域唯一的模型群組名稱。
 {: .tip}
 
-如需此 API 的使用者存取權相關資訊，請參閱[模型存取控制注意事項]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/index/#model-access-control-considerations)。
+如需此 API 使用者存取權的相關資訊，請參閱[模型存取控制注意事項]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/index/#model-access-control-considerations)。
 
-如果模型大小超過 10 MB，ML Commons 會將其分割成較小的區塊，並將這些區塊儲存在模型的索引中。
+如果模型大小超過 10 MB，OpenSearch 會將其分割為較小的區塊，並將這些區塊儲存在模型的索引中。
 
 ## 端點
 
@@ -109,18 +109,18 @@ OpenSearch 提供數個預先訓練模型。如需更多資訊，請參閱 [Open
 
 | 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- 
-| `model_type` | 字串 | 模型類型，例如 `bert`。對於 Hugging Face 模型，模型類型指定於 `config.json`。範例請參閱 [`all-MiniLM-L6-v2` Hugging Face 模型 `config.json`](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/blob/main/config.json#L15)。必要。 |
-| `embedding_dimension` | 整數 | 模型產生的稠密向量維度。對於 Hugging Face 模型，維度指定於模型卡片中。例如，在 [`all-MiniLM-L6-v2` Hugging Face 模型卡片](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2) 中，敘述 `384 dimensional dense vector space` 指定 384 作為嵌入維度。必要。 |
-| `framework_type` | 字串  | 模型使用的框架。OpenSearch 支援 `sentence_transformers` 與 `huggingface_transformers` 框架。`sentence_transformers` 模型直接輸出文字嵌入，因此 ML Commons 不會執行任何後處理。對於 `huggingface_transformers`，ML Commons 會執行後處理，套用平均池化以取得文字嵌入。更多細節請參閱範例 [`all-MiniLM-L6-v2` Hugging Face 模型](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2)。必要。 |
-| `all_config` | 字串 | 此欄位用於參考用途。您可以在此欄位中指定所有模型組態。例如，如果您使用 Hugging Face 模型，可以將 `config.json` 檔案壓縮成一行，並將其內容儲存在 `all_config` 欄位中。模型上傳後，您可以使用取得模型的 API 操作，取得儲存在此欄位中的所有模型組態。選用。 |
-| `additional_config` | 物件 | 其他模型組態。包含 `space_type`，用於指定 k-NN 搜尋的距離度量。對於 OpenSearch 提供的預先訓練模型，此值會自動設定為對應的度量（例如 `huggingface/sentence-transformers/all-distilroberta-v1` 使用 `l2`）。對於自訂模型，請指定您偏好的空間類型。選用。請參閱[空間類型]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-spaces/#distance-calculation)。 |
+| `model_type` | 字串 | 模型類型，例如 `bert`。對於 Hugging Face 模型，模型類型會於 `config.json` 中指定。範例請參閱 [`all-MiniLM-L6-v2` Hugging Face 模型 `config.json`](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/blob/main/config.json#L15)。必要。 |
+| `embedding_dimension` | 整數 | 模型產生之稠密向量的維度。對於 Hugging Face 模型，維度會於模型卡中指定。例如，在 [`all-MiniLM-L6-v2` Hugging Face 模型卡](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2) 中，`384 dimensional dense vector space` 敘述指定 384 為嵌入維度。必要。 |
+| `framework_type` | 字串  | 模型使用的架構。OpenSearch 支援 `sentence_transformers` 與 `huggingface_transformers` 架構。`sentence_transformers` 模型會直接輸出文字嵌入，因此 OpenSearch 不會執行任何後處理。對於 `huggingface_transformers`，OpenSearch 會套用均值池化進行後處理，以取得文字嵌入。詳情請參閱範例 [`all-MiniLM-L6-v2` Hugging Face 模型](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2)。必要。 |
+| `all_config` | 字串 | 此欄位供參考之用。您可以在此欄位中指定所有模型組態。例如，如果您使用 Hugging Face 模型，可以將 `config.json` 檔案縮減為一行，並將其內容儲存於 `all_config` 欄位中。模型上傳後，您可以使用 get model API 操作，取得儲存於此欄位中的所有模型組態。選用。 |
+| `additional_config` | 物件 | 其他模型組態。包含 `space_type`，其指定 k-NN 搜尋的距離計量。對於 OpenSearch 提供的預先訓練模型，此值會自動設為對應的計量（例如 `huggingface/sentence-transformers/all-distilroberta-v1` 的 `l2`）。對於自訂模型，請指定您偏好的空間類型。選用。請參閱[空間類型]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-spaces/#distance-calculation)。 |
 
 您可以使用 `model_config` 物件中的下列選用欄位，進一步自訂預先訓練句子轉換器模型的後處理邏輯。
 
 | 欄位 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
 | `pooling_mode` | 字串 | 後處理模型輸出，可為 `mean`、`mean_sqrt_len`、`max`、`weightedmean`、`cls`、`lasttoken` 或 `none`。對於僅解碼器模型（例如 Qwen3-Embedding），請使用 `lasttoken`，此類模型的最後一個非填充詞元會透過因果注意力擷取累積脈絡。對於已提供預先池化輸出的模型（例如 `sentence_embedding` 或 `pooler_output`），請使用 `none` 以略過額外的池化。|
-| `normalize_result` | 布林值 | 設定為 `true` 時，會將模型輸出標準化，以縮放至模型的標準範圍。 |
+| `normalize_result` | 布林值 | 設為 `true` 時，會將模型輸出正規化，以便縮放至模型的標準範圍。 |
 
 ### 註冊託管於第三方平台的模型
 

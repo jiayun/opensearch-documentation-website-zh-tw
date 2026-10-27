@@ -31,12 +31,12 @@ has_children: false
 7. 檢視結果，結果會列於 **Events** 索引標籤上的表格中。在此頁面上，可用欄位、來源與時間等詳細資料會以表格格式顯示。
 8. （選用）建立資料視覺化。
 
-## 建立 Amazon S3 資料的視覺化
+## 為您的 Amazon S3 資料建立視覺化
 
 若要建立視覺化，請依照下列步驟操作：
 
-1. 在 **Explorer** 頁面上，選取 **Visualizations** 索引標籤。 
-2. 選取 **Index data to visualize**。此選項只會建立[加速索引]({{site.url}}{{site.baseurl}}/dashboards/management/accelerate-external-data/)，讓您能從 **Visualizations** 索引標籤檢視資料視覺化。若要建立 Amazon S3 資料的視覺化，請前往 **Discover**。如需相關資訊與教學，請參閱 [Discover 文件]({{site.url}}{{site.baseurl}}/dashboards/discover/index-discover/)。
+1. 在 **Explorer** 頁面上，選取 **Visualizations** 索引標籤。
+2. 選取 **Index data to visualize**。此選項會建立一個[加速索引]({{site.url}}{{site.baseurl}}/dashboards/management/accelerate-external-data/)，將您的 Amazon S3 資料儲存在 OpenSearch 中。建立加速索引之後，即可在 **Visualizations** 索引標籤上將其資料視覺化。
 
 ## 搭配 Amazon S3 資料來源使用 Query Workbench
 

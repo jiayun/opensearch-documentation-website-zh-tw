@@ -3,7 +3,7 @@
 layout: default
 title: "搜尋模型"
 parent: Model APIs
-grand_parent: ML Commons APIs
+grand_parent: ML APIs
 nav_order: 35
 ---
 

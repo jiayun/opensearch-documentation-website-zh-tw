@@ -10,10 +10,10 @@ redirect_from:
 
 # ML 推論處理器
 
-`ml_inference` 處理器用於叫用註冊在 [OpenSearch ML Commons 外掛程式]({{site.url}}{{site.baseurl}}/ml-commons-plugin/) 中的機器學習 (ML) 模型。模型輸出會以新欄位的形式新增至匯入的文件。
+`ml_inference` 處理器會呼叫已在 OpenSearch 中註冊的[機器學習（ML）模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/)。模型輸出會作為新欄位新增至匯入的文件中。
 
 **先決條件**<br>
-使用 `ml_inference` 處理器之前，您必須在 OpenSearch 叢集上裝載本機 ML 模型，或透過 ML Commons 外掛程式將外部裝載的模型連線至您的 OpenSearch 叢集。如需本機模型的詳細資訊，請參閱[在 OpenSearch 中使用 ML 模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/)。如需外部裝載模型的詳細資訊，請參閱[連線至外部裝載的模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/)。 
+使用 `ml_inference` 處理器之前，您必須具備託管於 OpenSearch 叢集上的本機 ML 模型，或已連線至 OpenSearch 叢集的外部託管模型。如需本機模型的詳細資訊，請參閱[在 OpenSearch 中使用 ML 模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/)。如需外部託管模型的詳細資訊，請參閱[連線至外部託管模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/)。 
 {: .note}
 
 ## 語法
@@ -83,13 +83,13 @@ redirect_from:
 
 若為遠端模型，`model_input` 欄位為選用，其預設值為 `"{ \"parameters\": ${ml_inference.parameters} }`。
 
-### 範例：外部裝載的模型
+### 範例：外部託管模型
 
-下列範例會使用外部裝載的模型設定 `ml_inference` 處理器。
+下列範例會使用外部託管模型設定 `ml_inference` 處理器。
 
 **步驟 1：建立管線**
 
-下列範例會為外部裝載的文字嵌入模型建立資料匯入管線。此模型需要 `input` 欄位，並在 `data` 欄位中產生結果。它會將 `passage_text` 欄位中的文字轉換為文字嵌入，並將嵌入儲存在 `passage_embedding` 欄位中。處理器組態中未明確指定 `function_name`，因此其預設為 `remote`，表示為外部裝載的模型：
+下列範例會為外部託管的文字嵌入模型建立資料匯入管線。此模型需要 `input` 欄位，並在 `data` 欄位中產生結果。它會將 `passage_text` 欄位中的文字轉換為文字嵌入，並將嵌入儲存在 `passage_embedding` 欄位中。處理器組態中未明確指定 `function_name`，因此其預設為 `remote`，表示外部託管模型：
 
 ```json
 PUT /_ingest/pipeline/ml_inference_pipeline
@@ -116,7 +116,7 @@ PUT /_ingest/pipeline/ml_inference_pipeline
 ```
 {% include copy-curl.html %}
 
-對於傳送至外部裝載模型的 Predict API 請求，所有欄位通常會巢狀置於 `parameters` 物件內：
+對於傳送至外部託管模型的 Predict API 請求，所有欄位通常會巢狀置於 `parameters` 物件內：
 
 ```json
 POST /_plugins/_ml/models/cleMb4kBJ1eYAeTMFFg4/_predict
@@ -131,7 +131,7 @@ POST /_plugins/_ml/models/cleMb4kBJ1eYAeTMFFg4/_predict
 }
 ```
 
-為外部裝載模型指定 `input_map` 時，您可以直接參照 `input` 欄位，而不必提供其點路徑 `parameters.input`：
+為外部託管模型指定 `input_map` 時，您可以直接參照 `input` 欄位，而不必提供其點路徑 `parameters.input`：
 
 ```json
 "input_map": [
@@ -141,7 +141,7 @@ POST /_plugins/_ml/models/cleMb4kBJ1eYAeTMFFg4/_predict
 ]
 ```
 
-**步驟 2 (選用)：測試管線**
+**步驟 2（選用）：測試管線**
 
 建議您在匯入文件之前先測試管線。
 {: .tip}

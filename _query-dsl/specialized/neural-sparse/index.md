@@ -20,7 +20,7 @@ redirect_from:
 
 ## 神經稀疏搜尋
 
-在 `rank_features` 欄位上使用神經稀疏搜尋，以倒排索引的效率進行傳統稀疏向量搜尋。
+在 `rank_features` 欄位上使用神經稀疏搜尋，以反向索引的效率進行傳統稀疏向量搜尋。
 
 您可以使用原始稀疏向量或文字來執行神經稀疏搜尋。文字可由內建分析器或斷詞器模型進行斷詞。
 
@@ -117,7 +117,7 @@ redirect_from:
 
 最上層的欄位名稱會指定要對其執行搜尋查詢的向量欄位。您必須指定 `query_text` 或 `query_tokens` 來定義輸入。
 
-### 一般欄位
+### 共通欄位
 
 這些欄位同時支援 `rank_features` 與 `sparse_vector` 欄位類型。
 
@@ -126,7 +126,7 @@ redirect_from:
 | `query_text` | 字串 | 選用 | 要轉換為稀疏向量嵌入的查詢文字。必須指定 `query_text` 或 `query_tokens`。 |
 | `query_tokens` | 詞元（字串）到權重（浮點數）的對應 | 選用 | 以詞元及其權重形式呈現的原始稀疏向量。用於直接輸入向量，作為 `query_text` 的替代方案。必須指定 `query_text` 或 `query_tokens`。 |
 | `model_id` | 字串 | 選用 | 與 `query_text` 搭配使用。用於從查詢文字產生向量嵌入的稀疏編碼模型 ID（適用於雙編碼器模式）或斷詞器 ID（適用於僅文件模式）。模型/斷詞器必須先在 OpenSearch 中部署，才能在神經稀疏搜尋中使用。如需更多資訊，請參閱[在 OpenSearch 中使用自訂模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/)與[自動產生稀疏向量嵌入]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-with-pipelines/)。如需在神經稀疏查詢中設定預設模型 ID 的資訊，請參閱[`neural_query_enricher`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/neural-query-enricher/)。不能與 `analyzer` 同時指定。 |
-| `max_token_score` | 浮點數 | 選用 | （已棄用）此參數自 OpenSearch 2.12 起已棄用。僅為回溯相容性而保留，不再影響功能。請求中仍可提供此參數，但其值沒有任何影響。先前用於表示詞彙表中所有詞元分數的理論上限。|
+| `max_token_score` | 浮點數 | 選用 | （已棄用）此參數自 OpenSearch 2.12 起已棄用。僅為向後相容性而保留，不再影響功能。請求中仍可提供此參數，但其值沒有任何影響。先前用於表示詞彙表中所有詞元分數的理論上限。|
 
 ### 僅適用於 rank_features 的欄位
 
@@ -138,12 +138,12 @@ redirect_from:
 
 | 欄位 | 資料類型 | 必要/選用 | 說明 |
 |:--- |:--- |:--- |:--- |
-| `method_parameters.top_n` | 整數 | 選用 | 指定要為近似稀疏查詢保留的權重最高查詢詞元數量。 |
-| `method_parameters.heap_factor` | 浮點數 | 選用 | 控制召回率與效能之間的取捨。較高的值會提高召回率但降低查詢速度；較低的值會降低召回率但提升查詢速度。 |
-| `method_parameters.k` | 整數 | 選用 | 指定近似神經搜尋演算法傳回的前 k 個最近結果數量。 |
-| `method_parameters.filter` | 物件 | 選用 | 對查詢結果套用篩選條件。篩選條件的套用方式取決於為該欄位設定的引擎。請參閱[神經稀疏 ANN 搜尋中的篩選]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/filtering-in-sparse-search/)。 |
+| `method_parameters.top_n` | 整數 | 選用 | 指定近似稀疏查詢要保留的權重最高查詢詞元數量。 |
+| `method_parameters.heap_factor` | 浮點數 | 選用 | 控制召回率與效能之間的取捨。數值越高可提高召回率，但會降低查詢速度；數值越低則降低召回率，但可提升查詢速度。 |
+| `method_parameters.k` | 整數 | 選用 | 指定[神經稀疏 ANN 搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/)傳回的頂端結果數量。 |
+| `method_parameters.filter` | 物件 | 選用 | 對查詢結果套用篩選條件。篩選條件的套用方式取決於該欄位設定的引擎。請參閱[神經稀疏 ANN 搜尋中的篩選]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/filtering-in-sparse-search/)。 |
 
-如果篩選條件相符的文件數少於 `k`，兩種引擎都會對篩選後的文件執行精確搜尋。超過該數量後，Lucene 引擎會在近似檢索後套用篩選條件，因此選擇性篩選可能產生少於 `k` 個結果，而原生引擎則會在篩選後的集合中進行檢索，可傳回完整的 `k` 個結果。此差異取決於欄位對應中設定的引擎。
+如果篩選條件相符的文件少於 `k`，兩個引擎都會對篩選後的文件執行精確搜尋。超過該數量後，Lucene 引擎會在近似擷取之後才套用篩選條件，因此選擇性篩選可能產生少於 `k` 筆結果；而原生引擎則會在篩選後的集合內擷取，可傳回完整的 `k` 筆結果。此差異取決於欄位對應中設定的引擎。
 {: .note}
 
 ## 範例

@@ -3,15 +3,19 @@
 layout: default
 title: "預測"
 parent: Model APIs
-grand_parent: ML Commons APIs
+grand_parent: ML APIs
 nav_order: 60
 ---
 
 # Predict API
 
-ML Commons 可以使用您訓練好的模型，從已編製索引的資料或資料框預測新資料。若要使用 Predict API，需要 `model_id`。
+將輸入傳送至模型並回傳模型的輸出（推論）。請求本文的欄位取決於模型類型：
 
-有關此 API 的使用者存取權資訊，請參閱[模型存取控制注意事項]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/index/#model-access-control-considerations)。
+- 使用 [Train API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/train/) 訓練的模型，可從已編製索引的資料或請求中提供的資料框進行預測。
+- 本機模型，例如文字嵌入、稀疏編碼、文字相似度與問答模型，接受文字輸入。
+- 外部託管的模型接受其連接器中定義的輸入欄位。
+
+如需有關此 API 的使用者存取權資訊，請參閱[模型存取控制注意事項]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/index/#model-access-control-considerations)。
 
 ## 端點
 

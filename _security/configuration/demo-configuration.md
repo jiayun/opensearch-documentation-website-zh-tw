@@ -141,6 +141,6 @@ sudo env OPENSEARCH_INITIAL_ADMIN_PASSWORD=<custom-admin-password> dpkg -i opens
 
 ## 本機發行版本
 
-如果您正在建置本機發行版本，請參閱 [DEVELOPER_GUIDE.md](https://github.com/opensearch-project/security/blob/main/DEVELOPER_GUIDE.md)，以了解如何為 Security 外掛程式建置本機二進位檔。
+如果您正在建置本機發行版本，請參閱 [DEVELOPER_GUIDE.md](https://github.com/opensearch-project/security/blob/main/docs/DEVELOPER_GUIDE.md)，以了解如何為 Security 外掛程式建置本機二進位檔。
 
 對於 OpenSearch 2.12 或更新版本，請務必在安裝前設定強式密碼。

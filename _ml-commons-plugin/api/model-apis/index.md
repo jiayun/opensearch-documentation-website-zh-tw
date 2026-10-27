@@ -2,7 +2,7 @@
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: "模型 API"
-parent: ML Commons APIs
+parent: ML APIs
 has_children: true
 nav_order: 10
 has_toc: false
@@ -10,9 +10,9 @@ redirect_from:
   - /ml-commons-plugin/api/model-apis/
 ---
 
-# 模型 API
+# Model APIs
 
-ML Commons 支援下列模型層級的 CRUD API：
+OpenSearch 支援下列模型 API：
 
 - [註冊模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/)
 - [部署模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/deploy-model/)
@@ -22,25 +22,25 @@ ML Commons 支援下列模型層級的 CRUD API：
 - [取消部署模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/undeploy-model/)
 - [刪除模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/delete-model/)
 
-# 預測 API
+# Predict API
 
-預測 API 用於叫用機器學習 (ML) 模型。ML Commons 支援下列預測 API：
+Predict API 會叫用機器學習 (ML) 模型。OpenSearch 支援下列 Predict API：
 
-- [預測]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/predict/) 
-- [預測串流]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/predict-stream/) 
-- [批次預測]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/batch-predict/)
+- [Predict]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/predict/) 
+- [Predict Stream]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/predict-stream/) 
+- [Batch Predict]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/batch-predict/)
 
-# 訓練 API
+# Train API
 
-ML Commons 訓練 API 可讓您以同步及非同步方式訓練 ML 演算法：
+使用 Train API 以同步或非同步方式訓練機器學習演算法：
 
-- [訓練]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/train/)
+- [Train]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/train/)
 
 若要透過 API 訓練任務，需要三項輸入：
 
-- 演算法名稱：必須是 [FunctionName](https://github.com/opensearch-project/ml-commons/blob/1.3/common/src/main/java/org/opensearch/ml/common/parameter/FunctionName.java)。這會決定 ML 模型執行哪個演算法。若要新增函式，請參閱[如何新增函式](https://github.com/opensearch-project/ml-commons/blob/main/docs/how-to-add-new-function.md)。
-- 模型超參數：調整這些參數以提升模型準確度。  
-- 輸入資料：用於訓練 ML 模型或將其套用至預測的資料。您可以用兩種方式輸入資料：對您的索引進行查詢，或使用資料框架。
+- 演算法名稱：必須是 [FunctionName](https://github.com/opensearch-project/ml-commons/blob/1.3/common/src/main/java/org/opensearch/ml/common/parameter/FunctionName.java)。這會決定機器學習模型執行哪種演算法。若要新增函式，請參閱 [How To Add a New Function](https://github.com/opensearch-project/ml-commons/blob/main/docs/how-to-add-new-function.md)。
+- 模型超參數：調整這些參數以提升模型準確度。
+- 輸入資料：用於訓練機器學習模型或套用至預測的資料。您可以透過兩種方式輸入資料：對您的索引進行查詢，或使用 data frame。
 
 # 訓練與預測 API
 

@@ -150,7 +150,7 @@ POST /_plugins/_ml/agents/_register
     "model_id": <Model ID from Step 3>,
     "parameters": {
       "max_iteration": 15,
-      "embedding_model_id": "<Provide if you want to do neural search>"
+      "embedding_model_id": "<Provide if you want to use semantic search>"
     }
   },
   "memory": {
@@ -169,9 +169,9 @@ POST /_plugins/_ml/agents/_register
 ```
 {% include copy-curl.html %}
 
-### 建立使用代理程式記憶的代理程式
+### 建立使用代理記憶的代理程式
 
-若要儲存記憶與互動，您可以設定代理程式使用 [代理程式記憶]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/)。如需更多資訊，請參閱 [使用代理程式記憶]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agentic-memory/)。下列範例建立一個使用 `agentic_memory` 記憶的 `conversational` 代理程式：
+若要儲存記憶與互動，您可以設定代理程式使用[代理記憶 (agentic memory)]({{site.url}}{{site.baseurl}}/ml-commons-plugin/agentic-memory/)。如需更多資訊，請參閱[使用代理記憶]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agentic-memory/)。下列範例建立一個使用 `agentic_memory` 記憶的 `conversational` 代理程式：
 
 ```json
 POST /_plugins/_ml/agents/_register
@@ -183,7 +183,7 @@ POST /_plugins/_ml/agents/_register
     "model_id": <Model ID from Step 3>,
     "parameters": {
       "max_iteration": 15,
-      "embedding_model_id": "<Provide if you want to do neural search>"
+      "embedding_model_id": "<Provide if you want to use semantic search>"
     }
   },
   "memory": {
@@ -288,13 +288,13 @@ GET iris-index/_search?search_pipeline=agentic-pipeline
 
 - [新增搜尋範本]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/search-templates/) -- 新增預先定義的搜尋範本，以處理 LLM 難以穩定產生的複雜查詢模式，確保查詢結構可預測並提升可靠性。
 
-- [連接外部 MCP 伺服器]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/mcp-server/) -- 透過 Model Context Protocol (MCP) 伺服器擴充代理程式搜尋的外部工具與資料來源，以強化功能並即時存取資訊。
+- [連接外部 MCP 伺服器]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/mcp-server/) -- 透過 Model Context Protocol (MCP) 伺服器，以外部工具與資料來源擴充代理程式搜尋，以強化功能並即時存取資訊。
 
 - [建立代理程式搜尋流程]({{site.url}}{{site.baseurl}}/vector-search/ai-search/workflows/building-agentic-search-flows/) -- 使用 OpenSearch Dashboards 中的 AI 搜尋流程來設定代理程式並執行代理程式搜尋。
 
-- [重新排序代理程式搜尋結果]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/rerank-agentic-search-results/) -- 在您的代理程式搜尋管線中新增 rerank 搜尋回應處理器，以進一步重新排序搜尋結果。
+- [重新排名代理程式搜尋結果]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/rerank-agentic-search-results/) -- 在您的代理程式搜尋管線中新增重新排名搜尋回應處理器，以進一步重新排名搜尋結果。
 
-- [使用代理程式記憶]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agentic-memory/) -- 設定代理程式搜尋使用記憶容器來儲存記憶與互動，讓對話之間能保有持續的上下文。
+- [使用代理記憶]({{site.url}}{{site.baseurl}}/vector-search/ai-search/agentic-search/agentic-memory/) -- 設定代理程式搜尋使用記憶容器 (memory container) 來儲存記憶與互動，讓跨對話能保有持續的脈絡。
 
 ## 後續步驟
 

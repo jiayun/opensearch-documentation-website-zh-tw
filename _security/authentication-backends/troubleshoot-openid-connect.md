@@ -28,8 +28,8 @@ redirect_from:
 為協助排解 OpenID Connect 的問題，請將 OpenSearch 的記錄層級設為 `debug`。在 `config/log4j2.properties` 中新增下列各行，然後重新啟動節點：
 
 ```
-logger.securityjwt.name = com.amazon.dlic.auth.http.jwt
-logger.securityjwt.level = trace
+logger.securityjwt.name = org.opensearch.security.auth.http.jwt
+logger.securityjwt.level = debug
 ```
 
 此設定會將大量實用資訊輸出至您的記錄檔。如果這些資訊不足，您也可以將記錄層級設為 `trace`。
@@ -40,7 +40,7 @@ logger.securityjwt.level = trace
 此錯誤表示 Security 外掛程式無法連線至您 IdP 的中繼資料端點。請在 `opensearch_dashboards.yml` 中檢查下列設定：
 
 ```
-plugins.security.openid.connect_url: "http://keycloak.example.com:8080/auth/realms/master/.well-known/openid-configuration"
+opensearch_security.openid.connect_url: "http://keycloak.example.com:8080/auth/realms/master/.well-known/openid-configuration"
 ```
 
 如果此錯誤發生在 OpenSearch 上，請在 `config.yml` 中檢查下列設定：
@@ -66,9 +66,9 @@ openid_auth_domain:
 請檢查 `opensearch_dashboards.yml`，並確認您已設定下列最低限度的組態：
 
 ```yml
-plugins.security.openid.connect_url: "..."
-plugins.security.openid.client_id: "..."
-plugins.security.openid.client_secret: "..."
+opensearch_security.openid.connect_url: "..."
+opensearch_security.openid.client_id: "..."
+opensearch_security.openid.client_secret: "..."
 ```
 
 
@@ -89,7 +89,7 @@ plugins.security.openid.client_secret: "..."
 若要將存取權杖換成身分權杖，大多數 IdP 都會要求您提供用戶端密鑰。請檢查 `opensearch_dashboards.yml` 中的用戶端密鑰是否與您 IdP 組態中的用戶端密鑰相符：
 
 ```
-plugins.security.openid.client_secret: "..."
+opensearch_security.openid.client_secret: "..."
 ```
 
 

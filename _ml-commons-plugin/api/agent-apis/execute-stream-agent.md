@@ -3,7 +3,7 @@
 layout: default
 title: "執行代理程式串流"
 parent: Agent APIs
-grand_parent: ML Commons APIs
+grand_parent: ML APIs
 nav_order: 25
 ---
 

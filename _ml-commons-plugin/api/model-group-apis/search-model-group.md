@@ -3,7 +3,7 @@
 layout: default
 title: "搜尋模型群組"
 parent: Model group APIs
-grand_parent: ML Commons APIs
+grand_parent: ML APIs
 nav_order: 40
 ---
 

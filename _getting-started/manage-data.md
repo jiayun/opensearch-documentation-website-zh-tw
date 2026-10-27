@@ -285,5 +285,5 @@ DELETE /students
 
 ## 後續步驟
 
-- 若要在單一請求中將多份文件編製索引，請參閱[將資料匯入 OpenSearch]({{site.url}}{{site.baseurl}}/getting-started/ingest-data/)。
+- 若要在單一請求中為大量文件編製索引，並選擇匯入自身資料的方法，請參閱[將您的資料匯入 OpenSearch]({{site.url}}{{site.baseurl}}/getting-started/ingest-data/)。
 - 若要了解搜尋選項，請參閱[搜尋您的資料]({{site.url}}{{site.baseurl}}/getting-started/search-data/)。

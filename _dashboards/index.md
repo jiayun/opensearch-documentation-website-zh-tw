@@ -55,6 +55,12 @@ OpenSearch Dashboards 是 OpenSearch 的 Web UI。您可以使用它來搜尋與
 
 若已啟用[工作區]({{site.url}}{{site.baseurl}}/dashboards/workspace/)，您也可以撰寫 PPL 或 PromQL 查詢來建立視覺化。如需詳細資訊，請參閱[使用查詢建立視覺化]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/)。
 
+## 匯出資料與產生報表
+
+將搜尋結果或視覺化資料下載為 CSV 檔案，或將您的儀表板與視覺化匯出為已儲存物件，以便備份或複製到另一個執行個體。如需更多資訊，請參閱 [匯出資料]({{site.url}}{{site.baseurl}}/dashboards/exporting-data/)。
+
+若要以 PDF、PNG、CSV 或 XLSX 檔案分享儀表板、視覺化或已儲存的搜尋（一次性或依排程），請參閱 [Reporting]({{site.url}}{{site.baseurl}}/dashboards/reporting/)。
+
 ## 管理索引與快照
 
 使用下列應用程式管理索引與快照。

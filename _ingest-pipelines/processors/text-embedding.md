@@ -35,21 +35,21 @@ redirect_from:
 
 ## 組態參數
 
-下表列出 `text_embedding` 處理器的必要參數與選用參數。
+下表列出 `text_embedding` 處理器的必要與選用參數。
 
 | 參數  | 資料類型 | 必要/選用  | 說明  |
 |:---|:---|:---|:---|
-`model_id` | 字串 | 必要 | 用於產生嵌入的模型 ID。模型必須先部署在 OpenSearch 中，才能用於神經搜尋。如需詳細資訊，請參閱[在 OpenSearch 中使用自訂模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/)與[語意搜尋]({{site.url}}{{site.baseurl}}/search-plugins/semantic-search/)。
-`field_map` | 物件 | 必要 | 包含索引鍵/值組，用於指定文字欄位與向量欄位之間的對應。
-`field_map.<input_field>` | 字串 | 必要 | 用來取得文字以產生文字嵌入的欄位名稱。
-`field_map.<vector_field>`  | 字串 | 必要 | 用來儲存所產生之文字嵌入的向量欄位名稱。若輸入欄位為巢狀欄位，請僅指定欄位名稱，而非完整路徑。如需詳細資訊，請參閱[嵌入巢狀欄位](#embedding-a-nested-field)。
-`description`  | 字串 | 選用  | 處理器的簡短說明。  |
-`tag` | 字串 | 選用 | 處理器的識別標籤。在偵錯時，可用來區分相同類型的處理器。如需詳細資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
-`batch_size` | 整數 | 選用 | 指定每次批次處理的文件數量。預設為 `1`。若指定 `if`，處理器將不會批次處理文件，而是逐一處理。 |
-`if` | 包含布林運算式的字串 | 選用 | 執行處理器的條件。 |
-`ignore_failure` | 布林值 | 選用 | 指定處理器在發生錯誤時是否繼續執行。若設為 `true`，則會忽略處理器失敗。預設為 `false`。 |
+`model_id` | 字串 | 必要 | 用於產生嵌入的模型 ID。模型必須先部署在 OpenSearch 中才能使用。如需更多資訊，請參閱[在 OpenSearch 中使用自訂模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/)與[語意搜尋]({{site.url}}{{site.baseurl}}/search-plugins/semantic-search/)。
+`field_map` | 物件 | 必要 | 包含指定文字欄位對應至向量欄位的鍵值對。
+`field_map.<input_field>` | 字串 | 必要 | 用於取得文字以產生文字嵌入的欄位名稱。
+`field_map.<vector_field>`  | 字串 | 必要 | 用於儲存所產生文字嵌入的向量欄位名稱。對於巢狀輸入欄位，僅指定欄位名稱而非完整路徑。如需更多資訊，請參閱[嵌入巢狀欄位](#embedding-a-nested-field)。
+`description`  | 字串 | 選用  | 處理器的簡要說明。  |
+`tag` | 字串 | 選用 | 處理器的識別標籤。有助於除錯時區分相同類型的處理器。如需更多資訊，請參閱[使用處理器標籤進行監控與除錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
+`batch_size` | 整數 | 選用 | 指定每次批次處理的文件數量。預設為 `1`。若指定 `if`，處理器不會批次處理文件，而是逐一處理。 |
+`if` | 含有布林運算式的字串 | 選用 | 執行處理器的條件。 |
+`ignore_failure` | 布林值 | 選用 | 指定處理器即使遇到錯誤仍繼續執行。若設為 `true`，則會忽略處理器失敗。預設為 `false`。 |
 `on_failure` | 清單 | 選用 | 處理器失敗時要執行的處理器清單。 |
-`skip_existing` | 布林值 | 選用 | 設為 `true` 時，處理器會將傳入的文件與已使用相同文件 ID 編製索引的文件進行比較。若輸入文字未變更，且已編製索引的文件已包含嵌入，處理器便不會進行推論呼叫，而是複製現有的嵌入。由於比較作業需要已編製索引的文件，因此此參數在 `_simulate` 請求中沒有作用。預設為 `false`。 |
+`skip_existing` | 布林值 | 選用 | 當設為 `true` 時，處理器會將傳入文件與相同文件 ID 下已編製索引的文件進行比較。若輸入文字未改變且已索引的文件已包含嵌入，處理器不會進行推論呼叫，而是複製現有的嵌入。由於此比較需要已索引的文件，此參數在 `_simulate` 請求中沒有作用。預設為 `false`。 |
 
 ## 使用處理器
 

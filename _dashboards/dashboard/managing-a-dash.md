@@ -71,7 +71,7 @@ has_children: false
 匯出儀表板是一項 Reporting 功能。您必須啟用 Reporting 外掛程式才能匯出檔案。
 {: .note}
 
-此功能需要 Reporting 外掛程式。有關報告的更多資訊，請參閱 [Reporting using OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/reporting/report-dashboard-index/)。
+此功能需要 Reporting 外掛程式。有關報告的更多資訊，請參閱[使用 OpenSearch Dashboards 產生報告]({{site.url}}{{site.baseurl}}/dashboards/reporting/report-dashboard-index/)。
 
 1. 從應用程式選單中選取 **Reporting**。
 

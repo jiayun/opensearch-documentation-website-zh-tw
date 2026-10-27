@@ -3,7 +3,7 @@
 layout: default
 title: "訓練與預測"
 parent: Model APIs
-grand_parent: ML Commons APIs
+grand_parent: ML APIs
 nav_order: 75
 ---
 

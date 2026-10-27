@@ -59,18 +59,18 @@ grand_parent: Search pipelines
 | `function_name`        | 字串    | 外部託管模型為選用<br/><br/>本機模型為必要 | 處理器中設定的 ML 模型函式名稱。對於本機模型，有效值為 `sparse_encoding`、`sparse_tokenize`、`text_embedding` 和 `text_similarity`。對於外部託管模型，有效值為 `remote`。預設為 `remote`。 |
 | `model_config`         | 物件    | 選用   | ML 模型的自訂組態選項。對於外部託管模型，若設定此項，此組態會覆寫預設的連接器參數。對於本機模型，您可以在 `model_input` 中加入 `model_config`，以覆寫註冊時設定的模型組態。如需詳細資訊，請參閱 [`model_config` 物件]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/#the-model_config-object)。 |
 | `model_input`          | 字串    | 外部託管模型為選用<br/><br/>本機模型為必要 | 定義模型所預期輸入欄位格式的範本。每種本機模型類型可能使用不同的輸入集合。對於外部託管模型，預設為 `"{ \"parameters\": ${ml_inference.parameters} }`。 |
-| `input_map`            | 陣列 | 外部託管模型為選用<br/><br/>本機模型為必要 | 一個陣列，指定如何將搜尋回應中的文件欄位對應到模型輸入欄位。陣列的每個元素都是 `"<model_input_field>": "<document_field>"` 格式的對應，並對應至一個文件欄位的一次模型呼叫。若外部託管模型未指定輸入對應，則所有文件欄位會直接作為輸入傳遞給模型。`input_map` 的大小表示模型被呼叫的次數 (Predict API 請求的次數)。 |
+| `input_map`            | 陣列 | 外部託管模型為選用<br/><br/>本機模型為必要 | 一個陣列，指定如何將搜尋回應中的文件欄位對應到模型輸入欄位。陣列的每個元素都是 `"<model_input_field>": "<document_field>"` 格式的對應，並對應至一個文件欄位的一次模型呼叫。若外部託管模型未指定輸入對應，則所有文件欄位會直接作為輸入傳遞給模型。`input_map` 的大小表示模型被呼叫的次數（Predict API 請求的次數）。 |
 | `<model_input_field>`  | 字串    | 外部託管模型為選用<br/><br/>本機模型為必要  | 模型輸入欄位名稱。 |
 | `<document_field>`     | 字串    | 外部託管模型為選用<br/><br/>本機模型為必要 | 搜尋回應中用作模型輸入的文件欄位名稱或 JSON 路徑。  |
 | `output_map`           | 陣列 | 外部託管模型為選用<br/><br/>本機模型為必要 | 一個陣列，指定如何將模型輸出欄位對應到搜尋回應文件中的新欄位。陣列的每個元素都是 `"<new_document_field>": "<model_output_field>"` 格式的對應。 |
-| `<new_document_field>` | 字串    | 外部託管模型為選用<br/><br/>本機模型為必要 | 文件中新欄位的名稱，模型的輸出 (由 `model_output` 指定) 會儲存在此欄位。若外部託管模型未指定輸出對應，則模型輸出的所有欄位都會加入新的文件欄位。  |
+| `<new_document_field>` | 字串    | 外部託管模型為選用<br/><br/>本機模型為必要 | 文件中新欄位的名稱，模型的輸出（由 `model_output` 指定）會儲存在此欄位。若外部託管模型未指定輸出對應，則模型輸出的所有欄位都會加入新的文件欄位。  |
 | `<model_output_field>` | 字串    | 外部託管模型為選用<br/><br/>本機模型為必要 | 模型輸出中要儲存至 `new_document_field` 的欄位名稱或 JSON 路徑。  |
 | `full_response_path`   | 布林值   | 選用   | 若 `model_output_field` 包含欄位的完整 JSON 路徑而非欄位名稱，請將此參數設為 `true`。屆時模型輸出將被完整解析以取得該欄位的值。本機模型預設為 `true`，外部託管模型預設為 `false`。  |
 | `ignore_missing`       | 布林值   | 選用  | 若為 `true`，且 `input_map` 或 `output_map` 中定義的任何輸入欄位遺漏，則會忽略此處理器。否則，欄位遺漏會導致失敗。預設為 `false`。 |
-| `ignore_failure`       | 布林值   | 選用  | 指定處理器即使遇到錯誤仍繼續執行。若為 `true`，則會忽略此處理器並繼續搜尋。若為 `false`，則任何失敗都會導致搜尋被取消。預設為 `false`。 |
+| `ignore_failure`       | 布林值   | 選用  | 指定處理器在遇到錯誤時是否仍繼續執行。若為 `true`，則會忽略此處理器並繼續搜尋。若為 `false`，則任何失敗都會導致搜尋被取消。預設為 `false`。 |
 | `override`             | 布林值   | 選用   | 當回應中的文件已包含名稱為 `<new_document_field>` 所指定名稱的欄位時，此參數才有作用。若 `override` 為 `false`，則會略過輸入欄位。若為 `true`，則現有的欄位值會被新的模型輸出覆寫。預設為 `false`。  |
 | `max_prediction_tasks` | 整數   | 選用  | 文件搜尋期間可執行的並行模型呼叫數目上限。預設為 `10`。  |
-| `one_to_one`           | 布林值    | 選用  | 將此參數設為 `true`，可為每個文件呼叫模型一次 (發出一個 Predict API 請求)。預設值 (`false`) 指定以搜尋回應中的所有文件呼叫模型，發出一個 Predict API 請求。 |
+| `one_to_one`           | 布林值    | 選用  | 將此參數設為 `true`，可為每個文件呼叫模型一次（發出一個 Predict API 請求）。預設值（`false`）指定以搜尋回應中的所有文件呼叫模型，發出一個 Predict API 請求。 |
 | `description`          | 字串    | 選用  | 處理器的簡要說明。 |
 | `tag`                  | 字串    | 選用 | 處理器的識別標籤。在偵錯時可用於區分相同類型的處理器。 |
 
@@ -571,11 +571,11 @@ GET /review_string_index/_search?search_pipeline=my_pipeline_request_review_llm
 
 ### 範例：使用文字相似度模型重新排名搜尋結果
 
-下列範例示範如何設定 `ml_inference` 搜尋回應處理器以搭配文字相似度模型。
+下列範例示範如何使用文字相似度模型設定 `ml_inference` 搜尋回應處理器。
 
 **先決條件**
 
-您必須為此使用案例設定外部託管的文字相似度模型。如需外部託管模型的詳細資訊，請參閱[連線至外部託管模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/)。註冊文字相似度模型後，您可以使用下列請求進行測試。此請求需要您在 `inputs` 欄位中提供 `text` 和 `text_pair` 欄位：
+在此使用案例中，您必須設定外部託管的文字相似度模型。如需外部託管模型的詳細資訊，請參閱[連接外部託管模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/)。註冊文字相似度模型後，您可以使用下列請求進行測試。此請求要求您在 `inputs` 欄位中提供 `text` 和 `text_pair` 欄位：
 
 ```json
 POST /_plugins/_ml/models/Ialx65IBAs32TwoK1lXf/_predict
@@ -591,7 +591,7 @@ POST /_plugins/_ml/models/Ialx65IBAs32TwoK1lXf/_predict
 ```
 {% include copy-curl.html %}
 
-模型會為每份輸入文件傳回相似度分數：
+模型會傳回每份輸入文件的相似度分數：
 
 ```json
 {
@@ -630,7 +630,7 @@ POST _bulk
 
 **步驟 2：建立搜尋管線**
 
-在此範例中，您將建立一個搜尋管線，在 `one-to-one` 推論模式中使用文字相似度模型，逐一處理搜尋結果中的每份文件。此設定可讓模型為每份文件發出一次預測請求，為每個搜尋命中提供特定的相關性洞察。使用 `input_map` 將搜尋請求對應至查詢文字時，JSON 路徑必須以 `$._request` 或 `_request` 開頭：
+在此範例中，您將建立一個搜尋管線，以 `one-to-one` 推論模式使用文字相似度模型，個別處理搜尋結果中的每份文件。此設定可讓模型針對每份文件發出一個預測請求，為每個搜尋結果提供特定的相關性見解。使用 `input_map` 將搜尋請求對應至查詢文字時，JSON 路徑必須以 `$._request` 或 `_request` 開頭：
 
 ```json
 PUT /_search/pipeline/my_rerank_pipeline
@@ -675,15 +675,15 @@ PUT /_search/pipeline/my_rerank_pipeline
 在此組態中，您提供了下列參數：
 
 - `model_id` 參數指定文字相似度模型的唯一識別碼。
-- `function_name` 參數設為 `REMOTE`，表示此模型為外部託管。
-- `input_map` 參數會將每份文件中的 `diary` 欄位對應至模型的 `text` 輸入，並將搜尋查詢詞彙對應至 `text_pair` 輸入。
-- `output_map` 參數會將模型的分數對應至每份文件中名為 `rank_score` 的欄位。
+- `function_name` 參數設為 `REMOTE`，表示模型為外部託管。
+- `input_map` 參數將每份文件的 `diary` 欄位對應至模型的 `text` 輸入，並將搜尋查詢詞彙對應至 `text_pair` 輸入。`$._request` 前置詞會讓 JSON 路徑從搜尋請求而非文件讀取，因此 `$._request.query.term.diary.value` 會解析為 `diary` 欄位上 `term` 查詢的 `value`。對於步驟 3 中的搜尋請求，此值為 `today`。
+- `output_map` 參數將模型的分數對應至每份文件中名為 `rank_score` 的欄位。
 - `model_input` 參數會格式化模型的輸入，確保其符合 Predict API 預期的結構。
-- `one_to_one` 參數設為 `true`，確保模型逐一處理每份文件，而非將多份文件批次處理。
-- `ignore_missing` 參數設為 `false`，若文件中缺少對應的欄位，會導致處理器失敗。
-- `ignore_failure` 參數設為 `false`，若 ML 推論處理器發生錯誤，會導致整個管線失敗。
+- `one_to_one` 參數設為 `true`，確保模型個別處理每份文件，而非將多份文件批次處理。
+- `ignore_missing` 參數設為 `false`，若文件中缺少對應的欄位，處理器將會失敗。
+- `ignore_failure` 參數設為 `false`，若 ML 推論處理器發生錯誤，整個管線將會失敗。
 
-`rerank` 處理器會在 ML 推論之後套用。它會根據 ML 模型產生的 `rank_score` 欄位重新排序文件，然後從最終結果中移除此欄位。
+`rerank` 處理器會在 ML 推論之後套用。它會根據 ML 模型產生的 `rank_score` 欄位重新排名文件，然後從最終結果中移除此欄位。
 
 **步驟 3：執行管線**
 
@@ -694,7 +694,7 @@ GET /demo-index-0/_search?search_pipeline=my_rerank_pipeline
 {
   "query": {
     "term": {
-      "dairy": {
+      "diary": {
         "value": "today"
       }
     }

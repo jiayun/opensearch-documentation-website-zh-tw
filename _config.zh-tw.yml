@@ -51,8 +51,6 @@ opensearch_collection:
       name: "可觀測性"
     security-analytics:
       name: "安全性分析"
-    reporting:
-      name: "報告"
     monitoring-your-cluster:
       name: "監控您的叢集"
     tools:

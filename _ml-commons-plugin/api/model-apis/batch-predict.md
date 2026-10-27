@@ -3,19 +3,19 @@
 layout: default
 title: "批次預測"
 parent: Model APIs
-grand_parent: ML Commons APIs
+grand_parent: ML APIs
 nav_order: 70
 ---
 
 # Batch Predict API
 
-ML Commons 可使用部署在外部模型伺服器上的模型，以離線非同步模式對大型資料集執行推論。若要使用 Batch Predict API，您必須提供外部託管模型的 `model_id`。Amazon SageMaker、Cohere 和 OpenAI 是目前僅有經過驗證且支援此 API 的外部伺服器。
+使用部署於外部模型伺服器上的模型，以離線且非同步的模式對大型資料集執行推論。若要使用 Batch Predict API，請提供外部託管模型的 `model_id`。Amazon SageMaker、Cohere 和 OpenAI 是唯一經過驗證且支援此 API 的外部伺服器。
 
-如需此 API 的使用者存取權相關資訊，請參閱[模型存取控制注意事項]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/index/#model-access-control-considerations)。
+如需此 API 使用者存取權限的資訊，請參閱[模型存取控制考量]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/index/#model-access-control-considerations)。
 
-如需外部託管模型的相關資訊，請參閱[連線至外部託管模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/)。 
+如需外部託管模型的資訊，請參閱[連線至外部託管模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/)。
 
-如需設定批次推論和連接器藍圖的操作說明，請參閱下列內容：
+如需設定批次推論與連接器藍圖的說明，請參閱下列內容：
 
 - [Amazon SageMaker 批次預測連接器藍圖](https://github.com/opensearch-project/ml-commons/blob/main/docs/remote_inference_blueprints/batch_inference_sagemaker_connector_blueprint.md)
 

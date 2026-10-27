@@ -12,28 +12,28 @@ nav_order: 40
 
 ## 範例
 
-在執行 `parent_id` 查詢之前，您的索引必須包含 [join]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/join/) 欄位，才能建立上層/子層關係。索引對應請求使用下列格式：
+在執行 `parent_id` 查詢之前，您的索引必須包含 [join]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/join/) 欄位，才能建立親子關係。此範例使用 `testindex1` 索引，其 `product_to_brand` join 欄位將 `brand` 文件定義為父文件，並將 `product` 文件定義為子文件：
 
 ```json
-PUT /example_index
+PUT testindex1
 {
   "mappings": {
     "properties": {
-      "relationship_field": {
+      "product_to_brand": {
         "type": "join",
         "relations": {
-          "parent_doc": "child_doc"
+          "brand": "product"
         }
       }
     }
   }
 }
 ```
-{% include copy-curl.html %} 
+{% include copy-curl.html %}
 
-在本範例中，請先依照 [`has_child` 查詢範例]({{site.url}}{{site.baseurl}}/query-dsl/joining/has-child/) 所述，設定一個包含代表產品及其品牌的文件的索引。
+依照 [`has_child` 查詢範例]({{site.url}}{{site.baseurl}}/query-dsl/joining/has-child/) 中的說明，為品牌與產品文件編製索引。
 
-若要搜尋特定上層文件的子文件，請使用 `parent_id` 查詢。下列查詢會傳回其上層文件 ID 為 `1` 的子文件（產品）：
+若要搜尋特定父文件的子文件，請使用 `parent_id` 查詢。下列查詢會傳回父文件 ID 為 `1` 的子文件（產品）：
 
 ```json
 GET testindex1/_search
@@ -48,7 +48,7 @@ GET testindex1/_search
 ```
 {% include copy-curl.html %}
 
-回應會傳回子產品：
+回應會傳回子產品文件：
 
 ```json
 {

@@ -27,11 +27,11 @@ OpenSearch 支援下列類型的本機模型：
 
 ## 準備模型
 
-對於所有模型，您必須在模型 zip 檔案內提供斷詞器 JSON 檔案。
+對於所有模型，您必須在模型 zip 檔案中提供斷詞器 JSON 檔案。
 
-對於稀疏編碼模型，請確認您的輸出格式為 `{"output":<sparse_vector>}`，以便 ML Commons 能夠後處理稀疏向量。
+對於稀疏編碼模型，請確認您的輸出格式為 `{"output":<sparse_vector>}`，以便 ML Commons 能後處理稀疏向量。
 
-如果您在自己的資料集上微調稀疏模型，您可能也會想使用自己的稀疏斷詞器模型。建議您在斷詞器模型 zip 檔案中提供自己的 [IDF](https://en.wikipedia.org/wiki/Tf%E2%80%93idf) JSON 檔案，因為當您在查詢中使用斷詞器模型時，這可提升查詢效能。或者，您可以使用 OpenSearch 提供的通用[來自 MSMARCO 的 IDF](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-tokenizer-v1/1.0.0/torch_script/opensearch-neural-sparse-tokenizer-v1-1.0.0.zip)。若未提供 IDF 檔案，每個詞元的預設權重會設為 1，這可能會影響稀疏神經搜尋的效能。  
+如果您在自己的資料集上微調稀疏模型，您可能也會想使用自己的稀疏斷詞器模型。建議您在斷詞器模型 zip 檔案中提供自己的 [IDF](https://en.wikipedia.org/wiki/Tf%E2%80%93idf) JSON 檔案，因為當您在查詢中使用斷詞器模型時，這能提升查詢效能。或者，您也可以使用 OpenSearch 提供的通用 [MSMARCO IDF](https://artifacts.opensearch.org/models/ml-models/amazon/neural-sparse/opensearch-neural-sparse-tokenizer-v1/1.0.0/torch_script/opensearch-neural-sparse-tokenizer-v1-1.0.0.zip)。若未提供 IDF 檔案，每個詞元的預設權重會設為 1，這可能會影響神經稀疏搜尋的效能。  
 
 ### 模型格式
 
@@ -108,36 +108,11 @@ POST /_plugins/_ml/model_groups/_register
 
 ## 步驟 2：註冊本機模型
 
-若要將本機模型註冊到步驟 1 建立的模型群組，請傳送 Register Model API 請求。Register Model API 參數的說明請參閱[註冊模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/)。
+若要將本機模型註冊至步驟 1 中建立的模型群組，請傳送 Register Model API 請求。如需 Register Model API 參數的說明，請參閱[註冊模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/model-apis/register-model/)。 
 
-`function_name` 對應模型類型。對於文字嵌入模型，請將此參數設為 `TEXT_EMBEDDING`。對於稀疏編碼模型，請將此參數設為 `SPARSE_ENCODING` 或 `SPARSE_TOKENIZE`。對於交叉編碼器模型，請將此參數設為 `TEXT_SIMILARITY`。對於問答模型，請將此參數設為 `QUESTION_ANSWERING`。在此範例中，由於您要註冊的是文字嵌入模型，請將 `function_name` 設為 `TEXT_EMBEDDING`。
+`function_name` 對應至模型類型。對於文字嵌入模型，請將此參數設為 `TEXT_EMBEDDING`。對於稀疏編碼模型，請將此參數設為 `SPARSE_ENCODING` 或 `SPARSE_TOKENIZE`。對於交叉編碼器模型，請將此參數設為 `TEXT_SIMILARITY`。對於問答模型，請將此參數設為 `QUESTION_ANSWERING`。在此範例中，請將 `function_name` 設為 `TEXT_EMBEDDING`，因為您要註冊的是文字嵌入模型。 
 
-提供步驟 1 的模型群組 ID，並傳送下列請求：
-
-```json
-POST /_plugins/_ml/models/_register
-{
-  "name": "huggingface/sentence-transformers/msmarco-distilbert-base-tas-b",
-  "version": "1.0.1",
-  "model_group_id": "wlcnb4kBJ1eYAeTMHlV6",
-  "description": "This is a port of the DistilBert TAS-B Model to sentence-transformers model: It maps sentences & paragraphs to a 768 dimensional dense vector space and is optimized for the task of semantic search.",
-  "function_name": "TEXT_EMBEDDING",
-  "model_format": "TORCH_SCRIPT",
-  "model_content_size_in_bytes": 266352827,
-  "model_content_hash_value": "acdc81b652b83121f914c5912ae27c0fca8fabf270e6f191ace6979a19830413",
-  "model_config": {
-    "model_type": "distilbert",
-    "embedding_dimension": 768,
-    "framework_type": "sentence_transformers",
-    "all_config": "{\"_name_or_path\":\"old_models/msmarco-distilbert-base-tas-b/0_Transformer\",\"activation\":\"gelu\",\"architectures\":[\"DistilBertModel\"],\"attention_dropout\":0.1,\"dim\":768,\"dropout\":0.1,\"hidden_dim\":3072,\"initializer_range\":0.02,\"max_position_embeddings\":512,\"model_type\":\"distilbert\",\"n_heads\":12,\"n_layers\":6,\"pad_token_id\":0,\"qa_dropout\":0.1,\"seq_classif_dropout\":0.2,\"sinusoidal_pos_embds\":false,\"tie_weights_\":true,\"transformers_version\":\"4.7.0\",\"vocab_size\":30522}"
-  },
-  "created_time": 1676073973126,
-  "url": "https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/msmarco-distilbert-base-tas-b/1.0.1/torch_script/sentence-transformers_msmarco-distilbert-base-tas-b-1.0.1-torch_script.zip"
-}
-```
-{% include copy-curl.html %}
-
-請注意，在 OpenSearch Dashboards 中，將 `all_config` 欄位的內容以三引號（`"""`）包覆，可自動逸出欄位內的引號並提升可讀性：
+提供步驟 1 中的模型群組 ID，並傳送下列請求：
 
 ```json
 POST /_plugins/_ml/models/_register
@@ -160,7 +135,7 @@ POST /_plugins/_ml/models/_register
   "url": "https://artifacts.opensearch.org/models/ml-models/huggingface/sentence-transformers/msmarco-distilbert-base-tas-b/1.0.1/torch_script/sentence-transformers_msmarco-distilbert-base-tas-b-1.0.1-torch_script.zip"
 }
 ```
-{% include copy.html %}
+{% include copy-curl.html %}
 
 OpenSearch 會傳回註冊作業的任務 ID：
 
@@ -171,14 +146,14 @@ OpenSearch 會傳回註冊作業的任務 ID：
 }
 ```
 
-若要檢查作業狀態，請將任務 ID 提供給 [Get task]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/)：
+若要檢查作業狀態，請將任務 ID 提供給[取得任務]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/tasks-apis/get-task/)：
 
 ```json
 GET /_plugins/_ml/tasks/cVeMb4kBJ1eYAeTMFFgj
 ```
 {% include copy-curl.html %}
 
-作業完成後，狀態會變為 `COMPLETED`：
+作業完成時，狀態會變更為 `COMPLETED`：
 
 ```json
 {
@@ -195,7 +170,7 @@ GET /_plugins/_ml/tasks/cVeMb4kBJ1eYAeTMFFgj
 }
 ```
 
-請記下傳回的 `model_id`，因為部署模型時需要用到它。
+請記下傳回的 `model_id`，因為您部署模型時會需要用到它。
 
 ## 步驟 3：部署模型
 

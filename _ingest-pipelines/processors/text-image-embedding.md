@@ -9,13 +9,13 @@ redirect_from:
 ---
 
 <!-- vale off -->
-# 文字/影像嵌入處理器
+# 文字/圖片嵌入處理器
 <!-- vale on -->
 
-`text_image_embedding` 處理器用於從文字與影像欄位產生組合的向量嵌入，以支援[多模態神經搜尋]({{site.url}}{{site.baseurl}}/search-plugins/multimodal-search/)。
+`text_image_embedding` 處理器用於從文字與圖片欄位產生結合的向量嵌入，以供[多模態搜尋]({{site.url}}{{site.baseurl}}/search-plugins/multimodal-search/)使用。
 
-**必要條件**<br>
-使用 `text_image_embedding` 處理器之前，您必須先設定機器學習 (ML) 模型。如需更多資訊，請參閱[選擇模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/#choosing-a-model)。
+**先決條件**<br>
+使用 `text_image_embedding` 處理器之前，您必須先設定機器學習 (ML) 模型。如需詳細資訊，請參閱[選擇模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/#choosing-a-model)。
 {: .note}
 
 以下是 `text_image_embedding` 處理器的語法：
@@ -40,15 +40,15 @@ redirect_from:
 
 | 參數  | 資料類型 | 必要/選用  | 說明  |
 |:---|:---|:---|:---|
-`model_id` | 字串 | 必要 | 用於產生嵌入的模型 ID。模型必須先部署到 OpenSearch，才能在神經搜尋中使用。如需更多資訊，請參閱[在 OpenSearch 中使用自訂模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/)與[多模態搜尋]({{site.url}}{{site.baseurl}}/search-plugins/multimodal-search/)。
-`embedding` | 字串 | 必要 | 用於儲存所產生嵌入的向量欄位名稱。`text` 與 `image` 欄位會共用同一個產生的嵌入。
-`field_map` | 物件 | 必要 | 包含鍵值對，用來指定要從哪些欄位產生嵌入。
+`model_id` | 字串 | 必要 | 用於產生嵌入的模型 ID。模型必須先部署到 OpenSearch 才能使用。如需更多資訊，請參閱[在 OpenSearch 中使用自訂模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/)與[多模態搜尋]({{site.url}}{{site.baseurl}}/search-plugins/multimodal-search/)。
+`embedding` | 字串 | 必要 | 用於儲存所產生嵌入的向量欄位名稱。系統會針對 `text` 與 `image` 欄位產生單一嵌入。
+`field_map` | 物件 | 必要 | 包含鍵值對，指定要從哪些欄位產生嵌入。
 `field_map.text` | 字串 | 選用 | 用於取得文字以產生向量嵌入的欄位名稱。您必須至少指定一個 `text` 或 `image`。
 `field_map.image`  | 字串 | 選用 | 用於取得影像以產生向量嵌入的欄位名稱。您必須至少指定一個 `text` 或 `image`。
 `description`  | 字串 | 選用  | 處理器的簡短說明。  |
-`tag` | 字串 | 選用 | 處理器的識別標籤。在偵錯時可用來區分相同類型的處理器。如需更多資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
+`tag` | 字串 | 選用 | 處理器的識別標籤。可用於除錯，以區分相同類型的處理器。如需更多資訊，請參閱[使用處理器標籤進行監控與除錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
 `if` | 包含布林運算式的字串 | 選用 | 執行處理器的條件。 |
-`ignore_failure` | 布林值 | 選用 | 指定處理器即使遇到錯誤仍繼續執行。若設為 `true`，則會忽略處理器失敗。預設為 `false`。 |
+`ignore_failure` | 布林值 | 選用 | 指定處理器在遇到錯誤時是否仍繼續執行。若設為 `true`，則忽略處理器失敗。預設為 `false`。 |
 `on_failure` | 清單 | 選用 | 處理器失敗時要執行的處理器清單。 |
 `skip_existing` | 布林值 | 選用 | 當設為 `true` 時，處理器不會對已包含嵌入的欄位進行推論呼叫，並保留現有的嵌入不變。預設為 `false`。|
 

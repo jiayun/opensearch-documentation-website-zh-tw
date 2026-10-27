@@ -209,7 +209,7 @@ class TranslationNavigationTests(unittest.TestCase):
                 with self.subTest(path=path, field=field, key=key):
                     self.assertEqual(len(targets), 1, targets)
                     self.assertEqual(docs[path]['data'][field], docs[targets[0]]['data']['title'])
-        self.assertEqual(dict(kinds), {'local': 67, 'cross': 1, 'alias': 3})
+        self.assertEqual(dict(kinds), {'local': 61, 'cross': 1, 'alias': 3})
         title = lambda p: docs[p]['data']['title']
         self.assertEqual(docs['_dashboards/dashboard/plugins-dashboards.md']['data']['parent'], title('_observing-your-data/index.md'))
         for page in ['agentic-context-processor.md', 'agentic-query-translator-processor.md']:

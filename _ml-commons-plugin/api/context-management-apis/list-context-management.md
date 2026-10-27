@@ -3,11 +3,11 @@
 layout: default
 title: "列出脈絡管理"
 parent: Context management APIs
-grand_parent: ML Commons APIs
+grand_parent: ML APIs
 nav_order: 50
 ---
 
-# List Context Management API
+# 列出脈絡管理 API
 **3.5 版新增**
 {: .label .label-purple }
 
@@ -83,7 +83,7 @@ GET /_plugins/_ml/context_management?size=20&from=0
 欄位 | 資料類型 | 說明
 :--- | :--- | :---
 `total` | 整數 | 此回應中傳回的脈絡管理組態數量。
-`templates` | 陣列 | 脈絡管理組態的清單。欄位說明請參閱 [Get Context Management API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/context-management-apis/get-context-management/#response-body-fields)。
+`templates` | 陣列 | 脈絡管理組態的清單。欄位說明請參閱[取得脈絡管理 API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/context-management-apis/get-context-management/#response-body-fields)。
 
 ## 相關文件
 

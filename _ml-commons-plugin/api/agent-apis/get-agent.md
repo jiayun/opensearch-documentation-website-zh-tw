@@ -3,7 +3,7 @@
 layout: default
 title: "取得代理程式"
 parent: Agent APIs
-grand_parent: ML Commons APIs
+grand_parent: ML APIs
 nav_order: 30
 ---
 
@@ -25,7 +25,7 @@ GET /_plugins/_ml/agents/{agent_id}
 
 | 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `agent_id` | String | 要擷取之代理程式的代理程式 ID。 |
+| `agent_id` | 字串 | 要擷取之代理程式的代理程式 ID。 |
 
 
 ## 範例請求

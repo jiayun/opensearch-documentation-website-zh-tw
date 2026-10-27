@@ -3,7 +3,7 @@
 layout: default
 title: "更新代理記憶"
 parent: Agentic memory APIs
-grand_parent: ML Commons APIs
+grand_parent: ML APIs
 nav_order: 52
 ---
 

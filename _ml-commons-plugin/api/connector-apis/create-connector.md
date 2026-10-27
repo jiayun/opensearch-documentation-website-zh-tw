@@ -3,7 +3,7 @@
 layout: default
 title: "建立連接器"
 parent: Connector APIs
-grand_parent: ML Commons APIs
+grand_parent: ML APIs
 nav_order: 10
 ---
 

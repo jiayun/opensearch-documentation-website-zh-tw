@@ -16,12 +16,12 @@ nav_order: 2
 `ad` 命令已棄用，請改用 [`ml` 命令]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/commands/ml/)。
 {: .warning}
 
-`ad` 命令會將 ML Commons 外掛程式中的隨機切割森林 (Random Cut Forest，RCF) 演算法套用至 PPL 命令傳回的搜尋結果。此命令提供兩種異常偵測方法：
+`ad` 命令會對 PPL 命令傳回的搜尋結果套用隨機切割森林 (Random Cut Forest, RCF) 演算法。此命令提供兩種異常偵測方法：
 
 - [時間序列資料的異常偵測](#anomaly-detection-for-time-series-data)，使用固定時間 RCF 演算法
 - [非時間序列資料的異常偵測](#anomaly-detection-for-non-time-series-data)，使用批次 RCF 演算法
 
-若要使用 `ad` 命令，必須將 `plugins.calcite.enabled` 設定為 `false`。
+若要使用 `ad` 命令，必須將 `plugins.calcite.enabled` 設為 `false`。
 {: .note}
 
 ## 語法

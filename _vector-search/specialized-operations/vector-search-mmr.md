@@ -1,20 +1,20 @@
 ---
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: "使用 MMR 重新排序的向量搜尋"
+title: "使用 MMR 重新排名的向量搜尋"
 nav_order: 60
 parent: Specialized vector search
 has_children: false
 has_math: true
 ---
 
-# 使用 MMR 重新排序的向量搜尋
+# 使用 MMR 重新排名的向量搜尋
 **於 3.3 版導入**
 {: .label .label-purple }
 
 最大邊際相關性 (MMR) 搜尋有助於在搜尋結果中平衡相關性與多樣性。MMR 不只傳回最相似的文件，而是選取既與查詢相關、彼此又互不相同的結果。這能改善結果集的涵蓋範圍並減少重複，在向量搜尋情境中特別有用。
 
-MMR 重新排序會平衡兩個相互競爭的目標：
+MMR 重新排名會平衡兩個相互競爭的目標：
 
  - 相關性：文件與查詢的符合程度。
 
@@ -57,12 +57,12 @@ PUT _cluster/settings
 
 | 參數                 | 資料類型 | 必要/選用                                 | 說明                                                                                                                                                                                 |
 | ------------------------- | --------- | ----------------------------------------- |---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `diversity`               | Float     | 選用                                        | 控制重新排序過程中多樣性 ($$\lambda$$) 的權重。有效值範圍為 `0` 至 `1`（含端點）。值為 `1` 時優先考量最大多樣性；`0` 則停用多樣性。預設為 `0.5`。 |
-| `candidates`              | Integer   | 選用                                        | 在套用 MMR 重新排序之前要擷取的候選文件數量。預設為 `3 * size`，其中 `size` 是查詢的 `size` 參數（要求傳回的結果數量）。                                                                                        |
-| `vector_field_path`       | String    | 選用（遠端索引為必要） | 用於 MMR 重新排序的向量欄位路徑。若未提供，OpenSearch 會自動從搜尋請求中解析。                                                            |
-| `vector_field_data_type`  | String    | 選用（遠端索引為必要） | 向量欄位的資料類型。用於解析欄位並計算相似度。若未提供，OpenSearch 會從索引對應中解析。                                            |
-| `vector_field_space_type` | String    | 選用（遠端索引為必要） | 用於決定向量欄位的相似度函式，例如餘弦相似度或歐氏距離。若未提供，OpenSearch 會從索引對應中解析。有效值請參閱[距離計算]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-spaces/#distance-calculation)。             |
-| `explain`                 | Boolean   | 選用                               | 當設為 `true` 時，會在每個所選命中的 `_source` 中加入一個 `mmr_explain` 物件，其中包含每個命中的 MMR 評分詳細資訊。預設為 `false`。請參閱[說明 MMR 評分](#explain-mmr-scoring)。 |
+| `diversity`               | 浮點數     | 選用                                        | 控制重新排名過程中多樣性 ($$\lambda$$) 的權重。有效值範圍為 `0` 至 `1`（含端點）。值為 `1` 時優先考量最大多樣性；`0` 則停用多樣性。預設為 `0.5`。 |
+| `candidates`              | 整數   | 選用                                        | 在套用 MMR 重新排名之前要擷取的候選文件數量。預設為 `3 * size`，其中 `size` 是查詢的 `size` 參數（要求傳回的結果數量）。                                                                                        |
+| `vector_field_path`       | 字串    | 選用（遠端索引為必要） | 用於 MMR 重新排名的向量欄位路徑。若未提供，OpenSearch 會自動從搜尋請求中解析。                                                            |
+| `vector_field_data_type`  | 字串    | 選用（遠端索引為必要） | 向量欄位的資料類型。用於解析欄位並計算相似度。若未提供，OpenSearch 會從索引對應中解析。                                            |
+| `vector_field_space_type` | 字串    | 選用（遠端索引為必要） | 用於決定向量欄位的相似度函式，例如餘弦相似度或歐氏距離。若未提供，OpenSearch 會從索引對應中解析。有效值請參閱[距離計算]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-spaces/#distance-calculation)。             |
+| `explain`                 | 布林值   | 選用                               | 當設為 `true` 時，會在每個所選命中的 `_source` 中加入一個 `mmr_explain` 物件，其中包含每個命中的 MMR 評分詳細資訊。預設為 `false`。請參閱[說明 MMR 評分](#explain-mmr-scoring)。 |
 
 
 # 範例請求
@@ -122,18 +122,18 @@ POST /my-index/_search
 **於 3.7 版導入**
 {: .label .label-purple }
 
-當 `explain` 設為 `true` 時，每個所選命中的 `_source` 會包含一個 `mmr_explain` 物件，說明文件被選取的原因。這對於偵錯及了解 MMR 重新排序行為很有幫助。
+當 `explain` 設定為 `true` 時，每個所選命中的 `_source` 都會包含一個 `mmr_explain` 物件，提供文件被選取原因的說明。這對除錯以及了解 MMR 重新排名的行為非常有用。
 
 `mmr_explain` 物件包含下列欄位。
 
 | 欄位 | 說明 |
 |-------|-------------|
-| `original_score` | 來自 k-NN 或神經搜尋的原始相關性分數。 |
-| `max_similarity_to_selected` | 此文件與任何已選取文件之間的最大向量相似度。對於第一個選取的文件，此值為 `0.0`。 |
+| `original_score` | 來自向量搜尋的原始相關性分數。 |
+| `max_similarity_to_selected` | 此文件與任何已選文件之間的最大向量相似度。對於第一個被選取的文件，此值為 `0.0`。 |
 | `mmr_score` | 選取當下使用公式 `(1 - diversity) * original_score - diversity * max_similarity_to_selected` 計算出的 MMR 分數。 |
-| `mmr_formula` | 以實際值代入後的 MMR 公式之人類可讀表示。 |
+| `mmr_formula` | 以實際數值代入的 MMR 公式之人類可讀表示。 |
 
-選取順序與先前選取的文件可從每個命中在結果清單中的位置推斷。
+選取順序與先前已選的文件，可從每個命中在結果清單中的位置推斷。
 {: .note}
 
 下列範例示範如何使用 `explain` 參數：
@@ -198,7 +198,7 @@ POST /my-index/_search
 
 # 限制
 
-下列限制適用於使用 MMR 重新排序的向量搜尋：
+下列限制適用於使用 MMR 重新排名的向量搜尋：
 
 - **支援的查詢類型**：MMR 僅支援 `knn` 或 `neural` 查詢作為搜尋請求中的頂層查詢。若 `knn` 或 `neural` 查詢巢狀於其他查詢類型內（例如 `bool` 查詢或 `hybrid` 查詢），則不支援 MMR。
 

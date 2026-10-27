@@ -110,7 +110,7 @@ GET /bakery-items/_search
   },
   "hits": {
     "total": {
-      "value": 4,
+      "value": 3,
       "relation": "eq"
     },
     "max_score": null,
@@ -123,8 +123,7 @@ GET /bakery-items/_search
           "item": "Vanilla Cake",
           "category": "cakes",
           "price": 12,
-          "baked_date": "2023-07-02T00:00:00Z",
-          "baker": "Baker A"
+          "baked_date": "2023-07-02T00:00:00Z"
         },
         "fields": {
           "item": [
@@ -143,8 +142,7 @@ GET /bakery-items/_search
           "item": "Chocolate Cake",
           "category": "cakes",
           "price": 15,
-          "baked_date": "2023-07-01T00:00:00Z",
-          "baker": "Baker A"
+          "baked_date": "2023-07-01T00:00:00Z"
         },
         "fields": {
           "item": [
@@ -162,13 +160,13 @@ GET /bakery-items/_search
 
 收合後的搜尋結果只會顯示一個「Chocolate Cake」項目，示範 `collapse` 參數如何減少冗餘。
 
-`collapse` 參數只會影響最頂端的搜尋結果，不會變更任何彙總結果。回應中顯示的命中總數反映套用參數前的所有相符文件，包括重複項目。不過，回應並不會指出此操作所形成之唯一群組的確切數量。
+`collapse` 參數只會影響最頂端的搜尋結果，不會變更任何彙總結果。回應中顯示的命中總數反映套用參數前的所有相符文件，包括重複項目。不過，回應並不會指出此操作所形成的不重複群組的確切數量。
 
 ---
 
-## 搭配 search_after 使用摺疊
+## 搭配 search_after 收合
 
-`from` 和 `size` 參數會套用至摺疊後的群組，因此您可以使用這兩個參數逐頁瀏覽群組。例如，將 `from` 設為 `1`、`size` 設為 `2` 時，搜尋會略過第一個群組，並傳回第二個和第三個群組。您也可以使用 `search_after` 參數對摺疊後的搜尋結果進行分頁。摺疊欄位與排序欄位必須相同，且只能指定一個排序欄位。
+`from` 和 `size` 參數會套用至收合後的群組，因此您可以使用這兩個參數逐頁瀏覽群組。例如，將 `from` 設為 `1`、`size` 設為 `2` 時，搜尋會略過第一個群組，並傳回第二個和第三個群組。您也可以使用 `search_after` 參數對收合後的搜尋結果進行分頁。收合欄位與排序欄位必須相同，且只能指定一個排序欄位。
 
 以下範例說明如何搭配 `search_after` 使用 `collapse`：
 
@@ -195,9 +193,9 @@ GET /bakery-items/_search
 
 ## 展開收合結果
 
-您可以使用 `inner_hits` 屬性展開每個收合後的最高評分結果。關於您可以在 `inner_hits` 中指定的所有選項，請參閱 [內部命中]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/inner-hits/)。
+您可以使用 `inner_hits` 屬性展開每個收合後的最頂端命中。關於您可以在 `inner_hits` 中指定的所有選項，請參閱 [內部命中]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/inner-hits/)。
 
-下列範例請求套用 `inner_hits`，為每種蛋糕類型擷取價格最低且最新的品項：
+下列範例請求套用 `inner_hits`，為每種蛋糕分別擷取價格最低的品項與最新的品項：
 
 ```json
 GET /bakery-items/_search
@@ -262,9 +260,9 @@ GET /bakery-items/_search
 
 您可以針對回應中每個收合命中對應的每個內部命中請求，傳送額外的查詢來展開這些群組。如果群組或內部命中請求太多，這可能會大幅拖慢處理速度。您可以使用 `max_concurrent_group_searches` 請求參數來控制此階段允許的最大並行搜尋數。預設值取決於資料節點數量和預設搜尋執行緒集區大小。
 
-### 第二層摺疊
+### 第二層收合
 
-您也可以在 `inner_hits` 中指定 `collapse` 物件，對每個群組的內部命中結果進行摺疊。這會傳回兩個欄位各種組合中的最上層文件。為了示範，請在 `bakery-items` 索引中加入兩種餅乾：
+您也可以在 `inner_hits` 中指定 `collapse` 物件，對每個群組的內部命中再做收合。這會傳回兩個欄位每種組合中最頂端的文件。為了示範，請在 `bakery-items` 索引中加入兩種餅乾：
 
 ```json
 POST /bakery-items/_bulk?refresh=true
@@ -277,7 +275,7 @@ POST /bakery-items/_bulk?refresh=true
 ```
 {% include copy-curl.html %}
 
-下列請求會依 `category` 摺疊結果，並在每個類別內依 `item` 摺疊內部命中結果。因此，每個類別都會包含其中每個項目最便宜的文件：
+下列請求會依 `category` 收合結果，並在每個類別內依 `item` 收合內部命中。因此，每個類別都會包含其中每個項目最便宜的文件：
 
 ```json
 GET /bakery-items/_search
@@ -403,4 +401,4 @@ GET /bakery-items/_search
 }
 ```
 
-第二層的 `collapse` 物件不能包含 `inner_hits`，因此您無法在超過兩個層級上摺疊結果。
+第二層的 `collapse` 物件不能包含 `inner_hits`，因此您無法在超過兩個層級上收合結果。

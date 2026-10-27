@@ -3,7 +3,7 @@
 layout: default
 title: "取得模型"
 parent: Model APIs
-grand_parent: ML Commons APIs
+grand_parent: ML APIs
 nav_order: 30
 ---
 
@@ -33,7 +33,7 @@ GET /_plugins/_ml/models/{model_id}
 
 | 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `return_content` | Boolean | 若為 `true`，回應會包含 `model_content` 欄位，該欄位儲存使用 [Train API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/train/) 訓練之模型的序列化模型內容。預設為 `false`。 |
+| `return_content` | 布林值 | 若為 `true`，回應會包含 `model_content` 欄位，該欄位儲存使用 [Train API]({{site.url}}{{site.baseurl}}/ml-commons-plugin/api/train-predict/train/) 訓練之模型的序列化模型內容。預設為 `false`。 |
 
 ## 範例請求
 

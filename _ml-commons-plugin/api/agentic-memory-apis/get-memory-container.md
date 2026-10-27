@@ -3,7 +3,7 @@
 layout: default
 title: "取得記憶容器"
 parent: Agentic memory APIs
-grand_parent: ML Commons APIs
+grand_parent: ML APIs
 nav_order: 20
 ---
 

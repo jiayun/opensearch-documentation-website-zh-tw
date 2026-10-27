@@ -26,12 +26,12 @@ redirect_from:
 
 ## 步驟 1：註冊模型群組
 
-您可以透過兩種方式註冊模型：
+您可以用兩種方式註冊模型：
 
 * 您可以使用 `model_group_id` 將模型版本註冊到現有的模型群組。
-* 如果您不使用 `model_group_id`，ML Commons 會以新的模型群組建立模型。
+* 如果您未使用 `model_group_id`，OpenSearch 會建立模型並同時建立新的模型群組。
 
-若要註冊模型群組，請傳送以下請求：
+若要註冊模型群組，請傳送下列請求：
 
 ```json
 POST /_plugins/_ml/model_groups/_register
@@ -42,7 +42,7 @@ POST /_plugins/_ml/model_groups/_register
 ```
 {% include copy-curl.html %}
 
-回應中包含模型群組 ID，您將使用它把模型註冊到此模型群組：
+回應會包含模型群組 ID，您將使用該 ID 將模型註冊到此模型群組：
 
 ```json
 {
@@ -51,13 +51,13 @@ POST /_plugins/_ml/model_groups/_register
 }
 ```
 
-若要進一步了解模型群組，請參閱[模型存取控制]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/)。
+如要進一步瞭解模型群組，請參閱[模型存取控制]({{site.url}}{{site.baseurl}}/ml-commons-plugin/model-access-control/)。
 
 ## 步驟 2：建立連接器
 
-您可以建立獨立連接器，供 OpenSearch 中多個共用相同外部端點與組態的模型註冊重複使用。或者，您也可以在建立模型時指定連接器，使其僅供該模型使用。如需更多資訊與範例連接器，請參閱[連接器]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
+您可以建立獨立連接器，供 OpenSearch 中多個共用相同外部端點與組態的模型註冊重複使用。或者，您也可以在建立模型時指定連接器，讓它僅供該模型使用。如需更多資訊與範例連接器，請參閱 [Connectors]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/connectors/)。
 
-Connectors Create API（`/_plugins/_ml/connectors/_create`）用於建立連接器，以便在 OpenSearch 中註冊與部署外部模型。透過 `endpoint` 參數，您可以使用特定 API 端點將 ML Commons 連接至任何支援的 ML 工具。例如，您可以使用 `api.openai.com` 端點連接至 OpenAI 文字嵌入模型：
+Connectors Create API（`/_plugins/_ml/connectors/_create`）用於建立連接器，以便在 OpenSearch 中註冊與部署外部模型。透過 `endpoint` 參數，您可以使用特定 API 端點將 OpenSearch 連線至任何支援的 ML 工具。例如，您可以使用 `api.openai.com` 端點連線至 OpenAI 文字嵌入模型：
 
 ```json
 POST /_plugins/_ml/connectors/_create
@@ -93,7 +93,7 @@ POST /_plugins/_ml/connectors/_create
 
 `parameters.input_docs_processed_step_size` 參數用於設定傳送至遠端伺服器的文件批次大小上限。您可以將此參數設定為遠端伺服器支援的最大批次大小，或設定為較小的數值以獲得最佳效能。
 
-回應包含新建立連接器的連接器 ID：
+回應包含新建連接器的連接器 ID：
 
 ```json
 {

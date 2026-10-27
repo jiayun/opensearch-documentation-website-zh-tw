@@ -293,6 +293,11 @@ for hit in response:
     print(hit.meta.score, hit.title)
     
 # Delete the document.
+response = client.delete(
+    index = index_name,
+    id = 1
+)
+
 print('\nDeleting document:')
 print(response)
 

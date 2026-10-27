@@ -19,7 +19,7 @@ nav_order: 60
 ![追蹤分析元件概觀]({{site.url}}{{site.baseurl}}/images/data-prepper/trace-analytics/trace-analytics-components.jpg)
 
 若要監視追蹤分析，您需要在服務環境中設定下列元件：
-- 在您的應用程式中加入 **instrumentation**（埋點），使其能夠產生遙測資料並傳送至 OpenTelemetry collector。
+- 在您的應用程式中加入**程式碼檢測（instrumentation）**，使其能夠產生遙測資料並傳送至 OpenTelemetry collector。
 - 以 sidecar 或 `daemonset` 的形式為 Amazon Elastic Kubernetes Service (Amazon EKS) 執行 **OpenTelemetry collector**、為 Amazon Elastic Container Service (Amazon ECS) 使用 sidecar，或在 Amazon Elastic Compute Cloud (Amazon EC2) 上使用代理程式。您應設定 collector 將追蹤資料匯出至 Data Prepper。
 - 部署 **Data Prepper** 作為 OpenSearch 的匯入 collector。設定它將豐富化後的追蹤資料傳送至您的 OpenSearch 叢集或 Amazon OpenSearch Service 網域。
 - 使用 **OpenSearch Dashboards** 來視覺化並偵測分散式應用程式中的問題。
@@ -33,22 +33,22 @@ nav_order: 60
 
 ### OpenTelemetry 追蹤來源
  
-[OpenTelemetry 來源]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/otel-traces/) 接受來自 OpenTelemetry Collector 的追蹤資料。此來源遵循 [OpenTelemetry Protocol](https://github.com/open-telemetry/opentelemetry-specification/tree/master/specification/protocol)，並正式支援透過 gRPC 傳輸以及使用業界標準加密 (TLS/HTTPS)。
+[OpenTelemetry trace source]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/otel-trace-source/)（OpenTelemetry 追蹤來源）接受來自 OpenTelemetry Collector 的追蹤資料。此來源遵循 [OpenTelemetry Protocol](https://github.com/open-telemetry/opentelemetry-specification/tree/master/specification/protocol)，並正式支援透過 gRPC 傳輸以及使用業界標準加密（TLS/HTTPS）。
 
 ### 處理器
 
 追蹤分析功能有三個處理器：
 
-* `otel_traces` -- `otel_traces` 處理器接收來自 [`otel-trace-source`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/otel-trace-source/) 的一組 [span](https://github.com/opensearch-project/data-prepper/blob/fa65e9efb3f8d6a404a1ab1875f21ce85e5c5a6d/data-prepper-api/src/main/java/org/opensearch/dataprepper/model/trace/Span.java) 記錄，並對追蹤群組相關欄位執行有狀態處理、擷取與補全。
-* `otel_traces_group` -- `otel_traces_group` 處理器透過查詢 OpenSearch 後端，補齊 [span](https://github.com/opensearch-project/data-prepper/blob/298e7931aa3b26130048ac3bde260e066857df54/data-prepper-api/src/main/java/org/opensearch/dataprepper/model/trace/Span.java) 記錄集合中缺少的追蹤群組相關欄位。
-* `service_map` -- `service_map` 處理器對追蹤資料執行必要的前置處理，並建立中繼資料以顯示 `service-map` 儀表板。
+* `otel_traces` -- `otel_traces` 處理器會從 [`otel-trace-source`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/otel-trace-source/) 接收一組 [span](https://github.com/opensearch-project/data-prepper/blob/fa65e9efb3f8d6a404a1ab1875f21ce85e5c5a6d/data-prepper-api/src/main/java/org/opensearch/dataprepper/model/trace/Span.java) 記錄，並執行具狀態的處理、擷取，以及完成追蹤群組相關欄位。
+* `otel_trace_group` -- `otel_trace_group` 處理器會查詢 OpenSearch 後端，以補齊這組 [span](https://github.com/opensearch-project/data-prepper/blob/298e7931aa3b26130048ac3bde260e066857df54/data-prepper-api/src/main/java/org/opensearch/dataprepper/model/trace/Span.java) 記錄中缺少的追蹤群組相關欄位。
+* `service_map` -- `service_map` 處理器會執行追蹤資料所需的預先處理，並建立中繼資料以顯示 `service-map` 儀表板。
 
 
-### OpenSearch 接收端
+### OpenSearch 接收器（sink）
 
-OpenSearch 提供一個通用的接收端，可將資料寫入作為目的地的 OpenSearch。[OpenSearch 接收端]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sinks/opensearch/) 具有與 OpenSearch 叢集相關的組態選項，例如端點、SSL、使用者名稱/密碼、索引名稱、索引範本與索引狀態管理。
+OpenSearch 提供一個通用的接收器，可將資料寫入作為目的地的 OpenSearch。[OpenSearch 接收器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sinks/opensearch/) 具有與 OpenSearch 叢集相關的組態選項，例如端點、SSL、使用者名稱/密碼、索引名稱、索引範本與索引狀態管理。
 
-此接收端為追蹤分析功能提供特定組態。這些組態讓接收端能夠使用追蹤分析專用的索引與索引範本。下列 OpenSearch 索引是追蹤分析專用的：
+此接收器為追蹤分析功能提供特定組態。這些組態讓接收器能夠使用追蹤分析專用的索引與索引範本。下列 OpenSearch 索引是追蹤分析專用的：
 
 * `otel-v1-apm-span` -- `otel-v1-apm-span` 索引儲存 [`otel_traces`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/otel-traces/) 處理器的輸出。
 * `otel-v1-apm-service-map` -- `otel-v1-apm-service-map` 索引儲存 [`service_map`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/service-map/) 處理器的輸出。
@@ -65,11 +65,11 @@ OpenSearch 提供一個通用的接收端，可將資料寫入作為目的地的
 
 #### 緩衝區
 
-Data Prepper 處理的追蹤請求總數等於 `otel-trace-pipeline` 與 `raw-trace-pipeline` 中 `buffer_size` 值的總和。傳送至 OpenSearch 的追蹤請求總數等於 `raw-trace-pipeline` 中 `batch_size` 與 `workers` 的乘積。如需 `raw-trace-pipeline` 的更多資訊，請參閱[追蹤分析管線]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/pipelines)。
+Data Prepper 處理的追蹤請求總數，等於 `entry-pipeline` 與 `raw-trace-pipeline` 中 `buffer_size` 值的總和。傳送至 OpenSearch 的追蹤請求總數，等於 `raw-trace-pipeline` 中 `batch_size` 與 `workers` 的乘積。如需 `raw-trace-pipeline` 的詳細資訊，請參閱[追蹤分析管線]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/pipelines)。
 
 
-我們建議在變更緩衝區設定時遵循下列原則：
- * `otel-trace-pipeline` 與 `raw-trace-pipeline` 中的 `buffer_size` 值應該相同。
+變更緩衝區設定時，建議您遵循下列原則：
+ * `entry-pipeline` 與 `raw-trace-pipeline` 中的 `buffer_size` 值應相同。
  * `buffer_size` 應大於或等於 `raw-trace-pipeline` 中的 `workers` * `batch_size`。
  
 
@@ -113,7 +113,7 @@ Data Prepper 也會使用本機磁碟來寫入記錄檔。在最新版的 Data P
 
 ### 範例：追蹤分析管線
 
-下列範例示範如何建置支援 [OpenSearch Dashboards Observability 外掛程式]({{site.url}}{{site.baseurl}}/observability-plugin/trace/ta-dashboards/) 的管線。此管線會從 OpenTelemetry Collector 取得資料，並使用另外兩個管線做為接收端。這兩個不同的管線各有不同用途，並寫入不同的 OpenSearch 索引。第一個管線會準備 OpenSearch 的追蹤資料，並將 span 文件擴充及匯入至 OpenSearch 中的 span 索引。第二個管線會將追蹤彙總為服務對應，並將服務對應文件寫入 OpenSearch 中的服務對應索引。
+下列範例示範如何建置支援 [OpenSearch Dashboards Observability 外掛程式]({{site.url}}{{site.baseurl}}/observability-plugin/trace/ta-dashboards/) 的管線。此管線會從 OpenTelemetry Collector 取得資料，並使用另外兩條管線作為接收器。這兩條不同的管線各有不同用途，並寫入不同的 OpenSearch 索引。第一條管線會準備 OpenSearch 的追蹤資料，並將 span 文件擴充及匯入至 OpenSearch 中的 span 索引。第二條管線會將追蹤彙總為服務地圖，並將服務地圖文件寫入 OpenSearch 中的服務地圖索引。
 
 從 Data Prepper 2.0 版開始，Data Prepper 不再支援 `otel_traces_prepper` 處理器。`otel_traces` 處理器會取代 `otel_traces_prepper` 和 `otel_trace_raw` 處理器，並支援 Data Prepper 近期部分資料模型的變更。以下是 YAML 檔組態範例：
 
@@ -192,10 +192,10 @@ source:
 
 #### 範例：pipeline.yaml
 
-以下是未啟用 SSL 與基本驗證的 `pipeline.yaml` 檔案範例，用於 `otel-trace-pipeline` 管線：
+以下是 `pipeline.yaml` 檔案的範例，其中 `entry-pipeline` 管線未啟用 SSL 與基本驗證：
 
 ```yaml
-otel-trace-pipeline:
+entry-pipeline:
   # workers is the number of threads processing data in each pipeline.
   # We recommend same value for all pipelines.
   # default value is 1, set a value based on the machine you are running Data Prepper
@@ -225,16 +225,16 @@ otel-trace-pipeline:
     - pipeline:
         name: raw-trace-pipeline
     - pipeline:
-        name: entry-pipeline
+        name: service-map-pipeline
 
 raw-trace-pipeline:
-  # Configure same as the otel-trace-pipeline
+  # Configure same as the entry-pipeline
   workers: 8
   # We recommend using the default value for the raw-trace-pipeline.
   delay: 3000
   source:
     pipeline: 
-      name: otel-trace-pipeline
+      name: entry-pipeline
   buffer:
     bounded_blocking:
       # Configure the same value as in entry-pipeline
@@ -248,7 +248,7 @@ raw-trace-pipeline:
   processor:
     - otel_traces:
     # Optional: only if you want the group-filler stage.
-    - otel_traces_group:
+    - otel_trace_group:
         hosts: [ "https://opensearch:9200" ]
         # Change to your credentials
         username: admin
@@ -280,7 +280,7 @@ service-map-pipeline:
   delay: 100
   source:
     pipeline: 
-      name: otel-trace-pipeline
+      name: entry-pipeline
   processor:
     - service_map:
         # The window duration is the maximum length of time the data prepper stores the most recent trace data to evaluvate service-map relationships.
@@ -316,21 +316,21 @@ service-map-pipeline:
 ```
 {% include copy.html %}
 
-您需要為 OpenSearch 叢集修改上述組態，使組態符合您的環境。請注意，其中有兩個需要修改的 `opensearch` 接收端。
+您需要修改前述 OpenSearch 叢集的組態，使其符合您的環境。請注意，其中有兩個 `opensearch` 接收器（sink）需要修改。
 {: .note}
 
-您必須進行下列變更：
-* `hosts` – 設為您的主機。
+您必須進行以下變更：
+* `hosts` – 設定為您的主機。
 * `username` – 提供您的 OpenSearch 使用者名稱。
 * `password` – 提供您的 OpenSearch 密碼。
-* `aws_sigv4` – 如果您使用 Amazon OpenSearch Service 並採用 AWS 簽署，請將此值設為 `true`。它會使用預設的 AWS 認證資訊提供者來簽署請求。
-* `aws_region` – 如果您使用 Amazon OpenSearch Service 並採用 AWS 簽署，請將此值設為您的 AWS 區域。
+* `aws_sigv4` – 如果您使用具 AWS 簽署的 Amazon OpenSearch Service，請將此值設為 `true`。系統會使用預設的 AWS 認證資訊提供者來簽署請求。
+* `aws_region` – 如果您使用具 AWS 簽署的 Amazon OpenSearch Service，請將此值設為您的 AWS 區域。
 
-如需 OpenSearch 接收端的其他可用組態，請參閱 [Data Prepper OpenSearch 接收端]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sinks/opensearch/)。
+如需 OpenSearch 接收器可用的其他組態，請參閱 [Data Prepper OpenSearch 接收器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sinks/opensearch/)。
 
 ## OpenTelemetry Collector
 
-您需要在服務環境中執行 OpenTelemetry Collector。請依照[入門](https://opentelemetry.io/docs/collector/getting-started/#getting-started)安裝 OpenTelemetry collector。請確保您為 collector 設定了指向您 Data Prepper 執行個體的 exporter。以下範例 `otel-collector-config.yaml` 檔案會接收透過各種埋點產生的資料，並將其匯出至 Data Prepper。
+您需要在服務環境中執行 OpenTelemetry Collector。請依照[入門](https://opentelemetry.io/docs/collector/getting-started/#getting-started)安裝 OpenTelemetry collector。請確保您為 collector 設定了指向您 Data Prepper 執行個體的 exporter。以下範例 `otel-collector-config.yaml` 檔案會接收透過各種程式碼檢測（instrumentation）產生的資料，並將其匯出至 Data Prepper。
 
 ### 使用 Docker compose 的範例設定
 
@@ -594,11 +594,11 @@ docker run --rm --network anton_opensearch-net \
 
 ## 遷移至 Data Prepper 2.0
 
-從 Data Prepper 1.4 版開始，追蹤處理採用 Data Prepper 的事件模型。這讓管線作者能設定其他處理器來修改 span 或追蹤。為了提供遷移途徑，Data Prepper 1.4 版引進了下列變更：
+從 Data Prepper 1.4 版開始，追蹤處理採用 Data Prepper 的事件模型。這讓管線作者可以設定其他處理器來修改 span 或追蹤。為了提供遷移途徑，Data Prepper 1.4 版引進了下列變更：
 
 * `otel_trace_source` 有一個選用的 `record_type` 參數，可設為 `event`。設定後，它會輸出事件物件。
 * `otel_traces` 取代 `otel_traces_prepper`，用於以事件為基礎的 span。
-* `otel_traces_group` 取代 `otel_traces_group_prepper`，用於以事件為基礎的 span。
+* `otel_trace_group` 取代 `otel_trace_group_prepper`，用於以事件為基礎的 span。
 
-在 Data Prepper 2.0 版中，`otel_trace_source` 只會輸出事件。Data Prepper 2.0 版也完全移除了 `otel_traces_prepper` 和 `otel_traces_group_prepper`。若要遷移至 Data Prepper 2.0 版，您可以使用事件模型來設定您的追蹤管線。
+在 Data Prepper 2.0 版中，`otel_trace_source` 只會輸出事件。Data Prepper 2.0 版也完全移除 `otel_traces_prepper` 和 `otel_trace_group_prepper`。若要遷移至 Data Prepper 2.0 版，您可以使用事件模型來設定追蹤管線。
  

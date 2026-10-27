@@ -69,7 +69,7 @@ POST /_analyze
 
 ## 自訂 `delimited_term_freq` 詞元篩選器
 
-若要設定自訂的 `delimited_term_freq` 詞元篩選器，請先在對應請求中指定分隔符號，本範例中為 `^`：
+若要設定自訂的 `delimited_term_freq` 詞元篩選器，請先在對應請求中指定分隔符，在本範例中為 `^`：
 
 ```json
 PUT /testindex
@@ -102,7 +102,7 @@ POST /testindex/_analyze
 ```
 {% include copy-curl.html %}
 
-回應同時包含原始詞元，以及剖析後包含詞頻的版本：
+回應會同時包含原始詞元以及帶有詞頻的解析版本：
 
 ```json
 {
@@ -113,9 +113,9 @@ POST /testindex/_analyze
       "name": "keyword",
       "tokens": [
         {
-          "token": "foo|100",
+          "token": "foo^3",
           "start_offset": 0,
-          "end_offset": 7,
+          "end_offset": 5,
           "type": "word",
           "position": 0,
           "termFrequency": 1
@@ -124,15 +124,15 @@ POST /testindex/_analyze
     },
     "tokenfilters": [
       {
-        "name": "delimited_term_freq",
+        "name": "my_delimited_term_freq",
         "tokens": [
           {
             "token": "foo",
             "start_offset": 0,
-            "end_offset": 7,
+            "end_offset": 5,
             "type": "word",
             "position": 0,
-            "termFrequency": 100
+            "termFrequency": 3
           }
         ]
       }

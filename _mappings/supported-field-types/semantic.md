@@ -11,13 +11,13 @@ redirect_from:
 ---
 
 # Semantic 欄位類型
-**於 3.1 版推出**
+**3.1 版推出**
 {: .label .label-purple }
 
-`semantic` 欄位類型是一種高階抽象，可簡化 OpenSearch 中的神經搜尋設定。它能包裝多種欄位類型，包括所有字串和二進位欄位。`semantic` 欄位類型會根據所設定的機器學習 (ML) 模型自動啟用語意索引和查詢。
+`semantic` 欄位類型是高階抽象，可簡化在 OpenSearch 中設定語意搜尋與神經稀疏搜尋的流程。它能包裝多種欄位類型，包括所有字串與二進位欄位。`semantic` 欄位類型會根據所設定的機器學習 (ML) 模型，自動啟用語意索引與查詢。
 
 **先決條件**<br>
-使用 `semantic` 欄位類型之前，您必須設定裝載於 OpenSearch 叢集上的本機 ML 模型，或連線至 OpenSearch 叢集的外部裝載模型。如需本機模型的詳細資訊，請參閱[在 OpenSearch 中使用 ML 模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/)。如需外部裝載模型的詳細資訊，請參閱[連線至外部裝載模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/)。
+使用 `semantic` 欄位類型之前，您必須設定託管於 OpenSearch 叢集的本機 ML 模型，或設定連線至 OpenSearch 叢集的外部託管模型。如需本機模型的詳細資訊，請參閱[在 OpenSearch 中使用 ML 模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/)。如需外部託管模型的詳細資訊，請參閱[連線至外部託管模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/remote-models/index/)。
 {: .note}
 
 ## 範例：稠密嵌入模型

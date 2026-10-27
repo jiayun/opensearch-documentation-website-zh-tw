@@ -3,7 +3,7 @@
 layout: default
 title: "取得控制器"
 parent: Controller APIs
-grand_parent: ML Commons APIs
+grand_parent: ML APIs
 nav_order: 20
 ---
 

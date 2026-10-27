@@ -160,51 +160,6 @@ green open .kibana_3 XmTePICFRoSNf5O5uLgwRw 1 1 220 0 468.3kb 232.1kb
 請留意，啟用此功能並將系統索引權限對應至一般使用者，會讓這些使用者能夠存取可能包含敏感資訊及對叢集健全狀態至關重要之組態的索引。我們也建議您在將使用者對應至 `restapi:admin/roles` 時謹慎操作，因為此權限不僅讓使用者能將系統索引權限指派給其他使用者，也能自行指派任何系統索引的存取權給自己。
 {: .warning }
 
-### `do_not_fail_on_forbidden`
-
-如果使用者嘗試查詢多個索引，但沒有其中部分索引的權限，依預設，他們會在 OpenSearch Dashboards 中收到 `error`，或在使用 `cURL` 或 API 時收到 `exception`。如果您希望使用者收到他們_確實_具有權限之索引的搜尋結果，可以在 `config.yml` 中將 `do_not_fail_on_forbidden` 選項設為 `true`。請參閱下列範例：
-
-```
-_meta:
-  type: "config"
-  config_version: 2
-config:
-  dynamic:
-    http:
-      anonymous_auth_enabled: false
-      xff:
-        enabled: false
-        internalProxies: "192\\.168\\.0\\.10|192\\.168\\.0\\.11"
-    do_not_fail_on_forbidden: true
-    authc:
-      basic_internal_auth_domain:
-      ...
-```
-請務必記住，如果此選項設為 `true`，提供給使用者的資料會被視為完整資料集。系統不會顯示任何提示，告知使用者可能有部分資料遭到省略。
-{: .warning }
-
-### `do_not_fail_on_forbidden_empty`
-
-當使用者嘗試檢視其沒有索引權限的視覺化時，會看到 `error` 取代該視覺化。若要變更此行為以顯示 `No results displayed because all values equal 0.`，您可以在 `config.yml` 中將 `do_not_fail_on_forbidden_empty` 設為 `true`。只有在 `do_not_fail_on_forbidden` 也設為 `true` 時，此選項才有效。請參閱下列範例：
-
-```
-_meta:
-  type: "config"
-  config_version: 2
-config:
-  dynamic:
-    http:
-      anonymous_auth_enabled: false
-      xff:
-        enabled: false
-        internalProxies: "192\\.168\\.0\\.10|192\\.168\\.0\\.11"
-    do_not_fail_on_forbidden: true
-    do_not_fail_on_forbidden_empty: true
-    authc:
-      basic_internal_auth_domain:
-      ...
-```
-
 ## 叢集權限
 
 這些權限適用於叢集，無法以細粒度套用。例如，您只有具備或不具備建立快照（`cluster:admin/snapshot/create`）的權限這兩種情況。因此，叢集權限無法授予使用者為特定一組索引建立快照的權限，同時禁止使用者為其他索引建立快照。
@@ -229,8 +184,8 @@ config:
 | `indices:data/read/mtv` |  透過單一請求擷取多個詞彙向量的權限。此設定必須同時設定為叢集層級及索引層級的權限。 |
 | `indices:data/read/mtv*` |  透過單一請求擷取多個詞彙向量的權限。此設定必須同時設定為叢集層級及索引層級的權限。 |
 | `indices:data/read/search/template/render` |  呈現搜尋範本的權限。此設定必須同時設定為叢集層級及索引層級的權限。 |
-| `indices:data/write/bulk` |  執行 [bulk]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk/) 請求的權限。此設定必須同時設定為叢集層級及索引層級的權限。 |
-| `indices:data/write/bulk*` |  執行 bulk 請求的權限。此設定必須同時設定為叢集層級及索引層級的權限。 |
+| `indices:data/write/bulk` |  執行[大量請求]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk/)的權限。此設定必須同時設定為叢集層級及索引層級的權限。 |
+| `indices:data/write/bulk*` |  執行大量請求的權限。此設定必須同時設定為叢集層級及索引層級的權限。 |
 | `indices:data/write/reindex` |  執行[重新編製索引]({{site.url}}{{site.baseurl}}/im-plugin/reindex-data/)操作的權限。 |
 
 ### Ingest API 權限
@@ -309,9 +264,9 @@ config:
 - `cluster:admin/opendistro/ism/policy/search`
 - `cluster:admin/opendistro/ism/policy/delete`
 
-### 索引 rollup 權限
+### 索引彙總權限
 
-請參閱 [Index rollups API]({{site.url}}{{site.baseurl}}/im-plugin/index-rollups/rollup-api/)。
+請參閱[索引彙總 API]({{site.url}}{{site.baseurl}}/im-plugin/index-rollups/rollup-api/)。
 
 - `cluster:admin/opendistro/rollup/index`
 - `cluster:admin/opendistro/rollup/get`
@@ -321,9 +276,9 @@ config:
 - `cluster:admin/opendistro/rollup/stop`
 - `cluster:admin/opendistro/rollup/explain`
 
-### 報告權限
+### 報表權限
 
-請參閱 [使用 Dashboards 介面建立報告]({{site.url}}{{site.baseurl}}/dashboards/reporting/)。
+請參閱[使用 Dashboards 介面建立報表]({{site.url}}{{site.baseurl}}/dashboards/reporting/report-dashboard-index/)。
 
 - `cluster:admin/opendistro/reports/definition/create`
 - `cluster:admin/opendistro/reports/definition/update`
@@ -364,7 +319,7 @@ config:
 
 ### 重新索引
 
-請參閱 [Reindex 文件]({{site.url}}{{site.baseurl}}/api-reference/document-apis/reindex/)。
+請參閱[重新編製文件索引]({{site.url}}{{site.baseurl}}/api-reference/document-apis/reindex/)。
 
 - `cluster:admin/reindex/rethrottle`
 
@@ -410,7 +365,7 @@ config:
 
 ### 任務權限
 
-請參閱 API Reference 章節中的 [Tasks]({{site.url}}{{site.baseurl}}/api-reference/tasks/)。
+請參閱 API 參考章節中的[任務]({{site.url}}{{site.baseurl}}/api-reference/tasks/)。
 
 - `cluster:admin/tasks/cancel`
 - `cluster:admin/tasks/test`
@@ -550,8 +505,8 @@ config:
 | `indices:data/write/delete` |  [刪除文件]({{site.url}}{{site.baseurl}}/api-reference/document-apis/delete-document/)的權限。 |
 | `indices:data/write/delete/byquery` |  刪除所有[符合查詢]({{site.url}}{{site.baseurl}}/api-reference/document-apis/delete-by-query/)之文件的權限。 |
 | `indices:data/write/plugins/replication/changes` |  變更索引內資料複寫組態與設定的權限。 |
-| `indices:data/write/bulk` |  執行 [bulk]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk/) 請求的權限。此設定必須同時設定為叢集層級和索引層級權限。 |
-| `indices:data/write/bulk*` |  執行 bulk 請求的權限。此設定必須同時設定為叢集層級和索引層級權限。 |
+| `indices:data/write/bulk` |  執行[大量請求]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk/)的權限。此設定必須同時設定為叢集層級和索引層級權限。 |
+| `indices:data/write/bulk*` |  執行大量請求的權限。此設定必須同時設定為叢集層級和索引層級權限。 |
 | `indices:data/write/index` |  將文件新增至現有索引的權限。另請參閱[將文件編製索引]( {{site.url}}{{site.baseurl}}/api-reference/document-apis/index-document/ )。 |
 | `indices:data/write/update` | 更新索引的權限。 |
 | `indices:data/write/update/byquery` |  執行指令碼以更新所有[符合查詢]({{site.url}}{{site.baseurl}}/api-reference/document-apis/update-by-query/)之文件的權限。 |
@@ -565,10 +520,10 @@ config:
 
 ## 安全性 REST 權限
 
-允許存取這些端點可能會觸發叢集中的營運變更。請謹慎操作。
+允許存取這些端點可能會改變叢集的運作。請謹慎操作。
 {: .warning }
 
-下列 REST API 權限控制對端點的存取。授予任何這些 API 的存取權，即允許使用者變更安全性外掛程式的基本營運元件：
+下列 REST API 權限控制對端點的存取。授予任何這些 API 的存取權，即允許使用者變更 Security 外掛程式運作的基本元件：
 
 - `restapi:admin/actiongroups`
 - `restapi:admin/allowlist`

@@ -3,7 +3,7 @@
 layout: default
 title: "刪除記憶"
 parent: Memory APIs
-grand_parent: ML Commons APIs
+grand_parent: ML APIs
 nav_order: 30
 ---
 

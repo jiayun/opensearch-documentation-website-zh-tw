@@ -2,13 +2,13 @@
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: "執行概況"
-parent: ML Commons APIs
+parent: ML APIs
 nav_order: 110
 ---
 
-# ML Commons Profile API
+# ML Profile API
 
-Profile API 操作會傳回 ML 任務與模型的執行階段資訊。Profile 操作可協助您在執行階段偵錯模型問題。
+Profile API 會傳回機器學習 (ML) 任務與模型的執行階段資訊。您可以使用它來在執行階段偵錯模型問題。
 
 ## 傳回的請求數量
 
