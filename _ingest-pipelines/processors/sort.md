@@ -27,20 +27,20 @@ nav_order: 250
 ```
 {% include copy.html %}
 
-## 組態參數
+## 參數
 
 下表列出 `sort` 處理器的必要與選用參數。
 
 | 參數  | 必要/選用  | 說明  |
 |---|---|---|
 `field`  | 必要 | 要排序的欄位。必須是陣列。
-`order`  | 選用 | 要套用的排序順序。接受 `asc` 表示遞增，`desc` 表示遞減。預設為 `asc`。
-`target_field` | 選用 | 儲存排序後陣列的欄位名稱。若未指定，排序後的陣列會儲存在與原始陣列相同的欄位中（即 `field` 變數）。 
-`description`  | 選用  | 處理器用途或組態的描述。
-`if` | 選用 | 指定是否有條件地執行處理器。
-`ignore_failure` | 選用 | 指定忽略處理器失敗。請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。
+`order`  | 選用 | 要套用的排序順序。接受 `asc` 表示遞增，或 `desc` 表示遞減。預設為 `asc`。
+`target_field` | 選用 | 儲存排序後陣列的欄位名稱。若未指定，排序後的陣列會儲存在與原始陣列相同的欄位（即 `field` 變數）。 
+`description`  | 選用  | 處理器用途或組態的說明。
+`if` | 選用 | 指定是否要依條件執行處理器。
+`ignore_failure` | 選用 | 指定是否忽略處理器失敗。請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。
 `on_failure` | 選用 | 指定處理器在執行期間失敗時要執行的處理器清單。這些處理器會依指定的順序執行。
-`tag` | 選用 | 處理器的識別標籤。有助於除錯時區分相同類型的處理器。如需更多資訊，請參閱[使用處理器標籤進行監控與除錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。
+`tag` | 選用 | 處理器的識別碼標籤。有助於偵錯時區分相同類型的處理器。如需詳細資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。
 
 ## 使用處理器
 
@@ -88,9 +88,7 @@ POST _ingest/pipeline/sort-pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
-下列範例回應確認管線運作符合預期：
+下列範例回應確認管線如預期般運作：
 
 ```json
 {
@@ -134,7 +132,7 @@ POST _ingest/pipeline/sort-pipeline/_simulate
 
 ### 步驟 3：匯入文件
 
-下列查詢會將文件匯入名為 `testindex1` 的索引：
+下列查詢會將一份文件匯入名為 `testindex1` 的索引：
 
 ```json
 POST testindex1/_doc?pipeline=sort-pipeline
@@ -144,9 +142,7 @@ POST testindex1/_doc?pipeline=sort-pipeline
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
-此請求會將文件編製索引至索引 `testindex1`，然後將所有文件依 `my_array_field` 以遞減順序排序編製索引，如下列回應所示：
+此請求會將文件編製索引到 `testindex1` 索引中，然後將所有文件依 `my_array_field` 以遞減方式排序並編製索引，如下列回應所示：
 
 ```json
 {
@@ -166,10 +162,11 @@ POST testindex1/_doc?pipeline=sort-pipeline
 
 ### 步驟 4（選用）：擷取文件
 
-若要擷取文件，請執行下列查詢：
+如要擷取文件，請執行下列查詢：
 
 ```json
 GET testindex1/_doc/no-Py48BwFahnwl9KZzf
 ```
 {% include copy-curl.html %}
 
+回應中包含已匯入的文件，並已依步驟 2 的回應所示進行轉換。

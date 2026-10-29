@@ -23,4 +23,4 @@ has_toc: false
 
 - [索引設定]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index-settings/)
 - [對應與欄位類型]({{site.url}}{{site.baseurl}}/field-types/)
-- [編製索引速度調校]({{site.url}}{{site.baseurl}}/tuning-your-cluster/performance/)
+- [編製索引速度調校]({{site.url}}{{site.baseurl}}/tuning-your-cluster/performance-tuning/indexing-speed/)

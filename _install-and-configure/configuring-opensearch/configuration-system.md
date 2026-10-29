@@ -8,7 +8,7 @@ nav_order: 10
 
 # 組態與系統設定
 
-如需建立 OpenSearch 叢集的概觀及組態設定範例，請參閱[建立叢集]({{site.url}}{{site.baseurl}}/tuning-your-cluster/index/)。若要了解如何套用這些設定，請參閱[設定 OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/)。
+如需建立 OpenSearch 叢集的概觀及組態設定範例，請參閱[建立叢集]({{site.url}}{{site.baseurl}}/tuning-your-cluster/creating-a-cluster/)。若要了解如何套用這些設定，請參閱[設定 OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/index/)。
 
 ## 叢集與節點識別設定
 

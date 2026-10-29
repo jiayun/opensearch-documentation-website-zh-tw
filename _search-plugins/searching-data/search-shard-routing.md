@@ -111,7 +111,7 @@ OpenSearch 會使用所有節點，為搜尋請求選擇最佳的路由。不過
     ```
     {% include copy-curl.html %}
 
-10. `_search_replica`：僅在 [搜尋副本]({{site.url}}{{site.baseurl}}/tuning-your-cluster/separate-index-and-search-workloads/) 上執行搜尋，這些副本託管於具有 `search` 角色的節點上。若索引沒有搜尋副本，搜尋就會失敗。
+10. `_search_replica`：僅在 [搜尋副本]({{site.url}}{{site.baseurl}}/tuning-your-cluster/performance-tuning/separate-index-and-search-workloads/) 上執行搜尋，這些副本託管於具有 `search` 角色的節點上。若索引沒有搜尋副本，搜尋就會失敗。
 
     ```json
     GET /my-index/_search?preference=_search_replica

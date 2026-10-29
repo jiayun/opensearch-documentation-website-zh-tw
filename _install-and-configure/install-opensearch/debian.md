@@ -39,20 +39,20 @@ Debian 發行版本提供在 Debian 系 Linux 發行版本（例如 Ubuntu）中
 
 ### 從套件安裝 OpenSearch
 
-1. 直接從 [OpenSearch 下載頁面](https://opensearch.org/downloads.html){:target='\_blank'}下載所需版本的 Debian 套件。Debian 套件提供 **x64** 與 **arm64** 兩種架構的下載。
-1. 在 CLI 中，使用 `dpkg` 安裝套件。
+1. 直接從 [OpenSearch 下載頁面](https://opensearch.org/downloads.html){:target='\_blank'} 下載所需版本的 Debian 套件。Debian 套件同時提供 **x64** 與 **arm64** 架構。
+1. 從命令列介面使用 `dpkg` 安裝套件。
 
-   全新安裝 OpenSearch 3.7 及更新版本時，您可以使用下列安裝時期環境變數來控制 Security 外掛程式的行為：
-   * `DISABLE_INSTALL_DEMO_CONFIG=true` -- 防止安裝程式設定示範安全性組態（憑證、使用者與角色）。若您將手動設定安全性，請使用此變數。
-   * `DISABLE_SECURITY_PLUGIN=true` -- 完全停用 Security 外掛程式。僅在不需要安全性的測試或開發環境中使用。
+   對於 OpenSearch 3.7 及更新版本的新安裝，您可以使用下列安裝時的環境變數來控制 Security 外掛程式的行為：
+   * `DISABLE_INSTALL_DEMO_CONFIG=true` -- 防止安裝程式設定示範安全性組態（憑證、使用者與角色）。當您要手動設定安全性時，請使用此選項。
+   * `DISABLE_SECURITY_PLUGIN=true` -- 完全停用 Security 外掛程式。僅在不需要安全性的測試或開發環境中使用此選項。
 
-   若要使用這些環境變數，請搭配 `env` 關鍵字，將其加在安裝命令之前：
+   若要使用這些環境變數，請在安裝命令之前加上 `env` 關鍵字：
    ```bash
    sudo env DISABLE_INSTALL_DEMO_CONFIG=true dpkg -i opensearch-{{site.opensearch_version}}-linux-x64.deb
    ```
    {% include copy.html %}
 
-   全新安裝 OpenSearch 2.12 及更新版本時，您必須定義自訂的 admin 密碼，才能設定示範安全性組態。請使用下列其中一個命令來定義自訂的 admin 密碼：
+   對於 OpenSearch 2.12 及更新版本的新安裝，您必須定義自訂的管理員密碼，才能設定示範安全性組態。OpenSearch 僅在設定示範安全性組態時使用此密碼。若要稍後變更管理員密碼，請參閱 [變更管理員密碼]({{site.url}}{{site.baseurl}}/security/configuration/passwords/#changing-the-admin-password)。使用下列其中一個命令來定義自訂的管理員密碼：
 
    x64：
    ```bash
@@ -92,7 +92,7 @@ Debian 發行版本提供在 Debian 系 Linux 發行版本（例如 Ubuntu）中
     ```
     {% include copy.html %}
 
-1. 確認 OpenSearch 已正確啟動：
+1. 驗證 OpenSearch 是否正確啟動：
     ```bash
     sudo systemctl status opensearch
     ```

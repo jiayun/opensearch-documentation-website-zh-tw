@@ -56,9 +56,9 @@ Windows 版 OpenSearch 壓縮檔是一個自成一體的目錄，內含執行 Op
 
 ### 選項 1：在啟用安全性的情況下測試您的 OpenSearch 設定
 
-1. 從 Command prompt 或 Powershell 執行示範批次指令碼。
+1. 從命令提示字元或 PowerShell 執行示範批次指令碼。
 
-      1. 在工作列上 **Start** 旁的搜尋方塊中輸入 `cmd` 以開啟 Command Prompt，或輸入 `powershell` 以開啟 Powershell。 
+      1. 在工作列上 **Start** 旁的搜尋方塊中輸入 `cmd` 以開啟命令提示字元，或輸入 `powershell` 以開啟 PowerShell。
       1. 切換至 OpenSearch 安裝的頂層目錄。
          ```bat
          cd \path\to\opensearch-{{site.opensearch_version}}
@@ -66,21 +66,21 @@ Windows 版 OpenSearch 壓縮檔是一個自成一體的目錄，內含執行 Op
          {% include copy.html %}
 
       1. 執行批次指令碼。
-         若使用 OpenSearch 2.12 或更新版本，請依照[管理員密碼需求]({{site.url}}{{site.baseurl}}/security/configuration/demo-configuration/#admin-password-requirements)指定自訂管理員密碼。如果您未設定密碼，批次指令碼會結束，而不會啟動 OpenSearch。
+         若使用 OpenSearch 2.12 或更新版本，請依照 [管理員密碼需求]({{site.url}}{{site.baseurl}}/security/configuration/demo-configuration/#admin-password-requirements) 指定自訂的管理員密碼。若未設定密碼，批次指令碼會結束而不啟動 OpenSearch。OpenSearch 僅在設定示範安全性組態時使用此密碼。若要稍後變更管理員密碼，請參閱[變更管理員密碼]({{site.url}}{{site.baseurl}}/security/configuration/passwords/#changing-the-admin-password)。
 
-         在 Command Prompt 中，請使用下列命令：
+         在命令提示字元中，使用下列命令：
          ```bat
          set OPENSEARCH_INITIAL_ADMIN_PASSWORD=<custom-admin-password>
          ```
          {% include copy.html %}
 
-         在 PowerShell 中，請使用下列命令：
+         在 PowerShell 中，使用下列命令：
          ```powershell
          $env:OPENSEARCH_INITIAL_ADMIN_PASSWORD="<custom-admin-password>"
          ```
          {% include copy.html %}
 
-         Command Prompt 的 `set` 命令不會在 PowerShell 中設定環境變數，因此請務必使用適用於您 Shell 的命令。
+         命令提示字元的 `set` 命令不會在 PowerShell 中設定環境變數，因此請務必使用適用於您 shell 的命令。
          {: .note}
 
          接著執行批次指令碼：
@@ -89,14 +89,14 @@ Windows 版 OpenSearch 壓縮檔是一個自成一體的目錄，內含執行 Op
          ```
          {% include copy.html %}
 
-1. 開啟新的命令提示字元，並將請求傳送至伺服器，以確認 OpenSearch 正在執行。請注意使用了 `--insecure` 旗標，這是必要的，因為 TLS 憑證是自簽的。
-   - 將請求傳送至連接埠 9200：
+1. 開啟新的命令提示字元，並向伺服器傳送請求，以確認 OpenSearch 正在執行。請注意使用了 `--insecure` 旗標，由於 TLS 憑證為自簽憑證，因此必須使用此旗標。
+   - 向連接埠 9200 傳送請求：
       ```bat
       curl.exe -X GET https://localhost:9200 -u "admin:<custom-admin-password>" --insecure
       ```
       {% include copy.html %}
 
-      您應該會取得如下所示的回應：
+      您應該會收到如下所示的回應：
       ```json
       {
          "name" : "hostname-here",
@@ -122,7 +122,7 @@ Windows 版 OpenSearch 壓縮檔是一個自成一體的目錄，內含執行 Op
       ```
       {% include copy.html %}
 
-      回應應該如下所示：
+      回應應如下所示：
       ```text
       name     component                            version
       hostname opensearch-alerting                  {{site.opensearch_version}}

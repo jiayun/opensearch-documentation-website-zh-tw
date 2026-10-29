@@ -176,28 +176,29 @@ PUT _cluster/settings
 原生引擎停用期間，OpenSearch 會在分段排清與合併時略過建立原生索引。原始向量仍會寫入磁碟，因此重新啟用引擎，再對受影響的索引執行強制合併，就會重建原生索引。
 {: .note}
 
-#### 選擇正向索引配置
+#### 選擇正向索引的儲存版面
 
-`forward_index` 演算法參數控制原生引擎儲存正向索引的方式。請在欄位的 `method.parameters` 物件中指定此參數。下表說明可用的配置。
+`forward_index` 演算法參數控制原生引擎儲存正向索引的方式。請在該欄位的 `method.parameters` 物件中指定此參數。下表說明可用的版面。
 
-| 值 | 說明 | 取捨 |
+| 值 | 說明 | 權衡 |
 |:--- |:--- |:--- |
-| `shared`（預設） | 欄位使用單一連續的正向索引。 | 磁碟用量較低。 |
-| `per_block` | 每個區塊的向量都與該區塊一起以內嵌方式儲存，因此查詢只會讀取所選的區塊。 | 查詢延遲較低，磁碟用量較高。 |
+| `shared` (預設) | 該欄位使用一個連續的正向索引。 | 磁碟用量較低。 |
+| `per_block` | 每個區塊的向量與該區塊一起內嵌儲存，因此查詢只需讀取其選取的區塊。 | 查詢延遲較低，磁碟用量較高。 |
 
-兩種配置都會對應至記憶體，並套用相同的量化方式。`forward_index` 參數選擇正向索引資料的放置位置；兩種配置儲存資料的精確度相同。
+兩種版面皆使用記憶體對映，並套用相同的量化。`forward_index` 參數決定正向索引資料的存放位置；兩種版面儲存的精確度相同。
 
-如果您將 `engine` 設為 `lucene`，並指定 `shared` 以外的 `forward_index` 值，請求就會遭到拒絕。
+如果欄位使用 Lucene 引擎，並將 `forward_index` 指定為 `shared` 以外的值，或將 `clustering_batch_size` 指定為 `1` 以外的值，則請求會被拒絕。
 {: .warning}
 
 #### 原生引擎的注意事項
 
-選擇原生引擎之前，請注意下列事項：
+選擇原生引擎前，請注意下列事項：
 
-- [Warm Up]({{site.url}}{{site.baseurl}}/vector-search/api/neural/#warm-up) 和 [Clear Cache]({{site.url}}{{site.baseurl}}/vector-search/api/neural/#clear-cache) API 操作的是 Lucene 引擎的快取，不適用於原生引擎。
-- [Neural Search Stats API]({{site.url}}{{site.baseurl}}/vector-search/api/neural/#stats) 傳回的稀疏記憶體統計資料只會回報 Lucene 引擎的快取用量，不包含原生引擎索引的記憶體用量。
-- `plugins.neural_search.circuit_breaker.limit` 設定對原生引擎沒有影響。
+- [Warm Up]({{site.url}}{{site.baseurl}}/vector-search/api/neural/#warm-up) 與 [Clear Cache]({{site.url}}{{site.baseurl}}/vector-search/api/neural/#clear-cache) API 作用於 Lucene 引擎的快取，不適用於原生引擎。
+- [Neural Search Stats API]({{site.url}}{{site.baseurl}}/vector-search/api/neural/#stats) 傳回的稀疏記憶體統計資料僅回報 Lucene 引擎的快取使用量，並未計入原生引擎的索引記憶體。
+- `plugins.neural_search.circuit_breaker.limit` 設定對原生引擎沒有作用。
 - 原生引擎要求索引的資料儲存在本機檔案系統上。
+- 原生引擎會將其索引檔記憶體對應，因此在 [`node.store.allow_mmap`]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/configuration-system/#memory-and-storage-settings) 為 `false` 的節點上無法使用。
 
 ## 步驟 1：建立索引
 
@@ -292,7 +293,7 @@ GET /my-sparse-ann-index/_search
 
 ### 使用原始向量查詢
 
-使用預先計算的稀疏向量進行查詢，其中詞元以整數及其對應權重指定：
+使用預先計算的稀疏向量進行查詢，其中詞元以整數指定，並附帶對應的權重：
 
 ```json
 GET /my-sparse-ann-index/_search
@@ -301,8 +302,8 @@ GET /my-sparse-ann-index/_search
     "neural_sparse": {
       "sparse_embedding": {
         "query_tokens": {
-          "1055": 1.7,
-          "2931": 2.3
+          "23": 1.7,
+          "300": 2.3
         },
         "method_parameters": {
           "k": 10,

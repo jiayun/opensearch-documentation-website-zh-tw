@@ -78,11 +78,7 @@ OpenSearch 提供下列工具來探索與分析可觀測性資料：
 
 ## 查詢效能
 
-使用 [Query Insights]({{site.url}}{{site.baseurl}}/observing-your-data/query-insights/) 來監控並最佳化叢集中執行之查詢的效能。找出慢速查詢、分析查詢模式，並改善叢集效率。
-
-<span class="centering-container">
-[開始使用 Query Insights]({{site.url}}{{site.baseurl}}/observing-your-data/query-insights/){: .btn-dark-blue}
-</span>
+若要監視叢集中執行之查詢的效能，請參閱[查詢洞察]({{site.url}}{{site.baseurl}}/tuning-your-cluster/monitoring/query-insights/index/)。
 
 ---
 

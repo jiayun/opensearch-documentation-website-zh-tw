@@ -10,11 +10,11 @@ redirect_from:
   - /opensearch/rest-api/cluster-awareness/
 ---
 
-# Cluster Routing And Awareness API
+# 叢集路由與感知 API
 **2.4 版導入**
 {: .label .label-purple }
 
-若要控制搜尋流量如何在各可用區之間路由，您可以為感知屬性值指派權重。這對於分區部署、異質叢集，或將流量導離狀態異常的可用區非常有用。
+若要控制搜尋流量如何在各可用區之間路由，您可以為感知屬性值指派權重。這對於以可用區為單位的部署、異質叢集，或將流量導離狀態異常的可用區非常有用。
 
 ## 先決條件
 
@@ -277,4 +277,4 @@ DELETE /_cluster/routing/awareness/zone/weights
 ## 後續步驟
 
 - 如需區域啟用的詳細資訊，請參閱[叢集停用]({{site.url}}{{site.baseurl}}/api-reference/cluster-decommission/)。
-- 如需配置感知的詳細資訊，請參閱[叢集形成]({{site.url}}{{site.baseurl}}/opensearch/cluster/#advanced-step-6-configure-shard-allocation-awareness-or-forced-awareness)。
+- 如需配置感知的詳細資訊，請參閱[叢集形成]({{site.url}}{{site.baseurl}}/tuning-your-cluster/creating-a-cluster/#advanced-step-6-configure-shard-allocation-awareness-or-forced-awareness)。

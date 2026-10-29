@@ -61,9 +61,10 @@ PUT /_cluster/settings
 
 ## 使用遠端索引建置服務
 
-遠端索引建置服務設定完成後，任何符合下列要求的分段排清與合併作業都會透明地使用 GPU 建置路徑：
+一旦設定好遠端索引建置服務，任何符合下列要求的分段排清與合併作業，都會透明地使用 GPU 建置路徑：
 
 - 索引使用其中一種[支援的組態](#supported-configurations)。
-- 分段大小大於 `index.knn.remote_index_build.size.min` 且小於 `knn.remote_index_build.size.max`。
+- 分段大小至少為 `index.knn.remote_index_build.size.min`。若 `knn.remote_index_build.size.max` 設定為非零值，分段大小也必須不超過 `knn.remote_index_build.size.max`。
+- 向量欄位至少有 64 個維度。
 
-您可以呼叫 k-NN Stats API 並檢視[遠端索引建置統計資料]({{site.url}}{{site.baseurl}}/vector-search/api/knn/#remote-index-build-stats)來監控遠端索引建置工作。
+您可以呼叫 k-NN Stats API 並檢視[遠端索引建置統計資料]({{site.url}}{{site.baseurl}}/vector-search/api/knn/#remote-index-build-stats)來監控遠端索引建置任務。

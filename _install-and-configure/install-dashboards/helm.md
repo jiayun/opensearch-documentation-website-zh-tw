@@ -72,14 +72,14 @@ curl -XGET https://localhost:9200 -u 'admin:<custom-admin-password>' --insecure
    ```
    {% include copy.html %}
 
-   若要自訂部署，請使用自訂 YAML 檔案傳入您要覆寫的值：
+   若要自訂部署，請使用自訂的 YAML 檔案傳入您想覆寫的值：
 
    ```bash
    helm install my-dashboards opensearch/opensearch-dashboards -f customvalues.yaml
    ```
    {% include copy.html %}
 
-   輸出會顯示已部署的 Helm 發行項目：
+   輸出會顯示已部署的版本：
 
    ```yaml
    NAME: my-dashboards
@@ -98,14 +98,14 @@ curl -XGET https://localhost:9200 -u 'admin:<custom-admin-password>' --insecure
 
 部署完成後，請依照下列步驟存取 OpenSearch Dashboards：
 
-1. 若要確認您的 OpenSearch Dashboards pod 已啟動並正在執行，請執行下列命令：
+1. 若要確認您的 OpenSearch Dashboards pod 已啟動並執行中，請執行下列命令：
 
    ```bash
    kubectl get pods
    ```
    {% include copy.html %}
 
-   等待 OpenSearch Dashboards pod 在 `READY` 欄中顯示 `1/1`：
+   請等待 OpenSearch Dashboards pod 在 `READY` 欄位顯示 `1/1`：
 
    ```bash
    NAME                                                   READY   STATUS    RESTARTS   AGE
@@ -115,16 +115,16 @@ curl -XGET https://localhost:9200 -u 'admin:<custom-admin-password>' --insecure
    opensearch-cluster-master-2                            1/1     Running   0          3m
    ```
 
-1. 設定從 OpenSearch Dashboards 服務進行連接埠轉送：
+1. 從 OpenSearch Dashboards 服務設定連接埠轉送：
 
    ```bash
    kubectl port-forward svc/my-dashboards-opensearch-dashboards 5601
    ```
    {% include copy.html %}
 
-1. 在網頁瀏覽器中，前往 `http://localhost:5601`，並使用您在安裝 OpenSearch 時設定的自訂管理員密碼，以 `admin` 使用者身分登入。如需更多資訊，請參閱[存取 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#accessing-opensearch-dashboards)。
+1. 在網頁瀏覽器中前往 `http://localhost:5601`，並使用您安裝 OpenSearch 時設定的[自訂管理員密碼]({{site.url}}{{site.baseurl}}/security/configuration/passwords/#setting-the-initial-admin-password)以 `admin` 使用者身分登入。如需更多資訊，請參閱[存取 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#accessing-opensearch-dashboards)。
 
-   OpenSearch Dashboards 在 pod 就緒後可能還需要約 1 分鐘才能完成啟動。在此之前，請求會傳回 `503` 錯誤。如果您收到此錯誤，請稍候再重新載入頁面。
+   OpenSearch Dashboards 在 pod 就緒後可能還需要約 1 分鐘才能完成啟動。在此之前，請求會傳回 `503` 錯誤。若收到此錯誤，請稍候再重新載入頁面。
    {: .note}
 
 ## 使用 Helm 解除安裝

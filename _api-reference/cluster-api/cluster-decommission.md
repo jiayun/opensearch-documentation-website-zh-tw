@@ -16,7 +16,7 @@ redirect_from:
 
 叢集停用作業新增了以感知為基礎的停用支援。這對多區域部署非常有幫助，因為感知屬性（例如 `zones`）可協助以受控的方式將新的升級套用至叢集。這在發生中斷時特別有用，在這種情況下，您可以停用不健康的區域，以防止複寫請求停滯，並避免請求待處理量變得過大。
 
-如需配置感知的詳細資訊，請參閱[分片配置感知]({{site.url}}{{site.baseurl}}/opensearch/cluster/#shard-allocation-awareness)。
+如需配置感知的詳細資訊，請參閱[分片配置感知]({{site.url}}{{site.baseurl}}/tuning-your-cluster/creating-a-cluster/#shard-allocation-awareness)。
 
 
 ## 端點
@@ -139,4 +139,4 @@ response = client.cluster.get_decommission_awareness(
 ## 後續步驟
 
 - 如需區域感知與權重的詳細資訊，請參閱[叢集感知]({{site.url}}{{site.baseurl}}/api-reference/cluster-awareness/)。
-- 如需配置感知的詳細資訊，請參閱[叢集形成]({{site.url}}{{site.baseurl}}/opensearch/cluster/#advanced-step-6-configure-shard-allocation-awareness-or-forced-awareness)。
+- 如需配置感知的詳細資訊，請參閱[叢集形成]({{site.url}}{{site.baseurl}}/tuning-your-cluster/creating-a-cluster/#advanced-step-6-configure-shard-allocation-awareness-or-forced-awareness)。

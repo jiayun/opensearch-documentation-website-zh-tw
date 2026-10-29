@@ -8,7 +8,7 @@ nav_order: 30
 
 # 評分指令碼篩選器
 
-評分指令碼篩選器會先篩選文件，然後對結果使用暴力精確 k-NN 搜尋。例如，下列查詢會搜尋評分介於 8 到 10（含）之間且提供停車位的飯店，然後執行 k-NN 搜尋，以傳回最接近指定 `location` 的 3 間飯店：
+評分指令碼篩選器 (scoring script filter) 會先篩選文件，然後對結果執行暴力法的精確 k-NN 搜尋。下列範例使用在[使用 Lucene k-NN 篩選器]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/efficient-knn-filtering/#using-a-lucene-k-nn-filter)中建立的 `hotels-index`。下列查詢先搜尋評分介於 8 到 10（含）且提供停車位的飯店，然後執行 k-NN 搜尋，傳回最接近指定 `location` 的 3 間飯店：
 
 ```json
 POST /hotels-index/_search

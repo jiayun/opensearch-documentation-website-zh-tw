@@ -111,7 +111,7 @@ tarball 是一個自成一體的目錄，內含執行 OpenSearch 所需的一切
    ```
    {% include copy.html %}
 
-1. 若為 OpenSearch 2.12 或更新版本，請依照[管理員密碼需求]({{site.url}}{{site.baseurl}}/security/configuration/demo-configuration/#admin-password-requirements)設定自訂管理員密碼。如果您未設定密碼，啟動指令碼會結束，而不會啟動 OpenSearch：
+1. 若使用 OpenSearch 2.12 或更新版本，請依照[管理員密碼需求]({{site.url}}{{site.baseurl}}/security/configuration/demo-configuration/#admin-password-requirements)設定自訂的管理員密碼。若未設定密碼，啟動指令碼會結束而不啟動 OpenSearch。OpenSearch 僅在設定示範安全性組態時使用此密碼。若要稍後變更管理員密碼，請參閱[變更管理員密碼]({{site.url}}{{site.baseurl}}/security/configuration/passwords/#changing-the-admin-password)。若要設定密碼，請執行下列命令：
    ```bash
    export OPENSEARCH_INITIAL_ADMIN_PASSWORD=<custom-admin-password>
    ```
@@ -123,14 +123,14 @@ tarball 是一個自成一體的目錄，內含執行 OpenSearch 所需的一切
    ```
    {% include copy.html %}
 
-1. 開啟另一個終端機工作階段，並將請求傳送到伺服器，以確認 OpenSearch 正在執行。請注意 `--insecure` 旗標的使用，這是必要的，因為 TLS 憑證是自簽的。
-   - 將請求傳送到連接埠 9200：
+1. 開啟另一個終端機工作階段，並向伺服器傳送請求，以確認 OpenSearch 正在執行。請注意使用了 `--insecure` 旗標，由於 TLS 憑證是自簽憑證，因此必須使用此旗標。
+   - 向連接埠 9200 傳送請求：
       ```bash
       curl -X GET https://localhost:9200 -u 'admin:<custom-admin-password>' --insecure
       ```
       {% include copy.html %}
 
-      您應該會取得如下所示的回應：
+      您應該會收到類似以下的回應：
       ```bash
       {
          "name" : "hostname",
@@ -156,7 +156,7 @@ tarball 是一個自成一體的目錄，內含執行 OpenSearch 所需的一切
       ```
       {% include copy.html %}
 
-      回應應該如下所示：
+      回應應該類似以下內容：
       ```bash
       name     component                            version
       hostname opensearch-alerting                  {{site.opensearch_version}}
@@ -186,7 +186,7 @@ tarball 是一個自成一體的目錄，內含執行 OpenSearch 所需的一切
       hostname opensearch-ubi                       {{site.opensearch_version}}
       hostname query-insights                       {{site.opensearch_version}}
       ```
-1. 返回原始終端機工作階段，並按下 `CTRL + C` 停止處理程序。
+1. 返回原本的終端機工作階段，並按下 `CTRL + C` 停止處理程序。
 
 ### 選項 2：在停用安全性的情況下測試您的 OpenSearch 設定
 
@@ -654,7 +654,7 @@ curl https://your.host.address:9200 -u admin:yournewpassword -k
 - [為生產環境準備叢集]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/#preparing-a-cluster-for-production)
 - [常見安裝問題]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/#common-issues)
 - [OpenSearch 組態]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/)
-- [為 Tarball 安裝設定 Performance Analyzer]({{site.url}}{{site.baseurl}}/monitoring-plugins/pa/index/#install-performance-analyzer)
+- [Performance Analyzer]({{site.url}}{{site.baseurl}}/tuning-your-cluster/monitoring/telemetry/performance-analyzer/)
 - [安裝與設定 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/)
 - [OpenSearch 外掛程式安裝]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/)
 - [關於 Security 外掛程式]({{site.url}}{{site.baseurl}}/security/index/)

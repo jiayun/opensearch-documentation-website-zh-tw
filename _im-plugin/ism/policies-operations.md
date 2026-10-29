@@ -27,8 +27,8 @@ ISM 支援以下操作：
 - [快照](#snapshot)
 - [將索引轉換為遠端索引](#convert-index-to-remote)
 - [索引優先順序](#index-priority)
-- [分配](#allocation)
-- [彙整](#rollup)
+- [配置](#allocation)
+- [彙總](#rollup)
 - [停止複寫](#stop-replication)
 - [僅供搜尋](#search-only)
 
@@ -66,7 +66,7 @@ ISM 支援以下操作：
 
 為受管理的索引將索引設定 `index.blocks.write` 設定為 `true`。
 
-`index.blocks.write` 區塊不會阻止索引重新整理。
+`index.blocks.write` 封鎖不會阻止索引重新整理。
 {: .note}
 
 ## 讀寫
@@ -585,19 +585,19 @@ ISM 支援以下操作：
 
 ## 配置
 
-將索引配置到具有特定屬性設定的節點，[如本例所示]({{site.url}}{{site.baseurl}}/opensearch/cluster/#advanced-step-7-set-up-a-hot-warm-architecture)。
-例如，將 `require` 設為 `warm`，只會將您的資料移至「warm」節點。
+將索引配置到具有特定屬性集的節點，[如下所示]({{site.url}}{{site.baseurl}}/tuning-your-cluster/creating-a-cluster/#advanced-step-7-set-up-a-hot-warm-architecture)。
+例如，將 `require` 設定為 `warm` 會將您的資料只移動到「warm」節點。
 
-`allocation` 操作具有下列參數。必須至少指定 `require`、`include` 或 `exclude` 其中之一。
+`allocation` 操作具有下列參數。至少必須指定 `require`、`include` 或 `exclude` 其中之一。
 
 參數 | 說明 | 類型 | 必要
 :--- | :--- |:--- |:---
 `require` | 將索引配置到具有指定屬性的節點。 | 物件 | 否
 `include` | 將索引配置到具有任一指定屬性的節點。 | 物件 | 否
-`exclude` | 不將索引配置到具有任一指定屬性的節點。 | 物件 | 否
-`wait_for` | 等待政策執行後，再將索引配置到具有指定屬性的節點。 | 布林值 | 否。預設為 `false`。
+`exclude` | 不要將索引配置到具有任一指定屬性的節點。 | 物件 | 否
+`wait_for` | 在將索引配置到具有指定屬性的節點之前，先等待政策執行。 | 布林值 | 否。預設為 `false`。
 
-下列範例會將索引配置到 `temp` 屬性設為 `warm` 的節點：
+下列範例將索引配置到 `temp` 屬性設定為 `warm` 的節點：
 
 ```json
 "actions": [
@@ -610,14 +610,14 @@ ISM 支援以下操作：
 ```
 {% include copy.html %}
 
-## 彙整
+## 彙總
 
-[索引彙整]({{site.url}}{{site.baseurl}}/im-plugin/index-rollups/index/)可讓您定期將舊資料彙整為摘要索引，以降低資料的細緻程度。在 `ism_rollup` 物件中定義作業。如需其接受的欄位，請參閱[建立或更新索引彙整作業]({{site.url}}{{site.baseurl}}/im-plugin/index-rollups/rollup-api/#create-or-update-an-index-rollup-job)。
+[索引彙總 (index rollup)]({{site.url}}{{site.baseurl}}/im-plugin/index-rollups/index/)可讓您定期將舊資料彙總為摘要索引，以降低資料的精細度。在 `ism_rollup` 物件中定義作業。如需其接受的欄位，請參閱[建立或更新索引彙總作業]({{site.url}}{{site.baseurl}}/im-plugin/index-rollups/rollup-api/#create-or-update-an-index-rollup-job)。
 
-彙整作業可以是持續性或非持續性作業。使用 ISM 政策建立的彙整作業只能是非持續性作業。
+彙總作業可以是持續性或非持續性作業。使用 ISM 政策建立的彙總作業只能是非持續性作業。
 {: .note }
 
-下列政策會將 `opensearch_dashboards_sample_data_ecommerce` 欄位彙整為 `target` 索引中每小時一個的桶：
+下列政策會將 `opensearch_dashboards_sample_data_ecommerce` 欄位彙總為 `target` 索引中每小時一個的桶：
 
 ```json
 PUT _plugins/_ism/policies/sample_rollup_policy
@@ -695,7 +695,7 @@ PUT _plugins/_ism/policies/sample_rollup_policy
 ```
 {% include copy-curl.html %}
 
-若要在 OpenSearch Dashboards 中建立彙整作業，請參閱[建立彙整作業]({{site.url}}{{site.baseurl}}/im-plugin/index-rollups/index/#creating-a-rollup-job)。
+若要在 OpenSearch Dashboards 中建立彙總作業，請參閱[建立彙總作業]({{site.url}}{{site.baseurl}}/im-plugin/index-rollups/index/#creating-a-rollup-job)。
 
 ## 停止複寫
 
@@ -715,19 +715,19 @@ PUT _plugins/_ism/policies/sample_rollup_policy
 如果已啟用安全性，除了[停止複寫權限]({{site.url}}{{site.baseurl}}/tuning-your-cluster/replication-plugin/permissions/#replication-permissions)之外，您還必須具有 `indices:internal/plugins/replication/index/stop` 權限，才能使用 `stop_replication` 動作。
 {: .note}
 
-## 僅供搜尋
+## 僅限搜尋
 
-當索引進入 `search_only` 模式時，OpenSearch 會移除其主要分片和一般副本分片，同時保留搜尋副本供查詢操作使用。對該索引的所有寫入操作都會遭到封鎖。這適用於記錄檔生命週期管理，因為較舊的索引不再需要寫入功能，但仍應可供搜尋。
+當索引進入 `search_only` 模式時，OpenSearch 會移除其主要分片與一般副本分片，同時保留搜尋副本以供查詢作業使用。對該索引的所有寫入作業都會被封鎖。這適用於記錄檔生命週期管理，讓較舊的索引不再需要寫入能力，但仍可被搜尋。
 
-> 此動作必須符合下列先決條件：
+> 此動作需要下列先決條件：
 > - 叢集必須啟用遠端儲存。
 > - 索引必須啟用分段複寫。
 > - 索引必須設定搜尋副本。
 >
-> 如需僅供搜尋模式及讀取器與寫入器分離的詳細資訊，請參閱[分離索引編製與搜尋工作負載]({{site.url}}{{site.baseurl}}/tuning-your-cluster/separate-index-and-search-workloads/)。
+> 如需僅限搜尋模式與讀寫分離的詳細資訊，請參閱[分離索引與搜尋工作負載]({{site.url}}{{site.baseurl}}/tuning-your-cluster/performance-tuning/separate-index-and-search-workloads/)。
 {: .note}
 
-使用下列動作將索引設為僅供搜尋模式：
+使用下列動作將索引設為僅限搜尋模式：
 
 ```json
 {
@@ -736,9 +736,9 @@ PUT _plugins/_ism/policies/sample_rollup_policy
 ```
 {% include copy.html %}
 
-如果索引已處於僅供搜尋模式，此動作會成功完成，且不會進行任何變更。
+如果索引已處於僅限搜尋模式，此動作會順利完成，且不會進行任何變更。
 
-您可以呼叫 [Scale API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/scale/)，在 ISM 政策之外手動啟用或停用 `search_only` 模式。
+您可以在 ISM 政策之外，呼叫 [Scale API]({{site.url}}{{site.baseurl}}/api-reference/index-apis/scale/) 手動啟用或停用 `search_only` 模式。
 {: .tip}
 
 下列範例政策會在 7 天後將索引轉換為 `search_only` 模式：

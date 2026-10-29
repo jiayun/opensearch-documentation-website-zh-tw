@@ -164,22 +164,120 @@ GET /my-nlp-index/_mapping
 ```
 {% include copy-curl.html %}
 
+## 範例：使用叢集設定選取模型
+
+叢集管理員可以將模型 ID 儲存在叢集設定中，讓 `semantic` 欄位使用 `model_selection` 參數參照該模型，而不需要 `model_id`。設定名稱為 `plugins.neural_search.model_selection.model_id.<model_type>.<language_option>`，其中 `<model_type>` 和 `<language_option>` 需以小寫形式符合 `model_selection` 中的值。如需詳細資訊，請參閱[類神經搜尋外掛程式設定]({{site.url}}{{site.baseurl}}/vector-search/settings/#neural-search-plugin-settings)。
+
+此範例假設您已在叢集中部署 ID 為 `nF7yX5cBsaYnPfyOq2SG` 的稀疏編碼模型。首先，為英文稀疏模型設定模型 ID：
+
+```json
+PUT /_cluster/settings
+{
+  "persistent": {
+    "plugins.neural_search.model_selection.model_id.sparse.english": "nF7yX5cBsaYnPfyOq2SG"
+  }
+}
+```
+{% include copy-curl.html %}
+
+接著建立包含 `semantic` 欄位的索引，並以 `model_selection` 取代 `model_id`：
+
+```json
+PUT /my-nlp-index
+{
+  "mappings": {
+    "properties": {
+      "passage": {
+        "type": "semantic",
+        "model_selection": {
+          "model_type": "sparse",
+          "language_option": "english"
+        }
+      }
+    }
+  }
+}
+```
+{% include copy-curl.html %}
+
+建立對應時，OpenSearch 會從叢集設定解析模型 ID，並將其儲存在欄位對應中。若要驗證解析後的 `model_id`，請擷取對應：
+
+```json
+GET /my-nlp-index/_mapping
+```
+{% include copy-curl.html %}
+
+回應中包含解析後的 `model_id`。`model_selection` 值會以大寫形式傳回：
+
+<details markdown="block">
+  <summary>
+    Response
+  </summary>
+  {: .text-delta}
+
+```json
+{
+  "my-nlp-index": {
+    "mappings": {
+      "properties": {
+        "passage": {
+          "type": "semantic",
+          "model_id": "nF7yX5cBsaYnPfyOq2SG",
+          "raw_field_type": "text",
+          "model_selection": {
+            "language_option": "ENGLISH",
+            "model_type": "SPARSE"
+          }
+        },
+        "passage_semantic_info": {
+          "properties": {
+            "embedding": {
+              "type": "rank_features"
+            },
+            "model": {
+              "properties": {
+                "id": {
+                  "type": "text",
+                  "index": false
+                },
+                "name": {
+                  "type": "text",
+                  "index": false
+                },
+                "type": {
+                  "type": "text",
+                  "index": false
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+</details>
+
+由於模型 ID 儲存在對應中，之後變更叢集設定不會影響現有欄位。它只會套用至之後建立或更新的對應。
+
 ## 參數
 
 `semantic` 欄位類型支援下列參數。
 
-| 參數                             | 資料類型                  | 可更新      | 必要/選用          | 說明                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| 參數                        | 資料類型                | 可更新 | 必要/選用 | 說明                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 |----------------------------------|--------------------------|-----------|-------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `type`                           | 字串                   | 否        | 必要          | 必須設定為 `semantic`。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| `raw_field_type`                 | 字串                   | 否        | 選用          | `semantic` 欄位所封裝的底層欄位類型。原始輸入會以此類型儲存在 `semantic` 欄位的路徑下，使其行為如同該類型的標準欄位。有效值為 `text`、`keyword`、`match_only_text`、`wildcard`、`token_count` 與 `binary`。預設值為 `text`。您可以使用底層欄位類型支援的任何參數；這些參數會如預期運作。                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| `model_id`                       | 字串                   | 是       | 必要          | 在編製索引時用於從欄位值產生嵌入、以及在搜尋時從查詢輸入產生嵌入的 ML 模型 ID。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| `search_model_id`                | 字串                   | 是       | 選用          | 專門用於查詢時產生嵌入的 ML 模型 ID。若未指定，則使用 `model_id`。不可與 `semantic_field_search_analyzer` 同時指定。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| `semantic_info_field_name`       | 字串                   | 否        | 選用          | 儲存嵌入與模型資訊的內部中繼資料欄位的自訂名稱。預設情況下，此欄位名稱是在 `semantic` 欄位名稱後附加 `_semantic_info` 而得。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| `chunking`                       | 布林值或對應表陣列 | 否        | 選用          | 在匯入時啟用長篇文字的分塊處理。設定為 `Yes` 可使用預設的固定詞元長度策略，或指定策略物件清單以依序套用多種分塊演算法。請參閱 [文字分塊](#text-chunking)。                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| `semantic_field_search_analyzer` | 字串                   | 是       | 選用          | 指定在使用稀疏模型時用於斷詞查詢輸入的分析器。有效值為 `standard`、`bert-uncased` 與 `mbert-uncased`。不可與 `search_model_id` 同時使用。如需更多資訊，請參閱 [分析器]({{site.url}}{{site.baseurl}}/analyzers/supported-analyzers/)。                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `dense_embedding_config`         | 對應表                      | 否        | 選用          | 當 `semantic` 欄位由稠密嵌入模型支援時，為其所使用的底層 `knn_vector` 欄位定義自訂設定。這可對向量索引行為、相似度函式與引擎參數進行細緻控制。若省略，OpenSearch 會依據模型的嵌入維度與引擎預設值套用預設設定。如需支援的參數，請參閱 [稠密嵌入組態](#dense-embedding-configuration)。                                                                                                                                                                                                                                                                                                                                                                                                     |
-| `sparse_encoding_config`         | 對應表                      | 否        | 選用          | 設定在使用稀疏模型時，`semantic` 欄位的稀疏向量編碼方式。支援 [`sparse_encoding` 處理器]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/sparse-encoding/#pruning-sparse-vectors) 中所有可用的修剪策略。若省略，則使用 `max_ratio` 套用預設修剪策略，修剪比例為 `0.1`。這有助於降低雜訊與索引大小，同時保留稀疏向量中資訊量最高的維度。如需支援的參數，請參閱 [稀疏編碼組態](#sparse-encoding-configuration)。 |
-| `skip_existing_embedding`        | 布林值                  | 是       | 選用          | 決定是否略過 `semantic` 欄位的嵌入產生。啟用時，OpenSearch 會檢查現有文件，確認 `semantic` 欄位是否已有嵌入，以及 `semantic` 欄位的值與用於產生嵌入的 ML 模型 ID 是否皆未變更。若兩項條件皆成立，OpenSearch 會重複使用現有的嵌入並略過產生。預設值為 `false`。                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `type`                           | 字串                   | 否        | 必要          | 必須設為 `semantic`。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `raw_field_type`                 | 字串                   | 否        | 選用          | 由 `semantic` 欄位包裝的底層欄位類型。原始輸入會以此類型儲存在 `semantic` 欄位的路徑，讓該欄位能像此類型的標準欄位一樣運作。有效值為 `text`、`keyword`、`match_only_text`、`wildcard`、`token_count` 和 `binary`。預設為 `text`。您可以使用底層欄位類型支援的任何參數；這些參數會如預期般運作。                                                                                                                                                              |
+| `model_id`                       | 字串                   | 是       | 必要，除非已指定 `model_selection` | 機器學習模型的 ID，該模型用於在編製索引期間從欄位值產生嵌入，以及在搜尋期間從查詢輸入產生嵌入。如果您同時指定 `model_id` 和 `model_selection`，則 `model_id` 必須符合從 `model_selection` 解析出的模型 ID。                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `model_selection`                | 對映                      | 是       | 選用          | 使用叢集設定選取模型，以取代 `model_id`。包含 `model_type`（`sparse` 或 `dense`，預設為 `sparse`）和 `language_option`（`english` 或 `multilingual`，預設為 `english`）欄位。值不區分大小寫。當您建立或更新對應時，OpenSearch 會從 `plugins.neural_search.model_selection.model_id.<model_type>.<language_option>` [叢集設定]({{site.url}}{{site.baseurl}}/vector-search/settings/#neural-search-plugin-settings)解析模型 ID，並將其儲存為欄位的 `model_id`。如果尚未設定該設定，或模型類型與 `model_type` 不符，請求就會遭到拒絕。您可以同時指定 `search_model_id` 和 `model_selection`；系統會依提供的值使用。請參閱[範例：使用叢集設定選取模型](#example-selecting-a-model-using-a-cluster-setting)。 |
+| `search_model_id`                | 字串                   | 是       | 選用          | 專門用於在查詢時產生嵌入的機器學習模型 ID。如果未指定，則使用 `model_id`。不可與 `semantic_field_search_analyzer` 同時指定。                                                                                                                                                                                                                                                                                                                                                                                            |
+| `semantic_info_field_name`       | 字串                   | 否        | 選用          | 用於儲存嵌入和模型資訊的內部中繼資料欄位的自訂名稱。依預設，此欄位名稱是透過在 `semantic` 欄位名稱後附加 `_semantic_info` 衍生而來。                                                                                                                                                                                                                                                                                                                                                                                      |
+| `chunking`                       | 布林值或對映陣列 | 否        | 選用          | 在匯入期間啟用長篇文字分塊。設為 `Yes` 可使用預設的固定詞元長度策略，或指定策略物件清單以依序套用多個分塊演算法。請參閱[文字分塊](#text-chunking)。                                                                                                                                                                                                                                                                                                                                          |
+| `semantic_field_search_analyzer` | 字串                   | 是       | 選用          | 指定使用稀疏模型時，用於對查詢輸入進行斷詞的分析器。有效值為 `standard`、`bert-uncased` 和 `mbert-uncased`。不可與 `search_model_id` 同時使用。如需詳細資訊，請參閱[分析器]({{site.url}}{{site.baseurl}}/analyzers/supported-analyzers/)。                                                                                                                                                                                                                                                                                  |
+| `dense_embedding_config`         | 對映                      | 否        | 選用          | 定義當 `semantic` 欄位以密集嵌入模型為後端時，所使用的底層 `knn_vector` 欄位的自訂設定。這可讓您精細控制向量編製索引行為、相似度函式和引擎參數。如果省略，OpenSearch 會根據模型的嵌入維度和引擎預設值套用預設設定。如需支援的參數，請參閱[密集嵌入組態](#dense-embedding-configuration)。                                                                                                                                     |
+| `sparse_encoding_config`         | 對映                      | 否        | 選用          | 設定使用稀疏模型時，如何為 `semantic` 欄位編碼稀疏向量。支援 [`sparse_encoding` 處理器]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/sparse-encoding/#pruning-sparse-vectors)中所有可用的剪枝策略。如果省略，則會使用 `max_ratio` 套用預設剪枝策略，剪枝比例為 `0.1`。這有助於減少雜訊和索引大小，同時保留稀疏向量中最具資訊量的維度。如需支援的參數，請參閱[稀疏編碼組態](#sparse-encoding-configuration)。 |
+| `skip_existing_embedding`        | 布林值                  | 是       | 選用          | 決定是否略過為 `semantic` 欄位產生嵌入。啟用後，OpenSearch 會檢查現有文件，確認 `semantic` 欄位是否已有嵌入，以及 `semantic` 欄位的值和用於產生嵌入的機器學習模型 ID 是否皆未變更。如果兩個條件皆成立，OpenSearch 會重複使用現有嵌入，並略過產生步驟。預設為 `false`。                                                                                                                                                                 |
 
 
 ## 文字分塊

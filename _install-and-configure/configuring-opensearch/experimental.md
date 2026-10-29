@@ -21,10 +21,10 @@ opensearch.experimental.feature.<feature_name>.enabled: true
 
 ## 在 Docker 容器上啟用
 
-如果您正在執行 Docker，請將下列這一行新增至 `docker-compose.yml` 中的 `opensearch-node` > `environment` 區段下：
+如果您使用 Docker Compose，請在 `docker-compose.yml` 中每個 OpenSearch 服務的 `environment` 區段，將該旗標加入 `OPENSEARCH_JAVA_OPTS` 變數。請保留該變數原有的選項，例如堆積大小設定：
 
-```bash
-OPENSEARCH_JAVA_OPTS="-Dopensearch.experimental.feature.<feature_name>.enabled=true"
+```yaml
+- "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m -Dopensearch.experimental.feature.<feature_name>.enabled=true"
 ```
 {% include copy.html %}
 

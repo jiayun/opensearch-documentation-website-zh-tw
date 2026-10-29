@@ -27,30 +27,30 @@ nav_order: 105
 ```
 {% include copy.html %}
 
-## 組態參數
+## 參數
 
 下表列出 `fingerprint` 處理器的必要與選用參數。
 
-參數 | 必要/選用 | 說明 |
+參數 | 必要／選用 | 說明 |
 |-----------|-----------|-----------|
 `fields`  | 選用  | 用於產生雜湊值的欄位清單。  |
 `exclude_fields`  | 選用  | 指定要從雜湊值產生中排除的欄位。此參數與 `fields` 參數互斥；若 `exclude_fields` 與 `fields` 皆為空或 null，則所有欄位都會納入雜湊值計算。 |
-`hash_method`  | 選用  | 指定要使用的雜湊演算法，選項為 `MD5@2.16.0`、`SHA-1@2.16.0`、`SHA-256@2.16.0` 或 `SHA3-256@2.16.0`。預設為 `SHA-1@2.16.0`。附加版本號碼是為了確保在不同 OpenSearch 版本之間的雜湊結果一致，且新版本將支援新的雜湊方法。 |
-`target_field`  | 選用  | 指定用來儲存所產生雜湊值的欄位名稱。若未提供，則雜湊值預設會儲存在 `fingerprint` 欄位中。 |
-`ignore_missing`  | 選用  | 指定當其中一個必要欄位遺失時，處理器是否應靜默結束。預設為 `false`。 |
-`description`  | 選用  | 處理器的簡短說明。  |
+`hash_method`  | 選用  | 指定要使用的雜湊演算法，可選 `MD5@2.16.0`、`SHA-1@2.16.0`、`SHA-256@2.16.0` 或 `SHA3-256@2.16.0`。預設為 `SHA-1@2.16.0`。附加版本號是為了確保跨 OpenSearch 版本的雜湊結果一致，新版本將支援新的雜湊方法。 |
+`target_field`  | 選用  | 指定儲存所產生雜湊值的欄位名稱。若未提供，雜湊值預設會儲存在 `fingerprint` 欄位。 |
+`ignore_missing`  | 選用  | 指定當其中一個必要欄位缺失時，處理器是否應靜默結束。預設為 `false`。 |
+`description`  | 選用  | 處理器的簡短描述。  |
 `if` | 選用 | 執行處理器的條件。 |
-`ignore_failure` | 選用 | 若設為 `true`，則會忽略失敗。預設為 `false`。 |
-`on_failure` | 選用 | 處理器失敗時要執行的處理器清單。 |
-`tag` | 選用 | 處理器的識別標籤。有助於偵錯時區分相同類型的處理器。如需詳細資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
+`ignore_failure` | 選用 | 若設為 `true`，則忽略失敗。預設為 `false`。 |
+`on_failure` | 選用 | 當處理器失敗時要執行的處理器清單。 |
+`tag` | 選用 | 處理器的識別標籤。有助於除錯時區分相同類型的處理器。如需更多資訊，請參閱[使用處理器標籤進行監控與除錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
 
 ## 使用處理器
 
-依照下列步驟，在管線中使用處理器。
+請依照下列步驟在管線中使用處理器。
 
-**步驟 1：建立管線**
+### 步驟 1：建立管線
 
-下列查詢會建立名為 `fingerprint_pipeline` 的管線，使用 `fingerprint` 處理器針對文件中的指定欄位產生雜湊值： 
+下列查詢會建立名為 `fingerprint_pipeline` 的管線，該管線使用 `fingerprint` 處理器為文件中指定的欄位產生雜湊值：
 
 ```json
 PUT /_ingest/pipeline/fingerprint_pipeline
@@ -67,9 +67,9 @@ PUT /_ingest/pipeline/fingerprint_pipeline
 ```
 {% include copy-curl.html %}
 
-**步驟 2（選用）：測試管線**
+### 步驟 2（選用）：測試管線
 
-建議您在匯入文件前先測試管線。
+建議您在匯入文件之前先測試管線。
 {: .tip}
 
 若要測試管線，請執行下列查詢：
@@ -91,9 +91,7 @@ POST _ingest/pipeline/fingerprint_pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
-下列範例回應確認管線如預期運作：
+下列範例回應可確認管線運作正常：
 
 ```json
 {
@@ -116,7 +114,7 @@ POST _ingest/pipeline/fingerprint_pipeline/_simulate
 }
 ```
 
-**步驟 3：匯入文件**
+### 步驟 3：匯入文件
 
 下列查詢會將文件匯入名為 `testindex1` 的索引：
 
@@ -128,8 +126,6 @@ PUT testindex1/_doc/1?pipeline=fingerprint_pipeline
 }
 ```
 {% include copy-curl.html %}
-
-#### 回應
 
 此請求會將文件編製索引至 `testindex1` 索引：
 
@@ -149,7 +145,7 @@ PUT testindex1/_doc/1?pipeline=fingerprint_pipeline
 }
 ```
 
-**步驟 4（選用）：擷取文件**
+### 步驟 4（選用）：擷取文件
 
 若要擷取文件，請執行下列查詢：
 
@@ -157,3 +153,5 @@ PUT testindex1/_doc/1?pipeline=fingerprint_pipeline
 GET testindex1/_doc/1
 ```
 {% include copy-curl.html %}
+
+回應會包含已匯入的文件，並如步驟 2 的回應所示經過轉換。

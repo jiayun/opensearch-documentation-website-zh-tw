@@ -61,7 +61,7 @@ OpenSearch Dashboards 是 OpenSearch 中資料的預設視覺化工具。它同�
     ```
     {% include copy.html %}
 
-    若為 OpenSearch Dashboards 3.7 及更新版本的全新安裝，您可以在安裝命令前加上 `env` 關鍵字並搭配 `DISABLE_SECURITY_DASHBOARDS_PLUGIN=true` 環境變數，以停用 Security Dashboards 外掛程式：
+    若為全新安裝 OpenSearch Dashboards 3.7 及更新版本，您可以在安裝命令前加上 `env` 關鍵字並設定 `DISABLE_SECURITY_DASHBOARDS_PLUGIN=true` 環境變數，以停用 Security Dashboards 外掛程式：
     ```bash
     sudo env DISABLE_SECURITY_DASHBOARDS_PLUGIN=true rpm -ivh opensearch-dashboards-{{site.opensearch_dashboards_version}}-linux-x64.rpm
     ```
@@ -85,11 +85,11 @@ OpenSearch Dashboards 是 OpenSearch 中資料的預設視覺化工具。它同�
     ```
     {% include copy.html %}
 
-1. 在網頁瀏覽器中，前往 `http://localhost:5601`，並使用您在安裝 OpenSearch 時設定的自訂管理員密碼，以 `admin` 使用者身分登入。如果 OpenSearch Dashboards 執行於遠端主機，請將 `localhost` 替換為該主機的 IP 位址或 DNS 名稱。如需更多資訊，請參閱[存取 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#accessing-opensearch-dashboards)。
+1. 在網頁瀏覽器中前往 `http://localhost:5601`，並使用您在安裝 OpenSearch 時設定的[自訂管理員密碼]({{site.url}}{{site.baseurl}}/security/configuration/passwords/#setting-the-initial-admin-password)以 `admin` 使用者身分登入。若 OpenSearch Dashboards 執行於遠端主機，請將 `localhost` 替換為該主機的 IP 位址或 DNS 名稱。如需詳細資訊，請參閱[存取 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#accessing-opensearch-dashboards)。
 
 ## 從本機 YUM 儲存庫安裝 OpenSearch Dashboards
 
-YUM 是以 Red Hat 為基礎之作業系統的主要套件管理工具，可讓您從 YUM 儲存庫程式庫下載並安裝 RPM 套件。
+YUM 是 Red Hat 系作業系統的主要套件管理工具，可讓您從 YUM 儲存庫下載並安裝 RPM 套件。
 
 1. 為 OpenSearch Dashboards 建立本機儲存庫檔案：
    ```bash
@@ -97,26 +97,26 @@ YUM 是以 Red Hat 為基礎之作業系統的主要套件管理工具，可讓�
    ```
    {% include copy.html %}
 
-1. 確認儲存庫已成功建立：
+1. 驗證儲存庫是否已成功建立：
     ```bash
     sudo yum repolist
     ```
     {% include copy.html %}
 
-1. 清除您的 YUM 快取，以確保安裝順利：
+1. 清除 YUM 快取，以確保安裝順利進行：
    ```bash
    sudo yum clean all
    ```
    {% include copy.html %}
 
-1. 下載儲存庫檔案後，列出 OpenSearch-Dashboards 所有可用的版本：
+1. 儲存庫檔案下載完成後，列出所有可用的 OpenSearch-Dashboards 版本：
    ```bash
    sudo yum list opensearch-dashboards --showduplicates
    ```
    {% include copy.html %}
 
 1. 選擇您要安裝的 OpenSearch Dashboards 版本：
-   - 除非另有指示，否則會安裝 OpenSearch 最高的次要版本：
+   - 除非另有指定，否則會安裝 OpenSearch 的最高次要版本：
    ```bash
    sudo yum install opensearch-dashboards
    ```
@@ -128,19 +128,19 @@ YUM 是以 Red Hat 為基礎之作業系統的主要套件管理工具，可讓�
    ```
    {% include copy.html %}
 
-1. YUM 第一次下載儲存庫中繼資料時 (例如當您列出可用版本時)，以及安裝期間，YUM 會提示您匯入 GPG 金鑰並顯示金鑰指紋。請確認資訊與下列內容相符：
+1. YUM 第一次下載儲存庫中繼資料時（例如列出可用版本時），以及安裝期間，YUM 會提示您匯入 GPG 金鑰並顯示金鑰指紋。請驗證資訊是否符合下列內容：
    ```text
    Fingerprint: A8B2 D9E0 4CD5 1FEF 6AA2 DB53 BA81 D999 8119 1457
    ```
 
-    - 如果正確，請輸入 `yes` 或 `y`。OpenSearch 安裝會繼續進行。
+    - 若資訊正確，請輸入 `yes` 或 `y`。OpenSearch 安裝程序將繼續進行。
 1. 啟動 OpenSearch Dashboards：
     ```bash
     sudo systemctl start opensearch-dashboards
     ```
     {% include copy.html %}
 
-1. 在網頁瀏覽器中，前往 `http://localhost:5601`，並使用您在安裝 OpenSearch 時設定的自訂管理員密碼，以 `admin` 使用者身分登入。如果 OpenSearch Dashboards 執行於遠端主機，請將 `localhost` 替換為該主機的 IP 位址或 DNS 名稱。如需更多資訊，請參閱[存取 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#accessing-opensearch-dashboards)。
+1. 在網頁瀏覽器中前往 `http://localhost:5601`，並使用您安裝 OpenSearch 時設定的[自訂管理員密碼]({{site.url}}{{site.baseurl}}/security/configuration/passwords/#setting-the-initial-admin-password)以 `admin` 使用者身分登入。如果 OpenSearch Dashboards 執行於遠端主機，請將 `localhost` 取代為該主機的 IP 位址或 DNS 名稱。如需更多資訊，請參閱[存取 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#accessing-opensearch-dashboards)。
 
 ## 升級至較新版本
 

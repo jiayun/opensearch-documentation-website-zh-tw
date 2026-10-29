@@ -34,9 +34,9 @@ $$MMR = (1 − \lambda) \times \text{relevance_score} - \lambda \times max(\text
 
 透過調整 $$\lambda$$，您可以控制高相關性結果與結果集更多樣化涵蓋範圍之間的取捨。
 
-# 必要條件
+## 先決條件
 
-若要使用 MMR，您必須啟用[系統產生的搜尋處理器工廠]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/system-generated-search-processors/)。將 `cluster.search.enabled_system_generated_factories` 設定（預設為空清單）設為 `*`（所有工廠），或明確加入所需的工廠：
+若要使用 MMR，您必須啟用[系統產生的搜尋處理器工廠]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/system-generated-search-processors/)。將 `cluster.search.enabled_system_generated_factories` 設定（預設為空白清單）設為 `*`（所有工廠），或明確納入必要的工廠：
 
 ```json
 PUT _cluster/settings
@@ -51,23 +51,23 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-# 參數
+## 參數
 
-`mmr` 物件提供於 Search API 請求本文的 `ext` 物件中，並支援下列參數。
+`mmr` 物件會在 Search API 請求本文的 `ext` 物件中提供，並支援下列參數。
 
 | 參數                 | 資料類型 | 必要/選用                                 | 說明                                                                                                                                                                                 |
 | ------------------------- | --------- | ----------------------------------------- |---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `diversity`               | 浮點數     | 選用                                        | 控制重新排名過程中多樣性 ($$\lambda$$) 的權重。有效值範圍為 `0` 至 `1`（含端點）。值為 `1` 時優先考量最大多樣性；`0` 則停用多樣性。預設為 `0.5`。 |
-| `candidates`              | 整數   | 選用                                        | 在套用 MMR 重新排名之前要擷取的候選文件數量。預設為 `3 * size`，其中 `size` 是查詢的 `size` 參數（要求傳回的結果數量）。                                                                                        |
-| `vector_field_path`       | 字串    | 選用（遠端索引為必要） | 用於 MMR 重新排名的向量欄位路徑。若未提供，OpenSearch 會自動從搜尋請求中解析。                                                            |
-| `vector_field_data_type`  | 字串    | 選用（遠端索引為必要） | 向量欄位的資料類型。用於解析欄位並計算相似度。若未提供，OpenSearch 會從索引對應中解析。                                            |
-| `vector_field_space_type` | 字串    | 選用（遠端索引為必要） | 用於決定向量欄位的相似度函式，例如餘弦相似度或歐氏距離。若未提供，OpenSearch 會從索引對應中解析。有效值請參閱[距離計算]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-spaces/#distance-calculation)。             |
-| `explain`                 | 布林值   | 選用                               | 當設為 `true` 時，會在每個所選命中的 `_source` 中加入一個 `mmr_explain` 物件，其中包含每個命中的 MMR 評分詳細資訊。預設為 `false`。請參閱[說明 MMR 評分](#explain-mmr-scoring)。 |
+| `diversity`               | 浮點數     | 選用                                        | 控制重新排名過程中多樣性（$$\lambda$$）的權重。有效值範圍為 `0` 到 `1`（含）。值為 `1` 時優先考量最大多樣性；`0` 則停用多樣性。預設值為 `0.5`。 |
+| `candidates`              | 整數   | 選用                                        | 在套用 MMR 重新排名之前要擷取的候選文件數量。預設值為 `3 * size`，其中 `size` 是查詢的 `size` 參數（要求傳回的結果數量）。                                                                                        |
+| `vector_field_path`       | 字串    | 選用（遠端索引為必要） | 用於 MMR 重新排名之向量欄位的路徑。若未提供，OpenSearch 會從搜尋請求中自動解析。                                                            |
+| `vector_field_data_type`  | 字串    | 選用（遠端索引為必要） | 向量欄位的資料類型。用於剖析欄位並計算相似度。若未提供，OpenSearch 會從索引對應中解析。                                            |
+| `vector_field_space_type` | 字串    | 選用（遠端索引為必要） | 用於判斷向量欄位的相似度函式，例如餘弦相似度或歐幾里得距離。若未提供，OpenSearch 會從索引對應中解析。有效值請參閱[距離計算]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-spaces/#distance-calculation)。             |
+| `explain`                 | 布林值   | 選用                               | 當設為 `true` 時，會在每個選中命中結果的 `_source` 中加入 `mmr_explain` 物件，其中包含各命中結果的 MMR 評分詳細資料。預設值為 `false`。請參閱[說明 MMR 評分](#explain-mmr-scoring)。 |
 
 
-# 範例請求
+## 範例請求
 
-下列範例示範如何在 `knn` 查詢中使用 `mmr` 參數：
+下列範例說明如何在 `knn` 查詢中使用 `mmr` 參數：
 
 ```json
 POST /my-index/_search
@@ -89,7 +89,7 @@ POST /my-index/_search
 ```
 {% include copy-curl.html %}
 
-下列範例示範如何在 `neural` 查詢中使用 `mmr` 參數：
+下列範例說明如何在 `neural` 查詢中使用 `mmr` 參數：
 
 ```json
 POST /my-index/_search
@@ -115,28 +115,28 @@ POST /my-index/_search
 ```
 {% include copy-curl.html %}
 
-查詢多個索引時，所有向量欄位必須具有相符的資料類型與空間類型。這些設定會決定文件比較所使用的相似度函式。
+查詢多個索引時，所有向量欄位都必須具有相符的資料類型和空間類型。這些設定會決定用於文件比較的相似度函式。
 {: .note}
 
-# 說明 MMR 評分
-**於 3.7 版導入**
+## 說明 MMR 評分
+**3.7 版引入**
 {: .label .label-purple }
 
-當 `explain` 設定為 `true` 時，每個所選命中的 `_source` 都會包含一個 `mmr_explain` 物件，提供文件被選取原因的說明。這對除錯以及了解 MMR 重新排名的行為非常有用。
+當 `explain` 設為 `true` 時，每個被選取命中結果的 `_source` 都會包含一個 `mmr_explain` 物件，說明該文件被選取的原因。這有助於偵錯及瞭解 MMR 重新排名的行為。
 
 `mmr_explain` 物件包含下列欄位。
 
 | 欄位 | 說明 |
 |-------|-------------|
-| `original_score` | 來自向量搜尋的原始相關性分數。 |
-| `max_similarity_to_selected` | 此文件與任何已選文件之間的最大向量相似度。對於第一個被選取的文件，此值為 `0.0`。 |
-| `mmr_score` | 選取當下使用公式 `(1 - diversity) * original_score - diversity * max_similarity_to_selected` 計算出的 MMR 分數。 |
-| `mmr_formula` | 以實際數值代入的 MMR 公式之人類可讀表示。 |
+| `original_score` | 向量搜尋產生的原始相關性分數。 |
+| `max_similarity_to_selected` | 此文件與任何已選取文件之間的最大向量相似度。對於第一個被選取的文件，此值為 `0.0`。 |
+| `mmr_score` | 在選取時使用公式 `(1 - diversity) * original_score - diversity * max_similarity_to_selected` 計算出的 MMR 分數。 |
+| `mmr_formula` | 代入實際數值後、方便閱讀的 MMR 公式表示。 |
 
-選取順序與先前已選的文件，可從每個命中在結果清單中的位置推斷。
+您可以從每個命中結果在結果清單中的位置，推斷選取順序及先前已選取的文件。
 {: .note}
 
-下列範例示範如何使用 `explain` 參數：
+下列範例說明如何使用 `explain` 參數：
 
 ```json
 POST /my-index/_search
@@ -159,7 +159,7 @@ POST /my-index/_search
 ```
 {% include copy-curl.html %}
 
-回應會在每個命中的 `_source` 中包含一個 `mmr_explain` 物件：
+回應會在每個命中結果的 `_source` 中包含一個 `mmr_explain` 物件：
 
 ```json
 {
@@ -196,13 +196,13 @@ POST /my-index/_search
 }
 ```
 
-# 限制
+## 限制
 
-下列限制適用於使用 MMR 重新排名的向量搜尋：
+下列限制適用於搭配 MMR 重新排名的向量搜尋：
 
-- **支援的查詢類型**：MMR 僅支援 `knn` 或 `neural` 查詢作為搜尋請求中的頂層查詢。若 `knn` 或 `neural` 查詢巢狀於其他查詢類型內（例如 `bool` 查詢或 `hybrid` 查詢），則不支援 MMR。
+- **支援的查詢類型**：MMR 僅支援以 `knn` 或 `neural` 查詢作為搜尋請求中的頂層查詢。若 `knn` 或 `neural` 查詢巢狀於其他查詢類型內（例如 `bool` 查詢或 `hybrid` 查詢），則不支援 MMR。
 
-- **遠端索引需求**：查詢遠端索引時，您必須明確提供向量欄位資訊（`vector_field_path`、`vector_field_data_type` 與 `vector_field_space_type`）。不同於本機索引可由 OpenSearch 自動從索引對應中解析此中繼資料，系統無法可靠地從遠端叢集取得這些資訊。提供這些詳細資訊可確保正確解析向量資料並準確計算相似度。
+- **遠端索引需求**：查詢遠端索引時，您必須明確提供向量欄位資訊（`vector_field_path`、`vector_field_data_type` 與 `vector_field_space_type`）。本機索引可由 OpenSearch 自動從索引對應中解析這些中繼資料；但與本機索引不同，系統無法可靠地從遠端叢集取得這些資訊。提供這些詳細資訊可確保正確解析向量資料並準確計算相似度。
 
 ## 相關文件
 

@@ -30,7 +30,7 @@ _資料匯入管線_ (ingest pipeline) 是一連串的[處理器]({{site.url}}{{
 - 至少一個具有 `ingest` 角色的節點。預設情況下，每個節點都具有此角色，因此無需任何設定。
 - 如果已啟用 OpenSearch Security 外掛程式，您必須具備管理資料匯入管線的權限，例如透過 `cluster_manage_pipelines` 動作群組。如需更多資訊，請參閱[資料匯入 API]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/index/#required-permissions)。
 
-在生產環境中，您可以透過在 `node.roles` 設定中僅將 `ingest` 角色指派給特定節點，讓這些節點專門處理匯入作業。如需更多資訊，請參閱[叢集形成]({{site.url}}{{site.baseurl}}/opensearch/cluster/)。
+在生產環境中，您可以透過在 `node.roles` 設定中僅將 `ingest` 角色指派給特定節點，讓這些節點專門處理匯入作業。如需更多資訊，請參閱[叢集形成]({{site.url}}{{site.baseurl}}/tuning-your-cluster/creating-a-cluster/)。
 {: .tip}
 
 ## 定義管線

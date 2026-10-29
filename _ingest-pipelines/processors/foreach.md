@@ -28,20 +28,20 @@ nav_order: 110
 ```
 {% include copy.html %}
 
-## 組態參數
+## 參數
 
 下表列出 `foreach` 處理器的必要與選用參數。
 
 參數 | 必要/選用 | 說明 |
 |-----------|-----------|-----------|
 `field` | 必要 | 要逐一查看的陣列欄位。
-`processor` | 必要 | 要對陣列中每個元素執行的處理器。
-`ignore_missing` | 選用 | 若 `true` 且指定的欄位不存在或為 null，則處理器會直接結束，不會修改文件。預設為 `false`。
+`processor` | 必要 | 要為陣列中每個元素執行的處理器。
+`ignore_missing` | 選用 | 若 `true` 且指定的欄位不存在或為 null，則處理器會直接結束，不會修改文件。預設值為 `false`。
 `description` | 選用 | 處理器的簡短說明。
 `if` | 選用 | 執行處理器的條件。
-`ignore_failure` | 選用 | 指定處理器即使遇到錯誤是否仍繼續執行。若設為 `true`，則會忽略失敗。預設為 `false`。
+`ignore_failure` | 選用 | 指定處理器即使遇到錯誤是否仍繼續執行。若設為 `true`，則會忽略失敗。預設值為 `false`。
 `on_failure` | 選用 | 處理器失敗時要執行的處理器清單。
-`tag` | 選用 | 處理器的識別標籤。有助於偵錯時區分相同類型的處理器。如需詳細資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。
+`tag` | 選用 | 處理器的識別標籤。有助於偵錯時區分同類型的處理器。如需詳細資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。
 
 ## 存取陣列元素
 
@@ -102,9 +102,7 @@ POST _ingest/pipeline/test-foreach/_simulate
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
-下列範例回應確認管線如預期運作，顯示四個元素皆已轉換為小寫：
+下列範例回應確認管線如預期運作，顯示四個元素已轉換為小寫：
 
 ```json
 {  
@@ -144,8 +142,6 @@ POST testindex1/_doc/1?pipeline=test-foreach
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
 此請求會將文件編製索引至 `testindex1` 索引，並在編製索引前套用管線：
 
 ```json
@@ -173,28 +169,7 @@ GET testindex1/_doc/1
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
-回應會顯示該文件，其中 `protocols` 欄位的所有元素都已轉換為小寫：
-
-```json
-{  
-  "_index": "testindex1",  
-  "_id": "1",  
-  "_version": 6,  
-  "_seq_no": 5,  
-  "_primary_term": 67,  
-  "found": true,  
-  "_source": {  
-    "protocols": [  
-      "http",  
-      "https",  
-      "tcp",  
-      "udp"  
-    ]  
-  }  
-}  
-```
+回應會包含已匯入的文件，其轉換結果如步驟 2 的回應所示。
 
 ## 處理物件陣列
 

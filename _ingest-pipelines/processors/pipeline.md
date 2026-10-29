@@ -21,18 +21,18 @@ nav_order: 220
 ```
 {% include copy.html %}
 
-## 組態參數
+## 參數
 
 下表列出 `pipeline` 處理器的必要與選用參數。
 
-參數 | 必要／選用 | 說明 |
+參數 | 必要/選用 | 說明 |
 |-----------|-----------|-----------|
 `name` | 必要	| 要執行的管線名稱。支援[範本片段](#selecting-a-pipeline-dynamically)。
-`description` | 選用 | 處理器用途或組態的描述。
-`if` | 選用 | 指定是否依條件執行處理器。
-`ignore_failure` | 選用 | 指定忽略處理器失敗。請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。
-`on_failure` | 選用 | 指定處理處理器失敗。請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。
-`tag` | 選用 | 處理器的識別碼。適用於除錯與指標。如需更多資訊，請參閱[使用處理器標籤進行監控與除錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。
+`description` | 選用 | 處理器用途或組態的說明。
+`if` | 選用 | 指定是否要依條件執行處理器。
+`ignore_failure` | 選用 | 指定是否忽略處理器失敗。請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。
+`on_failure` | 選用 | 指定如何處理處理器失敗。請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。
+`tag` | 選用 | 處理器的識別碼。有助於偵錯與指標。如需詳細資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。
 
 ## 使用處理器
 
@@ -40,7 +40,7 @@ nav_order: 220
 
 ### 步驟 1：建立管線
 
-下列查詢會建立名為 `general-pipeline` 的一般管線，然後建立名為 `outer-pipeline` 的新管線，該管線會參照 `general-pipeline`：
+下列查詢會建立名為 `general-pipeline` 的管線，將 `protocol` 欄位轉換為大寫並移除 `name` 欄位：
 
 ```json
 PUT _ingest/pipeline/general-pipeline  
@@ -62,6 +62,8 @@ PUT _ingest/pipeline/general-pipeline
 ```
 {% include copy-curl.html %}
 
+下列查詢會建立名為 `outer-pipeline` 的管線，使用 `pipeline` 處理器來執行 `general-pipeline`：
+
 ```json
 PUT _ingest/pipeline/outer-pipeline  
 {  
@@ -77,7 +79,7 @@ PUT _ingest/pipeline/outer-pipeline
 ```
 {% include copy-curl.html %}
 
-### 步驟 2 (選用)：測試管線
+### 步驟 2（選用）：測試管線
 
 建議您在匯入文件之前先測試管線。
 {: .tip}
@@ -99,9 +101,7 @@ POST _ingest/pipeline/outer-pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
-以下範例回應確認管線如預期運作：
+下列範例回應確認管線如預期運作：
 
 ```json
 {  
@@ -124,7 +124,7 @@ POST _ingest/pipeline/outer-pipeline/_simulate
 
 ### 步驟 3：匯入文件
 
-下列查詢會將文件匯入名為 `testindex1` 的索引：
+下列查詢會將一份文件匯入名為 `testindex1` 的索引：
 
 ```json
 POST testindex1/_doc/1?pipeline=outer-pipeline  
@@ -135,9 +135,7 @@ POST testindex1/_doc/1?pipeline=outer-pipeline
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
-此請求會將文件編製索引至 `testindex1` 索引，並將 `protocol` 欄位轉為大寫、移除 `name` 欄位，如下列回應所示：
+此請求會將文件編製索引到 `testindex1` 索引中，其中 `protocol` 欄位已轉換為大寫，且 `name` 欄位已移除，如下列回應所示：
 
 ```json
 {  
@@ -155,7 +153,7 @@ POST testindex1/_doc/1?pipeline=outer-pipeline
 }  
 ```
 
-### 步驟 4 (選用)：擷取文件
+### 步驟 4（選用）：擷取文件
 
 若要擷取文件，請執行下列查詢：
 
@@ -164,24 +162,7 @@ GET testindex1/_doc/1
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
-回應顯示的文件中，`protocol` 欄位已轉換為大寫，且 `name` 欄位已移除：
-
-```json
-{  
-  "_index": "testindex1",  
-  "_id": "1",  
-  "_version": 2,  
-  "_seq_no": 1,  
-  "_primary_term": 1,  
-  "found": true,  
-  "_source": {  
-    "protocol": "HTTPS"  
-  }  
-}  
-```
-
+回應會包含已匯入的文件，其轉換結果如步驟 2 的回應所示。
 
 ## 動態選取管線
 

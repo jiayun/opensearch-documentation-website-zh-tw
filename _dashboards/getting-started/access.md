@@ -8,14 +8,16 @@ nav_order: 15
 
 # 存取 OpenSearch Dashboards
 
-OpenSearch 和 OpenSearch Dashboards 執行後，請開啟瀏覽器並前往下列 URL：
+當 OpenSearch 與 OpenSearch Dashboards 正在執行時，請開啟瀏覽器並前往下列 URL：
 
 - 本機安裝請使用 `http://localhost:5601` 或 `https://localhost:5601`。
 - OpenSearch Playground 請使用 [https://playground.opensearch.org/app/home#/](https://playground.opensearch.org/app/home#/)。
 
->- _OpenSearch Dashboards_ 是指 OpenSearch 的 Web UI，也就是您正在瀏覽器中查看的應用程式。
->- **Dashboards** 應用程式是 OpenSearch Dashboards 中用來將視覺化組合到單一頁面的工具。
->- _儀表板_（小寫的 dashboard）是在 **Dashboards** 應用程式中建立的單一視覺化頁面。
+如果您的叢集使用 Security 外掛程式，OpenSearch Dashboards 會開啟登入頁面。請以 `admin` 使用者身分登入，並使用安裝 OpenSearch 時在 `OPENSEARCH_INITIAL_ADMIN_PASSWORD` 中設定的密碼。如需更多資訊，請參閱[設定初始管理員密碼]({{site.url}}{{site.baseurl}}/security/configuration/passwords/#setting-the-initial-admin-password)。
+
+>- _OpenSearch Dashboards_ 是指 OpenSearch 的網頁 UI，也就是您目前在瀏覽器中看到的應用程式。
+>- **Dashboards** 應用程式是 OpenSearch Dashboards 內用來將視覺化組合到單一頁面的工具。
+>- _dashboard_（小寫）是指在 **Dashboards** 應用程式中建立的個別視覺化頁面。
 {: .note}
 
 ## 存取本節使用的應用程式

@@ -23,5 +23,6 @@ redirect_from:
 
 ## 本節內容
 
-- [外掛程式即服務]({{site.url}}{{site.baseurl}}/developer-documentation/plugin-as-a-service/)：使用遠端 OpenSearch 叢集或雲端儲存服務等外部資料儲存空間，啟用無狀態的 OpenSearch 外掛程式。
-- [擴充功能]({{site.url}}{{site.baseurl}}/developer-documentation/extensions/)：外掛程式的替代方案，更易於開發且更安全，可簡化為 OpenSearch 建立自訂功能的流程。 
+- [外掛程式即服務]({{site.url}}{{site.baseurl}}/developer-documentation/plugin-as-a-service/)：使用外部資料存放區（例如遠端 OpenSearch 叢集或雲端儲存服務）啟用無狀態的 OpenSearch 外掛程式。
+- [擴充功能]({{site.url}}{{site.baseurl}}/developer-documentation/extensions/)：比外掛程式更容易開發且更安全的替代方案，可簡化為 OpenSearch 建立自訂功能。
+- [任務排程器]({{site.url}}{{site.baseurl}}/developer-documentation/job-scheduler/index/)：用於建置可在叢集上執行排程任務之外掛程式的架構。

@@ -21,20 +21,20 @@ nav_order: 140
 ```
 {% include copy.html %}
 
-## 組態參數
+## 參數
 
 下表列出 `html_strip` 處理器的必要與選用參數。
 
-參數 | 必要/選用 | 說明 |
+參數 | 必要/選用 | 描述 |
 |-----------|-----------|-----------|
-`field` | 必要 | 要從中移除 HTML 標籤的字串欄位。
-`target_field` | 選用 | 接收移除 HTML 標籤後純文字版本的欄位。若未指定，則會就地更新該欄位。
-`ignore_missing` | 選用 | 指定處理器是否應忽略不含指定欄位，或該欄位為 `null` 的文件。預設值為 `false`。
-`description` | 選用 | 處理器用途或組態的說明。
-`if` | 選用 | 指定是否依條件執行處理器。
-`ignore_failure` | 選用 | 指定是否忽略處理器失敗。請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。
-`on_failure` | 選用 | 指定處理器執行期間失敗時要執行的處理器清單。這些處理器會依指定順序執行。請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。
-`tag` | 選用 | 處理器的識別碼標籤。有助於偵錯時區分相同類型的處理器。如需詳細資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。
+`field` | 必要 | 要移除 HTML 標籤的字串欄位。
+`target_field` | 選用 | 移除 HTML 標籤後接收純文字版本的欄位。若未指定，則會就地更新該欄位。
+`ignore_missing` | 選用 | 指定處理器是否應忽略不含指定欄位或欄位值為 `null` 的文件。預設為 `false`。
+`description` | 選用 | 處理器用途或組態的描述。
+`if` | 選用 | 指定要有條件地執行處理器。
+`ignore_failure` | 選用 | 指定忽略處理器失敗。請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。
+`on_failure` | 選用 | 指定當處理器在執行期間失敗時要執行的處理器清單。這些處理器會依指定的順序執行。請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。
+`tag` | 選用 | 處理器的識別標籤。有助於除錯時區分相同類型的處理器。如需更多資訊，請參閱[使用處理器標籤進行監控與除錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。
 
 ## 使用處理器
 
@@ -60,7 +60,7 @@ PUT _ingest/pipeline/strip-html-pipeline
 ```
 {% include copy-curl.html %}
 
-### 步驟 2 (選用)：測試管線
+### 步驟 2（選用）：測試管線
 
 建議您在匯入文件之前先測試管線。
 {: .tip}
@@ -81,9 +81,7 @@ POST _ingest/pipeline/strip-html-pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
-下列範例回應確認管線如預期運作：
+下列範例回應確認管線運作正常：
 
 ```json
 {
@@ -105,22 +103,19 @@ POST _ingest/pipeline/strip-html-pipeline/_simulate
 }
 ```
 
-### 步驟 3：匯入文件 
+### 步驟 3：匯入文件
 
-下列查詢會將文件匯入名為 `products` 的索引：
+下列查詢會將一份文件匯入名為 `products` 的索引：
 
 ```json
 PUT products/_doc/1?pipeline=strip-html-pipeline
 {
-  "name": "Product 1",
-  "description": "This is a <b>test</b> product with <i>some</i> HTML tags."
+  "description": "This is a <b>test</b> description with <i>some</i> HTML tags."
 }
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
-回應顯示請求已將文件編製索引到索引 `products` 中，並會將所有 `description` 欄位包含 HTML 標籤的文件編製索引，同時將純文字版本儲存在 `cleaned_description` 欄位中：
+回應顯示請求已將該文件編製索引至索引 `products`，並且會對所有包含 HTML 標籤的 `description` 欄位文件編製索引，同時將純文字版本儲存在 `cleaned_description` 欄位中：
 
 ```json
 {
@@ -138,7 +133,7 @@ PUT products/_doc/1?pipeline=strip-html-pipeline
 }
 ```
 
-### 步驟 4 (選用)：擷取文件
+### 步驟 4（選用）：擷取文件
 
 若要擷取文件，請執行下列查詢：
 
@@ -147,22 +142,4 @@ GET products/_doc/1
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
-回應同時包含原始的 `description` 欄位，以及已移除 HTML 標籤的 `cleaned_description` 欄位：
-
-```json
-{
-  "_index": "products",
-  "_id": "1",
-  "_version": 1,
-  "_seq_no": 0,
-  "_primary_term": 1,
-  "found": true,
-  "_source": {
-    "cleaned_description": "This is a test product with some HTML tags.",
-    "name": "Product 1",
-    "description": "This is a <b>test</b> product with <i>some</i> HTML tags."
-  }
-}
-```
+回應會包含已匯入的文件，並如步驟 2 的回應所示經過轉換。

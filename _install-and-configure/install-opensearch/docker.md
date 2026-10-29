@@ -111,28 +111,28 @@ docker pull public.ecr.aws/opensearchproject/opensearch-dashboards:{{ site.opens
 ```
 {% include copy.html %}
 
-若要下載最新可用版本以外的特定 OpenSearch 或 OpenSearch Dashboards 版本，請在其被參照的位置修改映像檔標籤（在命令列或 Docker Compose 檔案中）。例如，`opensearchproject/opensearch:{{site.opensearch_version}}` 會拉取 OpenSearch {{site.opensearch_version}} 版。若要拉取最新版本，請使用 `opensearchproject/opensearch:latest`。可用的版本請參閱官方映像檔儲存庫。
+若要下載最新可用版本以外的特定 OpenSearch 或 OpenSearch Dashboards 版本，請修改參照處的映像檔標籤（在命令列或 Docker Compose 檔案中）。例如，`opensearchproject/opensearch:{{site.opensearch_version}}` 會拉取 OpenSearch {{site.opensearch_version}} 版。若要拉取最新版本，請使用 `opensearchproject/opensearch:latest`。可用版本請參閱官方映像檔儲存庫。
 {: .tip}
 
-在繼續之前，您應該透過在單一容器中部署 OpenSearch，來驗證 Docker 是否正常運作。
+繼續之前，您應在單一容器中部署 OpenSearch，以確認 Docker 運作正常。
 
 1. 在 Docker 中啟動 OpenSearch。
-    OpenSearch 2.12 或更新版本要求您在啟動時設定自訂管理員密碼。如需更多資訊，請參閱[設定自訂管理員密碼](#setting-a-custom-admin-password)。如果密碼強度不足，記錄檔中會回報錯誤，且 OpenSearch 會結束：
+    OpenSearch 2.12 或更新版本在啟動時要求您設定自訂管理員密碼。如需詳細資訊，請參閱[設定自訂管理員密碼](#setting-a-custom-admin-password)。如果密碼強度不足，記錄檔中會回報錯誤，且 OpenSearch 會結束：
     ```bash
-    docker run -d -p 9200:9200 -p 9600:9600 -e "discovery.type=single-node" -e "OPENSEARCH_INITIAL_ADMIN_PASSWORD=<custom-admin-password>" opensearchproject/opensearch:latest
+    docker run -d -p 9200:9200 -e "discovery.type=single-node" -e "OPENSEARCH_INITIAL_ADMIN_PASSWORD=<custom-admin-password>" opensearchproject/opensearch:latest
     ```
-    舊版本在啟動時不包含密碼：
+    較舊版本在啟動時不包含密碼：
     ```bash
-    # This command maps ports 9200 and 9600, sets the discovery type to "single-node" and requests the newest image of OpenSearch
-    docker run -d -p 9200:9200 -p 9600:9600 -e "discovery.type=single-node" opensearchproject/opensearch:latest
+    # This command maps port 9200, sets the discovery type to "single-node" and requests the newest image of OpenSearch
+    docker run -d -p 9200:9200 -e "discovery.type=single-node" opensearchproject/opensearch:latest
     ```
-1. 等待幾分鐘讓 OpenSearch 啟動後，向連接埠 `9200` 傳送請求。對於 2.12 之前的版本，預設的使用者名稱與密碼為 `admin`。
+1. 等待幾分鐘讓 OpenSearch 啟動後，向連接埠 `9200` 傳送請求。若為 2.12 之前的版本，預設使用者名稱與密碼為 `admin`。
     ```bash
     curl https://localhost:9200 -ku admin:"<custom-admin-password>"
     ```
     {% include copy.html %}
 
-    - 您應該會收到類似以下的回應：
+    - 您應該會收到如下回應：
       ```bash
       {
         "name" : "a937e018cee5",
@@ -152,7 +152,7 @@ docker pull public.ecr.aws/opensearchproject/opensearch-dashboards:{{ site.opens
         "tagline" : "The OpenSearch Project: https://opensearch.org/"
       }
       ```
-1. 在停止執行中的容器之前，顯示所有執行中容器的清單，並複製您正在測試的 OpenSearch 節點的容器 ID。在以下範例中，容器 ID 為 `a937e018cee5`：
+1. 停止執行中的容器之前，請顯示所有執行中容器的清單，並複製您正在測試的 OpenSearch 節點容器 ID。在下列範例中，容器 ID 為 `a937e018cee5`：
     ```bash
     docker container ls
     ```
@@ -162,15 +162,15 @@ docker pull public.ecr.aws/opensearchproject/opensearch-dashboards:{{ site.opens
 
     ```bash
     CONTAINER ID   IMAGE                                 COMMAND                  CREATED          STATUS          PORTS                                                                NAMES
-    a937e018cee5   opensearchproject/opensearch:latest   "./opensearch-docker…"   19 minutes ago   Up 19 minutes   0.0.0.0:9200->9200/tcp, 9300/tcp, 0.0.0.0:9600->9600/tcp, 9650/tcp   wonderful_boyd
+    a937e018cee5   opensearchproject/opensearch:latest   "./opensearch-docker…"   19 minutes ago   Up 19 minutes   0.0.0.0:9200->9200/tcp, 9300/tcp, 9600/tcp, 9650/tcp   wonderful_boyd
     ```
-1. 透過將容器 ID 傳遞給 `docker stop` 來停止執行中的容器。
+1. 將容器 ID 傳遞給 `docker stop` 以停止執行中的容器。
     ```bash
     docker stop <containerId>
     ```
     {% include copy.html %}
 
-請記住，`docker container ls` 不會列出已停止的容器。如果您想檢視已停止的容器，請使用 `docker container ls -a`。您可以使用 `docker container rm <containerId_1> <containerId_2> <containerId_3> [...]` 手動移除不需要的容器（傳遞所有要停止的容器 ID，以空格分隔），或者如果您想移除所有已停止的容器，可以使用較短的命令 `docker container prune`。
+請記住，`docker container ls` 不會列出已停止的容器。如果您想檢視已停止的容器，請使用 `docker container ls -a`。您可以使用 `docker container rm <containerId_1> <containerId_2> <containerId_3> [...]` 手動移除不需要的容器（傳遞所有您想停止的容器 ID，以空格分隔），或者如果您想移除所有已停止的容器，可以使用較短的命令 `docker container prune`。
 {: .tip}
 
 ## 使用 Docker Compose 部署 OpenSearch 叢集
@@ -269,28 +269,28 @@ docker compose down
 
 ## 設定 OpenSearch
 
-OpenSearch 的 RPM 發行版需要大量的安裝後組態，而使用 Docker 執行 OpenSearch 叢集則可讓您在容器建立之前就先定義環境。無論您使用 Docker 或 Docker Compose 都可以這麼做。
+與 RPM 發行版的 OpenSearch 需要大量安裝後組態不同，使用 Docker 執行 OpenSearch 叢集可讓您在容器建立之前就先定義環境。無論您使用 Docker 或 Docker Compose，都可以這麼做。
 
-例如，請看下列指令：
+例如，請看以下命令：
 ```bash
 docker run \
-  -p 9200:9200 -p 9600:9600 \
+  -p 9200:9200 \
   -e "discovery.type=single-node" \
   -v /path/to/custom-opensearch.yml:/usr/share/opensearch/config/opensearch.yml \
   opensearchproject/opensearch:latest
 ```
 {% include copy.html %}
 
-檢閱此指令的每個部分，您可以看到它：
-- 對應連接埠 `9200` 與 `9600`（`HOST_PORT`:`CONTAINER_PORT`）。
-- 將 `discovery.type` 設為 `single-node`，讓此單一節點部署的啟動檢查不會失敗。
-- 使用 [-v 旗標](https://docs.docker.com/engine/reference/commandline/run#mount-volume--v---read-only)將名為 `custom-opensearch.yml` 的本機檔案傳遞至容器，取代映像檔隨附的 `opensearch.yml` 檔案。
+檢視命令的每個部分，可以看到它：
+- 對應連接埠 `9200`（`HOST_PORT`:`CONTAINER_PORT`）。
+- 將 `discovery.type` 設定為 `single-node`，使此單節點部署不會在啟動檢查時失敗。
+- 使用 [-v 旗標](https://docs.docker.com/engine/reference/commandline/run#mount-volume--v---read-only) 將名為 `custom-opensearch.yml` 的本機檔案傳遞至容器，取代映像檔內附的 `opensearch.yml` 檔案。
 - 從 Docker Hub 請求 `opensearchproject/opensearch:latest` 映像檔。
 - 執行容器。
 
-如果您將此指令與[範例 `docker-compose.yml`](#sample-docker-composeyml)檔案相比較，可能會注意到一些常見設定，例如連接埠對應與映像檔參照。不過，此指令只會部署一個執行 OpenSearch 的容器，並不會為 OpenSearch Dashboards 建立容器。此外，如果您想使用自訂 TLS 憑證、使用者或角色，或定義其他磁碟區與網路，那麼這個「一行」指令很快就會變得過於龐大而不實用。這正是 Docker Compose 發揮效用之處。
+如果您將此命令與[`docker-compose.yml` 範例](#sample-docker-composeyml)檔案比較，可能會注意到一些共通的設定，例如連接埠對應與映像檔參照。不過，此命令只部署一個執行 OpenSearch 的單一容器，並不會為 OpenSearch Dashboards 建立容器。此外，如果您想使用自訂的 TLS 憑證、使用者或角色，或定義額外的卷冊與網路，這個「單行」命令會迅速膨脹到不切實際的長度。這正是 Docker Compose 發揮作用之處。
 
-當您使用 Docker Compose 建置 OpenSearch 叢集時，您可能會發現從主機將自訂組態檔案傳遞至容器，比在 `docker-compose.yml` 中逐一列舉每個設定更容易。類似於範例 `docker run` 指令使用 `-v` 旗標將主機的磁碟區掛載至容器，compose 檔案可以將要掛載的磁碟區指定為對應服務的子選項。下列截斷的 YAML 檔案示範如何將檔案或目錄掛載至容器。如需磁碟區用法與語法的完整資訊，請參閱 Docker 官方關於[磁碟區](https://docs.docker.com/storage/volumes/)的文件。
+當您使用 Docker Compose 建立 OpenSearch 叢集時，可能會發現將自訂組態檔從主機傳遞至容器，比在 `docker-compose.yml` 中逐一列舉每個設定更為簡便。如同範例中 `docker run` 命令使用 `-v` 旗標將卷冊從主機掛載至容器，compose 檔案也可以在對應服務的子選項中指定要掛載的卷冊。以下截錄的 YAML 檔案示範如何將檔案或目錄掛載至容器。關於卷冊使用方式與語法的完整資訊，請參閱 Docker 官方文件中的 [volumes](https://docs.docker.com/storage/volumes/)。
 
 ```yml
 services:
@@ -310,7 +310,7 @@ services:
 
 ### 開發用的 Docker Compose 範例檔案
 
-如果您想以範例為基礎建立自己的 compose 檔案，請檢視下列 `docker-compose.yml` 範例檔案。此範例檔案會建立兩個 OpenSearch 節點和一個 OpenSearch Dashboards 節點，並停用 Security 外掛程式。您可以在檢視[設定基本安全性設定](#configuring-basic-security-settings)時，將此範例檔案作為起點。
+如果您想以範例為基礎建立自己的 compose 檔案，請參閱下列 `docker-compose.yml` 範例檔案。此範例檔案會建立兩個 OpenSearch 節點與一個 OpenSearch Dashboards 節點，並停用 Security 外掛程式。您可以在檢閱[設定基本安全性設定](#configuring-basic-security-settings)時，將此範例檔案作為起點。
 ```yml
 services:
   opensearch-node1:
@@ -336,7 +336,6 @@ services:
       - opensearch-data1:/usr/share/opensearch/data # Creates volume called opensearch-data1 and mounts it to the container
     ports:
       - 9200:9200 # REST API
-      - 9600:9600 # Performance Analyzer
     networks:
       - opensearch-net # All of the containers will join the same Docker bridge network
   opensearch-node2:
@@ -453,9 +452,9 @@ opendistro_security.audit.config.disabled_transport_categories: NONE
 
 您可以使用相同的程序，在 `/usr/share/opensearch/config/opensearch-security/config.yml` 中指定[後端組態]({{site.url}}{{site.baseurl}}/security/configuration/configuration/)，並在其各自的 [YAML 檔案]({{site.url}}{{site.baseurl}}/security/configuration/yaml/)中定義新的內部使用者、角色、對應、動作群組和租用戶。
 
-#### 使用自訂組態的完整 Docker Compose 範例
+#### 含自訂組態的完整 Docker Compose 範例
 
-此範例使用 `${OS_VER}` 與 `${OSD_VER}` 環境變數來指定 OpenSearch 與 OpenSearch Dashboards 的版本。若任一變數未設定，Docker Compose 會失敗並出現 `invalid reference format` 錯誤。使用此範例之前，請先匯出變數以設定版本：
+此範例使用 `${OS_VER}` 與 `${OSD_VER}` 環境變數來指定 OpenSearch 與 OpenSearch Dashboards 的版本。若未設定其中任一變數，Docker Compose 會因 `invalid reference format` 錯誤而失敗。使用此範例前，請先匯出變數來設定版本：
 
 ```bash
 export OS_VER={{ site.opensearch_version }}
@@ -471,10 +470,10 @@ OSD_VER={{ site.opensearch_dashboards_version }}
 ```
 {% include copy.html %}
 
-建議在正式環境部署中使用環境變數或明確的版本標籤（例如 `{{ site.opensearch_version }}`），以確保叢集中各節點版本一致，並避免非預期的更新。
+建議在生產環境部署時使用環境變數或明確的版本標籤（例如 `{{ site.opensearch_version }}`），以確保叢集內的版本一致，並避免非預期的更新。
 {: .tip}
 
-在建立您自己的憑證、`internal_users.yml`、`roles.yml`、`roles_mapping.yml` 以及其餘安全性組態檔案之後，您的 `docker-compose.yaml` 檔案應類似如下：
+建立您自己的憑證、`internal_users.yml`、`roles.yml`、`roles_mapping.yml` 以及其他安全性組態檔案後，您的 `docker-compose.yaml` 檔案應類似下列內容：
 
 ```yaml
 services:
@@ -513,7 +512,6 @@ services:
       - ./tenants.yml:/usr/share/opensearch/config/opensearch-security/tenants.yml
     ports:
       - 9201:9200
-      - 9600:9600
     networks:
       - opensearch-net
 
@@ -625,12 +623,12 @@ docker compose up -d
 ```
 {% include copy.html %}
 
-`.env` 檔案中提供的 `admin` 使用者密碼，會被 `internal_users.yml` 檔案中提供的密碼覆寫。
+`.env` 檔案中為 `admin` 使用者提供的密碼，會被 `internal_users.yml` 檔案中提供的密碼覆寫。
 {: .note}
 
 ### 使用外掛程式
 
-若要使用帶有自訂外掛程式的 OpenSearch 映像，您必須先建立 [`Dockerfile`](https://docs.docker.com/engine/reference/builder/)。請參閱官方 Docker 文件以取得建立 Dockerfile 的相關資訊。
+若要在 OpenSearch 映像中使用自訂外掛程式，您必須先建立 [`Dockerfile`](https://docs.docker.com/engine/reference/builder/)。請參閱官方 Docker 文件，了解如何建立 Dockerfile。
 ```
 FROM opensearchproject/opensearch:latest
 RUN /usr/share/opensearch/bin/opensearch-plugin install --batch <pluginId>
@@ -641,17 +639,17 @@ RUN /usr/share/opensearch/bin/opensearch-plugin install --batch <pluginId>
 # Build an image from a Dockerfile
 docker build --tag=opensearch-custom-plugin .
 # Start the container from the custom image
-docker run -p 9200:9200 -p 9600:9600 -e "discovery.type=single-node" -e "OPENSEARCH_INITIAL_ADMIN_PASSWORD=<custom-admin-password>" -v /usr/share/opensearch/data opensearch-custom-plugin
+docker run -p 9200:9200 -e "discovery.type=single-node" -e "OPENSEARCH_INITIAL_ADMIN_PASSWORD=<custom-admin-password>" -v /usr/share/opensearch/data opensearch-custom-plugin
 ```
 
-或者，您可能想在部署映像之前從中移除外掛程式。此範例 Dockerfile 會移除 Security 外掛程式：
+或者，您可能想在部署映像之前移除其中的外掛程式。以下範例 Dockerfile 會移除 Security 外掛程式：
 ```
 FROM opensearchproject/opensearch:latest
 RUN /usr/share/opensearch/bin/opensearch-plugin remove opensearch-security
 ```
 {% include copy.html %}
 
-您也可以使用 Dockerfile 傳入自己的憑證，以供 [Security 外掛程式]({{site.url}}{{site.baseurl}}/security/)使用：
+您也可以使用 Dockerfile 傳遞自己的憑證，供 [Security 外掛程式]({{site.url}}{{site.baseurl}}/security/)使用：
 ```
 FROM opensearchproject/opensearch:latest
 COPY --chown=opensearch:opensearch opensearch.yml /usr/share/opensearch/config/
@@ -675,6 +673,16 @@ COPY --chown=opensearch:opensearch my-root-cas.pem /usr/share/opensearch/config/
 sudo usermod -aG docker $USER
 ```
 {% include copy.html %}
+
+### 錯誤訊息："Authentication finally failed for admin"
+
+如果使用 admin 密碼的請求傳回 `401` 狀態碼，且 OpenSearch 記錄檔包含 `Authentication finally failed for admin`，表示您使用的密碼與已儲存的 admin 密碼不符。
+
+OpenSearch 只有在以空的資料磁碟區首次啟動時才會套用 `OPENSEARCH_INITIAL_ADMIN_PASSWORD`。如果您之後變更此值並重新啟動容器，admin 密碼不會變更，先前的密碼仍然有效。若要變更 admin 密碼，請參閱[變更 admin 密碼]({{site.url}}{{site.baseurl}}/security/configuration/passwords/#changing-the-admin-password)。若要以新密碼重新開始，請執行 `docker compose down -v` 移除磁碟區（這會刪除磁碟區中儲存的所有資料），然後再次啟動叢集。
+
+如果密碼包含錢字號（`$`），Docker Compose 會將 `.env` 檔案中該符號後面的字元讀取為變數名稱，因此未加引號或以雙引號括住的值會遺失字元。例如，`Zz$Strong9Pass!` 會變成 `Zz!`。請以單引號括住該值，例如 `OPENSEARCH_INITIAL_ADMIN_PASSWORD='<custom-admin-password>'`，或將每個 `$` 寫成 `$$`。
+
+當您將認證資訊傳遞給 `curl` 時，請以單引號括住，讓 shell 不會變更特殊字元，例如 `curl https://localhost:9200 -ku 'admin:<custom-admin-password>'`。
 
 ### 錯誤訊息：「max virtual memory areas vm.max_map_count [65530] is too low」
 
@@ -707,8 +715,8 @@ docker compose up -d
 
 ## 相關文件
 
-- [準備正式環境的叢集]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/#preparing-a-cluster-for-production)
+- [為正式環境準備叢集]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/#preparing-a-cluster-for-production)
 - [OpenSearch 組態]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/)
-- [Performance Analyzer]({{site.url}}{{site.baseurl}}/monitoring-plugins/pa/index/)
-- [安裝與設定 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/)
-- [關於 OpenSearch 中的安全性]({{site.url}}{{site.baseurl}}/security/index/)
+- [效能分析器]({{site.url}}{{site.baseurl}}/tuning-your-cluster/monitoring/telemetry/performance-analyzer/)
+- [安裝並設定 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/)
+- [OpenSearch 中的安全性簡介]({{site.url}}{{site.baseurl}}/security/index/)

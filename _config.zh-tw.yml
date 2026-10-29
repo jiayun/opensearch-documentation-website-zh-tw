@@ -18,7 +18,7 @@ opensearch_collection:
     migrate-or-upgrade:
       name: "移轉或升級"
     tuning-your-cluster:
-      name: "建立與調校您的叢集"
+      name: "管理叢集"
     security:
       name: "安全性"
     im-plugin:
@@ -51,8 +51,6 @@ opensearch_collection:
       name: "可觀測性"
     security-analytics:
       name: "安全性分析"
-    monitoring-your-cluster:
-      name: "監控您的叢集"
     tools:
       name: "工具"
     api-reference:

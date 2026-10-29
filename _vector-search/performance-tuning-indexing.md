@@ -41,13 +41,13 @@ PUT /{index_name}/_settings
 
 您可以使用衍生的向量來源功能，大幅降低向量欄位的儲存空間需求。這是一項[索引設定]({{site.url}}{{site.baseurl}}/vector-search/settings/#index-settings)，預設為啟用。此功能可避免將向量儲存在 `_source` 欄位中，同時仍維持所有功能，包括使用 `update`、`update_by_query` 和 `reindex` API 的能力。
 
-## （專家級）視需求建構向量資料結構
+## （專家級）依需求建立向量資料結構
 
-只有在工作負載涉及單一次初始大量上傳，且在強制合併為單一分段後僅用於搜尋時，才建議採用此做法。
+只有在工作負載僅涉及單次初始大量上傳，且在強制合併為單一分段後僅用於搜尋時，才建議採用此方法。
 
-在編製索引期間，向量搜尋會為 `knn_vector` 欄位建構特殊化的資料結構，以實現高效率的近似最近鄰（k-NN）搜尋。不過，這些結構會在向量索引的[強制合併]({{site.url}}{{site.baseurl}}/api-reference/index-apis/force-merge/)期間重建。若要最佳化索引速度，請依照下列步驟進行：
+在編製索引期間，向量搜尋會為 `knn_vector` 欄位建立專門的資料結構，以支援有效率的近似 k 最近鄰（k-NN）搜尋。不過，這些結構會在向量索引執行[強制合併]({{site.url}}{{site.baseurl}}/api-reference/index-apis/force-merge/)時重建。若要最佳化編製索引的速度，請依照下列步驟操作：
 
-1. **停用向量資料結構的建立**：將 [`index.knn.advanced.approximate_threshold`]({{site.url}}{{site.baseurl}}/vector-search/settings/#index-settings) 設為 `-1`，以停用新分段的向量資料結構建立。 
+1. **停用向量資料結構的建立**：將 [`index.knn.advanced.approximate_threshold`]({{site.url}}{{site.baseurl}}/vector-search/settings/#index-settings) 設為 `-1`，即可停用新分段的向量資料結構建立。
 
     若要在建立索引時指定此設定，請傳送下列請求：
 
@@ -55,7 +55,21 @@ PUT /{index_name}/_settings
     PUT /test-index/
     {
       "settings": {
+        "index.knn": true,
         "index.knn.advanced.approximate_threshold": "-1"
+      },
+      "mappings": {
+        "properties": {
+          "my_vector1": {
+            "type": "knn_vector",
+            "dimension": 2,
+            "method": {
+              "name": "hnsw",
+              "space_type": "l2",
+              "engine": "faiss"
+            }
+          }
+        }
       }
     }
     ```
@@ -71,7 +85,7 @@ PUT /{index_name}/_settings
     ```
     {% include copy-curl.html %}
 
-1. **執行大量索引**：在匯入期間不執行任何搜尋，以[大量]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk/)方式將資料編製索引：
+1. **執行大量編製索引**：在匯入期間不執行任何搜尋，以[大量]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk/)方式為資料編製索引：
 
     ```json
     POST _bulk
@@ -82,9 +96,9 @@ PUT /{index_name}/_settings
     ```
     {% include copy-curl.html %}
 
-    如果在停用向量資料結構時執行搜尋，搜尋會使用精確 k-NN 搜尋來執行。
+    若在停用向量資料結構期間執行搜尋，這些搜尋會改用精確 k-NN 搜尋來執行。
 
-1. **重新啟用向量資料結構的建立**：索引完成後，將 `index.knn.advanced.approximate_threshold` 設為 `0`，以啟用向量資料結構的建立：
+1. **重新啟用向量資料結構的建立**：編製索引完成後，將 `index.knn.advanced.approximate_threshold` 設為 `0`，即可重新啟用向量資料結構的建立：
 
     ```json
     PUT /test-index/_settings
@@ -94,14 +108,17 @@ PUT /{index_name}/_settings
     ```
     {% include copy-curl.html %}
 
-    如果您在強制合併前未將設定重設為 `0`，您將需要重新編製資料的索引。
+    若未在強制合併前將設定重設為 `0`，您將需要重新為資料編製索引。
     {: .note}
 
-1. **將分段強制合併為一個分段**：執行強制合併並指定 `max_num_segments=1`，以僅建立一次向量資料結構：
+1. **將分段強制合併為單一分段**：執行強制合併並指定 `max_num_segments=1`，讓向量資料結構只建立一次：
 
     ```json
     POST test-index/_forcemerge?max_num_segments=1
     ```
     {% include copy-curl.html %}
 
-    強制合併後，新的搜尋請求將使用新建立的資料結構來執行近似 k-NN 搜尋。
+    強制合併後，新的搜尋請求會使用新建立的資料結構來執行近似 k-NN 搜尋。
+
+    強制合併不會重寫已只包含單一分段的分片，因此不會為該分段建立向量資料結構。在此情況下，請在將 `index.knn.advanced.approximate_threshold` 設為 `0` 後重新為資料編製索引。
+    {: .note}

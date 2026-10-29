@@ -160,4 +160,4 @@ OpenSearch 通常會透過傳送 **差異更新 (diffs)** 而非完整狀態副�
 
 - [探索與叢集形成設定]({{site.url}}{{site.baseurl}}/tuning-your-cluster/discovery-cluster-formation/settings/)：設定投票與選舉行為
 - [節點探索與種籽主機]({{site.url}}{{site.baseurl}}/tuning-your-cluster/discovery-cluster-formation/discovery/)：節點如何彼此尋找
-- [建立叢集]({{site.url}}{{site.baseurl}}/tuning-your-cluster/)：逐步叢集設定指南
+- [建立叢集]({{site.url}}{{site.baseurl}}/tuning-your-cluster/creating-a-cluster/)：逐步叢集設定指南

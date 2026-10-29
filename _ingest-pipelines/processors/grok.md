@@ -47,31 +47,31 @@ nav_order: 120
 ```
 {% include copy.html %}
 
-## 組態參數
+## 參數
 
 若要設定 `grok` 處理器，您有多種選項可定義模式、比對特定鍵，並控制處理器的行為。下表列出 `grok` 處理器的必要與選用參數。
 
 參數 | 必要/選用 | 說明 |
 |-----------|-----------|-----------|
-`field`  | 必要  | 包含待剖析文字之欄位的名稱。 |
-`patterns`  | 必要  | 用於比對並擷取具名擷取項的 grok 運算式清單。系統會傳回清單中第一個相符的運算式。 | 
-`pattern_definitions`  | 選用  | 模式名稱與模式元組的字典，用於為目前處理器定義自訂模式。若模式與現有名稱相符，則會覆寫既有的定義。 |
-`trace_match` | 選用 | 當此參數設為 `true` 時，處理器會將 `_grok_match_index` 欄位加入已處理文件的匯入中繼資料（`_ingest._grok_match_index`）。此欄位包含 `patterns` 陣列中成功比對該文件之模式的索引。此資訊有助於偵錯，並了解套用至文件的是哪個模式。預設值為 `false`。 |
-`capture_all_matches` | 選用 | 設為 `true` 時，會擷取重複 grok 模式的所有相符項，而不只是第一個相符項。例如，給定文字 `192.168.1.1 10.0.0.1 172.16.0.1` 與模式 `%{IP:ipAddress} %{IP:ipAddress} %{IP:ipAddress}`，三個 IP 位址都會收集到 `ipAddress` 欄位中的陣列。僅適用於明確重複的模式，不適用於 `(%{IP:ipAddress})+` 這類量化的模式。預設值為 `false`。 |
+`field`  | 必要  | 包含待解析文字的欄位名稱。 |
+`patterns`  | 必要  | 用於比對並擷取具名擷取項目的 grok 運算式清單。系統會傳回清單中第一個相符的運算式。 | 
+`pattern_definitions`  | 選用  | 模式名稱與模式元組的字典，用於為目前處理器定義自訂模式。若模式與現有名稱相符，會覆寫既有的定義。 |
+`trace_match` | 選用 | 當此參數設為 `true` 時，處理器會將 `_grok_match_index` 欄位加入已處理文件的匯入中繼資料（`_ingest._grok_match_index`）。此欄位包含 `patterns` 陣列中成功比對該文件之模式索引。此資訊有助於偵錯，並了解套用至文件的是哪個模式。預設值為 `false`。 |
+`capture_all_matches` | 選用 | 設為 `true` 時，會擷取重複 grok 模式的所有相符項目，而不只是第一個相符項目。例如，給定文字 `192.168.1.1 10.0.0.1 172.16.0.1` 與模式 `%{IP:ipAddress} %{IP:ipAddress} %{IP:ipAddress}`，三個 IP 位址都會收集到 `ipAddress` 欄位的陣列中。僅適用於明確重複的模式，不適用於 `(%{IP:ipAddress})+` 這類量化模式。預設值為 `false`。 |
 `description` | 選用 | 處理器的簡短說明。 |
 `if` | 選用 | 執行處理器的條件。 |
-`ignore_failure` | 選用 | 指定處理器即使遇到錯誤是否仍繼續執行。若設為 `true`，則會忽略失敗。預設值為 `false`。 |
-`ignore_missing` | 選用 | 指定處理器是否應忽略不含指定欄位的文件。若設為 `true`，則當欄位不存在或為 `null` 時，處理器不會修改文件。預設值為 `false`。 |
+`ignore_failure` | 選用 | 指定處理器即使遇到錯誤是否仍繼續執行。若設為 `true`，則忽略失敗。預設值為 `false`。 |
+`ignore_missing` | 選用 | 指定處理器是否應忽略不包含指定欄位的文件。若設為 `true`，當欄位不存在或為 `null` 時，處理器不會修改文件。預設值為 `false`。 |
 `on_failure` | 選用 | 處理器失敗時要執行的處理器清單。 |
-`tag` | 選用 | 處理器的識別標籤。有助於偵錯，以區分相同類型的處理器。如需詳細資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
+`tag` | 選用 | 處理器的識別標籤。有助於偵錯時區分相同類型的處理器。如需詳細資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
 
-## 建立管線
+## 使用處理器
 
-下列步驟將引導您使用 `grok` 處理器建立[資料匯入管線]({{site.url}}{{site.baseurl}}/ingest-pipelines/index/)。
+請依照下列步驟在管線中使用此處理器。
 
-**步驟 1：建立管線**
+### 步驟 1：建立管線
 
-下列查詢會建立一個名為 `log_line` 的管線。它使用指定的模式從文件的 `message` 欄位中擷取欄位。在此範例中，它會擷取 `clientip`、`timestamp` 和 `response_status` 欄位：
+下列查詢會建立名為 `log_line` 的管線。它會使用指定的模式，從文件的 `message` 欄位擷取欄位。在此情況下，它會擷取 `clientip`、`timestamp` 和 `response_status` 欄位：
 
 ```json
 PUT _ingest/pipeline/log_line
@@ -89,7 +89,7 @@ PUT _ingest/pipeline/log_line
 ```
 {% include copy-curl.html %}
 
-**步驟 2（選用）：測試管線。**
+### 步驟 2（選用）：測試管線
 
 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/alert-icon.png" class="inline-icon" alt="alert icon"/>{:/} **注意**<br>建議您在匯入文件之前先測試管線。
 {: .note}
@@ -110,9 +110,7 @@ POST _ingest/pipeline/log_line/_simulate
 ```
 {% include copy-curl.html %}
 
-**回應**
-
-下列回應確認管線如預期運作：
+下列回應確認管線運作符合預期：
 
 ```json
 {
@@ -136,7 +134,7 @@ POST _ingest/pipeline/log_line/_simulate
 }
 ```
 
-**步驟 3：匯入文件**
+### 步驟 3：匯入文件
 
 下列查詢會將文件匯入名為 `testindex1` 的索引：
 
@@ -148,7 +146,7 @@ PUT testindex1/_doc/1?pipeline=log_line
 ```
 {% include copy-curl.html %}
 
-**步驟 4（選用）：擷取文件**
+### 步驟 4（選用）：擷取文件
 
 若要擷取文件，請執行下列查詢：
 
@@ -156,6 +154,8 @@ PUT testindex1/_doc/1?pipeline=log_line
 GET testindex1/_doc/1
 ```
 {% include copy-curl.html %}
+
+回應會包含已匯入的文件，並如步驟 2 的回應所示經過轉換。
 
 ## 自訂模式
 
@@ -233,9 +233,9 @@ PUT _cluster/settings
 
 如需更多資訊，請參閱[記錄檔]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/logs/)。
 
-## 追蹤符合的樣式
+## 追蹤符合的模式
 
-若要追蹤哪些樣式符合並填入欄位，您可以使用 `trace_match` 參數。以下範例說明如何將此參數納入您的組態：
+若要追蹤哪些模式符合並填入欄位，您可以使用 `trace_match` 參數。以下範例說明如何將此參數納入您的組態：
 
 ```json
 PUT _ingest/pipeline/log_line  
@@ -254,7 +254,7 @@ PUT _ingest/pipeline/log_line
 ```
 {% include copy-curl.html %}
 
-當您模擬管線時，OpenSearch 會傳回包含 `_grok_match_index` 的 `_ingest` 中繼資料，如下列輸出所示。索引從零開始，因此值為 `1` 表示第二個樣式符合。由於 `_grok_match_index` 是匯入中繼資料，因此不會編製索引：
+當您模擬管線時，OpenSearch 會傳回包含 `_grok_match_index` 的 `_ingest` 中繼資料，如下列輸出所示。索引從零開始，因此值為 `1` 表示第二個模式符合。由於 `_grok_match_index` 是匯入中繼資料，因此不會編製索引：
 
 ```json
 {

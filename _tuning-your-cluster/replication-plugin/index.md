@@ -2,7 +2,7 @@
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: "跨叢集複寫"
-nav_order: 12
+nav_order: 30
 has_children: true
 redirect_from:
   - /replication-plugin/

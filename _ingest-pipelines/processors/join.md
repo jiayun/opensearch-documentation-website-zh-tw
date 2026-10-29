@@ -1,7 +1,7 @@
 ---
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: Join
+title: "串接"
 parent: Ingest processors
 nav_order: 160
 ---
@@ -22,20 +22,20 @@ nav_order: 160
 ```
 {% include copy.html %}
 
-## 組態參數
+## 參數
 
 下表列出 `join` 處理器的必要與選用參數。
 
-參數 | 必要/選用 | 說明 |
+參數 | 必要／選用 | 說明 |
 |-----------|-----------|-----------|
-`field` | 必要 | 要套用 join 運算子的欄位名稱。必須為陣列。
-`separator` | 必要 | 串接欄位值時使用的字串分隔符號。若未指定，則串接各值時不使用分隔符號。
-`target_field` | 選用 | 要指派清理後的值的欄位。若未指定，則就地更新該欄位。
-`description` | 選用 | 處理器用途或組態的說明。
-`if` | 選用 | 指定依條件執行處理器。
+`field` | 必要 | 套用 join 運算子的目標欄位名稱。必須是陣列。
+`separator` | 必要 | 連接欄位值時使用的字串分隔符。若未指定，則各值會直接串接而不加分隔符。
+`target_field` | 選用 | 指定要指派清理後值的欄位。若未指定，則直接原地更新該欄位。
+`description` | 選用 | 處理器用途或組態的描述。
+`if` | 選用 | 指定要有條件地執行處理器。
 `ignore_failure` | 選用 | 指定忽略處理器的失敗。請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。
 `on_failure` | 選用 | 指定處理處理器的失敗。請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。
-`tag` | 選用 | 處理器的識別碼。適用於偵錯與指標。如需詳細資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。
+`tag` | 選用 | 處理器的識別碼。適用於除錯與指標。如需更多資訊，請參閱[使用處理器標籤進行監控與除錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。
 
 ## 使用處理器
 
@@ -86,9 +86,7 @@ POST _ingest/pipeline/example-join-pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
-下列範例回應確認管線運作符合預期：
+下列範例回應可確認管線運作正常：
 
 ```json
 {  
@@ -111,7 +109,7 @@ POST _ingest/pipeline/example-join-pipeline/_simulate
 
 ### 步驟 3：匯入文件
 
-下列查詢會將文件匯入名為 `testindex1` 的索引：
+下列查詢會將一份文件匯入名為 `testindex1` 的索引：
 
 ```json
 POST testindex1/_doc/1?pipeline=example-join-pipeline  
@@ -133,3 +131,5 @@ POST testindex1/_doc/1?pipeline=example-join-pipeline
 GET testindex1/_doc/1
 ```
 {% include copy-curl.html %}
+
+回應會包含已匯入的文件，並依步驟 2 的回應所示進行轉換。

@@ -10,9 +10,9 @@ nav_order: 20
 
 您可以透過 [布林篩選](#boolean-filter-with-ann-search) 或提供 [`post_filter` 參數](#the-post_filter-parameter) 來實現後置篩選。
 
-### 搭配 ANN 搜尋的布林篩選
+## 搭配 ANN 搜尋的布林篩選
 
-布林篩選由一個包含 k-NN 查詢與篩選條件的布林查詢組成。例如，下列查詢會搜尋距離指定 `location` 最近的飯店，然後篩選結果，只回傳評分介於 8 到 10（含）且提供停車位的飯店：
+布林篩選由包含 k-NN 查詢與篩選條件的布林查詢組成。下列範例使用[使用 Lucene k-NN 篩選]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/efficient-knn-filtering/#using-a-lucene-k-nn-filter)中建立的 `hotels-index`。下列查詢會搜尋最接近指定 `location` 的飯店，然後篩選結果，傳回評分介於 8 到 10（含）之間且提供停車位的飯店：
 
 ```json
 POST /hotels-index/_search
@@ -58,7 +58,7 @@ POST /hotels-index/_search
 ```
 {% include copy-curl.html %}
 
-回應會包含內含符合飯店的文件：
+回應包含符合條件的飯店文件：
 
 ```json
 {
@@ -121,9 +121,9 @@ POST /hotels-index/_search
 }
 ```
 
-### post_filter 參數
+## post_filter 參數
 
-如果您將 `knn` 查詢與篩選條件或其他子句（例如 `bool`、`must`、`match`）一起使用，可能會收到少於 `k` 筆的結果。在此範例中，`post_filter` 會將結果數量從 2 筆減少為 1 筆：
+若您將 `knn` 查詢與篩選條件或其他子句（例如 `bool`、`must`、`match`）搭配使用，傳回的結果可能少於 `k` 筆。以下範例使用在[近似 k-NN 搜尋]({{site.url}}{{site.baseurl}}/vector-search/vector-search-techniques/approximate-knn/)中建立的 `my-knn-index-1` 索引。在此範例中，`post_filter` 將結果數量從 2 筆減少為 1 筆：
 
 ```json
 GET my-knn-index-1/_search

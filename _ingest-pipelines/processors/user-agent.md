@@ -22,22 +22,22 @@ nav_order: 330
 ```
 {% include copy.html %}
 
-## 組態參數
+## 參數
 
 下表列出 `user_agent` 處理器的必要與選用參數。
 
 參數 | 必要/選用 | 說明 |
 |-----------|-----------|-----------|
-`field` | 必要 | 包含使用者代理字串的欄位。
-`target_field` | 選用 | 用於儲存擷取之使用者代理資訊的欄位。若未指定，則資訊會儲存在 `user_agent` 欄位中。
-`ignore_missing`  | 選用  | 指定處理器是否應忽略未包含所指定 `field` 的文件。若設為 `true`，則當 `field` 不存在或為 `null` 時，處理器不會修改該文件。預設值為 `false`。 |
-`regex_file` | 選用 | 包含用於剖析使用者代理字串之規則表達式模式的檔案名稱，例如 `custom-regexes.yml`。該檔案必須位於 `config/ingest-user-agent` 目錄中。若未指定，則處理器會使用 OpenSearch 隨附的規則表達式。如需詳細資訊，請參閱[使用自訂 regex 檔案](#using-a-custom-regex-file)。
-`properties` | 選用 | 要從使用者代理字串擷取並新增至 `target_field` 的屬性清單。有效值為 `name`、`version`、`os`、`device` 及 `original`。若未指定，則會擷取所有這些屬性。
-`description`  | 選用  | 處理器的簡短說明。  |
+`field` | 必要 | 包含使用者代理程式字串的欄位。
+`target_field` | 選用 | 用來儲存擷取出的使用者代理程式資訊的欄位。若未指定，資訊會儲存在 `user_agent` 欄位中。
+`ignore_missing`  | 選用  | 指定處理器是否應忽略不含指定 `field` 的文件。若設為 `true`，當 `field` 不存在或為 `null` 時，處理器不會修改該文件。預設為 `false`。 |
+`regex_file` | 選用 | 包含用於剖析使用者代理程式字串之正規表示式模式的檔案名稱，例如 `custom-regexes.yml`。該檔案必須位於 `config/ingest-user-agent` 目錄中。若未指定，處理器會使用 OpenSearch 隨附的正規表示式。如需更多資訊，請參閱[使用自訂正規表示式檔案](#using-a-custom-regex-file)。
+`properties` | 選用 | 要從使用者代理程式字串擷取並加入 `target_field` 的屬性清單。有效值為 `name`、`version`、`os`、`device` 與 `original`。若未指定，則會擷取所有這些屬性。
+`description`  | 選用  | 處理器的簡短描述。  |
 `if` | 選用 | 執行處理器的條件。 |
-`ignore_failure` | 選用 | 指定處理器即使遇到錯誤是否仍繼續執行。若設為 `true`，則會忽略失敗。預設值為 `false`。 |
+`ignore_failure` | 選用 | 指定處理器即使遇到錯誤是否仍繼續執行。若設為 `true`，則會忽略失敗。預設為 `false`。 |
 `on_failure` | 選用 | 處理器失敗時要執行的處理器清單。 |
-`tag` | 選用 | 處理器的識別碼標籤。有助於偵錯時區分相同類型的處理器。如需詳細資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
+`tag` | 選用 | 處理器的識別標籤。有助於偵錯時區分相同類型的處理器。如需更多資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
 
 ## 使用處理器
 
@@ -84,8 +84,6 @@ POST _ingest/pipeline/user_agent_pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
 下列範例回應可確認管線運作正常：
 
 ```json
@@ -120,21 +118,19 @@ POST _ingest/pipeline/user_agent_pipeline/_simulate
 }
 ```
 
-### 步驟 3：匯入文件 
+### 步驟 3：匯入文件
 
-下列查詢會將文件匯入名為 `testindex1` 的索引：
+下列查詢會將一份文件匯入名為 `testindex1` 的索引：
 
 ```json
 PUT testindex1/_doc/1?pipeline=user_agent_pipeline
 {
-  "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36"
+  "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
 }
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
-前述請求會將 `user_agent` 字串剖析為各個組成部分，並將文件（包括剖析後的組成部分）編製索引至 `testindex1` 索引，如下列回應所示：
+上述請求會將 `user_agent` 字串解析為其組成部分，並將該文件（包括解析後的組成部分）編製索引到 `testindex1` 索引中，如下列回應所示：
 
 ```json
 {
@@ -152,7 +148,7 @@ PUT testindex1/_doc/1?pipeline=user_agent_pipeline
 }
 ```
 
-### 步驟 4 (選用)：擷取文件
+### 步驟 4（選用）：擷取文件
 
 若要擷取文件，請執行下列查詢：
 
@@ -161,36 +157,7 @@ GET testindex1/_doc/1
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
-回應包含原始的 `user_agent` 欄位，以及解析後的 `user_agent_info` 欄位，其中含有裝置、作業系統與瀏覽器資訊：
-
-```json
-{
-  "_index": "testindex1",
-  "_id": "1",
-  "_version": 66,
-  "_seq_no": 65,
-  "_primary_term": 47,
-  "found": true,
-  "_source": {
-    "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36",
-    "user_agent_info": {
-      "original": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36",
-      "os": {
-        "name": "Mac OS X",
-        "version": "10.15.7",
-        "full": "Mac OS X 10.15.7"
-      },
-      "name": "Chrome",
-      "device": {
-        "name": "Mac"
-      },
-      "version": "90.0.4430.212"
-    }
-  }
-}
-```
+回應會包含已匯入的文件，並如步驟 2 的回應所示經過轉換。
 
 ## 使用自訂正規表示式檔案
 

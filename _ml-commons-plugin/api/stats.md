@@ -8,7 +8,7 @@ nav_order: 120
 
 # ML Stats API
 
-Stats API 會傳回基本的機器學習 (ML) 統計資料，例如正在執行的任務數量。若要使用更詳細的時間序列指標來監控機器學習工作流程，請參閱[監控機器學習工作流程]({{site.url}}{{site.baseurl}}/monitoring-your-cluster/metrics/getting-started/#monitoring-machine-learning-workflows)。
+Stats API 會傳回基本的機器學習 (ML) 統計資料，例如正在執行的任務數量。若要使用更詳細的時間序列指標來監控機器學習工作流程，請參閱[監控機器學習工作流程]({{site.url}}{{site.baseurl}}/tuning-your-cluster/monitoring/telemetry/metrics/#monitoring-machine-learning-workflows)。
 {: .note }
 
 回應包含叢集層級的統計資料（例如 ML 索引狀態和模型數量），以及節點層級的統計資料（例如請求數量），並依演算法和模型細分。

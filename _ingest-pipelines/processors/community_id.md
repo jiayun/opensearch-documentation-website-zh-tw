@@ -27,36 +27,36 @@ nav_order: 25
 ```
 {% include copy.html %}
 
-## 組態參數
+## 參數
 
 下表列出 `community_id` 處理器的必要與選用參數。
 
-參數 | 必要／選用 | 說明 |
+參數 | 必要/選用 | 說明 |
 |-----------|-----------|-----------|
 `source_ip_field`  | 必要  | 包含來源 IP 位址的欄位名稱。  |
-`source_port_field`  | 選用  | 包含來源連接埠位址的欄位名稱。如果網路通訊協定為 TCP、UDP 或 SCTP，則此欄位為必要。否則不需要。|
-`destination_ip_field`  | 必要  | 包含目的地 IP 位址的欄位名稱。 |
-`destination_port_field`  | 選用  | 包含目的地連接埠位址的欄位名稱。如果網路通訊協定為 TCP、UDP 或 SCTP，則此欄位為必要。否則不需要。 |
-`iana_protocol_number`  | 選用  | 包含 Internet Assigned Numbers Authority (IANA) 所定義協定編號的欄位名稱。支援的值為 1 (ICMP)、6 (TCP)、17 (UDP)、58 (IPv6-ICMP) 和 132 (SCTP)。 |
-`protocol_field`  | 選用  | 包含協定名稱的欄位名稱。如果未設定 `iana_protocol_number`，則此欄位為必要。否則不需要。 |
-`icmp_type_field`  | 選用  | 包含 ICMP 訊息類型的欄位名稱。當協定為 ICMP 或 IPv6-ICMP 時為必要。 |
-`icmp_code_field`  | 選用  | 包含 ICMP 訊息碼（code）的欄位名稱。對於某些沒有訊息碼的 ICMP 訊息類型，此欄位為選用。否則為必要。 |
-`seed`  | 選用  | 用於產生 community ID 雜湊的種子。值必須介於 0 到 65535 之間。 |
+`source_port_field`  | 選用  | 包含來源連接埠位址的欄位名稱。若網路通訊協定為 TCP、UDP 或 SCTP，則此欄位為必要。否則為非必要。|
+`destination_ip_field`  | 必要  | 包含目的 IP 位址的欄位名稱。 |
+`destination_port_field`  | 選用  | 包含目的連接埠位址的欄位名稱。若網路通訊協定為 TCP、UDP 或 SCTP，則此欄位為必要。否則為非必要。 |
+`iana_protocol_number`  | 選用  | 包含由網際網路號碼分配局 (IANA) 定義之通訊協定編號的欄位名稱。支援的值為 1 (ICMP)、6 (TCP)、17 (UDP)、58 (IPv6-ICMP) 及 132 (SCTP)。 |
+`protocol_field`  | 選用  | 包含通訊協定名稱的欄位名稱。若未設定 `iana_protocol_number`，則此欄位為必要。否則為非必要。 |
+`icmp_type_field`  | 選用  | 包含 ICMP 訊息類型的欄位名稱。當通訊協定為 ICMP 或 IPv6-ICMP 時為必要。 |
+`icmp_code_field`  | 選用  | 包含 ICMP 訊息碼（code）的欄位名稱。對於沒有訊息碼的特定 ICMP 訊息類型，此欄位為選用；否則為必要。 |
+`seed`  | 選用  | 用於產生 community ID 雜湊的種子。值必須介於 0 與 65535 之間。 |
 `target_field`  | 選用  | 用於儲存 community ID 雜湊值的欄位名稱。預設目標欄位為 `community_id`。  |
-`ignore_missing`  | 選用  | 指定當其中一個必要欄位遺失時，處理器是否應該靜默結束。預設為 `false`。 |
-`description`  | 選用  | 處理器的簡短描述。  |
+`ignore_missing`  | 選用  | 指定當其中一個必要欄位遺漏時，處理器是否應安靜結束。預設值為 `false`。 |
+`description`  | 選用  | 處理器的簡短說明。  |
 `if` | 選用 | 執行處理器的條件。 |
-`ignore_failure` | 選用 | 如果設定為 `true`，則會忽略失敗。預設為 `false`。 |
-`on_failure` | 選用 | 當處理器失敗時要執行的處理器清單。 |
-`tag` | 選用 | 處理器的識別標籤。有助於除錯時區分相同類型的處理器。如需更多資訊，請參閱[使用處理器標籤進行監控與除錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
+`ignore_failure` | 選用 | 若設為 `true`，則忽略失敗。預設值為 `false`。 |
+`on_failure` | 選用 | 處理器失敗時要執行的處理器清單。 |
+`tag` | 選用 | 處理器的識別碼標籤。有助於偵錯時區分相同類型的處理器。如需詳細資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
 
 ## 使用處理器
 
 請依照下列步驟在管線中使用處理器。
 
-**步驟 1：建立管線**
+### 步驟 1：建立管線
 
-下列查詢會建立名為 `community_id_pipeline` 的管線，其使用 `community_id` 處理器為網路流量元組產生雜湊值： 
+下列查詢會建立名為 `community_id_pipeline` 的管線，並使用 `community_id` 處理器為網路流量元組產生雜湊值：
 
 ```json
 PUT /_ingest/pipeline/commnity_id_pipeline
@@ -78,7 +78,7 @@ PUT /_ingest/pipeline/commnity_id_pipeline
 ```
 {% include copy-curl.html %}
 
-**步驟 2 (選用)：測試管線**
+### 步驟 2（選用）：測試管線
 
 建議您在匯入文件之前先測試管線。
 {: .tip}
@@ -105,9 +105,7 @@ POST _ingest/pipeline/commnity_id_pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
-下列範例回應確認管線運作正常：
+下列範例回應確認管線如預期般運作：
 
 ```json
 {
@@ -133,7 +131,7 @@ POST _ingest/pipeline/commnity_id_pipeline/_simulate
 }
 ```
 
-**步驟 3：匯入文件**
+### 步驟 3：匯入文件
 
 下列查詢會將文件匯入名為 `testindex1` 的索引：
 
@@ -148,8 +146,6 @@ PUT testindex1/_doc/1?pipeline=commnity_id_pipeline
 }
 ```
 {% include copy-curl.html %}
-
-#### 回應
 
 此請求會將文件編製索引至 `testindex1` 索引：
 
@@ -169,7 +165,7 @@ PUT testindex1/_doc/1?pipeline=commnity_id_pipeline
 }
 ```
 
-**步驟 4 (選用)：擷取文件**
+### 步驟 4（選用）：擷取文件
 
 若要擷取文件，請執行下列查詢：
 
@@ -177,3 +173,5 @@ PUT testindex1/_doc/1?pipeline=commnity_id_pipeline
 GET testindex1/_doc/1
 ```
 {% include copy-curl.html %}
+
+回應包含已匯入的文件，其轉換結果如步驟 2 的回應所示。

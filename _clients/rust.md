@@ -9,7 +9,7 @@ nav_order: 100
 
 OpenSearch Rust 用戶端可讓您將 Rust 應用程式連線至 OpenSearch 叢集中的資料。如需用戶端的完整 API 文件與更多範例，請參閱 [OpenSearch docs.rs 文件](https://docs.rs/opensearch/)。
 
-本入門指南說明如何連線至 OpenSearch、將文件編製索引，以及執行查詢。用戶端的原始碼請參閱 [`opensearch-rs` 儲存庫](https://github.com/opensearch-project/opensearch-rs)。
+本入門指南說明如何連線至 OpenSearch、將文件編製索引，以及執行查詢。用戶端的原始碼請參閱 [`opensearch-rs` 儲存庫](https://github.com/opensearch-project/opensearch-rs)。各用戶端版本支援的 OpenSearch 版本，請參閱用戶端的[相容性矩陣](https://github.com/opensearch-project/opensearch-rs/blob/main/COMPATIBILITY.md)。
 
 ## 安裝 Rust 用戶端
 
@@ -112,7 +112,7 @@ let client = OpenSearch::new(transport);
 ```
 {% include copy.html %}
 
-若要連線至已啟用 Security 外掛程式的叢集，請使用 HTTPS 並提供基本驗證憑證。下列範例也會停用憑證驗證，讓用戶端接受自我簽署的示範憑證。請從 `opensearch::auth` 匯入 `Credentials`，並從 `opensearch::cert` 匯入 `CertificateValidation`：
+若要連線至已啟用 Security 外掛程式的叢集，請使用 HTTPS 並提供基本驗證認證資訊。下列範例也會停用憑證驗證，讓用戶端接受自我簽署的示範憑證。請從 `opensearch::auth` 匯入 `Credentials`，並從 `opensearch::cert` 匯入 `CertificateValidation`：
 
 ```rust
 let url = Url::parse("https://localhost:9200")?;

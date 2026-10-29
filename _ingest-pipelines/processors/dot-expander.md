@@ -21,19 +21,19 @@ nav_order: 65
 ```
 {% include copy.html %}
 
-## 組態參數
+## 參數
 
 下表列出 `dot_expander` 處理器的必要與選用參數。
 
-參數 | 必要／選用 | 說明 |
+參數 | 必要/選用 | 說明 |
 |-----------|-----------|-----------|
 `field`  | 必要  | 要展開為物件欄位的欄位。 |
-`path` | 選用 | 只有當要展開的欄位巢狀於另一個物件欄位內時，才需要此欄位。這是因為 `field` 參數只能辨識葉節點欄位。 |
-`description`  | 選用  | 處理器的簡短描述。 |
+`path` | 選用 | 僅當要展開的欄位巢狀於另一個物件欄位內時，才需要此欄位。這是因為 `field` 參數只會辨識葉節點欄位。 |
+`description`  | 選用  | 處理器的簡短說明。 |
 `if` | 選用 | 執行處理器的條件。 |
-`ignore_failure` | 選用 | 若設為 `true`，則會忽略失敗。預設為 `false`。 |
-`on_failure` | 選用 | 當處理器失敗時要執行的處理器清單。 |
-`tag` | 選用 | 處理器的識別標籤。在偵錯時可用來區分相同類型的處理器。如需更多資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
+`ignore_failure` | 選用 | 若設為 `true`，則會忽略失敗。預設值為 `false`。 |
+`on_failure` | 選用 | 處理器失敗時要執行的處理器清單。 |
+`tag` | 選用 | 處理器的識別碼標籤。有助於偵錯時區分同類型的處理器。如需詳細資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
 
 ## 使用處理器
 
@@ -63,7 +63,7 @@ PUT /_ingest/pipeline/dot-expander-pipeline
 ```
 {% include copy-curl.html %}
 
-### 步驟 2 (選用)：測試管線
+### 步驟 2（選用）：測試管線
 
 建議您在匯入文件之前先測試管線。
 {: .tip}
@@ -87,9 +87,7 @@ POST _ingest/pipeline/dot-expander-pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
-下列範例回應確認管線運作正常：
+下列範例回應確認管線如預期運作：
 
 ```json
 {
@@ -122,13 +120,13 @@ POST _ingest/pipeline/dot-expander-pipeline/_simulate
 ```json
 PUT testindex1/_doc/1?pipeline=dot-expander-pipeline
 {
-  "user.address.city": "Denver",
-  "user.address.state": "CO"
+  "user.address.city": "New York",
+  "user.address.state": "NY"
 }
 ```
 {% include copy-curl.html %}
 
-### 步驟 4 (選用)：擷取文件
+### 步驟 4（選用）：擷取文件
 
 若要擷取文件，請執行下列查詢：
 
@@ -137,28 +135,7 @@ GET testindex1/_doc/1
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
-下列回應確認指定的欄位已展開為巢狀欄位：
-
-```json
-{
-  "_index": "testindex1",
-  "_id": "1",
-  "_version": 1,
-  "_seq_no": 3,
-  "_primary_term": 1,
-  "found": true,
-  "_source": {
-    "user": {
-      "address": {
-        "city": "Denver",
-        "state": "CO"
-      }
-    }
-  }
-}
-```
+回應會包含已匯入的文件，其轉換結果如步驟 2 的回應所示。
 
 ## `path` 參數
 

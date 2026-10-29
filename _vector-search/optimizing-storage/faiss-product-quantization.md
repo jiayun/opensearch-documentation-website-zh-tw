@@ -44,9 +44,9 @@ has_math: true
 
 ### IVF 記憶體估算
 
-使用 PQ 的 IVF 所需記憶體估計為 `1.1*(((pq_code_size / 8) * pq_m + 24) * num_vectors  + num_segments * (2^code_size * 4 * d + 4 * ivf_nlist * d))` 個位元組。
+使用 PQ 的 IVF 所需記憶體估算為 `1.1*(((pq_code_size / 8) * pq_m + 24) * num_vectors  + num_segments * (2^code_size * 4 * d + 4 * ivf_nlist * d))` 位元組。
 
-例如，假設您有 100 萬個維度為 256 的向量，`ivf_nlist` 為 512，`pq_m` 為 32，`pq_code_size` 為 8，且有 100 個分段。記憶體需求可估算如下：
+例如，假設您有 100 萬個維度為 256 的向量，`ivf_nlist` 為 512、`pq_m` 為 64、`pq_code_size` 為 8，並有 100 個分段。記憶體需求可估算如下：
 
 ```r
 1.1 * ((8 / 8 * 64 + 24) * 1000000  + 100 * (2^8 * 4 * 256 + 4 * 512 * 256))  ~= 0.171 GB

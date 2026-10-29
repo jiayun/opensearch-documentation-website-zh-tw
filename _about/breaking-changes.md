@@ -169,7 +169,7 @@ NMSLIB 引擎現已淘汰。建議您改用 Faiss 或 Lucene 引擎。
 
 ### Performance Analyzer 外掛程式
 
-`performance-analyzer-rca` 代理程式已移除。建議您改用 [Telemetry 外掛程式](https://github.com/opensearch-project/performance-analyzer/issues/585) 進行效能監控與分析。Telemetry 外掛程式採用 OpenTelemetry 框架，可與輕量級開放原始碼代理程式無縫整合，以將效能指標發布至可觀測性儲存區。如需詳細資訊，請參閱問題 [#591](https://github.com/opensearch-project/performance-analyzer-rca/issues/591)。
+`performance-analyzer-rca` 代理程式已移除。此代理程式在連接埠 9600 上提供 Performance Analyzer API，因此指標、批次指標與根本原因分析（RCA）API 以及 PerfTop 儀表板皆已無法使用。Performance Analyzer 外掛程式仍預設安裝，並可使用[指標框架]({{site.url}}{{site.baseurl}}/tuning-your-cluster/monitoring/telemetry/metrics/)發布其指標，該框架會透過 OpenTelemetry 匯出這些指標。如需更多資訊，請參閱 [Performance Analyzer]({{site.url}}{{site.baseurl}}/tuning-your-cluster/monitoring/telemetry/performance-analyzer/) 及 issue [#591](https://github.com/opensearch-project/performance-analyzer-rca/issues/591)。
 
 ### SQL 外掛程式
 

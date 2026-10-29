@@ -4,7 +4,8 @@ layout: default
 title: "探索與叢集形成"
 nav_order: 5
 has_children: true
-permalink: /tuning-your-cluster/discovery-cluster-formation/
+redirect_from:
+  - /tuning-your-cluster/discovery-cluster-formation/
 ---
 
 # 探索與叢集形成
@@ -95,4 +96,4 @@ GET /_cluster/state?filter_path=metadata.cluster_coordination.last_committed_con
 
 - 從[節點探索與種子主機]({{site.url}}{{site.baseurl}}/tuning-your-cluster/discovery-cluster-formation/discovery/)開始，了解叢集形成的基礎。
 - 檢視[探索與叢集形成設定]({{site.url}}{{site.baseurl}}/tuning-your-cluster/discovery-cluster-formation/settings/)以了解組態選項。
-- 請參閱[建立叢集]({{site.url}}{{site.baseurl}}/tuning-your-cluster/)以取得實際設定叢集的指引。
+- 請參閱[建立叢集]({{site.url}}{{site.baseurl}}/tuning-your-cluster/creating-a-cluster/)以取得實際設定叢集的指引。

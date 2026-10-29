@@ -49,205 +49,235 @@ GET /_plugins/_neural/{nodes}/stats/{stats}
 
 ### 查詢參數
 
-下表列出可用的查詢參數。所有查詢參數都是選用。
+下表列出可用的查詢參數。所有查詢參數皆為選用。
 
 | 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `include_metadata` | 布林值 | 當 `true` 時，會為每項統計資料加入額外的中繼資料欄位 (請參閱[可用的中繼資料](#available-metadata))。預設為 `false`。 |
-| `flat_stat_paths` | 布林值 | 當 `true` 時，會扁平化 JSON 回應結構，以便更容易解析。預設為 `false`。 |
-| `include_individual_nodes` | 布林值 | 當 `true` 時，會包含 `nodes` 類別中各個節點的統計資料。當 `false` 時，會從回應中排除 `nodes` 類別。預設為 `true`。 |
-| `include_all_nodes` | 布林值 | 當 `true` 時，會包含 `all_nodes` 類別中所有節點的彙總統計資料。當 `false` 時，會從回應中排除 `all_nodes` 類別。預設為 `true`。 |
-| `include_info` | 布林值 | 當 `true` 時，會包含 `info` 類別中的叢集範圍資訊。當 `false` 時，會從回應中排除 `info` 類別。預設為 `true`。 |
+| `include_metadata` | 布林值 | 當 `true` 時，會為每項統計資料納入額外的中繼資料欄位（請參閱[可用中繼資料](#available-metadata)）。預設值為 `false`。 |
+| `flat_stat_paths` | 布林值 | 當 `true` 時，會扁平化 JSON 回應結構，以便更容易解析。預設值為 `false`。 | 
+| `include_individual_nodes` | 布林值 | 當 `true` 時，會在 `nodes` 類別中納入個別節點的統計資料。當 `false` 時，會從回應中排除 `nodes` 類別。預設值為 `true`。 |
+| `include_all_nodes` | 布林值 | 當 `true` 時，會在 `all_nodes` 類別中納入所有節點的彙總統計資料。當 `false` 時，會從回應中排除 `all_nodes` 類別。預設值為 `true`。 |
+| `include_info` | 布林值 | 當 `true` 時，會在 `info` 類別中納入叢集範圍的資訊。當 `false` 時，會從回應中排除 `info` 類別。預設值為 `true`。 |
+| `include_metric` | 布林值 | 當 `true` 時，會在 `memory` 物件中納入[記憶體統計資料](#available-statistics)。當 `false` 時，會從回應中排除 `memory` 物件。預設值為 `true`。 |
 
 #### 範例請求
 
 ```json
-GET /_plugins/_neural/node1,node2/stats/stat1,stat2?include_metadata=true,flat_stat_paths=true
+GET /_plugins/_neural/node1,node2/stats/stat1,stat2?include_metadata=true&flat_stat_paths=true
 ```
 {% include copy-curl.html %}
 
-#### 範例回應
+#### 回應範例
 
 <details markdown="block">
-  <summary>
+<summary>
     回應
-  </summary>
-  {: .text-delta}
+</summary>
+{: .text-delta}
 
 ```json
-GET /_plugins/_neural/stats/
 {
-	"_nodes": {
-		"total": 1,
-		"successful": 1,
-		"failed": 0
-	},
-	"cluster_name": "integTest",
-	"info": {
-		"cluster_version": "3.1.0",
-		"processors": {
-			"search": {
-				"hybrid": {
-					"comb_geometric_processors": 0,
-					"comb_rrf_processors": 0,
-					"norm_l2_processors": 0,
-					"norm_minmax_processors": 0,
-					"comb_harmonic_processors": 0,
-					"comb_arithmetic_processors": 0,
-					"norm_zscore_processors": 0,
-					"rank_based_normalization_processors": 0,
-					"normalization_processors": 0
-				},
-				"rerank_ml_processors": 0,
-				"rerank_by_field_processors": 0,
-				"neural_sparse_two_phase_processors": 0,
-				"neural_query_enricher_processors": 0
-			},
-			"ingest": {
-				"sparse_encoding_processors": 0,
-				"skip_existing_processors": 0,
-				"text_image_embedding_processors": 0,
-				"text_chunking_delimiter_processors": 0,
-				"text_embedding_processors_in_pipelines": 0,
-				"text_chunking_fixed_token_length_processors": 0,
-				"text_chunking_fixed_char_length_processors": 0,
-				"text_chunking_processors": 0
-			}
-		}
-	},
-	"all_nodes": {
-		"query": {
-			"hybrid": {
-				"hybrid_query_with_pagination_requests": 0,
-				"hybrid_query_with_filter_requests": 0,
-				"hybrid_query_with_inner_hits_requests": 0,
-				"hybrid_query_requests": 0
-			},
-			"neural": {
-				"neural_query_against_semantic_sparse_requests": 0,
-				"neural_query_requests": 0,
-				"neural_query_against_semantic_dense_requests": 0,
-				"neural_query_against_knn_requests": 0
-			},
-			"neural_sparse": {
-				"neural_sparse_query_requests": 0,
-                "seismic_query_requests": 0
-			}
-		},
-		"semantic_highlighting": {
-			"semantic_highlighting_request_count": 0,
-			"semantic_highlighting_batch_request_count": 0
-		},
-		"processors": {
-			"search": {
-				"neural_sparse_two_phase_executions": 0,
-				"hybrid": {
-					"comb_harmonic_executions": 0,
-					"norm_zscore_executions": 0,
-					"comb_rrf_executions": 0,
-					"norm_l2_executions": 0,
-					"rank_based_normalization_processor_executions": 0,
-					"comb_arithmetic_executions": 0,
-					"normalization_processor_executions": 0,
-					"comb_geometric_executions": 0,
-					"norm_minmax_executions": 0
-				},
-				"rerank_by_field_executions": 0,
-				"neural_query_enricher_executions": 0,
-				"rerank_ml_executions": 0
-			},
-			"ingest": {
-				"skip_existing_executions": 0,
-				"text_chunking_fixed_token_length_executions": 0,
-				"sparse_encoding_executions": 0,
-				"text_chunking_fixed_char_length_executions": 0,
-				"text_chunking_executions": 0,
-				"text_embedding_executions": 0,
-				"semantic_field_executions": 0,
-				"semantic_field_chunking_executions": 0,
-				"text_chunking_delimiter_executions": 0,
-				"text_image_embedding_executions": 0
-			}
-		},
-        "memory": {
-            "sparse": {
-                "sparse_memory_usage": 0.13,
-                "clustered_posting_usage": 0.06,
-                "forward_index_usage": 0.06
-            }
+  "_nodes": {
+    "total": 1,
+    "successful": 1,
+    "failed": 0
+  },
+  "cluster_name": "integTest",
+  "info": {
+    "cluster_version": "3.9.0",
+    "index": {
+      "sparse": {
+        "sparse_vector_indices": 0,
+        "sparse_native_engine_indices": 0,
+        "sparse_vector_fields": 0,
+        "sparse_native_engine_fields": 0
+      }
+    },
+    "processors": {
+      "search": {
+        "hybrid": {
+          "comb_rrf_processors": 0,
+          "comb_geometric_processors": 0,
+          "norm_l2_processors": 0,
+          "norm_minmax_processors": 0,
+          "comb_harmonic_processors": 0,
+          "comb_arithmetic_processors": 0,
+          "norm_zscore_processors": 0,
+          "rank_based_normalization_processors": 0,
+          "normalization_processors": 0
+        },
+        "rerank_ml_processors": 0,
+        "rerank_by_field_processors": 0,
+        "neural_sparse_two_phase_processors": 0,
+        "agentic": {
+          "agentic_context_processors": 0,
+          "agentic_query_translator_processors": 0
+        },
+        "neural_query_enricher_processors": 0
+      },
+      "ingest": {
+        "sparse_encoding_processors": 0,
+        "skip_existing_processors": 0,
+        "text_image_embedding_processors": 0,
+        "text_chunking_delimiter_processors": 0,
+        "text_embedding_processors_in_pipelines": 0,
+        "text_chunking_fixed_token_length_processors": 0,
+        "text_chunking_fixed_char_length_processors": 0,
+        "text_chunking_processors": 0
+      }
+    }
+  },
+  "all_nodes": {
+    "memory": {
+      "sparse": {
+        "sparse_memory_usage": 0.13,
+        "clustered_posting_usage": 0.06,
+        "forward_index_usage": 0.06
+      }
+    },
+    "query": {
+      "hybrid": {
+        "hybrid_query_with_pagination_requests": 0,
+        "hybrid_query_with_filter_requests": 0,
+        "hybrid_query_with_inner_hits_requests": 0,
+        "hybrid_query_requests": 0
+      },
+      "neural": {
+        "neural_query_against_semantic_sparse_requests": 0,
+        "neural_query_requests": 0,
+        "neural_query_against_semantic_dense_requests": 0,
+        "neural_query_against_knn_requests": 0
+      },
+      "agentic": {
+        "agentic_query_requests": 0
+      },
+      "neural_sparse": {
+        "neural_sparse_query_requests": 0,
+        "seismic_query_requests": 0
+      }
+    },
+    "semantic_highlighting": {
+      "semantic_highlighting_request_count": 0,
+      "semantic_highlighting_batch_request_count": 0
+    },
+    "processors": {
+      "search": {
+        "neural_sparse_two_phase_executions": 0,
+        "hybrid": {
+          "comb_harmonic_executions": 0,
+          "norm_zscore_executions": 0,
+          "comb_rrf_executions": 0,
+          "norm_l2_executions": 0,
+          "rank_based_normalization_processor_executions": 0,
+          "comb_arithmetic_executions": 0,
+          "normalization_processor_executions": 0,
+          "comb_geometric_executions": 0,
+          "norm_minmax_executions": 0
+        },
+        "rerank_by_field_executions": 0,
+        "neural_query_enricher_executions": 0,
+        "mmr_neural_query_transformer_executions": 0,
+        "rerank_ml_executions": 0,
+        "agentic": {
+          "agentic_query_translator_executions": 0,
+          "agentic_context_executions": 0
         }
-	},
-	"nodes": {
-		"_cONimhxS6KdedymRZr6xg": {
-			"query": {
-				"hybrid": {
-					"hybrid_query_with_pagination_requests": 0,
-					"hybrid_query_with_filter_requests": 0,
-					"hybrid_query_with_inner_hits_requests": 0,
-					"hybrid_query_requests": 0
-				},
-				"neural": {
-					"neural_query_against_semantic_sparse_requests": 0,
-					"neural_query_requests": 0,
-					"neural_query_against_semantic_dense_requests": 0,
-					"neural_query_against_knn_requests": 0
-				},
-				"neural_sparse": {
-					"neural_sparse_query_requests": 0,
-                    "seismic_query_requests": 0
-				},
-                "memory": {
-                    "sparse": {
-                        "sparse_memory_usage_percentage": 0,
-                        "sparse_memory_usage": 0.13,
-                        "clustered_posting_usage": 0.06,
-                        "forward_index_usage": 0.06
-                    }
-                }
-			},
-			"semantic_highlighting": {
-				"semantic_highlighting_request_count": 0,
-				"semantic_highlighting_batch_request_count": 0
-			},
-			"processors": {
-				"search": {
-					"neural_sparse_two_phase_executions": 0,
-					"hybrid": {
-						"comb_harmonic_executions": 0,
-						"norm_zscore_executions": 0,
-						"comb_rrf_executions": 0,
-						"norm_l2_executions": 0,
-						"rank_based_normalization_processor_executions": 0,
-						"comb_arithmetic_executions": 0,
-						"normalization_processor_executions": 0,
-						"comb_geometric_executions": 0,
-						"norm_minmax_executions": 0
-					},
-					"rerank_by_field_executions": 0,
-					"neural_query_enricher_executions": 0,
-					"rerank_ml_executions": 0
-				},
-				"ingest": {
-					"skip_existing_executions": 0,
-					"text_chunking_fixed_token_length_executions": 0,
-					"sparse_encoding_executions": 0,
-					"text_chunking_fixed_char_length_executions": 0,
-					"text_chunking_executions": 0,
-					"text_embedding_executions": 0,
-					"semantic_field_executions": 0,
-					"semantic_field_chunking_executions": 0,
-					"text_chunking_delimiter_executions": 0,
-					"text_image_embedding_executions": 0
-				}
-			}
-		}
-	}
+      },
+      "ingest": {
+        "skip_existing_executions": 0,
+        "text_chunking_fixed_token_length_executions": 0,
+        "sparse_encoding_executions": 0,
+        "text_chunking_fixed_char_length_executions": 0,
+        "text_chunking_executions": 0,
+        "text_embedding_executions": 0,
+        "semantic_field_executions": 0,
+        "sparse_encoding_seismic_executions": 0,
+        "semantic_field_chunking_executions": 0,
+        "text_chunking_delimiter_executions": 0,
+        "text_image_embedding_executions": 0
+      }
+    }
+  },
+  "nodes": {
+    "_cONimhxS6KdedymRZr6xg": {
+      "memory": {
+        "sparse": {
+          "sparse_memory_usage_percentage": 0,
+          "sparse_memory_usage": 0.13,
+          "clustered_posting_usage": 0.06,
+          "forward_index_usage": 0.06
+        }
+      },
+      "query": {
+        "hybrid": {
+          "hybrid_query_with_pagination_requests": 0,
+          "hybrid_query_with_filter_requests": 0,
+          "hybrid_query_with_inner_hits_requests": 0,
+          "hybrid_query_requests": 0
+        },
+        "neural": {
+          "neural_query_against_semantic_sparse_requests": 0,
+          "neural_query_requests": 0,
+          "neural_query_against_semantic_dense_requests": 0,
+          "neural_query_against_knn_requests": 0
+        },
+        "agentic": {
+          "agentic_query_requests": 0
+        },
+        "neural_sparse": {
+          "neural_sparse_query_requests": 0,
+          "seismic_query_requests": 0
+        }
+      },
+      "semantic_highlighting": {
+        "semantic_highlighting_request_count": 0,
+        "semantic_highlighting_batch_request_count": 0
+      },
+      "processors": {
+        "search": {
+          "neural_sparse_two_phase_executions": 0,
+          "hybrid": {
+            "comb_harmonic_executions": 0,
+            "norm_zscore_executions": 0,
+            "comb_rrf_executions": 0,
+            "norm_l2_executions": 0,
+            "rank_based_normalization_processor_executions": 0,
+            "comb_arithmetic_executions": 0,
+            "normalization_processor_executions": 0,
+            "comb_geometric_executions": 0,
+            "norm_minmax_executions": 0
+          },
+          "rerank_by_field_executions": 0,
+          "neural_query_enricher_executions": 0,
+          "mmr_neural_query_transformer_executions": 0,
+          "rerank_ml_executions": 0,
+          "agentic": {
+            "agentic_query_translator_executions": 0,
+            "agentic_context_executions": 0
+          }
+        },
+        "ingest": {
+          "skip_existing_executions": 0,
+          "text_chunking_fixed_token_length_executions": 0,
+          "sparse_encoding_executions": 0,
+          "text_chunking_fixed_char_length_executions": 0,
+          "text_chunking_executions": 0,
+          "text_embedding_executions": 0,
+          "semantic_field_executions": 0,
+          "sparse_encoding_seismic_executions": 0,
+          "semantic_field_chunking_executions": 0,
+          "text_chunking_delimiter_executions": 0,
+          "text_image_embedding_executions": 0
+        }
+      }
+    }
+  }
 }
 ```
 
 </details>
 
-如果 `include_metadata` 為 `true`，則每個統計物件會包含額外的中繼資料：
+如果 `include_metadata` 為 `true`，每個統計資料物件都會包含額外的中繼資料：
 
 ```json
 {
@@ -262,7 +292,7 @@ GET /_plugins/_neural/stats/
 }
 ```
 
-如需更多資訊，請參閱[可用的中繼資料](#available-metadata)。
+如需詳細資訊，請參閱[可用的中繼資料](#available-metadata)。
 
 ### 回應本文欄位
 
@@ -280,13 +310,22 @@ GET /_plugins/_neural/stats/
 
 #### 可用的統計資料
 
-下表列出可用的統計資料。對於路徑以 `nodes.<node_id>` 為前綴的統計資料，也可在以 `all_nodes` 為前綴的相同路徑取得叢集層級的彙總統計資料。
+下表列出可用的統計資料。對於路徑以 `nodes.<node_id>` 為前綴的統計資料，在相同路徑加上 `all_nodes` 前綴也可取得叢集層級的彙總統計資料。
 
 | 統計資料名稱 | 類別 | 類別內的統計資料路徑 | 說明 |
 | :--- | :--- | :--- | :--- |
 | `cluster_version` | `info` | `cluster_version` | 叢集的版本。 |
 
-**資訊統計資料：處理器**
+**Info 統計資料：稀疏索引**
+
+| 統計資料名稱 | 類別 | 類別內的統計資料路徑 | 說明 |
+| :--- | :--- | :--- | :--- |
+| `sparse_vector_indices` | `info` | `index.sparse.sparse_vector_indices` | 包含至少一個 `sparse_vector` 欄位的索引數量。 |
+| `sparse_vector_fields` | `info` | `index.sparse.sparse_vector_fields` | 所有索引中 `sparse_vector` 欄位的數量。 |
+| `sparse_native_engine_indices` | `info` | `index.sparse.sparse_native_engine_indices` | 包含至少一個使用原生引擎之 `sparse_vector` 欄位的索引數量。 |
+| `sparse_native_engine_fields` | `info` | `index.sparse.sparse_native_engine_fields` | 所有索引中使用原生引擎的 `sparse_vector` 欄位數量。 |
+
+**Info 統計資料：處理器**
 
 | 統計資料名稱 | 類別 | 類別內的統計資料路徑 | 說明 |
 | :--- | :--- | :--- | :--- |
@@ -302,8 +341,10 @@ GET /_plugins/_neural/stats/
 | `rerank_by_field_processors` | `info` | `processors.search.rerank_by_field_processors` | `by_field` 類型的 `rerank` 處理器數量。 |
 | `neural_sparse_two_phase_processors` | `info` | `processors.search.neural_sparse_two_phase_processors` | 搜尋管線中 `neural_sparse_two_phase_processor` 處理器的數量。 |
 | `neural_query_enricher_processors` | `info` | `processors.search.neural_query_enricher_processors` | 搜尋管線中 `neural_query_enricher` 處理器的數量。 |
+| `agentic_query_translator_processors` | `info` | `processors.search.agentic.agentic_query_translator_processors` | 搜尋管線中 `agentic_query_translator` 處理器的數量。 |
+| `agentic_context_processors` | `info` | `processors.search.agentic.agentic_context_processors` | 搜尋管線中 `agentic_context` 處理器的數量。 |
 
-**資訊統計資料：混合處理器**
+**Info 統計資料：混合處理器**
 
 | 統計資料名稱 | 類別 | 類別內的統計資料路徑 | 說明 |
 | :--- | :--- | :--- | :--- |
@@ -331,10 +372,14 @@ GET /_plugins/_neural/stats/
 | `semantic_field_chunking_executions` | `nodes`, `all_nodes` | `processors.ingest.semantic_field_chunking_executions` | `semantic` 欄位系統分塊處理器的執行次數。 |
 | `text_chunking_delimiter_executions` | `nodes`, `all_nodes` | `processors.ingest.text_chunking_delimiter_executions` | 使用 `delimiter` 演算法的 `text_chunking` 處理器執行次數。 |
 | `text_image_embedding_executions` | `nodes`, `all_nodes` | `processors.ingest.text_image_embedding_executions` | `text_image_embedding` 處理器的執行次數。 |
+| `sparse_encoding_seismic_executions` | `nodes`, `all_nodes` | `processors.ingest.sparse_encoding_seismic_executions` | 為 `sparse_vector` 欄位產生詞元 ID 嵌入的 `sparse_encoding` 處理器執行次數。 |
 | `neural_sparse_two_phase_executions` | `nodes`, `all_nodes` | `processors.search.neural_sparse_two_phase_executions` | `neural_sparse_two_phase_processor` 處理器的執行次數。 |
 | `rerank_by_field_executions` | `nodes`, `all_nodes` | `processors.search.rerank_by_field_executions` | `by_field` 類型的 `rerank` 處理器執行次數。 |
 | `neural_query_enricher_executions` | `nodes`, `all_nodes` | `processors.search.neural_query_enricher_executions` | `neural_query_enricher` 處理器的執行次數。 |
 | `rerank_ml_executions` | `nodes`, `all_nodes` | `processors.search.rerank_ml_executions` | `ml_opensearch` 類型的 `rerank` 處理器執行次數。 |
+| `mmr_neural_query_transformer_executions` | `nodes`, `all_nodes` | `processors.search.mmr_neural_query_transformer_executions` | 為最大邊際相關性 (MMR) 重新排名而轉換 `neural` 查詢的次數。 |
+| `agentic_query_translator_executions` | `nodes`, `all_nodes` | `processors.search.agentic.agentic_query_translator_executions` | `agentic_query_translator` 處理器的執行次數。 |
+| `agentic_context_executions` | `nodes`, `all_nodes` | `processors.search.agentic.agentic_context_executions` | `agentic_context` 處理器的執行次數。 |
 
 **節點層級統計資料：混合處理器**
 
@@ -352,37 +397,38 @@ GET /_plugins/_neural/stats/
 
 **節點層級統計資料：查詢**
 
-| 統計名稱 | 類別 | 類別內的統計路徑 | 說明                                                                                                                                |
+| 統計資料名稱 | 類別 | 類別內的統計資料路徑 | 說明                                                                                                                                |
 | :--- | :--- | :--- |:-------------------------------------------------------------------------------------------------------------------------------------------|
-| `hybrid_query_with_pagination_requests` | `nodes`, `all_nodes` | `query.hybrid.hybrid_query_with_pagination_requests` | 帶有分頁的 `hybrid` 查詢請求數量。                                                                                     |
-| `hybrid_query_with_filter_requests` | `nodes`, `all_nodes` | `query.hybrid.hybrid_query_with_filter_requests` | 帶有篩選條件的 `hybrid` 查詢請求數量。                                                                                        |
-| `hybrid_query_with_inner_hits_requests` | `nodes`, `all_nodes` | `query.hybrid.hybrid_query_with_inner_hits_requests` | 帶有內部命中的 `hybrid` 查詢請求數量。                                                                                     |
+| `hybrid_query_with_pagination_requests` | `nodes`, `all_nodes` | `query.hybrid.hybrid_query_with_pagination_requests` | 使用分頁的 `hybrid` 查詢請求數量。                                                                                     |
+| `hybrid_query_with_filter_requests` | `nodes`, `all_nodes` | `query.hybrid.hybrid_query_with_filter_requests` | 使用篩選條件的 `hybrid` 查詢請求數量。                                                                                        |
+| `hybrid_query_with_inner_hits_requests` | `nodes`, `all_nodes` | `query.hybrid.hybrid_query_with_inner_hits_requests` | 使用內部命中項目的 `hybrid` 查詢請求數量。                                                                                     |
 | `hybrid_query_requests` | `nodes`, `all_nodes` | `query.hybrid.hybrid_query_requests` | `hybrid` 查詢請求的總數。                                                                                               |
 | `neural_query_against_semantic_sparse_requests` | `nodes`, `all_nodes` | `query.neural.neural_query_against_semantic_sparse_requests` | 針對語意稀疏欄位的 `neural` 查詢請求數量。                                                                      |
 | `neural_query_requests` | `nodes`, `all_nodes` | `query.neural.neural_query_requests` | `neural` 查詢請求的總數。                                                                                               |
-| `neural_query_against_semantic_dense_requests` | `nodes`, `all_nodes` | `query.neural.neural_query_against_semantic_dense_requests` | 針對語意稠密欄位的 `neural` 查詢請求數量。                                                                       |
+| `neural_query_against_semantic_dense_requests` | `nodes`, `all_nodes` | `query.neural.neural_query_against_semantic_dense_requests` | 針對語意密集欄位的 `neural` 查詢請求數量。                                                                       |
 | `neural_query_against_knn_requests` | `nodes`, `all_nodes` | `query.neural.neural_query_against_knn_requests` | 針對 k-NN 欄位的 `neural` 查詢請求數量。                                                                                 |
-| `neural_sparse_query_requests` | `nodes`, `all_nodes` | `query.neural_sparse.neural_sparse_query_requests` | 針對 `rank_features` 欄位的 `neural_sparse` 查詢請求數量 (傳統神經稀疏搜尋)。                                                                                              |
-| `seismic_query_requests` | `nodes`, `all_nodes` | `query.neural_sparse.seismic_query_requests` | 針對 `sparse_vector` 欄位的 `neural_sparse` 查詢請求數量 (使用 SEISMIC 演算法的神經稀疏近似最近鄰 (ANN) 搜尋)。 |
+| `neural_sparse_query_requests` | `nodes`, `all_nodes` | `query.neural_sparse.neural_sparse_query_requests` | 針對 `rank_features` 欄位的 `neural_sparse` 查詢請求數量（傳統神經稀疏搜尋）。                                                                                              |
+| `seismic_query_requests` | `nodes`, `all_nodes` | `query.neural_sparse.seismic_query_requests` | 針對 `sparse_vector` 欄位的 `neural_sparse` 查詢請求數量（使用 SEISMIC 演算法的神經稀疏近似最近鄰（ANN）搜尋）。 |
+| `agentic_query_requests` | `nodes`, `all_nodes` | `query.agentic.agentic_query_requests` | `agentic` 查詢請求的數量。 |
 
-**節點層級統計：記憶體**
+**節點層級統計資料：記憶體**
 
-| 統計名稱 | 類別             | 類別內的統計路徑                                  | 說明                                                                                                 |
+| 統計資料名稱 | 類別             | 類別內的統計資料路徑                                  | 說明                                                                                                 |
 | :--- |:---------------------|:----------------------------------------------------------------|:------------------------------------------------------------------------------------------------------------|
-| `sparse_memory_usage_percentage` | `nodes`              | `memory.sparse.sparse_memory_usage_percentage`                  | 節點上用於儲存稀疏資料的 JVM 堆積記憶體相對於最大 JVM 記憶體的百分比。 |
-| `sparse_memory_usage` | `nodes`, `all_nodes` | `memory.sparse.sparse_memory_usage`                             | 節點上用於儲存稀疏資料的 JVM 堆積記憶體量，以 KB 為單位。                           |
-| `clustered_posting_usage` | `nodes`, `all_nodes` | `memory.sparse.clustered_posting_usage`                         | 節點上用於儲存叢集式張貼清單的 JVM 堆積記憶體量，以 KB 為單位。                     |
-| `forward_index_usage` | `nodes`, `all_nodes` | `memory.sparse.forward_index_usage`                            | 節點上用於儲存正向索引的 JVM 堆積記憶體量，以 KB 為單位。                         |
+| `sparse_memory_usage_percentage` | `nodes`              | `memory.sparse.sparse_memory_usage_percentage`                  | 節點上用於儲存稀疏資料的 JVM 堆積記憶體相對於 JVM 記憶體上限的百分比。 |
+| `sparse_memory_usage` | `nodes`, `all_nodes` | `memory.sparse.sparse_memory_usage`                             | 節點上用於儲存稀疏資料的 JVM 堆積記憶體用量，以 KB 為單位。                           |
+| `clustered_posting_usage` | `nodes`, `all_nodes` | `memory.sparse.clustered_posting_usage`                         | 節點上用於儲存分群倒排項目的 JVM 堆積記憶體用量，以 KB 為單位。                     |
+| `forward_index_usage` | `nodes`, `all_nodes` | `memory.sparse.forward_index_usage`                            | 節點上用於儲存正向索引的 JVM 堆積記憶體用量，以 KB 為單位。                         |
 
-這些記憶體統計資料僅回報 Lucene 引擎快取。原生引擎會將其索引保留在磁碟上的記憶體對應檔案中，因此原生引擎的索引記憶體不會反映在這些統計資料中。如需更多資訊，請參閱[引擎]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/#engines)。
+這些記憶體統計資料僅回報 Lucene 引擎快取。原生引擎將索引保存在磁碟上的記憶體對應檔案中，因此這些統計資料不會反映原生引擎的索引記憶體。如需詳細資訊，請參閱[引擎]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/#engines)。
 {: .note}
 
-**節點層級統計：語意醒目提示**
+**節點層級統計資料：語意醒目提示**
 
-| 統計名稱 | 類別 | 類別內的統計路徑 | 說明 |
+| 統計資料名稱 | 類別 | 類別內的統計資料路徑 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `semantic_highlighting_request_count` | `nodes`, `all_nodes` | `semantic_highlighting.semantic_highlighting_request_count` | 單次推論 `semantic` 醒目提示請求數量 (每份文件一次推論呼叫)。請參閱[單次推論模式]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight/#basic-usage-single-inference-mode)。 |
-| `semantic_highlighting_batch_request_count` | `nodes`, `all_nodes` | `semantic_highlighting.semantic_highlighting_batch_request_count` | 批次推論 `semantic` 醒目提示請求數量 (在單次推論呼叫中處理多份文件)。請參閱[批次推論模式]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight/#batch-inference-mode)。 |
+| `semantic_highlighting_request_count` | `nodes`, `all_nodes` | `semantic_highlighting.semantic_highlighting_request_count` | 單次推論 `semantic` 醒目提示請求的數量（每份文件呼叫一次推論）。請參閱[單次推論模式]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight/#basic-usage-single-inference-mode)。 |
+| `semantic_highlighting_batch_request_count` | `nodes`, `all_nodes` | `semantic_highlighting.semantic_highlighting_batch_request_count` | 批次推論 `semantic` 醒目提示請求的數量（單次推論呼叫處理多份文件）。請參閱[批次推論模式]({{site.url}}{{site.baseurl}}/search-plugins/searching-data/highlight/#batch-inference-mode)。 |
 
 #### 可用的中繼資料
 
@@ -543,20 +589,18 @@ POST /_plugins/_neural/clear_cache/{index}
 ```json
 POST /_plugins/_neural/clear_cache/index1,index2,index3
 ```
-
 {% include copy-curl.html %}
 
-您也可以使用索引模式來清除符合某個模式的一個或多個索引：
+您也可以使用索引模式，清除符合某個模式的一或多個索引：
 
 ```json
 POST /_plugins/_neural/clear_cache/index*
 ```
-
 {% include copy-curl.html %}
 
 #### 範例回應
 
-API 呼叫只會在清除快取操作完成或請求逾時後才傳回結果：
+只有在清除快取作業完成或請求逾時後，API 呼叫才會傳回結果：
 
 ```json
 {
@@ -568,17 +612,16 @@ API 呼叫只會在清除快取操作完成或請求逾時後才傳回結果：
 }
 ```
 
-如果請求逾時，操作會繼續在叢集中執行。
+如果請求逾時，作業仍會在叢集中繼續執行。
 
-若要監視清除快取操作的進度，請使用 [Tasks API]({{site.url}}{{site.baseurl}}/api-reference/tasks/)：
+若要監控清除快取作業的進度，請使用 [Tasks API]({{site.url}}{{site.baseurl}}/api-reference/tasks/)：
 
 ```json
 GET /_tasks
 ```
-
 {% include copy-curl.html %}
 
-操作完成後，請使用 [neural stats API 操作](#stats) 檢查更新後的記憶體使用量。
+作業完成後，請使用 [neural stats API operation](#stats) 檢查最新的記憶體使用量。
 
 ### 回應本文欄位
 

@@ -39,10 +39,10 @@ PUT /my-raw-vector-index/_doc/1
 
 ```json
 PUT /_bulk
-{"index": {"_index": "my-raw-vector-index", "_id": 1}}
-{"my_vector": [0.1, 0.2, 0.3], "metadata": "First item"}
 {"index": {"_index": "my-raw-vector-index", "_id": 2}}
 {"my_vector": [0.2, 0.3, 0.4], "metadata": "Second item"}
+{"index": {"_index": "my-raw-vector-index", "_id": 3}}
+{"my_vector": [0.3, 0.4, 0.5], "metadata": "Third item"}
 ```
 {% include copy-curl.html %}
 
@@ -64,9 +64,9 @@ PUT /my-ai-search-index/_doc/1
 
 ```json
 PUT /_bulk
-{"index": {"_index": "my-ai-search-index", "_id": 1}}
-{"input_text": "Example AI search description"}
 {"index": {"_index": "my-ai-search-index", "_id": 2}}
+{"input_text": "Example AI search description"}
+{"index": {"_index": "my-ai-search-index", "_id": 3}}
 {"input_text": "Bulk API operation description"}
 ```
 {% include copy-curl.html %}

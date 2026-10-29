@@ -13,16 +13,18 @@ redirect_from:
 
 # 追蹤分析
 
-若要取得結合服務拓撲、RED 指標與情境內關聯的更整合監控體驗，請參閱 [應用程式效能監控]({{site.url}}{{site.baseurl}}/observing-your-data/apm/index/)。
+如需結合服務拓撲、RED 指標及脈絡內關聯分析的更整合監控體驗，請參閱[應用程式效能監控]({{site.url}}{{site.baseurl}}/observing-your-data/apm/index/)。
 {: .note}
 
-追蹤分析提供在 OpenSearch 中匯入及視覺化 [OpenTelemetry](https://opentelemetry.io/) 資料的方式。這些資料可協助您找出並修正分散式應用程式中的效能問題。
+追蹤分析提供在 OpenSearch 中匯入並視覺化 [OpenTelemetry](https://opentelemetry.io/) 資料的方式。這些資料可協助您找出並修正分散式應用程式中的效能問題。
 
-單一操作（例如使用者點選按鈕）可能觸發一連串延伸的事件。前端可能呼叫後端服務，該服務再呼叫另一個服務，該服務查詢資料庫、處理資料，並將資料傳回原始服務，再由原始服務向前端傳送確認。
+單一操作（例如使用者點選按鈕）可能觸發一連串的事件。前端可能呼叫某個後端服務，該服務再呼叫另一個服務，後者查詢資料庫、處理資料，並將資料傳回原始服務，原始服務再將確認訊息傳送至前端。
 
-追蹤分析可協助您視覺化此事件流程並識別效能問題，如下圖所示。
+追蹤分析可協助您將這一連串的事件流程視覺化並識別效能問題，如下圖所示。
 
 ![詳細追蹤檢視]({{site.url}}{{site.baseurl}}/images/ta-trace.png)
+
+追蹤分析會分析來自您應用程式的追蹤。OpenSearch 也可以為其處理的請求產生追蹤。如需詳細資訊，請參閱[分散式追蹤]({{site.url}}{{site.baseurl}}/tuning-your-cluster/monitoring/telemetry/distributed-tracing/)。
 
 ## 使用 Jaeger 資料的追蹤分析
 

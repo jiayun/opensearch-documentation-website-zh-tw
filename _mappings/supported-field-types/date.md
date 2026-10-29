@@ -22,7 +22,7 @@ OpenSearch 中的日期可以用下列其中一種形式表示：
 - 一個已格式化的字串。
 - 一個對應自 epoch 起算秒數的整數值。
 
-若要表示日期範圍，可使用日期 [range 欄位類型]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/range/)。
+若要表示日期範圍，可使用日期[範圍欄位類型]({{site.url}}{{site.baseurl}}/opensearch/supported-field-types/range/)。
 {: .note }
 
 ## 範例
@@ -100,72 +100,72 @@ Z: 時區偏移（例如 +0400；-0400；-04:00）<br>
 
 ### 基本日期格式
 
-基本日期格式的各組成部分之間不以分隔符號分隔。例如 "20190323"。
+基本日期格式的各個組成部分之間不使用分隔符號。例如：「20190323」。
 
 格式名稱與說明 | 模式與範例
 :--- | :---
 **日期**| 
-`basic_date_time` <br> 以 `T` 分隔的基本日期與時間。 | `"yyyyMMdd`T`HHmmss.SSSZ"`<br>`"20190323T213446.123-04:00"`
-`basic_date_time_no_millis` <br> 不含毫秒、以 `T` 分隔的基本日期與時間。 | `"yyyyMMdd`T`HHmmssZ"`<br>`"20190323T213446-04:00"`
-`basic_date` <br> 四位數年份、兩位數月份與兩位數日期的日期。 | `"yyyyMMdd"<br>"20190323"` 
+`basic_date_time` <br> 以 `T` 分隔的基本日期與時間。 | `"yyyyMMdd'T'HHmmss.SSSZ"`<br>`"20190323T213446.123-04:00"`
+`basic_date_time_no_millis` <br> 不含毫秒、以 `T` 分隔的基本日期與時間。 | `"yyyyMMdd'T'HHmmssZ"`<br>`"20190323T213446-04:00"`
+`basic_date` <br> 包含四位數年份、兩位數月份及兩位數日期的日期。 | `"yyyyMMdd"`<br>`"20190323"` 
 **時間** |
-`basic_time` <br> 含兩位數小時、兩位數分鐘、兩位數秒、三位數毫秒以及時區偏移的時間。 |`"HHmmss.SSSZ"` <br> `"213446.123-04:00"`
+`basic_time` <br> 包含兩位數小時、兩位數分鐘、兩位數秒數、三位數毫秒及時區偏移的時間。 |`"HHmmss.SSSZ"` <br> `"213446.123-04:00"`
 `basic_time_no_millis` <br> 不含毫秒的基本時間。 | `"HHmmssZ"` <br> `"213446-04:00"`
 **T 時間** | 
-`basic_t_time` <br> 前面加上 `T` 的基本時間。 | `"`T`HHmmss.SSSZ"` <br> `"T213446.123-04:00"`
-`basic_t_time_no_millis` <br> 前面加上 `T`、不含毫秒的基本時間。 | `"`T`HHmmssZ"` <br> `"T213446-04:00"`
+`basic_t_time` <br> 前面加上 `T` 的基本時間。 | `"'T'HHmmss.SSSZ"` <br> `"T213446.123-04:00"`
+`basic_t_time_no_millis` <br> 不含毫秒、前面加上 `T` 的基本時間。 | `"'T'HHmmssZ"` <br> `"T213446-04:00"`
 **序數日期** |
-`basic_ordinal_date_time` <br> 完整的序數日期與時間。 | `"yyyyDDD`T`HHmmss.SSSZ"`<br>`"2019082T213446.123-04:00"`
-`basic_ordinal_date_time_no_millis` <br> 不含毫秒的完整序數日期與時間。 | `"yyyyDDD`T`HHmmssZ"`<br>`"2019082T213446-04:00"`
-`basic_ordinal_date` <br> 四位數年份與三位數一年中序數日的日期。 | `"yyyyDDD"` <br> `"2019082"`
-**週為基準的日期** | 
-`basic_week_date_time` <br> `strict_basic_week_date_time` <br> 以 `T` 分隔的完整週為基準日期與時間。 | `"YYYY`W`wwe`T`HHmmss.SSSZ"` <br> `"2019W126213446.123-04:00"`
-`basic_week_date_time_no_millis` <br> `strict_basic_week_date_time_no_millis` <br> 不含毫秒、以 `T` 分隔的基本週為基準年份日期與時間。 | `"YYYY`W`wwe`T`HHmmssZ"` <br> "2019W126213446-04:00"
-`basic_week_date` <br> `strict_basic_week_date` <br> 含四位數週為基準年份、兩位數一年中序數週與一位數一週中序數日、以 `W` 分隔的完整週為基準日期。 | `"YYYY`W`wwe"` <br> `"2019W126"`
+`basic_ordinal_date_time` <br> 完整的序數日期與時間。 | `"yyyyDDD'T'HHmmss.SSSZ"`<br>`"2019082T213446.123-04:00"`
+`basic_ordinal_date_time_no_millis` <br> 不含毫秒的完整序數日期與時間。 | `"yyyyDDD'T'HHmmssZ"`<br>`"2019082T213446-04:00"`
+`basic_ordinal_date` <br> 包含四位數年份及三位數年中序數日的日期。 | `"yyyyDDD"` <br> `"2019082"`
+**以週為基準的日期** | 
+`basic_week_date_time` <br> `strict_basic_week_date_time` <br> 以 `T` 分隔、以週為基準的完整日期與時間。 | `"YYYY'W'wwe'T'HHmmss.SSSZ"` <br> `"2019W126T213446.123-04:00"`
+`basic_week_date_time_no_millis` <br> `strict_basic_week_date_time_no_millis` <br> 不含毫秒、以 `T` 分隔、以週為基準年份的基本日期與時間。 | `"YYYY'W'wwe'T'HHmmssZ"` <br> `"2019W126T213446-04:00"`
+`basic_week_date` <br> `strict_basic_week_date` <br> 以週為基準的完整日期，包含四位數的週基準年份、兩位數的年中序數週，以及一位數的週中序數日，並以 `W` 分隔。 | `"YYYY'W'wwe"` <br> `"2019W126"`
 
 ### 完整日期格式
 
-完整日期格式的各個組成部分會以日期分隔符號 `-` 和時間分隔符號 `:` 分隔。例如，`"2019-03-23T21:34"`。
+完整日期格式的各組成部分以 `-` 作為日期分隔符，以 `:` 作為時間分隔符。例如 `"2019-03-23T21:34"`。
 
 格式名稱與說明 | 模式與範例
 :--- | :---
 **日期** |
-`date_optional_time`<br>`strict_date_optional_time` <br> 通用的完整日期與時間。年份為必要。月份、日與時間為選用。時間與日期以 `T` 分隔。 | 多種模式。<br>`"2019--03--23T21:34:46.123456789--04:00"` <br> `"2019-03-23T21:34:46"` <br> `"2019-03-23T21:34"` <br> `"2019"`
-`strict_date_optional_time_nanos` <br>通用的完整日期與時間。年份為必要。月份、日與時間為選用。若指定時間，則必須包含時、分與秒，但秒的小數部分為選用。秒的小數部分長度為一至九位數，並具有奈秒解析度。時間與日期以 `T` 分隔。 | 多種模式。<br> `"2019-03-23T21:34:46.123456789-04:00"` <br> `"2019-03-23T21:34:46"` <br> `"2019"` 
-`date_time` <br> `strict_date_time` <br> 以 `T` 分隔的完整日期與時間。 | `"yyyy-MM-dd`T`HH:mm:ss.SSSZ"` <br> `"2019-03-23T21:34:46.123-04:00"`
+`date_optional_time`<br>`strict_date_optional_time` <br> 一般的完整日期與時間。年份為必要。月、日與時間為選用。時間與日期之間以 `T` 分隔。 | 多種模式。<br>`"2019-03-23T21:34:46.123456789-04:00"` <br> `"2019-03-23T21:34:46"` <br> `"2019-03-23T21:34"` <br> `"2019"`
+`strict_date_optional_time_nanos` <br>一般的完整日期與時間。年份為必要。月、日與時間為選用。若指定時間，必須包含小時、分鐘與秒，但秒的小數部分為選用。秒的小數部分為一到九位數，具有奈秒解析度。時間與日期之間以 `T` 分隔。 | 多種模式。<br> `"2019-03-23T21:34:46.123456789-04:00"` <br> `"2019-03-23T21:34:46"` <br> `"2019"` 
+`date_time` <br> `strict_date_time` <br> 以 `T` 分隔的完整日期與時間。 | `"yyyy-MM-dd'T'HH:mm:ss.SSSZ"` <br> `"2019-03-23T21:34:46.123-04:00"`
 `date_time_no_millis` <br> `strict_date_time_no_millis` <br> 不含毫秒、以 `T` 分隔的完整日期與時間。 | `"yyyy-MM-dd'T'HH:mm:ssZ"` <br> `"2019-03-23T21:34:46-04:00"` 
-`date_hour_minute_second_fraction` <br> `strict_date_hour_minute_second_fraction` <br> 以 `T` 分隔的完整日期、兩位數時、兩位數分、兩位數秒，以及一至九位數的秒的小數部分。 | `"yyyy-MM-dd`T`HH:mm:ss.SSSSSSSSS"`<br>`"2019-03-23T21:34:46.123456789"` <br> `"2019-03-23T21:34:46.1"`
-`date_hour_minute_second_millis` <br> `strict_date_hour_minute_second_millis` <br> 以 `T` 分隔的完整日期、兩位數時、兩位數分、兩位數秒，以及三位數毫秒。 | `"yyyy-MM-dd`T`HH:mm:ss.SSS"` <br> `"2019-03-23T21:34:46.123"` 
-`date_hour_minute_second` <br> `strict_date_hour_minute_second` <br> 以 `T` 分隔的完整日期、兩位數時、兩位數分與兩位數秒。| `"yyyy-MM-dd`T`HH:mm:ss"`<br>`"2019-03-23T21:34:46"`
-`date_hour_minute` <br> `strict_date_hour_minute` <br> 完整日期、兩位數時與兩位數分。 | `"yyyy-MM-dd`T`HH:mm"` <br> `"2019-03-23T21:34"`
-`date_hour` <br> `strict_date_hour` <br> 以 `T` 分隔的完整日期與兩位數時。 | `"yyyy-MM-dd`T`HH"` <br> `"2019-03-23T21"` 
-`date` <br> `strict_date` <br> 四位數年份、兩位數月份與兩位數日。 | `"yyyy-MM-dd"` <br> `"2019-03-23"` 
-`year_month_day` <br> `strict_year_month_day` <br> 四位數年份、兩位數月份與兩位數日。 | `"yyyy-MM-dd"` <br> `"2019-03-23"` 
+`date_hour_minute_second_fraction` <br> `strict_date_hour_minute_second_fraction` <br> 完整日期與時間，以 `T` 分隔日期與時間；時間包含兩位數小時、兩位數分鐘、兩位數秒，以及一到九位數秒的小數部分。 | `"yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS"`<br>`"2019-03-23T21:34:46.123456789"` <br> `"2019-03-23T21:34:46.1"`
+`date_hour_minute_second_millis` <br> `strict_date_hour_minute_second_millis` <br> 完整日期與時間，以 `T` 分隔日期與時間；時間包含兩位數小時、兩位數分鐘、兩位數秒，以及三位數毫秒。 | `"yyyy-MM-dd'T'HH:mm:ss.SSS"` <br> `"2019-03-23T21:34:46.123"` 
+`date_hour_minute_second` <br> `strict_date_hour_minute_second` <br> 完整日期與時間，以 `T` 分隔日期與時間；時間包含兩位數小時、兩位數分鐘與兩位數秒。 | `"yyyy-MM-dd'T'HH:mm:ss"`<br>`"2019-03-23T21:34:46"`
+`date_hour_minute` <br> `strict_date_hour_minute` <br> 完整日期、兩位數小時與兩位數分鐘。 | `"yyyy-MM-dd'T'HH:mm"` <br> `"2019-03-23T21:34"`
+`date_hour` <br> `strict_date_hour` <br> 以 `T` 分隔的完整日期與兩位數小時。 | `"yyyy-MM-dd'T'HH"` <br> `"2019-03-23T21"` 
+`date` <br> `strict_date` <br> 四位數年份、兩位數月份與兩位數日期。 | `"yyyy-MM-dd"` <br> `"2019-03-23"` 
+`year_month_day` <br> `strict_year_month_day` <br> 四位數年份、兩位數月份與兩位數日期。 | `"yyyy-MM-dd"` <br> `"2019-03-23"` 
 `year_month` <br> `strict_year_month` <br> 四位數年份與兩位數月份。 | `"yyyy-MM"` <br> `"2019-03"` 
 `year` <br> `strict_year` <br> 四位數年份。 | `"yyyy"` <br> `"2019"` 
-`rfc3339_lenient` <br>與 RFC3339 相容的 DateTimeFormatter，其速度遠快於其他寬鬆的完整日期格式，例如 `strict_date_optional_time` | `"YYYY"` <br> `"2019"` <br> `"YYYY-MM"` <br> `"2019-03"` <br> `"YYYY-MM-DD"` <br> `"2019-03-23"` <br> `"YYYY-MM-DDThh:mmTZD"` <br> `"2019-03-23T21:34Z"` <br> `"YYYY-MM-DDThh:mm:ssTZD"` <br> `"2019-03-23T21:34:46Z"` <br> `"YYYY-MM-DDThh:mm:ss.sTZD"` <br> `"2019-03-23T21:34:46.123456789-04:00"` <br> `"YYYY-MM-DDThh:mm:ss,sTZD"` <br> `"2019-03-23T21:34:46,123456789-04:00"`
+`rfc3339_lenient` <br>相容於 RFC3339 的 DateTimeFormatter，比 `strict_date_optional_time` 等其他完整寬鬆日期格式快得多 | `"YYYY"` <br> `"2019"` <br> `"YYYY-MM"` <br> `"2019-03"` <br> `"YYYY-MM-DD"` <br> `"2019-03-23"` <br> `"YYYY-MM-DDThh:mmTZD"` <br> `"2019-03-23T21:34Z"` <br> `"YYYY-MM-DDThh:mm:ssTZD"` <br> `"2019-03-23T21:34:46Z"` <br> `"YYYY-MM-DDThh:mm:ss.sTZD"` <br> `"2019-03-23T21:34:46.123456789-04:00"` <br> `"YYYY-MM-DDThh:mm:ss,sTZD"` <br> `"2019-03-23T21:34:46,123456789-04:00"`
 **時間** | 
-`time` <br> `strict_time` <br> 兩位數時、兩位數分、兩位數秒、一至九位數的秒的小數部分，以及時區位移。 | `"HH:mm:ss.SSSSSSSSSZ"` <br> `"21:34:46.123456789-04:00"` <br> `"21:34:46.1-04:00"`
-`time_no_millis` <br> `strict_time_no_millis` <br> 兩位數時、兩位數分、兩位數秒，以及時區位移。 | `"HH:mm:ssZ"` <br> `"21:34:46-04:00"` 
-`hour_minute_second_fraction` <br> `strict_hour_minute_second_fraction` <br> 兩位數時、兩位數分、兩位數秒，以及一至九位數的秒的小數部分。 | `"HH:mm:ss.SSSSSSSSS"` <br> `"21:34:46.1"` <br> `"21:34:46.123456789"` 
-`hour_minute_second_millis` <br> `strict_hour_minute_second_millis` <br> 兩位數時、兩位數分、兩位數秒，以及三位數毫秒。 | `"HH:mm:ss.SSS"` <br> `"21:34:46.123"` 
-`hour_minute_second` <br> `strict_hour_minute_second` <br> 兩位數時、兩位數分與兩位數秒。 | `"HH:mm:ss"` <br> `"21:34:46"` 
-`hour_minute` <br> `strict_hour_minute` <br> 兩位數時與兩位數分。 | `"HH:mm"` <br> `"21:34"` 
-`hour` <br> `strict_hour` <br> 兩位數時。 | `"HH"` <br> `"21"` 
+`time` <br> `strict_time` <br> 兩位數小時、兩位數分鐘、兩位數秒、一到九位數秒的小數部分，以及時區偏移。 | `"HH:mm:ss.SSSSSSSSSZ"` <br> `"21:34:46.123456789-04:00"` <br> `"21:34:46.1-04:00"`
+`time_no_millis` <br> `strict_time_no_millis` <br> 兩位數小時、兩位數分鐘、兩位數秒，以及時區偏移。 | `"HH:mm:ssZ"` <br> `"21:34:46-04:00"` 
+`hour_minute_second_fraction` <br> `strict_hour_minute_second_fraction` <br> 兩位數小時、兩位數分鐘、兩位數秒，以及一到九位數秒的小數部分。 | `"HH:mm:ss.SSSSSSSSS"` <br> `"21:34:46.1"` <br> `"21:34:46.123456789"` 
+`hour_minute_second_millis` <br> `strict_hour_minute_second_millis` <br> 兩位數小時、兩位數分鐘、兩位數秒，以及三位數毫秒。 | `"HH:mm:ss.SSS"` <br> `"21:34:46.123"` 
+`hour_minute_second` <br> `strict_hour_minute_second` <br> 兩位數小時、兩位數分鐘與兩位數秒。 | `"HH:mm:ss"` <br> `"21:34:46"` 
+`hour_minute` <br> `strict_hour_minute` <br> 兩位數小時與兩位數分鐘。 | `"HH:mm"` <br> `"21:34"` 
+`hour` <br> `strict_hour` <br> 兩位數小時。 | `"HH"` <br> `"21"` 
 **T 時間** |
-`t_time` <br> `strict_t_time` <br> 以 `T` 開頭的兩位數時、兩位數分、兩位數秒、一至九位數的秒的小數部分，以及時區位移。 | `"`T`HH:mm:ss.SSSSSSSSSZ"<br>"T21:34:46.123456789-04:00"` <br> `"T21:34:46.1-04:00"`
-`t_time_no_millis` <br> `strict_t_time_no_millis` <br> 以 `T` 開頭的兩位數時、兩位數分、兩位數秒，以及時區位移。 | `"`T`HH:mm:ssZ"` <br> `"T21:34:46-04:00"`
+`t_time` <br> `strict_t_time` <br> 兩位數小時、兩位數分鐘、兩位數秒、一到九位數秒的小數部分，以及時區偏移，前面加上 `T`。 | `"'T'HH:mm:ss.SSSSSSSSSZ"`<br>`"T21:34:46.123456789-04:00"` <br> `"T21:34:46.1-04:00"`
+`t_time_no_millis` <br> `strict_t_time_no_millis` <br> 兩位數小時、兩位數分鐘、兩位數秒，以及時區偏移，前面加上 `T`。 | `"'T'HH:mm:ssZ"` <br> `"T21:34:46-04:00"`
 **序數日期** |
-`ordinal_date_time` <br> `strict_ordinal_date_time` <br> 以 `T` 分隔的完整序數日期與時間。 | `"yyyy-DDD`T`HH:mm:ss.SSSZ"` <br> `"2019-082T21:34:46.123-04:00"` 
-`ordinal_date_time_no_millis` <br> `strict_ordinal_date_time_no_millis` <br> 不含毫秒、以 `T` 分隔的完整序數日期與時間。 | `"yyyy-DDD`T`HH:mm:ssZ"` <br> `"2019-082T21:34:46-04:00"`
-`ordinal_date` <br> `strict_ordinal_date`<br> 包含四位數年份與三位數年度序數日的完整序數日期。 | `"yyyy-DDD"` <br> `"2019-082"`
-**以週為基礎的日期** |
-`week_date_time` <br> `strict_week_date_time` <br> 以 `T` 分隔的完整以週為基礎的日期與時間。週日期為四位數的以週為基礎的年份、兩位數的年度序數週，以及一位數的星期序數日。時間為兩位數時、兩位數分、兩位數秒、一至九位數的秒的小數部分，以及時區位移。 | `"YYYY-`W`ww-e`T`HH:mm:ss.SSSSSSSSSZ"` <br> `"2019-W12-6T21:34:46.1-04:00"` <br> `"2019-W12-6T21:34:46.123456789-04:00"`
-`week_date_time_no_millis` <br> `strict_week_date_time_no_millis` <br> 不含毫秒、以 `T` 分隔的完整以週為基礎的日期與時間。週日期為四位數的以週為基礎的年份、兩位數的年度序數週，以及一位數的星期序數日。時間為兩位數時、兩位數分、兩位數秒，以及時區位移。 | `"YYYY-`W`ww-e`T`HH:mm:ssZ"` <br> `"2019-W12-6T21:34:46-04:00"`
-`week_date` <br> `strict_week_date` <br> 包含四位數的以週為基礎的年份、兩位數的年度序數週，以及一位數的星期序數日的完整以週為基礎的日期。 | `"YYYY-`W`ww-e"` <br> `"2019-W12-6"`
-`weekyear_week_day` <br> `strict_weekyear_week_day` <br> 四位數的以週為基礎的年份、兩位數的年度序數週，以及一位數的星期序數日。 | `"YYYY-'W'ww-e"` <br> `"2019-W12-6"` 
-`weekyear_week` <br> `strict_weekyear_week` <br> 四位數的以週為基礎的年份與兩位數的年度序數週。 | `"YYYY-`W`ww"` <br> `"2019-W12"` 
-`weekyear` <br> `strict_weekyear` <br> 四位數的以週為基礎的年份。 | `"YYYY"` <br> `"2019"` 
+`ordinal_date_time` <br> `strict_ordinal_date_time` <br> 以 `T` 分隔的完整序數日期與時間。 | `"yyyy-DDD'T'HH:mm:ss.SSSZ"` <br> `"2019-082T21:34:46.123-04:00"` 
+`ordinal_date_time_no_millis` <br> `strict_ordinal_date_time_no_millis` <br> 不含毫秒、以 `T` 分隔的完整序數日期與時間。 | `"yyyy-DDD'T'HH:mm:ssZ"` <br> `"2019-082T21:34:46-04:00"`
+`ordinal_date` <br> `strict_ordinal_date`<br> 具有四位數年份與三位數年內序數日的完整序數日期。 | `"yyyy-DDD"` <br> `"2019-082"`
+**以週為基準的日期** |
+`week_date_time` <br> `strict_week_date_time` <br> 以 `T` 分隔的完整以週為基準的日期與時間。週日期為四位數以週為基準的年份、兩位數年內序數週，以及一位數週內序數日。時間為兩位數小時、兩位數分鐘、兩位數秒、一到九位數秒的小數部分，以及時區偏移。 | `"YYYY-'W'ww-e'T'HH:mm:ss.SSSSSSSSSZ"` <br> `"2019-W12-6T21:34:46.1-04:00"` <br> `"2019-W12-6T21:34:46.123456789-04:00"`
+`week_date_time_no_millis` <br> `strict_week_date_time_no_millis` <br> 不含毫秒、以 `T` 分隔的完整以週為基準的日期與時間。週日期為四位數以週為基準的年份、兩位數年內序數週，以及一位數週內序數日。時間為兩位數小時、兩位數分鐘、兩位數秒，以及時區偏移。 | `"YYYY-'W'ww-e'T'HH:mm:ssZ"` <br> `"2019-W12-6T21:34:46-04:00"`
+`week_date` <br> `strict_week_date` <br> 具有四位數以週為基準的年份、兩位數年內序數週，以及一位數週內序數日的完整以週為基準的日期。 | `"YYYY-'W'ww-e"` <br> `"2019-W12-6"`
+`weekyear_week_day` <br> `strict_weekyear_week_day` <br> 四位數以週為基準的年份、兩位數年內序數週，以及一位數週內日。 | `"YYYY-'W'ww-e"` <br> `"2019-W12-6"` 
+`weekyear_week` <br> `strict_weekyear_week` <br> 四位數以週為基準的年份與兩位數年內序數週。 | `"YYYY-'W'ww"` <br> `"2019-W12"` 
+`weekyear` <br> `strict_weekyear` <br> 四位數以週為基準的年份。 | `"YYYY"` <br> `"2019"` 
 
 ## 自訂格式
 

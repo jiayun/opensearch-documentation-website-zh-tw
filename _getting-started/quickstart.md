@@ -35,7 +35,7 @@ OpenSearch 支援多種安裝方式：Docker、Debian、Helm、RPM、tarball 和
 啟動 OpenSearch：
 
 ```bash
-docker pull opensearchproject/opensearch:latest && docker run -d -p 9200:9200 -p 9600:9600 -e "discovery.type=single-node" -e "DISABLE_SECURITY_PLUGIN=true" --name opensearch opensearchproject/opensearch:latest
+docker pull opensearchproject/opensearch:latest && docker run -d -p 9200:9200 -e "discovery.type=single-node" -e "DISABLE_SECURITY_PLUGIN=true" --name opensearch opensearchproject/opensearch:latest
 ```
 {% include copy.html %}
 
@@ -109,7 +109,7 @@ curl http://localhost:9200
     ```bash
     NAME                    IMAGE                                            COMMAND                  SERVICE                 CREATED          STATUS          PORTS
     opensearch-dashboards   opensearchproject/opensearch-dashboards:latest   "./opensearch-dashbo…"   opensearch-dashboards   30 seconds ago   Up 30 seconds   0.0.0.0:5601->5601/tcp, [::]:5601->5601/tcp
-    opensearch-node1        opensearchproject/opensearch:latest              "./opensearch-docker…"   opensearch-node1        30 seconds ago   Up 30 seconds   0.0.0.0:9200->9200/tcp, [::]:9200->9200/tcp, 9300/tcp, 0.0.0.0:9600->9600/tcp, [::]:9600->9600/tcp, 9650/tcp
+    opensearch-node1        opensearchproject/opensearch:latest              "./opensearch-docker…"   opensearch-node1        30 seconds ago   Up 30 seconds   0.0.0.0:9200->9200/tcp, [::]:9200->9200/tcp, 9300/tcp, 9600/tcp, 9650/tcp
     opensearch-node2        opensearchproject/opensearch:latest              "./opensearch-docker…"   opensearch-node2        30 seconds ago   Up 30 seconds   9200/tcp, 9300/tcp, 9600/tcp, 9650/tcp
     ```
 
@@ -202,7 +202,7 @@ curl http://localhost:9200
     ```bash
     NAME                    IMAGE                                            COMMAND                  SERVICE                 CREATED          STATUS          PORTS
     opensearch-dashboards   opensearchproject/opensearch-dashboards:latest   "./opensearch-dashbo…"   opensearch-dashboards   30 seconds ago   Up 30 seconds   0.0.0.0:5601->5601/tcp, [::]:5601->5601/tcp
-    opensearch-node1        opensearchproject/opensearch:latest              "./opensearch-docker…"   opensearch-node1        30 seconds ago   Up 30 seconds   0.0.0.0:9200->9200/tcp, [::]:9200->9200/tcp, 9300/tcp, 0.0.0.0:9600->9600/tcp, [::]:9600->9600/tcp, 9650/tcp
+    opensearch-node1        opensearchproject/opensearch:latest              "./opensearch-docker…"   opensearch-node1        30 seconds ago   Up 30 seconds   0.0.0.0:9200->9200/tcp, [::]:9200->9200/tcp, 9300/tcp, 9600/tcp, 9650/tcp
     opensearch-node2        opensearchproject/opensearch:latest              "./opensearch-docker…"   opensearch-node2        30 seconds ago   Up 30 seconds   9200/tcp, 9300/tcp, 9600/tcp, 9650/tcp
     ```
 

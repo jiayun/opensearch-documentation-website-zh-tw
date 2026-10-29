@@ -79,7 +79,6 @@ services:
       - opensearch-data2:/usr/share/opensearch/data
     ports:
       - 9201:9200
-      - 9700:9600 # required for Performance Analyzer
     networks:
       - opensearch-net
   replication-node2:
@@ -98,7 +97,6 @@ services:
       - opensearch-data1:/usr/share/opensearch/data
     ports:
       - 9200:9200
-      - 9600:9600 # required for Performance Analyzer
     networks:
       - opensearch-net
 
@@ -133,8 +131,8 @@ curl -XGET -u 'admin:<custom-admin-password>' -k 'https://localhost:9200'
 ```bash
 docker ps
 CONTAINER ID    IMAGE                                       PORTS                                                      NAMES
-3b8cdc698be5    opensearchproject/opensearch:{{site.opensearch_version}}   0.0.0.0:9200->9200/tcp, 0.0.0.0:9600->9600/tcp, 9300/tcp   replication-node2
-731f5e8b0f4b    opensearchproject/opensearch:{{site.opensearch_version}}   9300/tcp, 0.0.0.0:9201->9200/tcp, 0.0.0.0:9700->9600/tcp   replication-node1
+3b8cdc698be5    opensearchproject/opensearch:{{site.opensearch_version}}   0.0.0.0:9200->9200/tcp, 9600/tcp, 9300/tcp   replication-node2
+731f5e8b0f4b    opensearchproject/opensearch:{{site.opensearch_version}}   9300/tcp, 0.0.0.0:9201->9200/tcp, 9600/tcp   replication-node1
 ```
 
 然後取得該容器的 IP 位址：

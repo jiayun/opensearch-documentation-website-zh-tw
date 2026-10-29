@@ -101,7 +101,7 @@ OpenSearch 支援下列叢集層級的路由與分片配置設定：
 
 - `cluster.routing.weighted.strict`（動態，布林值）：啟用時，會強制執行嚴格的加權路由，請求只會路由至具有適當權重的節點。預設值為 `true`。
 
-- `cluster.routing.allocation.awareness.attributes`（動態，清單）：請參閱[分片配置感知]({{site.url}}{{site.baseurl}}/tuning-your-cluster/index#shard-allocation-awareness)。
+- `cluster.routing.allocation.awareness.attributes`（動態，清單）：請參閱[分片配置感知]({{site.url}}{{site.baseurl}}/tuning-your-cluster/creating-a-cluster/#shard-allocation-awareness)。
 
 - `cluster.routing.allocation.include.<attribute>`（動態，列舉）：將分片配置到其 `attribute` 包含至少一個所列逗號分隔值的節點。
 
@@ -118,13 +118,13 @@ OpenSearch 支援下列叢集層級的路由與分片配置設定：
     - `_id`：依節點 ID 比對節點。
     - `_tier`：依資料層角色比對節點。
 
-- `cluster.routing.allocation.awareness.force.<attribute>.values`（動態，清單）：請參閱[強制感知]({{site.url}}{{site.baseurl}}/tuning-your-cluster/index#forced-awareness)。
+- `cluster.routing.allocation.awareness.force.<attribute>.values`（動態，清單）：請參閱[強制感知]({{site.url}}{{site.baseurl}}/tuning-your-cluster/creating-a-cluster/#forced-awareness)。
 
 - `cluster.routing.allocation.shard_movement_strategy`（動態，列舉）：決定將分片從移出節點重新放置到移入節點的順序。
 
     此設定支援下列策略：
     - `PRIMARY_FIRST`：先重新放置主要分片，再重新放置副本分片。如果重新放置中的節點在過程中發生故障，此優先順序可能有助於防止叢集的健康狀態變為紅色。
-    - `REPLICA_FIRST`：先重新放置副本分片，再重新放置主要分片。在混合版本且啟用區段複寫的 OpenSearch 叢集中執行分片重新放置時，此優先順序可能有助於防止叢集的健康狀態變為紅色。在此情況下，重新放置到較新版本 OpenSearch 節點的主要分片，可能會嘗試將區段檔案複製到較舊版本 OpenSearch 上的副本分片，進而導致分片故障。在多版本叢集中，先重新放置副本分片可能有助於避免此問題。
+    - `REPLICA_FIRST`：先重新放置副本分片，再重新放置主要分片。在混合版本且啟用分段複寫的 OpenSearch 叢集中執行分片重新放置時，此優先順序可能有助於防止叢集的健康狀態變為紅色。在此情況下，重新放置到較新版本 OpenSearch 節點的主要分片，可能會嘗試將分段檔案複製到較舊版本 OpenSearch 上的副本分片，進而導致分片故障。在多版本叢集中，先重新放置副本分片可能有助於避免此問題。
     - `NO_PREFERENCE`：預設行為，分片重新放置的順序不具重要性。 
 
 - `cluster.routing.search_replica.strict`（動態，布林值）：控制當索引存在搜尋副本分片時（例如 `index.number_of_search_replicas` 大於 `0` 時），搜尋請求的路由方式。此設定僅在索引已設定搜尋副本時適用。設為 `true` 時，這類索引的所有搜尋請求只會路由至搜尋副本分片。若搜尋副本未指派，請求將會失敗。設為 `false` 時，若搜尋副本未指派，請求會改為路由至任何可用的分片。預設為 `true`。
@@ -139,7 +139,7 @@ OpenSearch 支援下列叢集層級的路由與分片配置設定：
 
 - `cluster.routing.allocation.total_shards_per_node`（動態，整數）：可配置至單一節點的主要分片與副本分片合計的最大數量。預設為 `-1`（無限制）。透過限制每個節點的分片總數，有助於將分片平均分散至各節點。請謹慎使用，因為若節點達到其設定的上限，分片可能會維持未配置狀態。
 
-- `cluster.routing.allocation.total_primary_shards_per_node`（動態，整數）：可配置至單一節點的主要分片最大數量。此設定僅適用於遠端支援的叢集。預設為 `-1`（無限制）。透過限制每個節點的主要分片數量，有助於將主要分片平均分散至各節點。請謹慎使用，因為若節點達到其設定的上限，主要分片可能會維持未配置狀態。
+- `cluster.routing.allocation.total_primary_shards_per_node`（動態，整數）：可配置至單一節點的主要分片最大數量。此設定僅適用於使用遠端後端儲存空間的叢集。預設為 `-1`（無限制）。透過限制每個節點的主要分片數量，有助於將主要分片平均分散至各節點。請謹慎使用，因為若節點達到其設定的上限，主要分片可能會維持未配置狀態。
 
 - `cluster.routing.allocation.disk.watermark.enable_for_single_data_node`（靜態，布林值）：為僅有單一資料節點的叢集啟用磁碟水位檢查。啟用後，即使在單一節點叢集中，也會強制執行以磁碟為基礎的分片配置決策。預設為 `false`。
 
@@ -355,7 +355,7 @@ OpenSearch 支援下列動態叢集管理員任務節流設定，用於控制特
 
 OpenSearch 支援下列遠端儲存設定：
 
-如需實用範例與逐步組態指南，請參閱[遠端支援儲存空間]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/remote-store/)。
+如需實用範例與逐步組態指南，請參閱[遠端後端儲存空間]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/remote-store/)。
 {: .tip}
 
 
@@ -366,7 +366,7 @@ OpenSearch 支援下列遠端儲存設定：
   - `mixed`：在遷移期間允許同時包含已啟用遠端儲存的節點與一般節點的混合叢集
   預設值為 `strict`。
 
-- `cluster.remote_store.state.enabled`（靜態，布林值）：啟用遠端叢集狀態功能。啟用時，除了本機儲存空間之外，叢集狀態中繼資料也會儲存在遠端儲存庫中，以啟用無縫搜尋副本復原與提升叢集復原能力等功能。此設定必須在叢集初始化期間設定，且需要適當的遠端儲存庫組態。預設值為 `false`。
+- `cluster.remote_store.state.enabled`（靜態，布林值）：啟用遠端叢集狀態功能。啟用時，除了本機儲存空間之外，叢集狀態中繼資料也會儲存在遠端儲存庫中，以啟用無縫搜尋副本復原與提升叢集韌性等功能。此設定必須在叢集初始化期間設定，且需要適當的遠端儲存庫組態。預設值為 `false`。
 
 - `cluster.remote_store.publication.enabled`（靜態，布林值）：啟用叢集狀態更新的遠端發布。啟用時，叢集狀態變更會發布至遠端儲存，以實現分散式狀態管理並改善叢集協調。此設定需要將 `cluster.remote_store.state.enabled` 設為 `true`。預設值為 `false`。
 
@@ -385,7 +385,7 @@ OpenSearch 支援下列遠端儲存設定：
 
 - `cluster.indices.replication.strategy`（動態，字串）：設定叢集中索引的複寫策略。有效值包括：
   - `DOCUMENT`：傳統的以文件為基礎的複寫
-  - `SEGMENT`：以區段為基礎的複寫，可提升效能與效率
+  - `SEGMENT`：以分段為基礎的複寫，可提升效能與效率
   預設值為 `DOCUMENT`。
 
 - `cluster.index.restrict.replication.type`（動態，布林值）：啟用時，會限制建立具有特定複寫類型的索引，以確保整個叢集的一致性。此設定有助於強制執行複寫政策，並防止不相容的複寫組態。預設值為 `false`。

@@ -28,7 +28,7 @@ redirect_from:
 
 ## 靜態設定
 
-靜態設定是指無法在叢集執行期間更新的設定。若要變更靜態設定，請在每個節點的 `opensearch.yml` 中或使用啟動旗標更新該設定，然後重新啟動節點。一般而言，靜態設定與網路、叢集形成和本機檔案系統相關。如需詳細資訊，請參閱[建立叢集]({{site.url}}{{site.baseurl}}/tuning-your-cluster/)。
+靜態設定是指無法在叢集執行期間更新的設定。若要變更靜態設定，請在每個節點的 `opensearch.yml` 中或使用啟動旗標更新該設定，然後重新啟動節點。一般而言，靜態設定與網路、叢集形成和本機檔案系統相關。如需詳細資訊，請參閱[建立叢集]({{site.url}}{{site.baseurl}}/tuning-your-cluster/creating-a-cluster/)。
 
 ## 動態設定
 

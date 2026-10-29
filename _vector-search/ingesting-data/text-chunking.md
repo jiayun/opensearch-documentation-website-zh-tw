@@ -12,7 +12,7 @@ redirect_from:
 自 2.13 版起推出
 {: .label .label-purple }
 
-在 [AI 搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/) 中處理大型文字文件時，通常需要將其分割成較小的段落，因為大多數嵌入模型都有詞元長度限制。這個稱為_文字分段_的流程，可確保每個嵌入都代表一段符合模型限制的聚焦內容，藉此維持向量搜尋結果的品質與相關性。
+在 [AI 搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/) 中處理大型文字文件時，通常需要將其分割成較小的段落，因為大多數嵌入模型都有詞元長度限制。這個稱為 _文字分段_ 的流程，可確保每個嵌入都代表一段符合模型限制的聚焦內容，藉此維持向量搜尋結果的品質與相關性。
 
 若要將長文字分割成段落，您可以使用 `text_chunking` 處理器，作為 `text_embedding` 或 `sparse_encoding` 處理器的前置處理步驟，以取得每個分段段落的嵌入。如需處理器參數的詳細資訊，請參閱[文字分段處理器]({{site.url}}{{site.baseurl}}/ingest-pipelines/processors/text-chunking/)。開始之前，請依照[預先訓練模型文件]({{site.url}}{{site.baseurl}}/ml-commons-plugin/pretrained-models/)中概述的步驟註冊嵌入模型。下列範例會先將文字分割成段落進行前置處理，然後使用 `text_embedding` 或 `sparse_encoding` 處理器產生嵌入。
 
@@ -91,7 +91,7 @@ PUT testindex
 
 ### 步驟 3：將文件匯入索引
 
-若要將文件匯入上一個步驟建立的索引，請傳送下列請求：
+若要將文件匯入上一個步驟中建立的索引，請傳送下列請求：
 
 ```json
 POST testindex/_doc?pipeline=text-chunking-embedding-ingest-pipeline
@@ -133,7 +133,7 @@ GET testindex/_search
 
 ### 步驟 1：建立管線
 
-下列範例請求會建立資料匯入管線，將 `passage_text` 欄位中的文字轉換為分段段落，並儲存在 `passage_chunk` 欄位中。接著將 `passage_chunk` 欄位中的文字轉換為文字嵌入，並將嵌入儲存在 `passage_chunk_embedding` 欄位中：
+下列範例請求會建立一條資料匯入管線，將 `passage_text` 欄位中的文字轉換為分塊段落，並儲存在 `passage_chunk` 欄位中。接著，`passage_chunk` 欄位中的文字會被轉換為稀疏嵌入，並將嵌入儲存在 `passage_chunk_embedding` 欄位中：
 
 ```json
 PUT _ingest/pipeline/text-chunking-embedding-ingest-pipeline
@@ -205,7 +205,7 @@ PUT /testindex
   },
   "mappings": {
     "properties": {
-      "text": {
+      "passage_text": {
         "type": "text"
       },
       "passage_chunk_embedding": {

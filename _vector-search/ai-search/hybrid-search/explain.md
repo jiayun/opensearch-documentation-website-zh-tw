@@ -24,7 +24,7 @@ GET {index}/_search?search_pipeline={search_pipeline}&explain=true
 POST {index}/_search?search_pipeline={search_pipeline}&explain=true
 ```
 
-若要使用 `explain` 參數，您必須在搜尋管線中設定 `hybrid_score_explanation` 回應處理器。如需更多資訊，請參閱 [Hybrid score explanation processor]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/explanation-processor/)。
+若要使用 `explain` 參數，您必須在搜尋管線中設定 `hybrid_score_explanation` 回應處理器。如需更多資訊，請參閱[混合分數說明處理器]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/explanation-processor/)。
 
 ### 依文件 ID 說明
 
@@ -35,14 +35,14 @@ GET {index}/_explain/{id}
 POST {index}/_explain/{id}
 ```
 
-在此情況下，結果只會包含原始的 Lucene 層級評分資訊，例如 `term` 或 `match` 等文字型子查詢的 [Okapi BM25](https://en.wikipedia.org/wiki/Okapi_BM25) 分數。如需回應範例，請參閱 [Explain API example response]({{site.url}}{{site.baseurl}}/api-reference/explain/#example-response)。
+在此情況下，結果只包含原始的 Lucene 層級評分資訊，例如 `term` 或 `match` 等以文字為基礎的子查詢的 [Okapi BM25](https://en.wikipedia.org/wiki/Okapi_BM25) 分數。回應範例請參閱 [Explain API 範例回應]({{site.url}}{{site.baseurl}}/api-reference/explain/#example-response)。
 
 Explain API 與混合查詢搭配使用時有下列限制：
 
-- `_explain` 端點不支援 `search_pipeline` 查詢參數，無論是內嵌還是作為查詢參數。提供 `search_pipeline` 參數會導致 `parsing_exception` 錯誤。此限制適用於所有查詢類型，並非僅限混合查詢。
-- 分數正規化技術（例如 `min_max`、`l2` 或 `z_score`）與合併技術（例如 `arithmetic_mean`）需要所有相符文件的分數才能計算統計值。由於 Explain API 只針對單一文件運作，因此無法提供正規化情境。`hybrid_score_explanation` 回應處理器不會被呼叫，也不會傳回任何正規化後的評分詳細資訊。
+- `_explain` 端點不支援在請求本文或 URL 中使用 `search_pipeline` 參數，並會拒絕包含此參數的請求。此限制適用於所有查詢類型，不僅限於混合查詢。
+- 分數正規化技術（例如 `min_max`、`l2` 或 `z_score`）與組合技術（例如 `arithmetic_mean`）需要所有相符文件的分數才能計算統計資料。由於 Explain API 只針對單一文件運作，因此無法提供正規化脈絡。`hybrid_score_explanation` 回應處理器不會被叫用，也不會傳回任何正規化後的評分詳細資訊。
 
-若要取得特定文件的完整混合查詢說明（包含正規化與合併詳細資訊），請使用 Search API 搭配 `explain=true`，並在查詢中篩選出所需的文件 ID：
+若要取得特定文件的完整混合查詢說明（包含正規化與組合詳細資訊），請使用 Search API 搭配 `explain=true`，並在查詢中篩選所需的文件 ID：
 
 ```json
 GET {index}/_search?search_pipeline={search_pipeline}&explain=true
@@ -61,7 +61,7 @@ GET {index}/_search?search_pipeline={search_pipeline}&explain=true
 ```
 {% include copy-curl.html %}
 
-若要查看所有結果的 `explain` 輸出，請在 URL 或請求本文中將該參數設為 `true`：
+若要查看所有結果的 `explain` 輸出，請在 URL 或請求本文中將該參數設為 `true`。下列範例使用[語意與混合搜尋入門]({{site.url}}{{site.baseurl}}/tutorials/vector-search/neural-search-tutorial/)中的索引與模型，以及名為 `my_pipeline` 的搜尋管線，其中包含 `normalization-processor` 與 `hybrid_score_explanation` 處理器：
 
 ```json
 POST my-nlp-index/_search?search_pipeline=my_pipeline&explain=true
@@ -101,7 +101,7 @@ POST my-nlp-index/_search?search_pipeline=my_pipeline&explain=true
 
 <details markdown="block">
   <summary>
-    Response
+    回應
   </summary>
   {: .text-delta}
 
@@ -110,8 +110,8 @@ POST my-nlp-index/_search?search_pipeline=my_pipeline&explain=true
     "took": 54,
     "timed_out": false,
     "_shards": {
-        "total": 2,
-        "successful": 2,
+        "total": 1,
+        "successful": 1,
         "skipped": 0,
         "failed": 0
     },
@@ -120,20 +120,20 @@ POST my-nlp-index/_search?search_pipeline=my_pipeline&explain=true
             "value": 5,
             "relation": "eq"
         },
-        "max_score": 0.9251075,
+        "max_score": 0.92510754,
         "hits": [
             {
                 "_shard": "[my-nlp-index][0]",
                 "_node": "IsuzeVYdSqKUfy0qfqil2w",
                 "_index": "my-nlp-index",
                 "_id": "5",
-                "_score": 0.9251075,
+                "_score": 0.92510754,
                 "_source": {
                     "text": "A rodeo cowboy , wearing a cowboy hat , is being thrown off of a wild white horse .",
                     "id": "2691147709.jpg"
                 },
                 "_explanation": {
-                    "value": 0.9251075,
+                    "value": 0.92510754,
                     "description": "arithmetic_mean combination of:",
                     "details": [
                         {
@@ -141,29 +141,24 @@ POST my-nlp-index/_search?search_pipeline=my_pipeline&explain=true
                             "description": "min_max normalization of:",
                             "details": [
                                 {
-                                    "value": 1.2336599,
+                                    "value": 0.40775257,
                                     "description": "weight(text:horse in 0) [PerFieldSimilarity], result of:",
                                     "details": [
                                         {
-                                            "value": 1.2336599,
+                                            "value": 0.40775257,
                                             "description": "score(freq=1.0), computed as boost * idf * tf from:",
                                             "details": [
                                                 {
-                                                    "value": 2.2,
-                                                    "description": "boost",
-                                                    "details": []
-                                                },
-                                                {
-                                                    "value": 1.2039728,
+                                                    "value": 0.87546873,
                                                     "description": "idf, computed as log(1 + (N - n + 0.5) / (n + 0.5)) from:",
                                                     "details": [
                                                         {
-                                                            "value": 1,
+                                                            "value": 2,
                                                             "description": "n, number of documents containing term",
                                                             "details": []
                                                         },
                                                         {
-                                                            "value": 4,
+                                                            "value": 5,
                                                             "description": "N, total number of documents with field",
                                                             "details": []
                                                         }
@@ -207,13 +202,25 @@ POST my-nlp-index/_search?search_pipeline=my_pipeline&explain=true
                             ]
                         },
                         {
-                            "value": 0.8503647,
+                            "value": 0.85036486,
                             "description": "min_max normalization of:",
                             "details": [
                                 {
-                                    "value": 0.015177966,
-                                    "description": "within top 5",
-                                    "details": []
+                                    "value": 0.015177963,
+                                    "description": "the type of knn search executed was Approximate-NN",
+                                    "details": [
+                                        {
+                                            "value": 0.015177963,
+                                            "description": "the type of knn search executed at leaf was Approximate-NN with vectorDataType = FLOAT, spaceType = l2 where score is computed as `1 / (1 + rawScore)` from:",
+                                            "details": [
+                                                {
+                                                    "value": 64.884995,
+                                                    "description": "rawScore, returned from FAISS library",
+                                                    "details": []
+                                                }
+                                            ]
+                                        }
+                                    ]
                                 }
                             ]
                         }
@@ -230,4 +237,4 @@ POST my-nlp-index/_search?search_pipeline=my_pipeline&explain=true
 
 ## 後續步驟
 
-- 若要了解如何將 `explain` 與 inner hits 搭配使用，請參閱 [Using inner hits in hybrid queries]({{site.url}}{{site.baseurl}}/vector-search/ai-search/hybrid-search/inner-hits/)。
+- 若要了解如何將 `explain` 與 inner hits 搭配使用，請參閱[在混合查詢中使用 inner hits]({{site.url}}{{site.baseurl}}/vector-search/ai-search/hybrid-search/inner-hits/)。

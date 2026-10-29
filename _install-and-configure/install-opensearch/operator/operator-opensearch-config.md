@@ -13,7 +13,7 @@ Operator 會部署並管理 OpenSearch 叢集。您可以設定節點集區、TL
 
 ## 節點集區與擴展
 
-OpenSearch 叢集由一個或多個節點集區組成。每個節點集區都是一組具有相同[角色]({{site.url}}{{site.baseurl}}/tuning-your-cluster/)的節點所構成的邏輯群組，並且可以擁有自己的資源。Operator 會為每個已設定的節點集區建立 Kubernetes `StatefulSet` 和 `Service`，讓您能與特定的節點集區通訊：
+OpenSearch 叢集由一個或多個節點集區組成。每個節點集區都是一組具有相同[角色]({{site.url}}{{site.baseurl}}/tuning-your-cluster/creating-a-cluster/#nodes)的節點所構成的邏輯群組，並且可以擁有自己的資源。Operator 會為每個已設定的節點集區建立 Kubernetes `StatefulSet` 和 `Service`，讓您能與特定的節點集區通訊：
 
 ```yaml
 spec:
@@ -243,9 +243,9 @@ general:
 ```
 {% include copy.html %}
 
-使用此組態時，Secret 中的所有金鑰都會成為 keystore 中的金鑰。
+使用此組態時，Secret 中的所有鍵都會成為 keystore 中的鍵。
 
-如果您只想從 Secret 載入部分金鑰，或重新命名現有的金鑰，可以將金鑰對應新增為 map：
+如果您只想從 Secret 載入部分鍵，或重新命名現有的鍵，可以將鍵對應新增為 map：
 
 ```yaml
 general:
@@ -265,7 +265,7 @@ general:
 ```
 {% include copy.html %}
 
-只有所提供的金鑰會從 Secret 中載入。任何未指定的金鑰都會被忽略。
+只有所提供的鍵會從 Secret 中載入。任何未指定的鍵都會被忽略。
 {: .note}
 
 若要填入 bootstrap pod 的 keystore，請在 `bootstrap.keystore` 區段下新增 Secret：
@@ -328,7 +328,7 @@ spec:
 ```
 {% include copy.html %}
 
-根據預設，init 容器會使用 `busybox` 映像檔。若要變更此設定（例如使用私有登錄檔中的映像檔），請參閱[自訂 init 輔助程式]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/operator/operator-kubernetes-custom/#custom-init-helper)。
+根據預設，init 容器會使用 `busybox` 映像檔。若要變更此設定（例如使用私有映像檔 registry 中的映像檔），請參閱[自訂 init 輔助程式]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/operator/operator-kubernetes-custom/#custom-init-helper)。
 
 ## 設定快照儲存庫
 

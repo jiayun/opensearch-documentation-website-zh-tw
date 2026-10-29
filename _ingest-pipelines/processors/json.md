@@ -23,20 +23,20 @@ nav_order: 170
 ```
 {% include copy.html %}
 
-## 組態參數
+## 參數
 
 下表列出 `json` 處理器的必要與選用參數。
 
-參數 | 必要／選用 | 說明 |
+參數 | 必要/選用 | 說明 |
 |-----------|-----------|-----------|
 `field` | 必要 | 包含要還原序列化之 JSON 格式字串的欄位名稱。
-`target_field` | 選用 | 儲存還原序列化後 JSON 資料的欄位名稱。若未提供，資料會儲存在 `field` 欄位。若 `target_field` 已存在，其現有值會被新的 JSON 資料覆寫。
-`add_to_root` | 選用 | 布林值旗標，決定還原序列化後的 JSON 資料應加入文件根層級 (`true`)，還是儲存在 target_field 中 (`false`)。若 `add_to_root` 為 `true`，則 `target_field` 無效。解析出的欄位會覆寫同名根欄位。若 `add_to_root` 為 `true` 且解析出的值不是 JSON 物件，處理器會失敗。預設值為 `false`。
+`target_field` | 選用 | 儲存還原序列化後 JSON 資料的欄位名稱。若未提供，資料會儲存在 `field` 欄位中。若 `target_field` 已存在，其現有值會被新的 JSON 資料覆寫。
+`add_to_root` | 選用 | 一個布林值旗標，決定還原序列化後的 JSON 資料應加入文件的根層級 (`true`)，還是儲存在 target_field 中 (`false`)。若 `add_to_root` 為 `true`，則 `target_field` 無效。解析出的欄位會覆寫根層級中同名的欄位。若 `add_to_root` 為 `true` 且解析出的值不是 JSON 物件，處理器將會失敗。預設值為 `false`。
 `description` | 選用 | 處理器用途或組態的描述。
-`if` | 選用 | 指定要有條件地執行處理器。
+`if` | 選用 | 指定有條件地執行處理器。
 `ignore_failure` | 選用 | 指定忽略處理器失敗。請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。
-`on_failure`| 選用 | 指定當處理器在執行期間失敗時要執行的處理器清單。這些處理器會依指定順序執行。
-`tag` | 選用 | 處理器的識別標籤。在偵錯時可用於區分相同類型的處理器。如需更多資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。
+`on_failure`| 選用 | 指定當處理器在執行期間失敗時要執行的處理器清單。這些處理器會依指定的順序執行。
+`tag` | 選用 | 處理器的識別標籤。有助於除錯時區分相同類型的處理器。如需更多資訊，請參閱[使用處理器標籤進行監控與除錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。
 
 ## 使用處理器
 
@@ -81,7 +81,7 @@ PUT _ingest/pipeline/my-json-pipeline
 ```
 {% include copy-curl.html %}
 
-### 步驟 2 (選用)：測試管線
+### 步驟 2（選用）：測試管線
 
 建議您在匯入文件之前先測試管線。
 {: .tip}
@@ -107,9 +107,7 @@ POST _ingest/pipeline/my-json-pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
-以下範例回應確認管線如預期運作：
+下列範例回應可確認管線運作正常：
 
 ```json
 {
@@ -154,9 +152,9 @@ POST _ingest/pipeline/my-json-pipeline/_simulate
 }
 ```
 
-### 步驟 3：匯入文件 
+### 步驟 3：匯入文件
 
-以下查詢會將文件匯入名為 `my-index` 的索引：
+下列查詢會將文件匯入名為 `my-index` 的索引：
 
 ```json
 PUT my-index/_doc/1?pipeline=my-json-pipeline
@@ -166,9 +164,7 @@ PUT my-index/_doc/1?pipeline=my-json-pipeline
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
-回應會確認包含 `raw_data` 欄位 JSON 資料的文件已成功編製索引：
+回應確認包含 `raw_data` 欄位中 JSON 資料的文件已成功編製索引：
 
 ```json
 {
@@ -186,7 +182,7 @@ PUT my-index/_doc/1?pipeline=my-json-pipeline
 }
 ```
 
-### 步驟 4 (選用)：擷取文件
+### 步驟 4（選用）：擷取文件
 
 若要擷取文件，請執行下列查詢：
 
@@ -194,3 +190,5 @@ PUT my-index/_doc/1?pipeline=my-json-pipeline
 GET my-index/_doc/1
 ```
 {% include copy-curl.html %}
+
+回應包含已匯入的文件，其轉換結果如步驟 2 的回應所示。

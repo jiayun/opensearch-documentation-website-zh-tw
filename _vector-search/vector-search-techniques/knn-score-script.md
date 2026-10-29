@@ -12,15 +12,15 @@ redirect_from:
 
 # 使用評分指令碼進行精確 k-NN 搜尋
 
-您可以使用評分指令碼進行精確 k-nearest neighbors (k-NN) 搜尋，以找出與給定查詢點最接近的精確 k 個最近鄰。使用 k-NN 評分指令碼，您可以在執行最近鄰搜尋之前，先對索引套用篩選條件。這對於動態搜尋使用案例很有用，因為這類案例的索引本文可能會依其他條件而有所不同。
+您可以使用評分指令碼進行精確 k 最近鄰（k-NN）搜尋，以找出與給定查詢點最接近的精確 k 個最近鄰。使用 k-NN 評分指令碼，您可以在執行最近鄰搜尋之前，先對索引套用篩選條件。這對於動態搜尋使用案例很有用，因為這類案例的索引內容可能會依其他條件而有所不同。
 
 由於評分指令碼方法會執行暴力搜尋，其擴展效率不如[近似方法]({{site.url}}{{site.baseurl}}/search-plugins/knn/approximate-knn/)。在某些情況下，您最好考慮重構工作流程或索引結構，改用近似方法，而非評分指令碼方法。
 
 ## 開始使用向量評分指令碼
 
-與近似最近鄰 (ANN) 搜尋類似，若要在向量本文上使用評分指令碼，您必須先建立一個含有一或多個 `knn_vector` 欄位的索引。
+與近似最近鄰 (ANN) 搜尋類似，若要在向量集合上使用評分指令碼，您必須先建立一個含有一或多個 `knn_vector` 欄位的索引。
 
-如果您打算只使用評分指令碼方法（而不使用近似方法），可以將 `index.knn` 設為 `false`，並不要設定 `index.knn.space_type`。您可以在搜尋時選擇空間類型。關於 k-NN 評分指令碼支援的空間，請參閱[空間]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-spaces/)。
+如果您打算只使用評分指令碼方法（而不使用近似方法），可以將 `index.knn` 設為 `false`。您可以在搜尋時選擇空間類型。關於 k-NN 評分指令碼支援的空間，請參閱[空間]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-spaces/)。
 
 此範例建立一個含有兩個 `knn_vector` 欄位的索引：
 
@@ -43,10 +43,10 @@ PUT my-knn-index-1
 ```
 {% include copy-curl.html %}
 
-如果您想*只*使用評分指令碼，可以省略 `"index.knn": true`。此方法可加快編製索引速度並降低記憶體用量，但您將無法在該索引上執行標準 k-NN 查詢。
+如果您想*只*使用評分指令碼，可以省略 `"index.knn": true`。此方法可帶來更快的索引速度與更低的記憶體用量，但您將無法在該索引上執行標準的 k-NN 查詢。
 {: .tip}
 
-建立索引之後，您可以新增一些資料到索引中：
+建立索引後，您可以新增一些資料：
 
 ```json
 POST _bulk
@@ -97,20 +97,20 @@ GET my-knn-index-1/_search
 ```
 {% include copy-curl.html %}
 
-所有參數都是必要。
+所有參數皆為必要。
 
 - `lang` 是指令碼類型。此值通常是 `painless`，但在此您必須指定 `knn`。
 - `source` 是指令碼名稱，即 `knn_score`。
 
-  此指令碼是 k-NN 外掛程式的一部分，無法在標準 `_scripts` 路徑取得。對 `_cluster/state/metadata` 發出 GET 請求也不會傳回它。
+  此指令碼屬於 k-NN 外掛程式的一部分，無法在標準的 `_scripts` 路徑取得。對 `_cluster/state/metadata` 發出 GET 請求也不會傳回它。
 
-- `field` 是包含您向量資料的欄位。
-- `query_value` 是您想找出最近鄰的點。對於 Euclidean 和 cosine similarity 空間，此值必須是符合欄位對應中所設定維度的浮點數陣列。對於 Hamming bit distance，此值可以是 signed long 類型，或是 Base64 編碼字串（分別對應 long 和 binary 欄位類型）。
-- `space_type` 對應於距離函式。如需更多資訊，請參閱[空間]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-spaces/)。
+- `field` 是包含向量資料的欄位。
+- `query_value` 是您要尋找最近鄰的點。對於歐幾里得與餘弦相似度空間，此值必須是浮點數陣列，且符合欄位對應中設定的維度。對於漢明位元距離，此值可以是帶正負號的 long 類型，或是 Base64 編碼字串（分別對應 long 與 binary 欄位類型）。
+- `space_type` 對應距離函式。如需詳細資訊，請參閱[空間]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-spaces/)。
 
-[近似方法中的後置篩選範例]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/)顯示了一種傳回結果少於 `k` 筆的搜尋。如果您想避免這種情況，評分指令碼方法可讓您基本上反轉事件順序。換句話說，您可以先篩選要執行 k-NN 搜尋的文件集合。
+[近似方法中的後置篩選範例]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/) 顯示了一項傳回結果少於 `k` 筆的搜尋。如果您想避免這種情況，評分指令碼方法可讓您實質上反轉事件的順序。換句話說，您可以先篩選要執行 k-NN 搜尋的文件集合。
 
-此範例顯示使用評分指令碼方法進行 k-NN 搜尋的前置篩選方法。首先，建立索引：
+此範例展示使用評分指令碼方法進行 k-NN 搜尋的前置篩選做法。首先，建立索引：
 
 ```json
 PUT my-knn-index-2
@@ -149,7 +149,7 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-最後，使用 `script_score` 查詢先篩選您的文件，再找出最近鄰：
+最後，使用 `script_score` 查詢在找出最近鄰之前先篩選您的文件：
 
 ```json
 GET my-knn-index-2/_search
@@ -183,10 +183,10 @@ GET my-knn-index-2/_search
 
 ## 開始使用二進位資料評分指令碼
 
-k-NN 評分指令碼也可讓您使用 Hamming distance 空間對二進位資料執行 k-NN 搜尋。
-若要使用 Hamming distance，目標欄位的類型必須是 `binary` 或 `long`。如果您使用 `binary` 類型，資料必須是 Base64 編碼字串。
+k-NN 評分指令碼也可讓您使用漢明距離空間對二進位資料執行 k-NN 搜尋。
+若要使用漢明距離，目標欄位的類型必須是 `binary` 或 `long`。如果您使用 `binary` 類型，資料必須是 Base64 編碼字串。
 
-此範例顯示如何搭配 `binary` 欄位類型使用 Hamming distance 空間：
+此範例顯示如何搭配 `binary` 欄位類型使用漢明距離空間：
 
 ```json
 PUT my-index

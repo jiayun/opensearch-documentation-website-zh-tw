@@ -375,7 +375,6 @@ services:
       nofile: { soft: 65536, hard: 65536 }
     ports:
       - "9200:9200"
-      - "9600:9600"
     networks: [opensearch-net]
 
   dashboards:

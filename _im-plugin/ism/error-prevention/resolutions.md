@@ -307,4 +307,4 @@ PUT _cluster/settings
 
 ## 未設定搜尋副本
 
-`search_only` 動作需要至少一個搜尋副本。如需設定搜尋副本的更多資訊，請參閱 [分離編製索引與搜尋工作負載]({{site.url}}{{site.baseurl}}/tuning-your-cluster/separate-index-and-search-workloads/)。
+`search_only` 動作需要至少一個搜尋副本。如需設定搜尋副本的詳細資訊，請參閱[分離索引與搜尋工作負載]({{site.url}}{{site.baseurl}}/tuning-your-cluster/performance-tuning/separate-index-and-search-workloads/)。

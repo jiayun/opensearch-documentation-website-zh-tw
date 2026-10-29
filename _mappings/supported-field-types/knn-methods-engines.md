@@ -183,7 +183,9 @@ IVF 方法支援下列參數。
 
 ### IVF 訓練需求
 
-IVF 演算法需要訓練步驟。若要建立使用 IVF 的索引，您需要使用 [Train API]({{site.url}}{{site.baseurl}}/vector-search/api/knn#train-a-model) 訓練模型，並傳入 IVF 方法定義。IVF 至少需要 `nlist` 個訓練資料點，但我們建議[使用更多資料點](https://github.com/facebookresearch/faiss/wiki/Guidelines-to-choose-an-index#how-big-is-the-dataset)。訓練資料可以與您計劃編製索引的資料相同，也可以來自個別的資料集。
+IVF 演算法需要一個訓練步驟。若要建立使用 IVF 的索引，您需要使用 [Train API]({{site.url}}{{site.baseurl}}/vector-search/api/knn#train-a-model) 訓練模型，並傳入 IVF 方法定義。IVF 至少需要 `nlist` 個訓練資料點，但我們建議[您使用多於此數量的資料](https://github.com/facebookresearch/faiss/wiki/Guidelines-to-choose-an-index#how-big-is-the-dataset)。訓練資料可以與您計畫編製索引的資料相同，也可以來自個別的資料集。
+
+如果此方法使用 `pq` 編碼器，訓練資料也必須包含至少 2<sup>`code_size`</sup> 個向量，例如，當 `code_size` 為 `8` 時，需要 256 個向量。如果您未指定 `code_size`，訓練資料必須包含超過 1,000 個向量。Train API 會拒絕不符合 `pq` 下限的請求。如果訓練向量少於 `nlist`，訓練會開始，但模型會進入 `failed` 狀態。
 
 ### 支援的編碼器
 

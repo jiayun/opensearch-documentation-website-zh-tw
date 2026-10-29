@@ -22,20 +22,20 @@ nav_order: 300
 ```
 {% include copy.html %}
 
-## 組態參數
+## 參數
 
 下表列出 `trim` 處理器的必要與選用參數。
 
-Parameter | Required/Optional | Description 
+參數 | 必要/選用 | 說明
 :---|:---|:---
-`field` | 必要 | 包含要修剪文字的欄位。
+`field` | 必要 | 包含要修剪文字之欄位。
 `target_field` | 選用 | 儲存修剪後文字的欄位。若未指定，則會就地更新該欄位。
-`ignore_missing` | 選用 | 指定處理器是否應忽略不含指定欄位的文件。若設為 `true`，處理器會忽略欄位中缺少的值，並保持 `target_field` 不變。預設為 `false`。
-`description` | 選用 | 處理器的簡短描述。
+`ignore_missing` | 選用 | 指定處理器是否應忽略不包含指定欄位的文件。若設為 `true`，則處理器會忽略欄位中缺少的值，並保持 `target_field` 不變。預設為 `false`。
+`description` | 選用 | 處理器的簡短說明。
 `if` | 選用 | 執行處理器的條件。
-`ignore_failure` | 選用 | 指定處理器即使遇到錯誤仍繼續執行。若設為 `true`，則會忽略失敗。預設為 `false`。
+`ignore_failure` | 選用 | 指定處理器即使遇到錯誤是否仍繼續執行。若設為 `true`，則會忽略失敗。預設為 `false`。
 `on_failure` | 選用 | 處理器失敗時要執行的處理器清單。
-`tag` | 選用 | 處理器的識別標籤。有助於除錯時區分相同類型的處理器。如需更多資訊，請參閱[使用處理器標籤進行監控與除錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。
+`tag` | 選用 | 處理器的識別碼標籤。有助於偵錯時區分相同類型的處理器。如需詳細資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。
 
 ## 使用處理器
 
@@ -61,7 +61,7 @@ PUT _ingest/pipeline/trim_pipeline
 ```
 {% include copy-curl.html %}
 
-### 步驟 2 (選用)：測試管線
+### 步驟 2（選用）：測試管線
 
 建議您在匯入文件之前先測試管線。
 {: .tip}
@@ -82,9 +82,7 @@ POST _ingest/pipeline/trim_pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
-下列範例回應確認管線運作正常：
+下列範例回應確認管線如預期運作：
 
 ```json
 {
@@ -113,14 +111,12 @@ POST _ingest/pipeline/trim_pipeline/_simulate
 ```json
 PUT testindex1/_doc/1?pipeline=trim_pipeline
 {
-  "raw_text": "   This is a test document.   "
+  "raw_text": "   Hello, world!   "
 }
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
-此請求會將文件編製索引至 `testindex1` 索引。`trim_pipeline` 會去除 `raw_text` 值前後的空白，並將結果儲存在 `trimmed_text` 欄位中，如下列回應所示：
+此請求會將文件編製索引至 `testindex1` 索引。`trim_pipeline` 會修剪 `raw_text` 值，並將結果儲存在 `trimmed_text` 欄位中，如下列回應所示：
 
 ```json
 {
@@ -138,7 +134,7 @@ PUT testindex1/_doc/1?pipeline=trim_pipeline
 }
 ```
 
-### 步驟 4 (選用)：擷取文件
+### 步驟 4（選用）：擷取文件
 
 若要擷取文件，請執行下列查詢：
 
@@ -147,19 +143,4 @@ GET testindex1/_doc/1
 ```
 {% include copy-curl.html %}
 
-回應會包含已移除開頭與結尾空白的 `trimmed_text` 欄位：
-
-```json
-{
-  "_index": "testindex1",
-  "_id": "1",
-  "_version": 69,
-  "_seq_no": 71,
-  "_primary_term": 47,
-  "found": true,
-  "_source": {
-    "raw_text": "   This is a test document.   ",
-    "trimmed_text": "This is a test document."
-  }
-}
-```
+回應包含已匯入的文件，其轉換結果如步驟 2 的回應所示。

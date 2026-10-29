@@ -86,16 +86,16 @@ OpenSearch 提供下列 REST API。
 
 ### 叢集管理 API
 
-下列 API 可保護叢集可用性，並控制叢集使用資源的方式。
+下列 API 可保護叢集可用性，並控制叢集如何使用其資源。
 
 | API | 用途 |
 | :--- | :--- |
-| [Cross-Cluster Replication (CCR) API]({{site.url}}{{site.baseurl}}/tuning-your-cluster/replication-plugin/api/) | 將索引從領導者叢集複寫至追隨者叢集。 |
+| [Cross-Cluster Replication (CCR) API]({{site.url}}{{site.baseurl}}/tuning-your-cluster/replication-plugin/api/) | 將索引從領導者叢集複寫到追隨者叢集。 |
 | [Remote Store Stats API]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/remote-store/remote-store-stats-api/) | 讀取遠端後端儲存空間的上傳與下載統計資料。 |
-| [Rules API]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/rule-based-autotagging/rule-lifecycle-api/) | 建立及管理將傳入請求指派至工作負載群組的自動標籤規則。 |
-| [Shard Indexing Backpressure Stats API]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/stats-api/) | 監視分片索引寫入回壓。 |
-| [Snapshot Management API]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/snapshots/sm-api/) | 依排程建立及刪除快照。 |
-| [Workload Management APIs]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/workload-management/workload-groups/) | 建立限制資源用量的工作負載群組，並讀取其統計資料。 |
+| [Rules API]({{site.url}}{{site.baseurl}}/tuning-your-cluster/workload-management/rule-based-autotagging/rule-lifecycle-api/) | 建立並管理自動標記規則，將傳入的請求指派至工作負載群組。 |
+| [Shard Indexing Backpressure Stats API]({{site.url}}{{site.baseurl}}/tuning-your-cluster/load-protection/stats-api/) | 監視分片索引回壓。 |
+| [Snapshot Management API]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/snapshots/sm-api/) | 依排程建立與刪除快照。 |
+| [Workload Management APIs]({{site.url}}{{site.baseurl}}/tuning-your-cluster/workload-management/workload-groups/) | 建立可限制資源使用量的工作負載群組，並讀取其統計資料。 |
 
 ### 可觀測性與監控 API
 
@@ -104,14 +104,12 @@ OpenSearch 提供下列 REST API。
 | API | 用途 |
 | :--- | :--- |
 | [Alerting API]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/api/) | 建立及管理監視器、觸發條件與警示。 |
-| [Anomaly Detection API]({{site.url}}{{site.baseurl}}/observing-your-data/ad/api/) | 建立及管理異常偵測器，並讀取其發現的異常。 |
-| [Forecasting API]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/api/) | 建立及管理預測器，並讀取其產生的預測。 |
-| [Job Scheduler APIs]({{site.url}}{{site.baseurl}}/monitoring-your-cluster/job-scheduler/index/#job-scheduler-apis) | 監視叢集上的排程工作與鎖定。 |
-| [Notifications API]({{site.url}}{{site.baseurl}}/observing-your-data/notifications/api/) | 定義傳遞通知的頻道，以及傳送通知的來源。 |
-| [Performance Analyzer API]({{site.url}}{{site.baseurl}}/monitoring-your-cluster/pa/api/) | 擷取節點或叢集的效能指標。 |
-| [Query Insights APIs]({{site.url}}{{site.baseurl}}/observing-your-data/query-insights/) | 讀取前 N 名查詢、即時查詢與查詢洞察健康狀態統計資料，並變更查詢洞察設定。 |
-| [Reporting API]({{site.url}}{{site.baseurl}}/dashboards/reporting/api/) | 定義報告，並從儀表板、視覺化、已儲存的搜尋與筆記本產生報告。下載算繪後的內容會使用 OpenSearch Dashboards 端點。 |
-| [Root Cause Analysis API]({{site.url}}{{site.baseurl}}/monitoring-your-cluster/pa/rca/api/) | 擷取叢集的根本原因分析結果。 |
+| [Anomaly Detection API]({{site.url}}{{site.baseurl}}/observing-your-data/ad/api/) | 建立及管理異常偵測器，並讀取偵測到的異常。 |
+| [Forecasting API]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/api/) | 建立及管理預測器，並讀取產生的預測結果。 |
+| [Job Scheduler APIs]({{site.url}}{{site.baseurl}}/tuning-your-cluster/scheduled-jobs/index/#monitoring-scheduled-jobs) | 監控叢集上的排程工作與鎖定。 |
+| [Notifications API]({{site.url}}{{site.baseurl}}/observing-your-data/notifications/api/) | 定義傳送通知的管道，以及傳送通知的來源。 |
+| [Query Insights APIs]({{site.url}}{{site.baseurl}}/tuning-your-cluster/monitoring/query-insights/) | 讀取前 N 筆查詢、即時查詢與查詢洞察健康狀態統計資料，並變更查詢洞察設定。 |
+| [Reporting API]({{site.url}}{{site.baseurl}}/dashboards/reporting/api/) | 定義報告，並從儀表板、視覺化、已儲存的搜尋與筆記本產生報告。下載轉譯後的內容會使用 OpenSearch Dashboards 端點。 |
 
 ### 安全性與安全分析 API
 

@@ -25,21 +25,21 @@ nav_order: 230
 ```
 {% include copy.html %}
 
-## 組態參數
+## 參數
 
 下表列出 `script` 處理器的必要與選用參數。
 
 | 參數  | 必要/選用  | 說明  |
 |---|---|---|
-`source`  | 選用  | 要執行的 Painless 指令碼。如需詳細資訊，請參閱 [Painless 指令碼語言]({{site.url}}{{site.baseurl}}/scripting/painless/)。必須指定 `id` 或 `source` 其中之一，但不能同時指定兩者。若指定 `source`，則會使用提供的原始碼執行指令碼。
-`id` | 選用 | 先前使用 [Create Stored Script API]({{site.url}}{{site.baseurl}}/api-reference/script-apis/create-stored-script/) 建立之已儲存指令碼的 ID。必須指定 `id` 或 `source` 其中之一，但不能同時指定兩者。若指定 `id`，則會從具有所指定 ID 的已儲存指令碼擷取指令碼原始碼。 
-`lang`  | 選用  | 指令碼的程式設計語言。預設為 `painless`。
-`params` | 選用 |  可傳遞至指令碼的參數。
+`source`  | 選用  | 要執行的 Painless 指令碼。如需更多資訊，請參閱 [Painless 指令碼語言]({{site.url}}{{site.baseurl}}/scripting/painless/)。必須指定 `id` 或 `source` 其中之一---但不可同時指定兩者。若指定 `source`，則會使用所提供的原始碼執行該指令碼。
+`id` | 選用 | 先前使用 [Create Stored Script API]({{site.url}}{{site.baseurl}}/api-reference/script-apis/create-stored-script/) 建立之已儲存指令碼的 ID。必須指定 `id` 或 `source` 其中之一，但不可同時指定兩者。若指定 `id`，則會從具有指定 ID 的已儲存指令碼中擷取指令碼原始碼。 
+`lang`  | 選用  | 指令碼的程式語言。預設為 `painless`。
+`params` | 選用 | 可傳遞給指令碼的參數。
 `description`  | 選用  | 處理器用途或組態的說明。
-`if` | 選用 | 指定是否要依條件執行處理器。
-`ignore_failure` | 選用 | 指定是否要忽略處理器失敗。請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。
-`on_failure` | 選用 | 指定處理器在執行期間失敗時要執行的處理器清單。這些處理器會依指定的順序執行。請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。
-`tag` | 選用 | 處理器的識別碼標籤。有助於偵錯，以便區分相同類型的處理器。如需詳細資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。
+`if` | 選用 | 指定有條件地執行處理器。
+`ignore_failure` | 選用 | 指定忽略處理器失敗。請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。
+`on_failure` | 選用 | 指定當處理器在執行期間失敗時要執行的處理器清單。這些處理器會依指定的順序執行。請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。
+`tag` | 選用 | 處理器的識別標籤。在偵錯時可用於區分相同類型的處理器。如需更多資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。
 
 ## 使用處理器
 
@@ -66,7 +66,7 @@ PUT _ingest/pipeline/my-script-pipeline
 ```
 {% include copy-curl.html %}
 
-### 步驟 2 (選用)：測試管線
+### 步驟 2（選用）：測試管線
 
 建議您在匯入文件之前先測試管線。
 {: .tip}
@@ -86,8 +86,6 @@ POST _ingest/pipeline/my-script-pipeline/_simulate
 }
 ```
 {% include copy-curl.html %}
-
-#### 回應
 
 下列範例回應確認管線如預期運作：
 
@@ -122,9 +120,7 @@ PUT testindex1/_doc/1?pipeline=my-script-pipeline
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
-回應確認文件已編製索引至 `testindex1`，且所有文件皆已編製索引，其中 `message` 欄位已轉換為大寫：
+回應會確認文件已編製索引至 `testindex1`，且已將所有文件的 `message` 欄位轉換為大寫後編製索引：
 
 ```json
 {
@@ -150,6 +146,8 @@ PUT testindex1/_doc/1?pipeline=my-script-pipeline
 GET testindex1/_doc/1
 ```
 {% include copy-curl.html %}
+
+回應會包含已匯入的文件，其轉換結果如步驟 2 的回應所示。
 
 ## 使用參數與修改中繼資料
 

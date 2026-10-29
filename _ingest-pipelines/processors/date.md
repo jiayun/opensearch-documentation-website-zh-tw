@@ -15,7 +15,7 @@ redirect_from:
 
 `date` 處理器用於從文件欄位剖析日期，並將剖析後的資料新增至新欄位。根據預設，剖析後的資料會儲存在 `@timestamp` 欄位中。
 
-## 語法範例
+## 語法
 
 以下是 `date` 處理器的語法：
 
@@ -29,31 +29,31 @@ redirect_from:
 ```
 {% include copy.html %}
 
-## 組態參數
+## 參數
 
 下表列出 `date` 處理器的必要與選用參數。
 
 參數 | 必要/選用 | 說明 |
 |-----------|-----------|-----------|
 `field`  | 必要  | 包含待轉換資料的欄位名稱。 |
-`formats`  | 必要 | 預期日期格式的陣列。處理器會依指定順序嘗試每種格式。若有多種格式都能解析該日期，則以最後一個相符的格式決定結果。可為[日期格式]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/date/#formats)或下列其中一種格式：ISO8601、UNIX、UNIX_MS 或 TAI64N。  |
-`description`  | 選用  | 處理器的簡短說明。  |
+`formats`  | 必要 | 預期日期格式的陣列。處理器會依指定順序嘗試每種格式。如果有多種格式可解析該日期，則由最後一個符合的格式決定結果。可以是[日期格式]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/date/#formats)或下列其中一種格式：ISO8601、UNIX、UNIX_MS 或 TAI64N。  |
+`description`  | 選用  | 處理器的簡要說明。  |
 `if` | 選用 | 執行處理器的條件。 |
-`ignore_failure` | 選用 | 指定處理器即使遇到錯誤是否仍繼續執行。若設為 `true`，則忽略失敗。預設為 `false`。 |
-`locale`  | 選用  | 解析日期時使用的語言環境。若未指定，則使用根語言環境，可解析英文的月份與星期幾名稱。支援[範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。  |
+`ignore_failure` | 選用 | 指定處理器遇到錯誤時是否仍繼續執行。若設為 `true`，則忽略失敗。預設為 `false`。 |
+`locale`  | 選用  | 解析日期時使用的地區設定。若未指定，則使用根語系 (root locale)，以解析英文的月份與星期名稱。支援[範本程式碼片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。  |
 `on_failure` | 選用 | 處理器失敗時要執行的處理器清單。 |
-`output_format` | 選用 | 用於目標欄位的[日期格式]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/date/#formats)。預設為 `yyyy-MM-dd'T'HH:mm:ss.SSSXXX`，例如 `2023-06-30T00:00:00.000Z`。 |
-`tag` | 選用 | 處理器的識別標籤。有助於偵錯時區分同類型的處理器。如需詳細資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
-`target_field`  | 選用  | 儲存解析後資料的欄位名稱。預設目標欄位為 `@timestamp`。 | 
-`timezone`  | 選用  | 解析日期時使用的時區。預設為 `UTC`。支援[範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。 |
+`output_format` | 選用 | 目標欄位使用的[日期格式]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/date/#formats)。預設為 `yyyy-MM-dd'T'HH:mm:ss.SSSXXX`，例如 `2023-06-30T00:00:00.000Z`。 |
+`tag` | 選用 | 處理器的識別標籤。有助於除錯時區分相同類型的處理器。如需更多資訊，請參閱[使用處理器標籤進行監控與除錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
+`target_field`  | 選用  | 儲存已解析資料的欄位名稱。預設目標欄位為 `@timestamp`。 | 
+`timezone`  | 選用  | 解析日期時使用的時區。預設為 `UTC`。支援[範本程式碼片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。 |
 
 ## 使用處理器
 
-請依照下列步驟，在管線中使用處理器。
+依照下列步驟，在管線中使用此處理器。
 
-**步驟 1：建立管線**
+### 步驟 1：建立管線
 
-下列查詢會建立名為 `date-output-format` 的管線，使用 `date` 處理器將歐洲日期格式轉換為美國日期格式，並以所需的 `output_format` 將結果新增至新欄位 `date_us`：
+下列查詢會建立名為 `date-output-format` 的管線，使用 `date` 處理器將歐洲日期格式轉換為美國日期格式，並新增欄位 `date_us`，其 `output_format` 為所需值：
 
 ```json
 PUT /_ingest/pipeline/date-output-format
@@ -74,7 +74,7 @@ PUT /_ingest/pipeline/date-output-format
 ```
 {% include copy-curl.html %}
 
-**步驟 2（選用）：測試管線**
+### 步驟 2（選用）：測試管線
 
 建議您在匯入文件之前先測試管線。
 {: .tip}
@@ -97,9 +97,7 @@ POST _ingest/pipeline/date-output-format/_simulate
 ```
 {% include copy-curl.html %}
 
-**回應**
-
-下列範例回應可確認管線運作正常：
+下列範例回應確認管線如預期運作：
 
 ```json
 {
@@ -121,7 +119,7 @@ POST _ingest/pipeline/date-output-format/_simulate
 }
 ```
 
-**步驟 3：匯入文件**
+### 步驟 3：匯入文件
 
 下列查詢會將文件匯入名為 `testindex1` 的索引：
 
@@ -133,7 +131,7 @@ PUT testindex1/_doc/1?pipeline=date-output-format
 ```
 {% include copy-curl.html %}
 
-**步驟 4（選用）：擷取文件**
+### 步驟 4（選用）：擷取文件
 
 若要擷取文件，請執行下列查詢：
 
@@ -141,6 +139,8 @@ PUT testindex1/_doc/1?pipeline=date-output-format
 GET testindex1/_doc/1
 ```
 {% include copy-curl.html %}
+
+回應中包含已匯入的文件，其轉換結果如步驟 2 的回應所示。
 
 ## 使用文件中的時區與地區設定
 

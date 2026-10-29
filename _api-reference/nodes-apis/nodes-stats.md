@@ -953,7 +953,7 @@ response = client.nodes.info(
 `search.startree_query_time_in_millis` | `Integer` | 所有使用星狀樹進行搜尋的查詢作業所花費的總時間，以毫秒為單位。
 `search.startree_query_current` | `Integer` | 目前正在執行且使用星狀樹進行搜尋的查詢作業數量。
 `search.startree_query_failed` | `Integer` | 使用星狀樹進行搜尋但失敗的查詢作業數量。
-`search.open_contexts` | `Integer` | 開啟中的搜尋情境數量。
+`search.open_contexts` | `Integer` | 開啟中的搜尋脈絡數量。
 `search.query_total` | `Integer` | 分片查詢作業總數。
 `search.query_time_in_millis` | `Integer` | 所有分片查詢作業的總時間，以毫秒為單位。
 `search.query_current` | `Integer` | 目前正在執行的分片查詢作業數量。
@@ -964,9 +964,9 @@ response = client.nodes.info(
 `search.scroll_total` | `Integer` | 分片捲動作業總數。
 `search.scroll_time_in_millis` | `Integer` | 所有分片捲動作業的總時間，以毫秒為單位。
 `search.scroll_current` | `Integer` | 目前正在執行的分片捲動作業數量。
-`search.point_in_time_total` | `Integer` | 自節點上次重新啟動以來，已建立 (包括已完成和作用中) 的分片時間點 (Point in Time，PIT) 情境總數。
-`search.point_in_time_time_in_millis` | `Integer` |  自節點上次重新啟動以來，分片 PIT 情境保持開啟的時間長度，以毫秒為單位。
-`search.point_in_time_current` | `Integer` | 目前開啟中的分片 PIT 情境數量。
+`search.point_in_time_total` | `Integer` | 自節點上次重新啟動以來，已建立（包括已完成和作用中）的分片時間點（Point in Time，PIT）脈絡總數。
+`search.point_in_time_time_in_millis` | `Integer` |  自節點上次重新啟動以來，分片 PIT 脈絡保持開啟的時間長度，以毫秒為單位。
+`search.point_in_time_current` | `Integer` | 目前開啟中的分片 PIT 脈絡數量。
 `search.suggest_total` | `Integer` | 分片建議作業總數。
 `search.suggest_time_in_millis` | `Integer` | 所有分片建議作業的總時間，以毫秒為單位。
 `search.suggest_current` | `Integer` | 目前正在執行的分片建議作業數量。
@@ -1046,7 +1046,7 @@ response = client.nodes.info(
 `segments.index_writer_memory_in_bytes` | 整數 | 所有索引寫入器使用的記憶體總量，以位元組為單位。
 `segments.version_map_memory_in_bytes` | 整數 | 所有版本對應使用的記憶體總量，以位元組為單位。
 `segments.fixed_bit_set_memory_in_bytes` | 整數 | 固定位元集使用的記憶體總量，以位元組為單位。固定位元集用於巢狀物件與聯結欄位。
-`segments.max_unsafe_auto_id_timestamp` | 整數 | 最近一次已淘汰的索引請求時間戳記，以自 epoch 起算的毫秒數表示。
+`segments.max_unsafe_auto_id_timestamp` | 整數 | 最近一次已淘汰的索引請求時間戳記，以自紀元起算的毫秒數表示。
 `segments.segment_replication` | 物件 | 當節點啟用分段複寫時，所有主要分片的分段複寫統計資料。
 `segments.segment_replication.max_bytes_behind` | long | 落後主要副本的最大位元組數。
 `segments.segment_replication.total_bytes_behind` | long | 落後主要副本的位元組總數。
@@ -1054,7 +1054,7 @@ response = client.nodes.info(
 `segments.remote_store` | 物件 | 遠端分段儲存區作業的統計資料。
 `segments.remote_store.upload` | 物件 | 上傳至遠端分段儲存區的相關統計資料。
 `segments.remote_store.upload.total_upload_size` | 物件 | 上傳至遠端分段儲存區的資料量，以位元組為單位。
-`segments.remote_store.upload.total_upload_size.started_bytes` | 整數 | 上傳開始後，待上傳至遠端分段儲存區的位元組數。
+`segments.remote_store.upload.total_upload_size.started_bytes` | 整數 | 上傳開始後，要上傳至遠端分段儲存區的位元組數。
 `segments.remote_store.upload.total_upload_size.succeeded_bytes` | 整數 | 成功上傳至遠端分段儲存區的位元組數。
 `segments.remote_store.upload.total_upload_size.failed_bytes` | 整數 | 上傳至遠端分段儲存區失敗的位元組數。
 `segments.remote_store.upload.refresh_size_lag` | 物件 | 上傳期間遠端分段儲存區相對於本機儲存區的資料落後量。
@@ -1064,7 +1064,7 @@ response = client.nodes.info(
 `segments.remote_store.upload.total_time_spent_in_millis` | 整數 | 花費在上傳至遠端分段儲存區的總時間，以毫秒為單位。
 `segments.remote_store.upload.pressure` | 物件 | 分段儲存區上傳背壓的相關統計資料。
 `segments.remote_store.upload.pressure.total_rejections` | 整數 | 因分段儲存區上傳背壓而遭拒絕的請求總數。
-`segments.remote_store.download` | 物件 | 從遠端分段儲存區下載的相關統計資料。
+`segments.remote_store.download` | 物件 | 與下載至遠端分段儲存區相關的統計資料。
 `segments.remote_store.download.total_download_size` | 物件 | 從遠端分段儲存區下載的資料總量。
 `segments.remote_store.download.total_download_size.started_bytes` | 整數 | 下載開始後，從遠端分段儲存區下載的位元組數。
 `segments.remote_store.download.total_download_size.succeeded_bytes` | 整數 | 成功從遠端分段儲存區下載的位元組數。
@@ -1266,7 +1266,7 @@ response = client.nodes.info(
 `script_cache.sum.compilations` | `Integer` | 節點快取中的指令碼編譯總次數。
 `script_cache.sum.cache_evictions` | `Integer` | 指令碼快取清除舊資料的總次數。
 `script_cache.sum.compilation_limit_triggered` | `Integer` | 快取中的指令碼編譯受到斷路器限制的總次數。
-`script_cache.contexts` | `Array of objects` | 指令碼快取的情境清單。每個情境都包含其名稱、編譯次數、快取移出次數，以及指令碼受到斷路器限制的次數。
+`script_cache.contexts` | `Array of objects` | 指令碼快取的脈絡清單。每個脈絡都包含其名稱、編譯次數、快取逐出次數，以及指令碼受到斷路器限制的次數。
 
 ### `discovery`
 
@@ -1436,14 +1436,14 @@ response = client.nodes.info(
 
 ### `concurrency_limiters`
 
-`concurrency_limiters` 物件包含每個已設定之[並行限制器]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/concurrency-limits/)的一個項目，並以限制器名稱作為鍵。當您請求 `concurrency_limiter` 指標時會傳回此物件。每個項目具有下列屬性。
+`concurrency_limiters` 物件包含每個已設定之[並行限制器]({{site.url}}{{site.baseurl}}/tuning-your-cluster/load-protection/concurrency-limits/)的一個項目，並以限制器名稱作為鍵。當您請求 `concurrency_limiter` 指標時會傳回此物件。每個項目具有下列屬性。
 
 欄位 | 欄位類型 | 說明
 :--- | :--- | :---
 `action_name` | `String` | 限制器所套用的傳輸動作。
-`mode` | `String` | 限制器的[模式]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/concurrency-limits/#modes)。有效值為 `disabled`、`monitor_only` 及 `enforced`。
-`algorithm` | `String` | 用於調整限制的[演算法]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/concurrency-limits/#algorithms)。有效值為 `vegas`、`gradient2` 及 `aimd`。
-`current_limit` | `Integer` | 目前的自適應並行限制，不包含[暴衝容量]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/concurrency-limits/#burst-capacity)。
+`mode` | `String` | 限制器的[模式]({{site.url}}{{site.baseurl}}/tuning-your-cluster/load-protection/concurrency-limits/#modes)。有效值為 `disabled`、`monitor_only` 及 `enforced`。
+`algorithm` | `String` | 用於調整限制的[演算法]({{site.url}}{{site.baseurl}}/tuning-your-cluster/load-protection/concurrency-limits/#algorithms)。有效值為 `vegas`、`gradient2` 及 `aimd`。
+`current_limit` | `Integer` | 目前的自適應並行限制，不包含[暴衝容量]({{site.url}}{{site.baseurl}}/tuning-your-cluster/load-protection/concurrency-limits/#burst-capacity)。
 `in_flight` | `Integer` | 目前正在處理的請求數。
 `total_rejected` | `Integer` | 遭拒請求的累計數量。在 `monitor_only` 模式下，這會計入原本會遭拒的請求。
 `last_rtt_millis` | `Integer` | 最近觀察到的來回時間，以毫秒為單位。在限制器記錄到完成的請求之前會省略此項。

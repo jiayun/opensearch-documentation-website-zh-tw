@@ -251,12 +251,24 @@ GET /_plugins/_flow_framework/workflow/8xL8bowB8y25Tqfenm50/_status
 此工作流程會設定[語意搜尋]({{site.url}}{{site.baseurl}}/search-plugins/semantic-search/)。
 
 - **使用案例**：`semantic_search`
-- **建立的元件**： 
-  - 包含 `text_embedding` 處理器的資料匯入管線
-  - 設定為使用該管線的向量索引
-- **必要參數**： 
-  - `create_ingest_pipeline.model_id`：要使用的文字嵌入模型的模型 ID
+- **建立的元件**：
+  - 名為 `nlp-ingest-pipeline` 的資料匯入管線，內含 `text_embedding` 處理器
+  - 名為 `my-nlp-index` 的向量索引，已設定使用該管線
+- **必要參數**：
+  - `create_ingest_pipeline.model_id`：要使用的文字嵌入模型之模型 ID
 - [預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/semantic-search-defaults.json)
+
+預設向量維度為 `1024`。若您的模型產生的嵌入維度不同，請在 `text_embedding.field_map.output.dimension` 參數中指定。若要變更讀取文字的來源文件欄位（預設為 `passage_text`），請在 `text_embedding.field_map.input` 參數中指定該欄位。下列請求會為產生 768 維嵌入並從 `passage` 欄位讀取文字的模型建立工作流程：
+
+```json
+POST /_plugins/_flow_framework/workflow?use_case=semantic_search&provision=true
+{
+  "create_ingest_pipeline.model_id": "aVeif4oB5Vm0Tdw8zYO2",
+  "text_embedding.field_map.output.dimension": "768",
+  "text_embedding.field_map.input": "passage"
+}
+```
+{% include copy-curl.html %}
 
 ### 使用查詢充實器的語意搜尋
 
@@ -359,11 +371,22 @@ GET /_plugins/_flow_framework/workflow/8xL8bowB8y25Tqfenm50/_status
 
 - **使用案例**：`multimodal_search`
 - **建立的元件**：
-  - 含有 `text_image_embedding` 處理器的資料匯入管線
-  - 以該管線設定的向量索引
+  - 名為 `nlp-multimodal-ingest-pipeline` 的資料匯入管線，內含 `text_image_embedding` 處理器
+  - 名為 `my-multimodal-nlp-index` 的向量索引，已使用該管線完成設定
 - **必要參數**：
-  - `create_ingest_pipeline.model_id`：要使用的多模態嵌入模型之模型 ID
+  - `create_ingest_pipeline.model_id`：要使用的多模態嵌入模型 ID
 - [預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/multi-modal-search-defaults.json)
+
+預設向量維度為 `1024`。若您的模型產生的嵌入維度不同，請在 `text_image_embedding.field_map.output.dimension` 參數中指定。維度必須與模型產生的嵌入大小相符。下列請求會為產生 384 維嵌入的模型建立工作流程：
+
+```json
+POST /_plugins/_flow_framework/workflow?use_case=multimodal_search&provision=true
+{
+  "create_ingest_pipeline.model_id": "-fYQAosBQkdnhhBsK593",
+  "text_image_embedding.field_map.output.dimension": "384"
+}
+```
+{% include copy-curl.html %}
 
 ### 使用 Amazon Bedrock Titan 的多模態搜尋
 
@@ -391,13 +414,24 @@ GET /_plugins/_flow_framework/workflow/8xL8bowB8y25Tqfenm50/_status
 此工作流程會設定[混合搜尋]({{site.url}}{{site.baseurl}}/search-plugins/hybrid-search/)。
 
 - **使用案例**：`hybrid_search`
-- **建立的元件**：
-  - 資料匯入管線
-  - 以該管線設定的向量索引
-  - 含有 `normalization_processor` 的搜尋管線
-- **必要參數**：
-  - `create_ingest_pipeline.model_id`：要使用的文字嵌入模型之模型 ID
+- **建立的元件**： 
+  - 名為 `nlp-ingest-pipeline` 的資料匯入管線，內含 `text_embedding` 處理器
+  - 名為 `my-nlp-index` 的向量索引，已設定使用此管線
+  - 名為 `nlp-search-pipeline` 的搜尋管線，內含 `normalization_processor`
+- **必要參數**： 
+  - `create_ingest_pipeline.model_id`：要使用的文字嵌入模型的模型 ID
 - [預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/hybrid-search-defaults.json)
+
+預設向量維度為 `1024`。如果您的模型產生不同維度的嵌入，請在 `text_embedding.field_map.output.dimension` 參數中指定該維度。以下請求會為產生 768 維嵌入的模型建立工作流程：
+
+```json
+POST /_plugins/_flow_framework/workflow?use_case=hybrid_search&provision=true
+{
+  "create_ingest_pipeline.model_id": "bQ1J8ooBpBj3wT4HVUsb",
+  "text_embedding.field_map.output.dimension": "768"
+}
+```
+{% include copy-curl.html %}
 
 ### 使用本機模型的混合搜尋
 

@@ -27,7 +27,7 @@ nav_order: 240
 ```
 {% include copy.html %}
 
-## 組態參數
+## 參數
 
 下表列出 `set` 處理器的必要與選用參數。
 
@@ -35,13 +35,13 @@ nav_order: 240
 |-----------|-----------|-----------|
 `field` | 必要 | 要設定或更新的欄位名稱。支援[範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。
 `value` | 必要 | 指派給欄位的值。支援[範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。
-`override` | 選用 | 決定處理器是否應覆寫欄位現有值的布林值旗標。預設為 `true`。
-`ignore_empty_value` | 選用 | 決定處理器是否應忽略 `null` 值或空字串的布林值旗標。預設為 `false`。
+`override` | 選用 | 布林值旗標，決定處理器是否應覆寫欄位的現有值。預設為 `true`。
+`ignore_empty_value` | 選用 | 布林值旗標，決定處理器是否應忽略 `null` 值或空字串。預設為 `false`。
 `description`  | 選用  | 處理器用途或組態的說明。
-`if` | 選用 | 指定依條件執行處理器。
-`ignore_failure` | 選用 | 指定忽略處理器失敗。請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。
-`on_failure` | 選用 | 指定處理器執行失敗時要執行的處理器清單。這些處理器會依指定的順序執行。
-`tag` | 選用 | 處理器的識別標籤。有助於在偵錯時區分相同類型的處理器。如需詳細資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。
+`if` | 選用 | 指定條件式執行處理器。
+`ignore_failure` | 選用 | 指定是否忽略處理器失敗。請參閱[處理管線失敗]({{site.url}}{{site.baseurl}}/ingest-pipelines/pipeline-failures/)。
+`on_failure` | 選用 | 指定處理器在執行期間失敗時要執行的處理器清單。這些處理器會依指定的順序執行。
+`tag` | 選用 | 處理器的識別碼標籤。有助於偵錯時區分相同類型的處理器。如需詳細資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。
 
 ## 使用處理器
 
@@ -69,7 +69,7 @@ PUT _ingest/pipeline/set-pipeline
 
 ### 步驟 2（選用）：測試管線
 
-建議您在匯入文件前先測試管線。
+建議您在匯入文件之前測試管線。
 {: .tip}
 
 若要測試管線，請執行下列查詢：
@@ -88,9 +88,7 @@ POST _ingest/pipeline/set-pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
-下列範例回應確認管線運作符合預期：
+下列範例回應確認管線如預期運作：
 
 ```json
 {
@@ -112,9 +110,9 @@ POST _ingest/pipeline/set-pipeline/_simulate
 }
 ```
 
-### 步驟 3：匯入文件 
+### 步驟 3：匯入文件
 
-下列查詢會將文件匯入名為 `testindex1` 的索引：
+下列查詢會將一份文件匯入名為 `testindex1` 的索引：
 
 ```json
 POST testindex1/_doc?pipeline=set-pipeline
@@ -124,9 +122,7 @@ POST testindex1/_doc?pipeline=set-pipeline
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
-此請求會將文件編製索引至 `testindex1` 索引，並將 `new_field` 欄位設為 `some_value`，如下列回應所示：
+此請求會將文件編製索引至 `testindex1` 索引，並將 `new_field` 欄位設定為 `some_value`，如下列回應所示：
 
 ```json
 {
@@ -152,6 +148,8 @@ POST testindex1/_doc?pipeline=set-pipeline
 GET testindex1/_doc/1
 ```
 {% include copy-curl.html %}
+
+回應會包含已匯入的文件，並依步驟 2 的回應所示進行轉換。
 
 ## 從另一個欄位複製值
 

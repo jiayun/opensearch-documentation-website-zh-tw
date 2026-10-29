@@ -23,7 +23,7 @@ nav_order: 125
 ```
 {% include copy.html %}
 
-## 組態參數
+## 參數
 
 下表列出 `gsub` 處理器的必要與選用參數。
 
@@ -32,13 +32,13 @@ nav_order: 125
 `field` | 必要 | 要套用取代的欄位。
 `pattern` | 必要 | 要被取代的模式。
 `replacement` | 必要 | 用來取代相符模式的字串。
-`target_field` | 選用 | 用來儲存剖析後資料的欄位名稱。若未指定 `target_field`，剖析後的資料會取代 `field` 欄位中的原始資料。預設為 `field`。
-`description` | 選用 | 處理器的簡短說明。
+`target_field` | 選用 | 儲存剖析資料的欄位名稱。若未指定 `target_field`，剖析後的資料會取代 `field` 欄位中的原始資料。預設為 `field`。
+`description` | 選用 | 處理器的簡短描述。
 `if` | 選用 | 執行處理器的條件。
-`ignore_missing` | 選用 | 指定處理器是否應忽略不包含指定欄位或該欄位為 `null` 的文件。預設為 `false`。
-`ignore_failure` | 選用 | 指定處理器在遇到錯誤時是否繼續執行。若設為 `true`，則會忽略失敗。預設為 `false`。
+`ignore_missing` | 選用 | 指定處理器是否應忽略不含指定欄位或欄位值為 `null` 的文件。預設為 `false`。
+`ignore_failure` | 選用 | 指定處理器在遇到錯誤時是否仍繼續執行。若設為 `true`，則會忽略失敗。預設為 `false`。
 `on_failure` | 選用 | 處理器失敗時要執行的處理器清單。
-`tag` | 選用 | 處理器的識別標籤。可用於偵錯，以區分相同類型的處理器。如需更多資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。
+`tag` | 選用 | 處理器的識別標籤。有助於偵錯時區分相同類型的處理器。如需更多資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。
 
 ## 使用處理器
 
@@ -86,9 +86,7 @@ POST _ingest/pipeline/gsub_pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
-下列回應確認管線如預期運作：
+下列回應可確認管線運作正常：
 
 ```json
 {
@@ -111,7 +109,7 @@ POST _ingest/pipeline/gsub_pipeline/_simulate
 
 ### 步驟 3：匯入文件
 
-下列查詢會將文件匯入名為 `logs` 的索引：
+下列查詢會將一份文件匯入名為 `logs` 的索引：
 
 ```json
 PUT logs/_doc/1?pipeline=gsub_pipeline
@@ -121,9 +119,7 @@ PUT logs/_doc/1?pipeline=gsub_pipeline
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
-下列回應顯示，請求已將文件編製索引至名為 `logs` 的索引，且 `gsub` 處理器已將 `message` 欄位中所有出現的單字 `error` 取代為單字 `warning`：
+下列回應顯示該請求已將文件編製索引至名為 `logs` 的索引，並且 `gsub` 處理器已將 `message` 欄位中所有出現的 `error` 一詞替換為 `warning`：
 
 ```json
 {
@@ -150,22 +146,4 @@ GET logs/_doc/1
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
-下列回應顯示修改後 `message` 欄位值的文件：
-
-```json
-{
-  "_index": "logs",
-  "_id": "1",
-  "_version": 1,
-  "_seq_no": 0,
-  "_primary_term": 1,
-  "found": true,
-  "_source": {
-    "message": "This is an warning message"
-  }
-}
-```
-
-
+回應包含已匯入的文件，其轉換結果與步驟 2 回應中所示相同。

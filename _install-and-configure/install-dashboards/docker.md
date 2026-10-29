@@ -19,14 +19,14 @@ redirect_from:
 
 ## 使用 Docker 安裝 OpenSearch Dashboards
 
-如果您已使用 `docker network create os-net` 定義網路，並使用以下命令啟動 OpenSearch：
+如果您已使用 `docker network create os-net` 定義網路，並使用下列命令啟動 OpenSearch：
 
 ```bash
-docker run -d --name opensearch-node -p 9200:9200 -p 9600:9600 --network os-net -e "discovery.type=single-node" -e "OPENSEARCH_INITIAL_ADMIN_PASSWORD=<admin_password>" opensearchproject/opensearch:latest
+docker run -d --name opensearch-node -p 9200:9200 --network os-net -e "discovery.type=single-node" -e "OPENSEARCH_INITIAL_ADMIN_PASSWORD=<admin_password>" opensearchproject/opensearch:latest
 ```
 {% include copy.html %}
 
-接著您可以透過以下步驟啟動 OpenSearch Dashboards：
+接著您可以使用下列步驟啟動 OpenSearch Dashboards：
 
 1. 啟動 OpenSearch Dashboards，並在 `OPENSEARCH_HOSTS` 環境變數中指定 OpenSearch 容器名稱：
 
@@ -39,13 +39,13 @@ docker run -d --name opensearch-node -p 9200:9200 -p 9600:9600 --network os-net 
     ```
     {% include copy.html %}
 
-1. 在網頁瀏覽器中，前往 `http://localhost:5601` 並使用您在安裝 OpenSearch 時設定的自訂管理員密碼，以 `admin` 使用者身分登入。如果 OpenSearch Dashboards 執行在遠端主機上，請將 `localhost` 替換為該主機的 IP 位址或 DNS 名稱。如需更多資訊，請參閱 [存取 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#accessing-opensearch-dashboards)。
+1. 在網頁瀏覽器中前往 `http://localhost:5601`，並使用您在安裝 OpenSearch 時設定的[自訂管理員密碼]({{site.url}}{{site.baseurl}}/security/configuration/passwords/#setting-the-initial-admin-password)以 `admin` 使用者身分登入。如果 OpenSearch Dashboards 執行於遠端主機，請將 `localhost` 替換為該主機的 IP 位址或 DNS 名稱。如需詳細資訊，請參閱[存取 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#accessing-opensearch-dashboards)。
 
 ## 使用 Docker Compose 安裝 OpenSearch Dashboards
 
-[範例 `docker-compose.yml`]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/docker/#sample-docker-composeyml) 檔案包含一個 `opensearch-dashboards` 服務，因此 OpenSearch Dashboards 會與 OpenSearch 同時啟動。當您 [使用 Docker Compose 部署叢集]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/docker/#deploy-an-opensearch-cluster-using-docker-compose) 時，不需要額外步驟來安裝 OpenSearch Dashboards。
+[範例 `docker-compose.yml`]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/docker/#sample-docker-composeyml) 檔案包含 `opensearch-dashboards` 服務，因此 OpenSearch Dashboards 會與 OpenSearch 一起啟動。當您[使用 Docker Compose 部署叢集]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/docker/#deploy-an-opensearch-cluster-using-docker-compose)時，不需要額外步驟即可安裝 OpenSearch Dashboards。
 
-在網頁瀏覽器中，前往 `http://localhost:5601` 並使用您在安裝 OpenSearch 時設定的自訂管理員密碼，以 `admin` 使用者身分登入。如果 OpenSearch Dashboards 執行在遠端主機上，請將 `localhost` 替換為該主機的 IP 位址或 DNS 名稱。如需更多資訊，請參閱 [存取 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#accessing-opensearch-dashboards)。
+在網頁瀏覽器中前往 `http://localhost:5601`，並以 `admin` 使用者身分，使用您在安裝 OpenSearch 時設定的[自訂管理員密碼]({{site.url}}{{site.baseurl}}/security/configuration/passwords/#setting-the-initial-admin-password)登入。如果 OpenSearch Dashboards 在遠端主機上執行，請將 `localhost` 替換為該主機的 IP 位址或 DNS 名稱。如需詳細資訊，請參閱[存取 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#accessing-opensearch-dashboards)。
 
 ## 自訂 OpenSearch Dashboards 組態
 
@@ -60,7 +60,7 @@ opensearch-dashboards:
     OPENSEARCH_REQUESTTIMEOUT: 60000
 ```
 
-並非所有設定都能以環境變數傳遞。若要使用不支援環境變數的設定，請建立您自己的 `opensearch_dashboards.yml` 檔案並將其掛載到容器中，以替換預設檔案。由於掛載的檔案會完全替換預設檔案，因此它必須包含 OpenSearch Dashboards 所需的所有設定，包括 `opensearch.hosts` 和連線憑證。範例請參閱 [包含自訂組態的完整 Docker Compose 範例]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/docker/#complete-docker-compose-example-with-custom-configuration)。
+並非所有設定都能以環境變數傳遞。若要使用不支援環境變數的設定，請建立您自己的 `opensearch_dashboards.yml` 檔案並將其掛載到容器中，以替換預設檔案。由於掛載的檔案會完全替換預設檔案，因此它必須包含 OpenSearch Dashboards 所需的所有設定，包括 `opensearch.hosts` 和連線認證資訊。範例請參閱 [包含自訂組態的完整 Docker Compose 範例]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/docker/#complete-docker-compose-example-with-custom-configuration)。
 
 ## 相關文件
 

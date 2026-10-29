@@ -28,29 +28,29 @@ nav_order: 60
 {% include copy.html %}
 
 
-## 組態參數
+## 參數
 
 下表列出 `dissect` 處理器的必要與選用參數。
 
-參數 | 必要/選用 | 說明 |
+參數 | 必要／選用 | 說明 |
 |-----------|-----------|-----------|
-`field`  | 必要  | 包含待剖析資料的欄位名稱。 |
-`pattern` | 必要 | 用於從指定欄位擷取資料的剖析模式。 |
-`append_separator` | 選用 | 用於分隔附加欄位的分隔字元或字串。預設為 `""`（空字串）。
-`description`  | 選用  | 處理器的簡短說明。  |
+`field`  | 必要  | 包含要剖析資料的欄位名稱。 |
+`pattern` | 必要 | 用於從指定欄位擷取資料的 dissect 模式。 |
+`append_separator` | 選用 | 分隔附加欄位的分隔字元或字串。預設為 `""`（空字串）。
+`description`  | 選用  | 處理器的簡短描述。  |
 `if` | 選用 | 執行處理器的條件。 |
-`ignore_failure` | 選用 | 指定處理器是否在遇到錯誤時仍繼續執行。若設為 `true`，則忽略處理器失敗。預設為 `false`。 |
-`ignore_missing`  | 選用  | 指定處理器是否應忽略不含指定欄位的文件。若設為 `true`，則當欄位不存在或為 `null` 時，處理器不會修改文件。預設為 `false`。 |
+`ignore_failure` | 選用 | 指定處理器在遇到錯誤時是否仍繼續執行。若設為 `true`，則忽略處理器失敗。預設為 `false`。 |
+`ignore_missing`  | 選用  | 指定處理器是否應忽略不包含指定欄位的文件。若設為 `true`，當欄位不存在或為 `null` 時，處理器不會修改文件。預設為 `false`。 |
 `on_failure` | 選用 | 處理器失敗時要執行的處理器清單。 |
-`tag` | 選用 | 處理器的識別標籤。可在偵錯時用來區分相同類型的處理器。如需詳細資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
+`tag` | 選用 | 處理器的識別標籤。有助於除錯時區分相同類型的處理器。如需更多資訊，請參閱[使用處理器標籤進行監控與除錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
 
 ## 使用處理器
 
-請依照下列步驟在管線中使用處理器。
+請依照下列步驟，在管線中使用處理器。
 
-**步驟 1：建立管線**
+### 步驟 1：建立管線
 
-下列查詢會建立名為 `dissect-test` 的管線，並使用 `dissect` 處理器剖析記錄檔行：
+下列查詢會建立一個名為 `dissect-test` 的管線，使用 `dissect` 處理器來剖析記錄行：
 
 ```json
 PUT /_ingest/pipeline/dissect-test
@@ -68,7 +68,7 @@ PUT /_ingest/pipeline/dissect-test
 ```
 {% include copy-curl.html %}
 
-**步驟 2（選用）：測試管線**
+### 步驟 2（選用）：測試管線
 
 建議您在匯入文件之前先測試管線。
 {: .tip}
@@ -91,9 +91,7 @@ POST _ingest/pipeline/dissect-test/_simulate
 ```
 {% include copy-curl.html %}
 
-**回應**
-
-下列範例回應可確認管線運作正常：
+下列範例回應確認管線如預期般運作：
 
 ```json
 {
@@ -121,7 +119,7 @@ POST _ingest/pipeline/dissect-test/_simulate
 }
 ```
 
-**步驟 3：匯入文件**
+### 步驟 3：匯入文件
 
 下列查詢會將文件匯入名為 `testindex1` 的索引：
 
@@ -133,7 +131,7 @@ PUT testindex1/_doc/1?pipeline=dissect-test
 ```
 {% include copy-curl.html %}
 
-**步驟 4（選用）：擷取文件**
+### 步驟 4（選用）：擷取文件
 
 若要擷取文件，請執行下列查詢：
 
@@ -141,6 +139,8 @@ PUT testindex1/_doc/1?pipeline=dissect-test
 GET testindex1/_doc/1
 ```
 {% include copy-curl.html %}
+
+回應包含已匯入的文件，其轉換結果如步驟 2 的回應所示。
 
 ## Dissect 模式
 

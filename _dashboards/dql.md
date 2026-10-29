@@ -127,14 +127,14 @@ PUT /testindex/_doc/4
 {: .note}
 </details>
 
-## DQL 與查詢字串查詢快速參考
+## DQL 與 query string query 快速參考
 
 下表提供兩種查詢語言命令的快速參考。
 
-| 功能 | DQL | 查詢字串查詢（Lucene）|
+| 功能 | DQL | Query string query (Lucene)|
 |:---|:---|:---|
 | 基本詞彙搜尋 | `wind` | `wind` |
-| 多個詞彙 | `wind gone`（找出包含 `wind` 或 `gone` 的文件） | `wind gone`（找出包含 `wind` 或 `gone` 的文件） |
+| 多個詞彙 | `wind gone` (找出包含 `wind` 或 `gone` 的文件) | `wind gone` (找出包含 `wind` 或 `gone` 的文件) |
 | 精確片語搜尋 | `"wind rises"` | `"wind rises"` |
 | 特定欄位搜尋 | `title: wind` | `title:wind` |
 | 欄位是否存在 | `description:*` | `_exists_:description` |
@@ -146,19 +146,19 @@ PUT /testindex/_doc/4
 | 逸出特殊字元 | `format: 2\*3` | `format:2\*3` |
 | 多欄位搜尋 | `title: wind OR description: film` | `title:wind OR description:film` |
 | 巢狀欄位搜尋 | 請參閱[巢狀欄位](#nested-fields) | 不支援 |
-| 數值範圍 | `page_views >= 100 and page_views <= 300` <br><br> `not page_views: 100`（結果包含不含 `page_views` 欄位的文件） <br><br>   請參閱[範圍](#ranges)| `page_views:[100 TO 300]` <br><br>  `page_views:(>=100 AND <=300)` <br><br>  `page_views:(+>=100 +<=300)` <br><br>  `page_views:[100 TO *]` <br><br>  `page_views:>=100` <br><br>  `NOT page_views:100`（結果包含不含 `page_views` 欄位的文件） <br><br> 請參閱[範圍]({{site.url}}{{site.baseurl}}/query-dsl/full-text/query-string/#ranges)|
+| 數值範圍 | `page_views >= 100 and page_views <= 300` <br><br> `not page_views: 100` (結果包含沒有 `page_views` 欄位的文件) <br><br>   請參閱[範圍](#ranges)| `page_views:[100 TO 300]` <br><br>  `page_views:(>=100 AND <=300)` <br><br>  `page_views:(+>=100 +<=300)` <br><br>  `page_views:[100 TO *]` <br><br>  `page_views:>=100` <br><br>  `NOT page_views:100` (結果包含沒有 `page_views` 欄位的文件) <br><br> 請參閱[範圍]({{site.url}}{{site.baseurl}}/query-dsl/full-text/query-string/#ranges)|
 | 日期範圍 | `date >= "1939-01-01" and date <= "2013-12-31"` <br><br> `not date: "1939-09-08"` | `date:[1939-01-01 TO 2013-12-31]` <br><br> `NOT date:1939-09-08` <br><br> 支援所有數值範圍語法結構|
-| 不含端點的範圍 | 不支援 | `page_views: {100 TO 300}`（傳回 `page_views` 介於 `100` 與 `300` 之間的文件，但不包含 `100` 與 `300`） |
-| 布林 `AND` | `media_type: film AND page_views: 100` <br><br> `media_type: film and page_views: 100`| `media_type:film AND page_views:100` <br><br> `+media_type:film +page_views:100`|
-| 布林 `NOT` | `NOT media_type: article` <br><br> `not media_type: article` | `NOT media_type:article` <br><br> `-media_type:article`  |
-| 布林 `OR` | `title: wind OR description: film` <br><br> `title: wind or description: film` | `title: wind OR description: film` |
-| 必要／禁止運算子 | 不支援 | 同時支援 `+`（必要運算子）與 `-`（禁止運算子） <br><br> `+title:wind -media_type:article`（傳回 `title` 包含 `wind` 但 `media_type` 不包含 `article` 的文件）  |
-| 萬用字元 | `title: wind*`<br><br> `titl*: wind` <br><br> 不支援片語搜尋（引號內）中的萬用字元 <br><br> 僅支援 `*`（多個字元）  | `title:wind*` 或 `title:w?nd` <br><br> 不支援欄位名稱中的萬用字元 <br><br> 不支援片語搜尋（引號內）中的萬用字元 <br><br> 支援 `*`（多個字元）與 `?`（單一字元） |
-| 正規表示式 | 不支援 | `title:/w[a-z]nd/` |
+| 排除範圍 | 不支援 | `page_views: {100 TO 300}` (傳回 `page_views` 介於 `100` 與 `300` 之間的文件，不含 `100` 與 `300`) |
+| 布林值 `AND` | `media_type: film AND page_views: 100` <br><br> `media_type: film and page_views: 100`| `media_type:film AND page_views:100` <br><br> `+media_type:film +page_views:100`|
+| 布林值 `NOT` | `NOT media_type: article` <br><br> `not media_type: article` | `NOT media_type:article` <br><br> `-media_type:article`  |
+| 布林值 `OR` | `title: wind OR description: film` <br><br> `title: wind or description: film` | `title: wind OR description: film` |
+| 必要/禁止運算子 | 不支援 | 同時支援 `+` (必要運算子) 與 `-` (禁止運算子) <br><br> `+title:wind -media_type:article` (傳回 `title` 包含 `wind` 但 `media_type` 不包含 `article` 的文件)  |
+| 萬用字元 | `title: wind*`<br><br> `titl*: wind` <br><br> 不支援片語搜尋 (引號內) 中的萬用字元 <br><br> 僅支援 `*` (多個字元)  | `title:wind*` 或 `title:w?nd` <br><br> 不支援欄位名稱中的萬用字元 <br><br> 不支援片語搜尋 (引號內) 中的萬用字元 <br><br> 支援 `*` (多個字元) 與 `?` (單一字元) |
+| 規則運算式 | 不支援 | `title:/w[a-z]nd/` |
 | 模糊搜尋 | 不支援 | `title:wind~2` |
 | 鄰近搜尋 | 不支援 | `"wind rises"~2` |
 | 詞彙加權 | 不支援 | `title:wind^2` |
-| 保留字元 | `\ ( ) : < > " *` | `+ - = && || > < ! ( ) { } [ ] ^ " ~ * ? : \ /` |
+| 保留字元 | `\ ( ) : < > " * { }` | `+ - = && || > < ! ( ) { } [ ] ^ " ~ * ? : \ /` |
 
 ## 搜尋詞彙
 
@@ -191,12 +191,26 @@ author: "Ruiz-Ortega"
 
 以下是 DQL 中的保留字元清單：
 
-`\`, `(`, `)`, `:`, `<`, `>`, `"`, `*`
+`\`、`(`、`)`、`:`、`<`、`>`、`"`、`*`、`{`、`}`
 
-使用反斜線（`\`）來跳脫保留字元。例如，若要搜尋運算式 `2*3`，請將查詢指定為 `2\*3`：
+請使用反斜線（`\`）來逸出保留字元。例如，若要搜尋運算式 `2*3`，請將查詢指定為 `2\*3`：
 
 ```plaintext
 2\*3
+```
+{% include copy.html %}
+
+`or`、`and` 和 `not` 這幾個字是布林運算子。若要將其中某個字當作詞彙進行搜尋，請使用反斜線將其逸出。例如，下列查詢會在 `title` 欄位中搜尋 `and` 這個字：
+
+```plaintext
+title: \and
+```
+{% include copy.html %}
+
+在加上引號的片語中，只有引號（`"`）和反斜線（`\`）需要逸出。其他保留字元都會被視為一般字元。例如，下列查詢會搜尋片語 `2*3 (approx.)`：
+
+```plaintext
+"2*3 (approx.)"
 ```
 {% include copy.html %}
 

@@ -19,9 +19,9 @@ redirect_from:
 - 如果該欄位是純量欄位，`append` 處理器會將其轉換為陣列，並將指定的值附加到該陣列。
 - 如果該欄位不存在，`append` 處理器會建立一個包含指定值的陣列。
 
-### 語法 
+## 語法
 
-以下是 `append` 處理器的語法： 
+以下是 `append` 處理器的語法：
 
 ```json
 {
@@ -33,28 +33,28 @@ redirect_from:
 ```
 {% include copy.html %}
 
-## 組態參數
+## 參數
 
 下表列出 `append` 處理器的必要與選用參數。
 
-參數 | 必要／選用 | 說明 |
+參數 | 必要/選用 | 說明 |
 |-----------|-----------|-----------|
 `field`  | 必要  | 包含要附加資料的欄位名稱。支援[範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。|
-`value`  | 必要  | 要附加的值。可以是靜態值，或從現有欄位衍生的動態值。支援[範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。 | 
-`description`  | 選用  | 處理器的簡要描述。  |
+`value`  | 必要  | 要附加的值。可以是靜態值，也可以是從現有欄位衍生的動態值。支援[範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。 | 
+`description`  | 選用  | 處理器的簡短說明。  |
 `if` | 選用 | 執行處理器的條件。 |
-`ignore_failure` | 選用 | 指定處理器即使遇到錯誤仍繼續執行。若設為 `true`，則會忽略失敗。預設為 `false`。 |
-`allow_duplicates` | 選用 | 指定是否附加欄位中已存在的值。若為 `true`，則會附加重複的值；否則會略過。 |
-`on_failure` | 選用 | 當處理器失敗時要執行的處理器清單。 |
-`tag` | 選用 | 處理器的識別標籤。有助於偵錯時區分相同類型的處理器。如需更多資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
+`ignore_failure` | 選用 | 指定處理器在發生錯誤時是否繼續執行。若設為 `true`，則會忽略失敗。預設為 `false`。 |
+`allow_duplicates` | 選用 | 指定是否附加欄位中已包含的值。若為 `true`，則會附加重複的值；否則會略過這些值。 |
+`on_failure` | 選用 | 處理器失敗時要執行的處理器清單。 |
+`tag` | 選用 | 處理器的識別標籤。可用於偵錯，以區分相同類型的處理器。如需更多資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
 
 ## 使用處理器
 
-請依照下列步驟在管線中使用處理器。
+請依照下列步驟在管線中使用此處理器。
 
-**步驟 1：建立管線** 
+### 步驟 1：建立管線
 
-下列查詢會建立一個名為 `user-behavior` 的管線，其中包含一個 append 處理器。它會將每個匯入 OpenSearch 的新文件的 `page_view` 附加到名為 `event_types` 的陣列欄位：
+下列查詢會建立一個名為 `user-behavior` 的管線，其中包含一個 append 處理器。該處理器會將每份匯入 OpenSearch 的新文件的 `page_view` 附加到名為 `event_types` 的陣列欄位：
 
 ```json
 PUT _ingest/pipeline/user-behavior
@@ -72,7 +72,7 @@ PUT _ingest/pipeline/user-behavior
 ```
 {% include copy-curl.html %}
 
-**步驟 2（選用）：測試管線**
+### 步驟 2（選用）：測試管線
 
 建議您在匯入文件之前先測試管線。
 {: .tip}
@@ -92,9 +92,7 @@ POST _ingest/pipeline/user-behavior/_simulate
 ```
 {% include copy-curl.html %}
 
-**回應**
-
-下列回應確認管線如預期運作：
+下列回應確認管線如預期般運作：
 
 ```json
 {
@@ -117,9 +115,9 @@ POST _ingest/pipeline/user-behavior/_simulate
 }
 ```
 
-**步驟 3：匯入文件**
+### 步驟 3：匯入文件
 
-下列查詢會將文件匯入名為 `testindex1` 的索引：
+下列查詢會將一份文件匯入名為 `testindex1` 的索引：
 
 ```json
 PUT testindex1/_doc/1?pipeline=user-behavior
@@ -128,7 +126,7 @@ PUT testindex1/_doc/1?pipeline=user-behavior
 ```
 {% include copy-curl.html %}
 
-**步驟 4（選用）：擷取文件**
+### 步驟 4（選用）：擷取文件
 
 若要擷取文件，請執行下列查詢：
 
@@ -137,20 +135,4 @@ GET testindex1/_doc/1
 ```
 {% include copy-curl.html %}
 
-由於文件不包含 `event_types` 欄位，因此會建立一個陣列欄位，並將事件附加到該陣列：
-
-```json
-{
-  "_index": "testindex1",
-  "_id": "1",
-  "_version": 2,
-  "_seq_no": 1,
-  "_primary_term": 1,
-  "found": true,
-  "_source": {
-    "event_types": [
-      "page_view"
-    ]
-  }
-}
-```
+回應會包含已匯入的文件，並如步驟 2 的回應所示經過轉換。

@@ -15,9 +15,9 @@ redirect_from:
 
 透過 Painless 指令碼擴充功能，您可以直接在 Painless 指令碼中使用 k 最近鄰（k-NN）距離函式，對 `knn_vector` 欄位執行運算。為了確保指令碼的安全性，Painless 對每個情境允許使用的函式與類別有嚴格的限制。如需更多資訊，請參閱 [Painless 指令碼語言]({{site.url}}{{site.baseurl}}/scripting/painless/)。OpenSearch 為 [k-NN 評分指令碼]({{site.url}}{{site.baseurl}}/search-plugins/knn/knn-score-script/) 中使用的幾個距離函式加入了 Painless 指令碼擴充功能，讓您可以用它們自訂 k-NN 工作負載。
 
-## 開始使用 k-NN Painless 指令碼函式
+## 在指令碼中使用 k-NN 距離函式
 
-若要使用 k-NN Painless 指令碼函式，請先依照 [向量評分指令碼入門]({{site.url}}{{site.baseurl}}/search-plugins/knn/knn-score-script#getting-started-with-the-scoring-script-for-vectors) 的說明，建立一個含有 `knn_vector` 欄位的索引。建立索引並匯入一些資料之後，即可使用 Painless 擴充功能：
+若要使用 k-NN Painless 指令碼函式，請先依照[向量評分指令碼入門]({{site.url}}{{site.baseurl}}/search-plugins/knn/knn-score-script#getting-started-with-the-scoring-script-for-vectors)的說明，建立一個包含 `knn_vector` 欄位的索引。建立索引並匯入一些資料後，即可使用 Painless 擴充功能：
 
 ```json
 GET my-knn-index-2/_search
@@ -47,35 +47,32 @@ GET my-knn-index-2/_search
 ```
 {% include copy-curl.html %}
 
-`field` 必須對應到 `knn_vector` 欄位，而 `query_value` 必須是與 `field` 維度相同的浮點數陣列。
+請注意下列需求：
+
+- `field` 必須對應至 `knn_vector` 欄位。
+- `query_value` 必須是與 `field` 維度相同的浮點數陣列。
+- 每份文件都必須在向量欄位中包含值。如果某些文件可能不含值，請在呼叫函式前先檢查文件是否在該欄位中包含值：
+
+  ```
+  "source": "doc[params.field].size() == 0 ? 0 : 1 / (1 + l2Squared(params.query_value, doc[params.field]))",
+  ```
+
+  由於分數只能是正數，此指令碼會將包含向量欄位的文件排在不含向量欄位的文件之前。
+- 對於 cosine similarity，查詢向量不能是零向量 (`[0, 0, ...]`)，因為零向量的量值為 `0`，cosine similarity 公式會除以零。
 
 ## 函式類型
 
 下表說明 OpenSearch 提供的 Painless 函式。
 
 函式名稱 | 函式簽章 | 說明
-:--- | :---
-`l2Squared` | `float l2Squared (float[] queryVector, doc['vector field'])` | 此函式計算給定查詢向量與文件向量之間的 L2 距離（歐氏距離）的平方。距離越短代表文件越相關，因此此範例會反轉 `l2Squared` 函式的回傳值。如果文件向量與查詢向量相符，結果為 `0`，因此此範例也在距離上加上 `1`，以避免除以零的錯誤。
-`l1Norm` | `float l1Norm (float[] queryVector, doc['vector field'])` | 此函式計算給定查詢向量與文件向量之間的 L1 範數距離（曼哈頓距離）。
-`cosineSimilarity` | `float cosineSimilarity (float[] queryVector, doc['vector field'])` | 餘弦相似度是查詢向量與文件向量的內積，兩者皆正規化為長度 `1`。如果查詢向量的大小在整個查詢過程中不變，您可以傳入查詢向量的大小以提升效能，而不必為每個篩選後的文件重複計算大小：<br /> `float cosineSimilarity (float[] queryVector, doc['vector field'], float normQueryVector)` <br />一般而言，餘弦相似度的範圍是 [-1, 1]。然而，在資訊檢索的情況下，兩份文件的餘弦相似度範圍是 `0` 到 `1`，因為 `tf-idf` 統計值不可能為負。因此，OpenSearch 加上 `1.0`，使餘弦相似度分數恆為正值。
-`hamming` | `float hamming (float[] queryVector, doc['vector field'])` | 此函式計算給定查詢向量與文件向量之間的漢明距離。漢明距離是對應元素不同的位置數量。距離越短代表文件越相關，因此此範例會反轉漢明距離的回傳值。
+:--- | :--- | :---
+`l2Squared` | `float l2Squared (float[] queryVector, doc['vector field'])` | 此函式會計算指定查詢向量與文件向量之間的 L2 距離（歐幾里得距離）平方。距離越短表示文件越相關，因此此範例會反轉 `l2Squared` 函式的傳回值。若文件向量與查詢向量相符，結果為 `0`，因此此範例也會在距離加上 `1`，以避免除以零的錯誤。
+`l1Norm` | `float l1Norm (float[] queryVector, doc['vector field'])` | 此函式會計算指定查詢向量與文件向量之間的 L1 範數距離（曼哈頓距離）。
+`cosineSimilarity` | `float cosineSimilarity (float[] queryVector, doc['vector field'])` | 餘弦相似度是查詢向量與文件向量的內積，並將兩者正規化為長度皆為 `1`。若查詢向量的量值在整個查詢過程中不變，您可以傳入查詢向量的量值平方（其各值平方之和）來提升效能，而不必為每個篩選後的文件重複計算量值：<br /> `float cosineSimilarity (float[] queryVector, doc['vector field'], float normQueryVector)` <br />一般而言，餘弦相似度的範圍為 [-1, 1]。然而在資訊檢索的情況下，由於 `tf-idf` 統計量不會為負值，兩份文件的餘弦相似度範圍為 `0` 到 `1`。因此，OpenSearch 會加上 `1.0`，以確保一律產生正的餘弦相似度分數。
+`hamming` | `float hamming (float[] queryVector, doc['vector field'])` | 此函式會計算指定查詢向量與文件向量之間的漢明距離。漢明距離是對應元素不同的位置數量。距離越短表示文件越相關，因此此範例會反轉漢明距離的傳回值。二進位向量支援 `hamming` 空間類型。如需詳細資訊，請參閱[二進位 k-NN 向量]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized#binary-vectors)。
 
-OpenSearch 2.16 及之後版本支援二進位向量的 `hamming` 空間類型。如需更多資訊，請參閱 [二進位 k-NN 向量]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized#binary-vectors)。
-{: .note}
+## 相關文件
 
-## 限制
-
-1. 如果文件的 `knn_vector` 欄位維度與查詢不同，函式會擲回 `IllegalArgumentException`。
-
-2. 如果向量欄位沒有值，函式會擲回 `IllegalStateException`。
-
-   您可以先檢查文件的欄位是否含有值，以避免此問題：
-
-   ```
-   "source": "doc[params.field].size() == 0 ? 0 : 1 / (1 + l2Squared(params.query_value, doc[params.field]))",
-   ```
-
-   由於分數只能是正值，此指令碼會將含有向量欄位的文件排在沒有向量欄位的文件之前。
-
-使用餘弦相似度時，傳入零向量 (`[0, 0, ...]`) 作為輸入是無效的。因為這類向量的大小為 0，會在對應的公式中引發 `divide by 0` 例外。包含零向量的請求將被拒絕，並擲回對應的例外。
-{: .note }
+- [指令碼]({{site.url}}{{site.baseurl}}/scripting/)
+- [指令碼分數查詢]({{site.url}}{{site.baseurl}}/query-dsl/specialized/script-score/)
+- [如何使用指令碼]({{site.url}}{{site.baseurl}}/scripting/using-scripts/)

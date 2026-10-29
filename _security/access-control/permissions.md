@@ -141,7 +141,7 @@ index_permissions:
 
 ### 驗證系統索引存取
 
-您可以使用 [CAT indices]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-indices/) 操作，查看與權限組態中任何索引模式相關聯的所有索引，並驗證權限是否提供您預期的存取權。例如，如果您想驗證包含開頭為前置詞 `.kibana` 之系統索引的權限，可以執行 `GET /_cat/indices/.kibana*` 呼叫，以傳回與該前置詞相關聯的所有索引。
+您可以使用 [CAT indices]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-indices/) 操作，查看與權限組態中任何索引模式相關聯的所有索引，並驗證權限是否提供您預期的存取權。例如，如果您想驗證包含開頭為前綴 `.kibana` 之系統索引的權限，可以執行 `GET /_cat/indices/.kibana*` 呼叫，以傳回與該前綴相關聯的所有索引。
 
 下列範例回應顯示與索引模式 `.kibana*` 相關聯的三個系統索引：
 
@@ -183,14 +183,14 @@ green open .kibana_3 XmTePICFRoSNf5O5uLgwRw 1 1 220 0 468.3kb 232.1kb
 | `indices:data/read/msearch/template` |  將[多個搜尋範本]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search-template/index/#multiple-search-templates)組合起來，並在單一請求中傳送至您的 OpenSearch 叢集的權限。此設定必須同時設定為叢集層級及索引層級的權限。 |
 | `indices:data/read/mtv` |  透過單一請求擷取多個詞彙向量的權限。此設定必須同時設定為叢集層級及索引層級的權限。 |
 | `indices:data/read/mtv*` |  透過單一請求擷取多個詞彙向量的權限。此設定必須同時設定為叢集層級及索引層級的權限。 |
-| `indices:data/read/search/template/render` |  呈現搜尋範本的權限。此設定必須同時設定為叢集層級及索引層級的權限。 |
+| `indices:data/read/search/template/render` |  轉譯搜尋範本的權限。此設定必須同時設定為叢集層級及索引層級的權限。 |
 | `indices:data/write/bulk` |  執行[大量請求]({{site.url}}{{site.baseurl}}/api-reference/document-apis/bulk/)的權限。此設定必須同時設定為叢集層級及索引層級的權限。 |
 | `indices:data/write/bulk*` |  執行大量請求的權限。此設定必須同時設定為叢集層級及索引層級的權限。 |
 | `indices:data/write/reindex` |  執行[重新編製索引]({{site.url}}{{site.baseurl}}/im-plugin/reindex-data/)操作的權限。 |
 
-### Ingest API 權限
+### 匯入 API 權限
 
-請參閱 [Ingest APIs]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/index/)。
+請參閱[匯入 API]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/index/)。
 
 - `cluster:admin/ingest/pipeline/delete`
 - `cluster:admin/ingest/pipeline/get`
@@ -264,7 +264,7 @@ green open .kibana_3 XmTePICFRoSNf5O5uLgwRw 1 1 220 0 468.3kb 232.1kb
 - `cluster:admin/opendistro/ism/policy/search`
 - `cluster:admin/opendistro/ism/policy/delete`
 
-### 索引彙總權限
+### 索引彙總（index rollup）權限
 
 請參閱[索引彙總 API]({{site.url}}{{site.baseurl}}/im-plugin/index-rollups/rollup-api/)。
 
@@ -334,7 +334,7 @@ green open .kibana_3 XmTePICFRoSNf5O5uLgwRw 1 1 220 0 468.3kb 232.1kb
 
 ### 重新路由
 
-請參閱 [叢集管理員任務節流]({{site.url}}{{site.baseurl}}/tuning-your-cluster/cluster-manager-task-throttling/)。
+請參閱 [叢集管理員任務節流]({{site.url}}{{site.baseurl}}/tuning-your-cluster/load-protection/cluster-manager-task-throttling/)。
 
 - `cluster:admin/reroute`
 
@@ -497,7 +497,7 @@ green open .kibana_3 XmTePICFRoSNf5O5uLgwRw 1 1 220 0 468.3kb 232.1kb
 | `indices:data/read/plugins/replication/file_chunk` | 在分段複寫期間檢查檔案的權限。 |
 | `indices:data/read/plugins/replication/changes` | 變更分段複寫設定的權限。 |
 | `indices:data/read/scroll` |  捲動瀏覽資料的權限。此設定必須同時設定為叢集層級和索引層級權限。 |
-| `indices:data/read/scroll/clear` | 清除 scroll 物件的權限。此設定必須同時設定為叢集層級和索引層級權限。 |
+| `indices:data/read/scroll/clear` | 清除捲動物件的權限。此設定必須同時設定為叢集層級和索引層級權限。 |
 | `indices:data/read/search` |  [搜尋]({{site.url}}{{site.baseurl}}/api-reference/search/)資料的權限。 |
 | `indices:data/read/search*` |  搜尋資料的權限。 |
 | `indices:data/read/search/template` |  讀取搜尋範本的權限。 |
@@ -510,10 +510,10 @@ green open .kibana_3 XmTePICFRoSNf5O5uLgwRw 1 1 220 0 468.3kb 232.1kb
 | `indices:data/write/index` |  將文件新增至現有索引的權限。另請參閱[將文件編製索引]( {{site.url}}{{site.baseurl}}/api-reference/document-apis/index-document/ )。 |
 | `indices:data/write/update` | 更新索引的權限。 |
 | `indices:data/write/update/byquery` |  執行指令碼以更新所有[符合查詢]({{site.url}}{{site.baseurl}}/api-reference/document-apis/update-by-query/)之文件的權限。 |
-| `indices:monitor/data_stream/stats` | 串流統計資料的權限。  |
+| `indices:monitor/data_stream/stats` | 取得資料串流統計資料的權限。  |
 | `indices:monitor/recovery` | 存取復原統計資料的權限。 |
 | `indices:monitor/segments` |  存取分段統計資料的權限。 |
-| `indices:monitor/settings/get` | 取得監視器設定的權限。  |
+| `indices:monitor/settings/get` | 取得監控設定的權限。  |
 | `indices:monitor/shard_stores` |  存取分片儲存區統計資料的權限。 |
 | `indices:monitor/stats` | 存取監控統計資料的權限。  |
 | `indices:monitor/upgrade` | 存取升級統計資料的權限。  |

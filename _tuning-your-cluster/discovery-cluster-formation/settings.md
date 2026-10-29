@@ -213,5 +213,5 @@ cluster.join.timeout: 120s
 ## 相關文件
 
 - [節點探索與種子主機]({{site.url}}{{site.baseurl}}/tuning-your-cluster/discovery-cluster-formation/discovery/)：提供探索機制與種子主機提供者的資訊
-- [建立叢集]({{site.url}}{{site.baseurl}}/tuning-your-cluster/)：逐步叢集設定指南
+- [建立叢集]({{site.url}}{{site.baseurl}}/tuning-your-cluster/creating-a-cluster/)：逐步叢集設定指南
 - [設定 OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/)：一般組態指引

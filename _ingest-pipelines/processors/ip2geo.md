@@ -157,16 +157,16 @@ DELETE /_plugins/geospatial/ip2geo/datasource/my-datasource
 }
 ```
 
-## 組態參數
+## 參數
 
-下表列出 `ip2geo` 處理器的必要與選用參數。
+下表列出 `ip2geo` 處理器的必要參數與選用參數。
 
 | 參數 | 必要/選用 | 說明 |
 |------|----------|---------|-------------|
 | `datasource` | 必要 | 用於擷取地理資訊的資料來源名稱。 |
 | `field` | 必要 | 包含要進行地理查詢之 IP 位址的欄位。 |
 | `ignore_missing` | 選用 | 指定處理器是否應忽略不包含指定欄位的文件。若設為 `true`，當欄位不存在或為 `null` 時，處理器不會修改文件。預設為 `false`。 |
-| `properties` | 選用 | 控制要從 `datasource` 將哪些屬性新增至 `target_field` 的欄位。預設為 `datasource` 中的所有欄位。 |
+| `properties` | 選用 | 控制要從 `datasource` 將哪些屬性加入 `target_field` 的欄位。預設為 `datasource` 中的所有欄位。 |
 | `target_field` | 選用 | 包含從資料來源擷取之地理資訊的欄位。預設為 `ip2geo`。 |
 | `description` | 選用 | 處理器的簡短說明。 |
 | `if` | 選用 | 執行處理器的條件。 |
@@ -176,9 +176,9 @@ DELETE /_plugins/geospatial/ip2geo/datasource/my-datasource
 
 ## 使用處理器
 
-請依照下列步驟在管線中使用處理器。
+請依照下列步驟在管線中使用此處理器。
 
-**步驟 1：建立管線**
+### 步驟 1：建立管線
 
 下列查詢會建立名為 `my-pipeline` 的管線，將 IP 位址轉換為地理資訊：
 
@@ -198,7 +198,7 @@ PUT /_ingest/pipeline/my-pipeline
 ```
 {% include copy-curl.html %}
 
-**步驟 2（選用）：測試管線**
+### 步驟 2（選用）：測試管線
 
 {::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/icons/info-icon.png" class="inline-icon" alt="info icon"/>{:/} **注意**<br>建議您在匯入文件之前先測試管線。
 {: .note}
@@ -220,9 +220,7 @@ POST _ingest/pipeline/my-pipeline/_simulate
 }
 ```
 
-**回應**
-
-下列回應確認管線運作正常：
+下列回應確認管線如預期運作：
 
 ```json
 {
@@ -248,7 +246,7 @@ POST _ingest/pipeline/my-pipeline/_simulate
 }
 ```
 
-**步驟 3：匯入文件**
+### 步驟 3：匯入文件
 
 下列查詢會將文件匯入名為 `my-index` 的索引：
 
@@ -260,7 +258,7 @@ PUT /my-index/_doc/my-id?pipeline=my-pipeline
 ```
 {% include copy-curl.html %}
 
-**步驟 4（選用）：擷取文件**
+### 步驟 4（選用）：擷取文件
 
 若要擷取文件，請執行下列查詢：
 
@@ -268,3 +266,5 @@ PUT /my-index/_doc/my-id?pipeline=my-pipeline
 GET /my-index/_doc/my-id
 ```
 {% include copy-curl.html %}
+
+回應包含已匯入的文件，其轉換結果如步驟 2 的回應所示。

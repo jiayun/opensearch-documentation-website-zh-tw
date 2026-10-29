@@ -30,11 +30,11 @@ Helm 是一種套件管理工具，可讓您輕鬆地在 Kubernetes 叢集中安
 
 ## 先決條件
 
-預設 Helm chart 會部署三個節點的叢集。我們建議您為此部署準備至少 8 GiB 的記憶體。舉例來說，如果您的可用記憶體少於 4 GiB，部署預期會失敗。
+預設的 Helm 套件（chart）會部署一個三節點叢集。我們建議您為此部署準備至少 8 GiB 的記憶體。若您的可用記憶體少於 4 GiB，部署預期會失敗。
 
-OpenSearch 要求每個 Kubernetes 節點上的 `vm.max_map_count` 核心設定至少為 `262144`。如果該值較低，OpenSearch pod 將無法通過啟動檢查，並進入 `CrashLoopBackOff` 狀態。下列步驟中的 `values.yaml` 檔案會將 `sysctlInit.enabled` 設為 `true`，這會執行具特殊權限的 init 容器，在節點上設定 `vm.max_map_count`。如果您的節點已設定完成，或您的叢集不允許具特殊權限的容器，請移除此設定，改為在節點上設定 `vm.max_map_count`。如需詳細資訊，請參閱[重要設定]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/#important-settings)。
+OpenSearch 要求每個 Kubernetes 節點上的 `vm.max_map_count` 核心設定至少為 `262144`。若該值較低，OpenSearch Pod 將無法通過啟動檢查，並進入 `CrashLoopBackOff` 狀態。下列步驟中的 `values.yaml` 檔案會將 `sysctlInit.enabled` 設為 `true`，這會執行一個特權初始化容器，在節點上設定 `vm.max_map_count`。若您的節點已設定完成，或您的叢集不允許特權容器，請移除此設定，改為在節點上設定 `vm.max_map_count`。如需詳細資訊，請參閱[重要設定]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/#important-settings)。
 
-若使用 OpenSearch 2.12 或更新版本，您必須提供 `OPENSEARCH_INITIAL_ADMIN_PASSWORD` 才能啟動叢集。請依照[管理員密碼需求]({{site.url}}{{site.baseurl}}/security/configuration/demo-configuration/#admin-password-requirements)，在 `values.yaml` 的 `extraEnvs` 下設定管理員密碼。
+若使用 OpenSearch 2.12 或更新版本，您必須提供 `OPENSEARCH_INITIAL_ADMIN_PASSWORD` 才能啟動叢集。請依照[管理員密碼需求]({{site.url}}{{site.baseurl}}/security/configuration/demo-configuration/#admin-password-requirements)，在 `extraEnvs` 下的 `values.yaml` 中設定管理員密碼。OpenSearch 僅在設定示範安全性組態時使用此密碼。若要日後變更管理員密碼，請參閱[變更管理員密碼]({{site.url}}{{site.baseurl}}/security/configuration/passwords/#changing-the-admin-password)。
 
 ## 使用 Helm 安裝 OpenSearch
 

@@ -111,5 +111,5 @@ PUT _cluster/settings
 ```
 {% include copy-curl.html %}
 
-若要追蹤昂貴的查詢，請啟用 [分片慢速記錄檔]({{site.url}}{{site.baseurl}}/monitoring-your-cluster/logs/#shard-slow-logs)。
+若要追蹤昂貴的查詢，請啟用 [分片慢速記錄檔]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/logs/#shard-slow-logs)。
 {: .tip}

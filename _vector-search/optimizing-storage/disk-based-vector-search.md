@@ -17,9 +17,9 @@ redirect_from:
 
 若要使用磁碟式向量搜尋，請為您的向量欄位類型將 [`mode`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/#vector-workload-modes) 參數設為 `on_disk`。此參數會將您的索引設定為使用次要儲存空間。如需磁碟式搜尋參數的詳細資訊，請參閱[記憶體最佳化向量]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/)。
 
-## 建立磁碟式向量搜尋的索引
+## 為磁碟式向量搜尋建立索引
 
-若要建立磁碟式向量搜尋的索引，請傳送下列請求：
+若要為磁碟式向量搜尋建立索引，請傳送下列請求：
 
 ```json
 PUT my-vector-index
@@ -44,7 +44,7 @@ PUT my-vector-index
 ```
 {% include copy-curl.html %}
 
-根據預設，`on_disk` 模式會將索引設定為使用 `faiss` 引擎與 `hnsw` 方法。預設的 [`compression_level`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/#compression-levels) 為 `32x`，可將向量所需的記憶體量減少 32 倍。為了維持搜尋召回率，重新評分預設為啟用。對磁碟最佳化索引進行的搜尋分兩個階段執行：先搜尋壓縮後的索引，然後使用從磁碟載入的全精度向量重新評分結果。
+根據預設，`on_disk` 模式會將索引設定為使用 `faiss` 引擎與 `hnsw` 方法。`32x` 的預設 [`compression_level`]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/#compression-levels) 可將向量所需的記憶體量減少為 32 分之一。為了維持搜尋召回率，重新評分預設為啟用。在磁碟最佳化索引上進行的搜尋會分兩個階段執行：先搜尋壓縮後的索引，再使用從磁碟載入的全精度向量重新評分結果。
 
 若要降低壓縮層級，請在建立索引對應時提供 `compression_level` 參數：
 
@@ -75,7 +75,7 @@ PUT my-vector-index
 如需 `compression_level` 參數的詳細資訊，請參閱[壓縮層級]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/#compression-levels)。請注意，若使用 `4x` 壓縮，將會使用 `lucene` 引擎。
 {: .note}
 
-如果您需要更精細的微調，可以在方法定義中覆寫其他 k-NN 參數。例如，若要提升召回率，請增加 `ef_construction` 參數值：
+如果您需要更精細的微調，可以在方法定義中覆寫其他 k-NN 參數。例如，若要提高召回率，請增加 `ef_construction` 參數值：
 
 ```json
 PUT my-vector-index
@@ -94,7 +94,8 @@ PUT my-vector-index
         "data_type": "float",
         "mode": "on_disk",
         "method": {
-          "params": {
+          "name": "hnsw",
+          "parameters": {
             "ef_construction": 512
           }
         }
@@ -137,7 +138,7 @@ POST _bulk
 
 ## 搜尋
 
-搜尋的執行方式也與其他索引組態相同。主要差異在於，根據預設，重新評分參數的 `oversample_factor` 會設為 `2.0`（除非您覆寫 `compression_level`）。如需詳細資訊，請參閱[將量化結果重新評分至全精度]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/#rescoring-quantized-results-to-full-precision)。若要在磁碟最佳化索引上執行向量搜尋，請提供搜尋向量：
+搜尋的執行方式也與其他索引組態相同。主要差異在於，rescore 參數的 `oversample_factor` 預設設為 `2.0`（除非您覆寫 `compression_level`）。如需詳細資訊，請參閱[將量化結果重新評分至完整精確度]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-memory-optimized/#rescoring-quantized-results-to-full-precision)。若要在針對磁碟最佳化的索引上執行向量搜尋，請提供搜尋向量：
 
 ```json
 GET my-vector-index/_search
@@ -177,7 +178,7 @@ GET my-vector-index/_search
 ```
 {% include copy-curl.html %}
 
-[徑向搜尋]({{site.url}}{{site.baseurl}}/search-plugins/knn/radial-search-knn/)不支援磁碟式向量搜尋。
+[半徑搜尋]({{site.url}}{{site.baseurl}}/search-plugins/knn/radial-search-knn/)不支援使用 `4x` 壓縮的磁碟式向量搜尋。
 {: .note}
 
 ## 以模型為基礎的索引

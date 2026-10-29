@@ -143,14 +143,14 @@ POST /_plugins/_ml/models/_register?deploy=true
 
 ### 步驟 2(a)：建立資料匯入管線
 
-若要產生稀疏向量嵌入，您需要建立一個包含 [`sparse_encoding` 處理器]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/processors/sparse-encoding/) 的[資料匯入管線]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/index/)，該處理器會將文件欄位中的文字轉換為向量嵌入。處理器的 `field_map` 決定要從哪些輸入欄位產生向量嵌入，以及要將嵌入儲存在哪些輸出欄位。
+若要產生稀疏向量嵌入，您需要建立包含 [`sparse_encoding` 處理器]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/processors/sparse-encoding/)的[資料匯入管線]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/index/)，該處理器會將文件欄位中的文字轉換為向量嵌入。處理器的 `field_map` 會決定要從哪些輸入欄位產生向量嵌入，以及要將嵌入儲存在哪些輸出欄位中。
 
-下列範例請求會建立一個資料匯入管線，其中 `passage_text` 的文字將被轉換為稀疏向量嵌入，並儲存在 `passage_embedding` 中。請在請求中提供已註冊模型的模型 ID：
+下列範例請求會建立資料匯入管線，其中 `passage_text` 的文字會轉換為稀疏向量嵌入，並儲存在 `passage_embedding` 中。請在請求中提供已註冊模型的模型 ID：
 
 ```json
 PUT /_ingest/pipeline/nlp-ingest-pipeline-sparse
 {
-  "description": "An sparse encoding ingest pipeline",
+  "description": "A sparse encoding ingest pipeline",
   "processors": [
     {
       "sparse_encoding": {
@@ -167,7 +167,7 @@ PUT /_ingest/pipeline/nlp-ingest-pipeline-sparse
 ```
 {% include copy-curl.html %}
 
-若要將長文字分割成段落，請在 `sparse_encoding` 處理器之前使用 `text_chunking` 資料匯入處理器。如需更多資訊，請參閱 [文字分塊]({{site.url}}{{site.baseurl}}/search-plugins/text-chunking/)。
+若要將長文字分割成段落，請在 `sparse_encoding` 處理器之前使用 `text_chunking` 匯入處理器。如需詳細資訊，請參閱[文字分段]({{site.url}}{{site.baseurl}}/search-plugins/text-chunking/)。
 
 ### 步驟 2(b)：建立用於匯入的索引
 
@@ -257,9 +257,9 @@ PUT /my-nlp-index/_doc/2
 
 ## 步驟 3：搜尋資料
 
-若要對索引執行神經稀疏搜尋，請在 [Query DSL]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/index/) 查詢中使用 `neural_sparse` 查詢子句。
+若要對您的索引執行神經稀疏搜尋，請在 [Query DSL]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/index/) 查詢中使用 `neural_sparse` 查詢子句。
 
-下列範例請求使用 `neural_sparse` 查詢，以原始文字查詢搜尋相關文件。請提供 bi-encoder 模式的模型 ID，或自訂斷詞器的 doc-only 模式的斷詞器 ID：
+以下範例請求使用 `neural_sparse` 查詢，以原始文字查詢搜尋相關文件。若為雙編碼器模式，請提供模型 ID；若為搭配自訂斷詞器的僅文件模式，請提供斷詞器 ID：
 
 ```json
 GET my-nlp-index/_search
@@ -276,11 +276,11 @@ GET my-nlp-index/_search
 ```
 {% include copy-curl.html %}
 
-回應包含相符的文件：
+回應包含相符的文件。以下為雙編碼器模式的回應：
 
 ```json
 {
-  "took" : 688,
+  "took" : 45,
   "timed_out" : false,
   "_shards" : {
     "total" : 1,
@@ -293,39 +293,25 @@ GET my-nlp-index/_search
       "value" : 2,
       "relation" : "eq"
     },
-    "max_score" : 30.0029,
+    "max_score" : 34.865364,
     "hits" : [
       {
         "_index" : "my-nlp-index",
         "_id" : "1",
-        "_score" : 30.0029,
+        "_score" : 34.865364,
         "_source" : {
           "passage_text" : "Hello world",
           "passage_embedding" : {
-            "!" : 0.8708904,
-            "door" : 0.8587369,
-            "hi" : 2.3929274,
-            "worlds" : 2.7839446,
-            "yes" : 0.75845814,
-            "##world" : 2.5432441,
-            "born" : 0.2682308,
-            "nothing" : 0.8625516,
-            "goodbye" : 0.17146169,
-            "greeting" : 0.96817183,
-            "birth" : 1.2788506,
-            "come" : 0.1623208,
-            "global" : 0.4371151,
-            "it" : 0.42951578,
-            "life" : 1.5750692,
-            "thanks" : 0.26481047,
-            "world" : 4.7300377,
-            "tiny" : 0.5462298,
-            "earth" : 2.6555297,
-            "universe" : 2.0308156,
-            "worldwide" : 1.3903781,
-            "hello" : 6.696973,
-            "so" : 0.20279501,
-            "?" : 0.67785245
+            "hi" : 1.7058562,
+            "greeting" : 1.4859452,
+            "hey" : 1.0460025,
+            "hello" : 2.9297209,
+            "worlds" : 1.8736429,
+            "##world" : 1.912715,
+            "world" : 2.8314424,
+            "mundo" : 1.4463987,
+            "yes" : 1.1277477,
+            ...
           },
           "id" : "s1"
         }
@@ -333,16 +319,18 @@ GET my-nlp-index/_search
       {
         "_index" : "my-nlp-index",
         "_id" : "2",
-        "_score" : 16.480486,
+        "_score" : 22.617752,
         "_source" : {
           "passage_text" : "Hi planet",
           "passage_embedding" : {
-            "hi" : 4.338913,
-            "planets" : 2.7755864,
-            "planet" : 5.0969057,
-            "mars" : 1.7405145,
-            "earth" : 2.6087382,
-            "hello" : 3.3210192
+            "hi" : 2.9966009,
+            "high" : 1.5209199,
+            "planets" : 2.2623432,
+            "hawaii" : 1.618121,
+            "planet" : 2.927078,
+            "h" : 1.4045444,
+            "hello" : 1.808179,
+            ...
           },
           "id" : "s2"
         }
@@ -352,9 +340,9 @@ GET my-nlp-index/_search
 }
 ```
 
-## 設定搜尋的預設模型
+## 為搜尋設定預設模型
 
-使用自訂模型時，您可以在索引層級設定預設模型 ID，以簡化查詢。這樣就不需要在每個查詢中指定 `model_id`。
+使用自訂模型時，您可以在索引層級設定預設模型 ID，以簡化查詢。這樣就不必在每個查詢中指定 `model_id`。
 
 首先，建立一個包含 [`neural_query_enricher`]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/neural-query-enricher/) 處理器的搜尋管線：
 
@@ -364,7 +352,7 @@ PUT /_search/pipeline/neural_search_pipeline
   "request_processors": [
     {
       "neural_query_enricher" : {
-        "default_model_id": "<bi-encoder model/tokenizer ID>"
+        "default_model_id": "<bi-encoder model ID or tokenizer ID>"
       }
     }
   ]
@@ -372,7 +360,7 @@ PUT /_search/pipeline/neural_search_pipeline
 ```
 {% include copy-curl.html %}
 
-然後將此管線設定為索引的預設管線：
+然後將此管線設為索引的預設值：
 
 ```json
 PUT /my-nlp-index/_settings 
@@ -382,9 +370,9 @@ PUT /my-nlp-index/_settings
 ```
 {% include copy-curl.html %}
 
-設定預設模型後，您在執行查詢時即可省略 `model_id`。
+設定預設模型後，執行查詢時即可省略 `model_id`。
 
-如需更多關於在索引上設定預設模型的資訊，或想了解如何在特定欄位上設定預設模型，請參閱 [在索引或欄位上設定預設模型]({{site.url}}{{site.baseurl}}/search-plugins/semantic-search/#setting-a-default-model-on-an-index-or-field)。
+如需在索引上設定預設模型的更多資訊，或想了解如何在特定欄位上設定預設模型，請參閱[在索引或欄位上設定預設模型]({{site.url}}{{site.baseurl}}/search-plugins/semantic-search/#setting-a-default-model-on-an-index-or-field)。
 
 ## 後續步驟
 

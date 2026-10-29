@@ -9,7 +9,7 @@ has_math: true
 
 # 神經稀疏 ANN 搜尋效能調校
 
-[神經稀疏 ANN 搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/) 提供數個參數，讓您能在查詢召回率（準確度）與查詢效率（延遲）之間取得平衡。查詢參數是在查詢的 `method_parameters` 物件中提供，會立即生效。對應參數是在 `sparse_vector` 欄位的 `method` 物件中提供，會在建立欄位時固定。若要變更 `engine` 或 `method.parameters` 中的任何值，請以所需的對應建立新索引，並將資料重新編製索引。
+[神經稀疏 ANN 搜尋]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/) 提供數個參數，讓您能在查詢召回率（準確度）與查詢效率（延遲）之間取得平衡。查詢參數會在查詢的 `method_parameters` 物件中提供，並立即生效。對應參數會在 `sparse_vector` 欄位的 `method` 物件中提供，並在建立欄位時固定。若要變更 `engine` 或 `method.parameters` 中的任何值，請以預期的對應建立新索引，並重新編製資料索引。
 
 ## 選擇引擎
 **自 3.9 版推出**
@@ -19,41 +19,41 @@ has_math: true
 
 兩種引擎的差異在於演算法所讀取之資料結構的位置，這會影響節點大小規劃：
 
-- Lucene 引擎會將叢集化的張貼清單與正向索引保存在受 `plugins.neural_search.circuit_breaker.limit` 限制的 JVM 堆積快取中。請將節點的堆積大小設定為足以容納其服務之每個稀疏分段的工作集。
-- 原生引擎會從磁碟上的記憶體對應檔案讀取其索引，因此索引不會耗用 JVM 堆積，也不會增加垃圾回收壓力。請將節點大小設定為為作業系統頁面快取保留足夠的 RAM。
+- Lucene 引擎會將叢集化的倒排串列與正向索引保存在受 `plugins.neural_search.circuit_breaker.limit` 限制的 JVM 堆積快取中。請將節點的堆積大小設定為足以容納其服務之每個稀疏分段的工作集。
+- 原生引擎會從磁碟上的記憶體對應檔案讀取其索引，因此索引不會耗用 JVM 堆積，也不會增加垃圾回收壓力。請設定節點大小，為作業系統頁面快取保留足夠的 RAM。
 
 當您想要更好的查詢與索引建置效能、當您的稀疏索引大到將其保存在 JVM 堆積中會對節點造成限制，或當您想以相對較小的堆積服務大型稀疏索引時，請考慮使用原生引擎。當您想要預設組態，或當您依賴 [Warm Up]({{site.url}}{{site.baseurl}}/vector-search/api/neural/#warm-up) 與 [Clear Cache]({{site.url}}{{site.baseurl}}/vector-search/api/neural/#clear-cache) API，或依賴 [Neural Search Stats API]({{site.url}}{{site.baseurl}}/vector-search/api/neural/#stats) 所回報的稀疏記憶體統計資料時，請考慮使用 Lucene 引擎。
 
 在選擇引擎之前，請先針對您自己的資料與查詢組合對兩種引擎進行基準測試。相對輸送量、延遲與記憶體使用量取決於您的語料庫、您的參數設定，以及節點上可用的資源。
 {: .note}
 
-## 索引效能調校
+## 編製索引效能調校
 
-這些參數控制索引建構與記憶體使用量：
+這些參數控制索引建構和記憶體使用量：
 
-- `n_postings`：每個張貼清單中要保留的文件數上限。
+- `n_postings`：每個倒排串列中保留的文件數量上限。
 
-    `n_postings` 值越小，會套用越積極的剪除，表示每個張貼清單中保留的文件識別碼越少。較低的值可加快索引建置與查詢執行速度，但會降低召回率與記憶體耗用量。若未指定，演算法會在分段層級將該值計算為 $$0.0005 \times \text{document count}$$。
+    較小的 `n_postings` 值會採取更積極的剪枝，表示每個倒排串列中保留的文件識別碼較少。較低的值可加快索引建構和查詢執行速度，但會降低召回率和記憶體用量。若未指定，演算法會在分段層級計算此值，取 $$0.0005 \times \text{document count}$$ 或 `160` 中較大的值。
 
-- `cluster_ratio`：每個張貼清單中用來決定叢集數的文件比例。
+- `cluster_ratio`：每個倒排串列中用於決定叢集數量的文件比例。
 
-    剪除之後，每個張貼清單會包含 `cluster_ratio × posting_document_count`。增加 `cluster_ratio` 會產生更多叢集，可改善召回率，但會增加索引建置時間、查詢延遲與記憶體使用量。
+    剪枝後，每個倒排串列中的文件會分成 `cluster_ratio × posting_document_count` 個叢集。提高 `cluster_ratio` 會產生更多叢集，進而提高召回率，但也會增加索引建構時間、查詢延遲和記憶體使用量。
 
-- `summary_prune_ratio`：叢集摘要向量中要保留以供近似比對的詞元比例。
+- `summary_prune_ratio`：叢集摘要向量中為近似比對而保留的詞元權重占總權重的比例。
 
-    此參數控制每個叢集的 `summary` 中保留多少詞元。`summary` 有助於判斷查詢期間是否要檢查某個叢集。若嵌入的詞元數差異很大，請據此調整此參數。較高的值會在 `summary` 中保留更多詞元。
+    此參數控制每個叢集的 `summary` 中保留的詞元數量。系統會保留權重最高的詞元，直到其累計權重達到摘要總權重的此比例。`summary` 有助於判斷查詢期間是否要檢查某個叢集。如果各嵌入的詞元數量差異很大，請據此調整此參數。較高的值會在 `summary` 中保留更多詞元。
 
-- `approximate_threshold`：分段中要啟用神經稀疏 ANN 搜尋所需的文件數下限。
+- `approximate_threshold`：啟用神經稀疏 ANN 搜尋所需的分段文件數量下限。
 
-    此參數控制當分段的文件數達到指定閾值時，是否要在該分段中啟用神經稀疏 ANN 演算法。隨著文件總數增加，個別分段會包含更多文件。在此情況下，您可以將 `approximate_threshold` 設為較高的值，以避免在文件數較少的分段合併時反覆重建叢集。如果您不使用 force merge 作業將所有分段合併成一個，此參數尤其重要，因為文件數少於閾值的分段會退回 `rank_features`（一般神經稀疏搜尋）模式。請注意，若將此值設得太高，神經稀疏 ANN 搜尋可能永遠不會啟用。
+    此參數控制分段的文件數量達到指定門檻時，是否在該分段中啟用神經稀疏 ANN 演算法。隨著文件總數增加，個別分段包含的文件也會增加。在這種情況下，您可以將 `approximate_threshold` 設為較高的值，以避免在合併文件較少的分段時反覆重建叢集。如果您未使用強制合併作業將所有分段合併為一個分段，此參數尤其重要，因為文件數量低於門檻的分段會退回 `rank_features`（一般神經稀疏搜尋）模式。請注意，如果將此值設得過高，神經稀疏 ANN 搜尋可能永遠不會啟用。
 
-- `clustering_batch_size`：每個倒排清單在進行叢集化時要分割成的批次數。僅原生引擎支援。
+- `clustering_batch_size`：每個倒排串列為進行分群而分割成的批次數量。僅原生引擎支援。
 
-    依預設，此參數為 `1`，叢集化會對整個語料庫執行。將其設為較高的值（最高為 `10000`）會將每個倒排清單分割成該數量的批次，並分別對每個批次進行叢集化，這可減少建置索引所需的記憶體，但會延長建置時間。若索引建置受記憶體限制，請增加此值。
+    此參數預設為 `1`，並對整個語料庫執行分群。將其設為較高的值（最高為 `10000`），會將每個倒排串列分割成該數量的批次，並分別對每個批次進行分群，藉此減少建構索引所需的記憶體，但建構時間會更長。如果索引建構受到記憶體限制，請提高此值。
 
 - `forward_index`：正向索引在磁碟上的儲存方式。僅原生引擎支援。
 
-    預設的 `shared` 配置會為欄位儲存一個連續的正向索引，使用的磁碟空間較少。`per_block` 配置會將每個區塊的向量內嵌儲存在該區塊旁，因此查詢只會讀取其選取的區塊，可降低查詢延遲，但會使用更多磁碟空間。如需詳細資訊，請參閱 [選擇正向索引配置]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/#choosing-a-forward-index-layout)。
+    預設的 `shared` 配置會為欄位儲存一個連續的正向索引，使用的磁碟空間較少。`per_block` 配置會將每個區塊的向量以內嵌方式儲存在該區塊旁，因此查詢只會讀取其選取的區塊，可降低查詢延遲，但會使用更多磁碟空間。如需詳細資訊，請參閱[選擇正向索引配置]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-ann/#choosing-a-forward-index-layout)。
 
 ## 查詢效能調校
 
@@ -74,7 +74,7 @@ has_math: true
 
 ### 建置叢集
 
-索引建置可受益於使用多個執行緒。您可以指定 `plugins.neural_search.sparse.algo_param.index_thread_qty` 設定（預設為 `1`）來調整用於叢集建置的執行緒數。如需更新此設定的相關資訊，請參閱 [向量搜尋設定]({{site.url}}{{site.baseurl}}/vector-search/settings/#cluster-settings-2)。在啟用神經稀疏 ANN 搜尋時，使用較高的 `plugins.neural_search.sparse.algo_param.index_thread_qty` 可縮短 force merge 時間，不過也會耗用更多系統資源。此設定同時適用於 Lucene 引擎與原生引擎。
+索引建置可受益於使用多個執行緒。您可以指定 `plugins.neural_search.sparse.algo_param.index_thread_qty` 設定（預設為 `1`）來調整用於叢集建置的執行緒數。如需更新此設定的相關資訊，請參閱 [向量搜尋設定]({{site.url}}{{site.baseurl}}/vector-search/settings/#cluster-settings-2)。在啟用神經稀疏 ANN 搜尋時，使用較高的 `plugins.neural_search.sparse.algo_param.index_thread_qty` 可縮短強制合併所需的時間，不過也會耗用更多系統資源。此設定同時適用於 Lucene 引擎與原生引擎。
 
 ### 冷啟動後查詢
 
@@ -84,7 +84,7 @@ has_math: true
 
 ### 強制合併分段
 
-一旦分段的文件數超過 `approximate_threshold`，神經稀疏 ANN 搜尋就會自動建置叢集化的張貼清單。不過，將所有分段合併成單一分段通常可達到更低的查詢延遲：
+一旦分段的文件數超過 `approximate_threshold`，神經稀疏 ANN 搜尋就會自動建置叢集化的倒排串列。不過，將所有分段合併成單一分段通常可達到更低的查詢延遲：
 
 ```json
 POST /sparse-ann-documents/_forcemerge?max_num_segments=1
@@ -93,7 +93,7 @@ POST /sparse-ann-documents/_forcemerge?max_num_segments=1
 
 您也可以將 `approximate_threshold` 設為較高的值，讓個別分段不會觸發叢集化，但合併後的分段會觸發。此做法有助於避免在編製索引期間反覆建置叢集。
 
-原生引擎建置稀疏索引的速度較快，因此 force merge 會較早完成。如需詳細資訊，請參閱 [選擇引擎](#choosing-an-engine)。
+原生引擎建置稀疏索引的速度較快，因此強制合併會較早完成。如需詳細資訊，請參閱 [選擇引擎](#choosing-an-engine)。
 
 ## 最佳做法
 

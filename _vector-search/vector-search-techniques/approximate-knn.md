@@ -124,31 +124,31 @@ GET my-knn-index-1/_search
 ```
 {% include copy-curl.html %}
 
-## 傳回的結果數量
+## 傳回結果的數量
 
-在上述查詢中，`k` 代表每個圖形搜尋所傳回的鄰居數量。您也必須包含 `size` 參數，指出您希望查詢傳回的最終結果數量。  
+在上述查詢中，`k` 代表每個圖形搜尋所傳回的鄰居數量。您還必須包含 `size` 參數，表示您希望查詢最終傳回的結果數量。  
 
-對於 NMSLIB 和 Faiss 引擎，`k` 代表分片所有分段所傳回的文件數量上限。對於 Lucene 引擎，`k` 代表分片所傳回的文件數量。`k` 的最大值為 10,000。
+對於 NMSLIB 與 Faiss 引擎，`k` 代表每個分片的每個分段所傳回的文件數量上限。對於 Lucene 引擎，`k` 代表每個分片所傳回的文件數量。`k` 的最大值為 10,000。
 
-對於任何引擎，每個分片都會將 `size` 個結果傳回協調節點。因此，協調節點接收的結果總數為 `size * number of shards`。協調節點彙整從所有節點接收的結果後，查詢會傳回前 `size` 個結果。
+對於任何引擎，每個分片都會向協調節點傳回 `size` 筆結果。因此，協調節點收到的結果總數為 `size * number of shards`。當協調節點整合來自所有節點的結果後，查詢會傳回前 `size` 筆結果。
 
-下表提供各種引擎在幾種情境下所傳回結果數量的範例。在這些範例中，假設分段和分片中所包含的文件數量足以傳回表中指定的結果數量。
+下表提供各種引擎在幾種情境下所傳回結果數量的範例。在這些範例中，假設分段與分片所包含的文件數量足以傳回表中指定的結果數量。
 
-`size` 	| `k` | 主要分片數量 | 	每個分片的分段數量 | 傳回的結果數量，Faiss/NMSLIB | 傳回的結果數量，Lucene
+`size` 	| `k` | 主要分片數量 | 	每個分片的分段數量 | 傳回結果數量，Faiss/NMSLIB | 傳回結果數量，Lucene
 :--- | :--- | :--- | :--- | :--- | :---
 10 |	1 |	1 |	4 |	4 | 1
 10 | 10 |	1 |	4 |	10 | 10
 10 |	1 |	2 |	4 |	8 | 2
 
-只有在 `k` 小於 `size` 時，Faiss/NMSLIB 傳回的結果數量才會與 Lucene 傳回的結果數量不同。如果 `k` 和 `size` 相等，所有引擎都會傳回相同數量的結果。 
+只有當 `k` 小於 `size` 時，Faiss/NMSLIB 傳回的結果數量才會與 Lucene 不同。如果 `k` 與 `size` 相等，所有引擎都會傳回相同數量的結果。 
 
-您可以將 `k`、`min_score` 或 `max_distance` 用於[徑向搜尋]({{site.url}}{{site.baseurl}}/search-plugins/knn/radial-search-knn/)。
+您可以在[放射狀搜尋]({{site.url}}{{site.baseurl}}/search-plugins/knn/radial-search-knn/)中使用 `k`、`min_score` 或 `max_distance`。
 
 ## 從模型建立向量索引
 
-對於 OpenSearch 支援的部分演算法，原生函式庫索引需要先經過訓練才能使用。訓練每個新建立的分段所費不貲，因此，OpenSearch 改以 *模型* 的概念，在建立分段期間初始化原生函式庫索引。您可以呼叫 [Train API]({{site.url}}{{site.baseurl}}/vector-search/api/knn#train-a-model) 並傳入訓練資料的來源和模型的方法定義來建立模型。訓練完成後，模型會序列化至 k-NN 模型系統索引。接著，在索引編製期間，會從該索引提取模型來初始化分段。
+對於 OpenSearch 支援的部分演算法，原生程式庫索引必須先經過訓練才能使用。為每個新建立的分段進行訓練成本很高，因此 OpenSearch 提供 *模型* 的概念，在分段建立時用來初始化原生程式庫索引。您可以呼叫 [Train API]({{site.url}}{{site.baseurl}}/vector-search/api/knn#train-a-model) 並傳入訓練資料來源與模型的方法定義來建立模型。訓練完成後，模型會序列化至 k-NN 模型系統索引。接著在編製索引時，會從該索引提取模型來初始化分段。
 
-若要訓練模型，您首先需要一個包含訓練資料的 OpenSearch 索引。訓練資料可以來自任何 `knn_vector` 欄位，其維度須符合您要建立之模型的維度。訓練資料可以與您打算編製索引的資料相同，或來自個別的資料集。若要建立訓練索引，請傳送下列請求：
+若要訓練模型，您首先需要一個包含訓練資料的 OpenSearch 索引。訓練資料可以來自任何維度與您要建立之模型維度相符的 `knn_vector` 欄位。訓練資料可以與您計畫編製索引的資料相同，或來自另一個資料集。若要建立訓練索引，請傳送下列請求：
 
 ```json
 PUT /train-index
@@ -169,9 +169,9 @@ PUT /train-index
 ```
 {% include copy-curl.html %}
 
-請注意，索引設定中未設定 `index.knn`。這可確保您不會為此索引建立原生函式庫索引。
+請注意，索引設定中並未設定 `index.knn`。這可確保您不會為此索引建立原生程式庫索引。
 
-您現在可以新增一些資料至索引：
+現在您可以將一些資料加入索引：
 
 ```json
 POST _bulk
@@ -186,7 +186,7 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-完成訓練索引的索引編製後，您可以呼叫 Train API：
+完成訓練索引的索引編製後，即可呼叫 Train API：
 
 ```json
 POST /_plugins/_knn/models/my-model/_train
@@ -212,19 +212,24 @@ POST /_plugins/_knn/models/my-model/_train
 ```
 {% include copy-curl.html %}
 
-如需方法參數的詳細資訊，請參閱 [IVF 訓練需求]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/#ivf-training-requirements)。
+此範例僅以四個向量就能成功訓練，因為它使用預設的 `nlist` 為 `4`，且 `code_size` 為 `2`，這需要至少 2<sup>2</sup> = 4 個訓練向量。如果您省略 `code_size` 或將其調大，就需要更多訓練資料。例如，省略 `code_size` 需要超過 1,000 個訓練向量。如需方法參數與最少訓練向量數量的詳細資訊，請參閱 [IVF 訓練需求]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/#ivf-training-requirements)。
 
-Train API 會在訓練工作開始後立即傳回。若要檢查工作狀態，請使用 Get Model API：
+Train API 會在訓練工作開始後立即回傳。若要檢查工作狀態，請使用 Get Model API：
 
 ```json
-GET /_plugins/_knn/models/my-model?filter_path=state&pretty
+GET /_plugins/_knn/models/my-model?filter_path=state
+```
+{% include copy-curl.html %}
+
+模型訓練期間，回應會包含 `training` 狀態：
+
+```json
 {
   "state": "training"
 }
 ```
-{% include copy-curl.html %}
 
-一旦模型進入 `created` 狀態，您就可以建立索引，使用此模型來初始化其原生函式庫索引：
+一旦模型進入 `created` 狀態，您就可以建立一個索引，讓它使用此模型來初始化其原生程式庫索引：
 
 ```json
 PUT /target-index
@@ -246,7 +251,7 @@ PUT /target-index
 ```
 {% include copy-curl.html %}
 
-最後，您可以將要搜尋的文件新增至索引：
+最後，您可以將要搜尋的文件加入索引：
 
 ```json
 POST _bulk
@@ -261,4 +266,4 @@ POST _bulk
 ```
 {% include copy-curl.html %}
 
-資料匯入後，即可像任何其他 `knn_vector` 欄位一樣進行搜尋。
+資料匯入完成後，即可像其他任何 `knn_vector` 欄位一樣進行搜尋。

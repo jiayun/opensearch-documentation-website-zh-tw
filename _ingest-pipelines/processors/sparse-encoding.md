@@ -30,25 +30,25 @@ redirect_from:
 ```
 {% include copy.html %}
 
-## 組態參數
+## 參數
 
 下表列出 `sparse_encoding` 處理器的必要與選用參數。
 
 | 參數  | 資料類型 | 必要/選用  | 說明  |
 |:---|:---|:---|:---|
-`model_id` | 字串 | 必要 | 將用來產生嵌入的模型 ID。模型必須先部署在 OpenSearch 中，才能在神經搜尋中使用。如需詳細資訊，請參閱[在 OpenSearch 中使用自訂模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/)與[神經稀疏搜尋]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-search/)。
-`prune_type` | 字串 | 選用 | 稀疏向量的剪枝策略。有效值為 `max_ratio`、`alpha_mass`、`top_k`、`abs_value` 與 `none`。預設為 `none`。
-`prune_ratio` | 浮點數 | 選用 | 剪枝策略的比例。指定 `prune_type` 時為必要。
-`field_map` | 物件 | 必要 | 包含鍵值對，用於指定文字欄位對應至 `rank_features` 欄位。
-`field_map.<input_field>` | 字串 | 必要 | 用來取得文字以產生向量嵌入的欄位名稱。
-`field_map.<vector_field>`  | 字串 | 必要 | 用來儲存所產生向量嵌入的向量欄位名稱。
+`model_id` | 字串 | 必要 | 用於產生嵌入的模型 ID。模型必須先部署至 OpenSearch，才能用於神經搜尋。如需詳細資訊，請參閱[在 OpenSearch 中使用自訂模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/)和[神經稀疏搜尋]({{site.url}}{{site.baseurl}}/search-plugins/neural-sparse-search/)。
+`prune_type` | 字串 | 選用 | 稀疏向量的剪枝策略。有效值為 `max_ratio`、`alpha_mass`、`top_k`、`abs_value` 和 `none`。預設為 `none`。
+`prune_ratio` | 浮點數 | 選用 | 剪枝策略的比例。指定 `prune_type` 時為必要參數。
+`field_map` | 物件 | 必要 | 包含指定文字欄位與 `rank_features` 欄位之間對應的鍵值組。
+`field_map.<input_field>` | 字串 | 必要 | 用於取得文字以產生向量嵌入的欄位名稱。
+`field_map.<vector_field>`  | 字串 | 必要 | 用於儲存所產生向量嵌入的向量欄位名稱。
 `description`  | 字串 | 選用  | 處理器的簡短說明。  |
-`tag` | 字串 | 選用 | 處理器的識別標籤。有助於偵錯時區分同類型的處理器。如需詳細資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
+`tag` | 字串 | 選用 | 處理器的識別標籤。有助於在偵錯時區分相同類型的處理器。如需詳細資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
 `if` | 包含布林運算式的字串 | 選用 | 執行處理器的條件。 |
-`ignore_failure` | 布林值 | 選用 | 指定處理器即使遇到錯誤是否仍繼續執行。若設為 `true`，則忽略處理器失敗。預設為 `false`。 |
+`ignore_failure` | 布林值 | 選用 | 指定處理器是否即使遇到錯誤仍繼續執行。若設為 `true`，則會忽略處理器失敗。預設為 `false`。 |
 `on_failure` | 清單 | 選用 | 處理器失敗時要執行的處理器清單。 |
-`batch_size` | 整數 | 選用 | 指定每次要批次處理的文件數。預設為 `1`。若指定 `if`，處理器不會批次處理文件，而是一次處理一份。 |
-`skip_existing` | 布林值 | 選用 | 當設為 `true` 時，處理器不會對已包含嵌入的欄位發出推論呼叫，並保留現有嵌入不變。預設為 `false`。|
+`batch_size` | 整數 | 選用 | 指定每次批次處理的文件數量。預設為 `1`。若您指定 `if`，處理器會逐一處理文件。 |
+`skip_existing` | 布林值 | 選用 | 當值為 `true` 時，處理器不會對已包含嵌入的欄位進行推論呼叫，並保留現有嵌入不變。預設為 `false`。|
 
 ### 剪除稀疏向量
 
@@ -68,11 +68,11 @@ redirect_from:
 
 ## 使用處理器
 
-請依照下列步驟在管線中使用處理器。建立處理器時，您必須提供模型 ID。如需更多資訊，請參閱[在 OpenSearch 中使用自訂模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/)。
+請依照下列步驟在管線中使用處理器。建立處理器時，您必須提供模型 ID。如需更多資訊，請參閱[在 OpenSearch 中使用自訂模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/)。 
 
-**步驟 1：建立管線。**
+### 步驟 1：建立管線
 
-下列範例請求會建立資料匯入管線，其中來自 `passage_text` 的文字將轉換為文字嵌入，且嵌入將儲存在 `passage_embedding` 中：
+下列範例請求會建立一條資料匯入管線，將 `passage_text` 中的文字轉換為文字嵌入，並將嵌入儲存在 `passage_embedding` 中：
 
 ```json
 PUT /_ingest/pipeline/nlp-ingest-pipeline
@@ -94,7 +94,7 @@ PUT /_ingest/pipeline/nlp-ingest-pipeline
 ```
 {% include copy-curl.html %}
 
-**步驟 2 (選用)：測試管線。**
+### 步驟 2（選用）：測試管線
 
 建議您在匯入文件之前先測試管線。
 {: .tip}
@@ -117,9 +117,7 @@ POST _ingest/pipeline/nlp-ingest-pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
-回應確認除了 `passage_text` 欄位之外，處理器已在 `passage_embedding` 欄位中產生文字嵌入：
+回應會確認除了 `passage_text` 欄位之外，處理器也已在 `passage_embedding` 欄位中產生文字嵌入：
 
 ```json
 {
@@ -158,7 +156,7 @@ POST _ingest/pipeline/nlp-ingest-pipeline/_simulate
 }
 ```
 
-建立資料匯入管線之後，您需要建立索引以進行匯入，並將文件匯入索引中。如需完整範例，請參閱[自動產生稀疏向量嵌入]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-with-pipelines/)。
+建立資料匯入管線之後，您需要建立索引以供匯入，並將文件匯入該索引。如需完整範例，請參閱[自動產生稀疏向量嵌入]({{site.url}}{{site.baseurl}}/vector-search/ai-search/neural-sparse-with-pipelines/)。
 
 ---
 

@@ -16,7 +16,7 @@ nav_order: 50
 
 大多數彙總都是在混合查詢所傳回的文件子集上執行。唯一會對所有文件執行的彙總是 [`global`]({{site.url}}{{site.baseurl}}/aggregations/bucket/global/) 彙總。
 
-若要將彙總與混合查詢搭配使用，請先建立索引。彙總通常用於特殊類型的欄位，例如 `keyword` 或 `integer`。下列範例會建立包含數個這類欄位的索引：
+若要在混合查詢中使用彙總，請先建立索引。彙總通常用於特殊類型的欄位，例如 `keyword` 或 `integer`。下列範例會建立包含數個這類欄位的索引：
 
 ```json
 PUT /my-nlp-index
@@ -64,7 +64,9 @@ POST /_bulk
 ```
 {% include copy-curl.html %}
 
-現在您可以將混合查詢子句與 `min` 彙總結合：
+下列搜尋會使用名為 `nlp-search-pipeline` 的搜尋管線，其中包含採用 `min_max` 正規化技術與 `arithmetic_mean` 組合技術的 `normalization-processor`。如需詳細資訊，請參閱[設定搜尋管線]({{site.url}}{{site.baseurl}}/vector-search/ai-search/hybrid-search/#step-3-configure-a-search-pipeline)。
+
+現在您可以將混合查詢子句與 `sum` 彙總及 `terms` 彙總結合：
 
 ```json
 GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
@@ -179,9 +181,9 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
   },
   "aggregations": {
     "total_price": {
-      "value": 680
+      "value": 680.0
     },
-    "doc_keywords": {
+    "keywords": {
       "doc_count_error_upper_bound": 0,
       "sum_other_doc_count": 0,
       "buckets": [

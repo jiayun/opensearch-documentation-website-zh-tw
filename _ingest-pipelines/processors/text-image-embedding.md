@@ -54,11 +54,11 @@ redirect_from:
 
 ## 使用處理器
 
-依照下列步驟在管線中使用處理器。建立處理器時必須提供模型 ID。如需更多資訊，請參閱[在 OpenSearch 中使用自訂模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/)。
+請依照下列步驟在管線中使用此處理器。建立處理器時必須提供模型 ID。如需更多資訊，請參閱 [在 OpenSearch 中使用自訂模型]({{site.url}}{{site.baseurl}}/ml-commons-plugin/using-ml-models/)。 
 
-**步驟 1：建立管線。**
+### 步驟 1：建立管線
 
-下列範例請求會建立一條資料匯入管線，將 `image_description` 的文字與 `image_binary` 的影像轉換為向量嵌入，並將嵌入儲存在 `vector_embedding` 中：
+下列範例請求會建立資料匯入管線，將來自 `image_description` 的文字與來自 `image_binary` 的影像轉換為向量嵌入，並將嵌入儲存在 `vector_embedding` 中：
 
 ```json
 PUT /_ingest/pipeline/nlp-ingest-pipeline
@@ -80,10 +80,10 @@ PUT /_ingest/pipeline/nlp-ingest-pipeline
 ```
 {% include copy-curl.html %}
 
-您可以在一條管線中設定多個處理器，為多個欄位產生嵌入。
+您可以在一個管線中設定多個處理器，為多個欄位產生嵌入。
 {: .note}
 
-**步驟 2 (選用)：測試管線。**
+### 步驟 2（選用）：測試管線
 
 建議您在匯入文件之前先測試管線。
 {: .tip}
@@ -107,9 +107,7 @@ POST _ingest/pipeline/nlp-ingest-pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
-回應確認處理器除了 `image_description` 與 `image_binary` 欄位之外，已在 `vector_embedding` 欄位中產生向量嵌入：
+回應確認除了 `image_description` 和 `image_binary` 欄位之外，處理器還在 `vector_embedding` 欄位中產生了向量嵌入：
 
 ```json
 {
@@ -138,7 +136,7 @@ POST _ingest/pipeline/nlp-ingest-pipeline/_simulate
 }
 ```
 
-建立資料匯入管線之後，您需要建立一個索引供匯入使用，並將文件匯入該索引。若要了解更多，請參閱[多模態搜尋]({{site.url}}{{site.baseurl}}/search-plugins/multimodal-search/)中的[步驟 2：建立供匯入使用的索引]({{site.url}}{{site.baseurl}}/search-plugins/multimodal-search/#step-2-create-an-index-for-ingestion)與[步驟 3：將文件匯入索引]({{site.url}}{{site.baseurl}}/search-plugins/multimodal-search/#step-3-ingest-documents-into-the-index)。
+建立資料匯入管線後，您需要建立用於匯入的索引，並將文件匯入該索引。若要進一步了解，請參閱[多模態搜尋]({{site.url}}{{site.baseurl}}/search-plugins/multimodal-search/)中的[步驟 2：建立用於匯入的索引]({{site.url}}{{site.baseurl}}/search-plugins/multimodal-search/#step-2-create-an-index-for-ingestion)和[步驟 3：將文件匯入索引]({{site.url}}{{site.baseurl}}/search-plugins/multimodal-search/#step-3-ingest-documents-into-the-index)。
 
 ## 後續步驟
 

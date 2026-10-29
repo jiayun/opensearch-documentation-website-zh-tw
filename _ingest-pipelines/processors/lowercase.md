@@ -11,7 +11,7 @@ redirect_from:
 本文件說明如何在 OpenSearch 資料匯入管線中使用 `lowercase` 處理器。如果您的使用情境涉及大型或複雜的資料集，建議考慮使用在 OpenSearch 叢集外部執行的 [Data Prepper `lowercase_string` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/lowercase-string/)。
 {: .note}
 
-# Lowercase 處理器
+# 小寫轉換處理器
 
 `lowercase` 處理器會將特定欄位中的所有文字轉換為小寫字母。對於陣列欄位，處理器會轉換每個字串元素。
 
@@ -28,28 +28,28 @@ redirect_from:
 ```
 {% include copy.html %}
 
-## 組態參數
+## 參數
 
 下表列出 `lowercase` 處理器的必要與選用參數。
 
-| Parameter  | Required  | Description  |
+| 參數  | 必要  | 說明  |
 |---|---|---|
 `field`  | 必要  | 包含要轉換之資料的欄位名稱。 |
-`description`  | 選用  | 處理器的簡要描述。  |
+`description`  | 選用  | 處理器的簡短說明。  |
 `if` | 選用 | 執行處理器的條件。 |
-`ignore_failure` | 選用 |  指定處理器即使遇到錯誤仍繼續執行。若設為 `true`，則忽略失敗。預設為 `false`。 |
+`ignore_failure` | 選用 |  指定處理器即使遇到錯誤是否仍繼續執行。若設為 `true`，則忽略失敗。預設為 `false`。 |
 `on_failure` | 選用 | 處理器失敗時要執行的處理器清單。 |
-`ignore_missing`  | 選用  | 指定處理器是否應忽略不含指定欄位的文件。若設為 `true`，當欄位不存在或為 `null` 時，處理器不會修改文件。預設為 `false`。  |
-`tag` | 選用 | 處理器的識別標籤。有助於除錯時區分相同類型的處理器。如需更多資訊，請參閱[使用處理器標籤進行監控與除錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
-`target_field`  | 選用  | 儲存已剖析資料的欄位名稱。預設為 `field`。預設情況下，`field` 會原地更新。 |
+`ignore_missing`  | 選用  | 指定處理器是否應忽略不包含指定欄位的文件。若設為 `true`，則欄位不存在或為 `null` 時，處理器不會修改文件。預設為 `false`。  |
+`tag` | 選用 | 處理器的識別碼標籤。有助於偵錯時區分相同類型的處理器。如需詳細資訊，請參閱[使用處理器標籤進行監視與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
+`target_field`  | 選用  | 用於儲存剖析後資料的欄位名稱。預設為 `field`。依預設，`field` 會就地更新。 |
 
 ## 使用處理器
 
-依照下列步驟在管線中使用處理器。
+請依照下列步驟在管線中使用此處理器。
 
-**步驟 1：建立管線** 
+### 步驟 1：建立管線
 
-下列查詢會建立一個名為 `lowercase-title` 的管線，使用 `lowercase` 處理器將文件的 `title` 欄位轉換為小寫：
+下列查詢會建立名為 `lowercase-title` 的管線，該管線使用 `lowercase` 處理器將文件的 `title` 欄位轉為小寫：
 
 ```json
 PUT _ingest/pipeline/lowercase-title
@@ -66,7 +66,7 @@ PUT _ingest/pipeline/lowercase-title
 ```
 {% include copy-curl.html %}
 
-**步驟 2（選用）：測試管線**
+### 步驟 2（選用）：測試管線
 
 建議您在匯入文件之前先測試管線。
 {: .tip}
@@ -89,8 +89,6 @@ POST _ingest/pipeline/lowercase-title/_simulate
 ```
 {% include copy-curl.html %}
 
-**回應**
-
 下列範例回應確認管線如預期運作：
 
 ```json
@@ -112,7 +110,7 @@ POST _ingest/pipeline/lowercase-title/_simulate
 }
 ```
 
-**步驟 3：匯入文件**
+### 步驟 3：匯入文件
 
 下列查詢會將文件匯入名為 `testindex1` 的索引：
 
@@ -124,7 +122,7 @@ PUT testindex1/_doc/1?pipeline=lowercase-title
 ```
 {% include copy-curl.html %}
 
-**步驟 4（選用）：擷取文件**
+### 步驟 4（選用）：擷取文件
 
 若要擷取文件，請執行下列查詢：
 
@@ -132,3 +130,5 @@ PUT testindex1/_doc/1?pipeline=lowercase-title
 GET testindex1/_doc/1
 ```
 {% include copy-curl.html %}
+
+回應會包含已匯入的文件，並依步驟 2 的回應所示進行轉換。

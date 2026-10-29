@@ -14,7 +14,7 @@ redirect_from:
 本指南說明如何在 OpenSearch 中使用您自己的向量。您將學會建立向量索引、新增位置資料，並執行向量搜尋，在座標平面上找出最近的飯店。雖然這個範例為了簡化而使用二維向量，但相同做法也適用於語意搜尋和推薦系統中使用的高維向量。
 
 
-## 先決條件：安裝 OpenSearch
+## 必要條件：安裝 OpenSearch
   
 
 <details markdown="block">
@@ -22,25 +22,25 @@ redirect_from:
   如果您尚未安裝 OpenSearch，請依照下列步驟建立叢集。
   </summary>
 
-開始之前，請確認您的環境中已安裝並執行 [Docker](https://docs.docker.com/get-docker/)。<br>
-此示範組態並不安全，不應在正式環境中使用。
+開始之前，請確認您的環境中已安裝並執行 [Docker](https://docs.docker.com/get-docker/)。 <br>
+此示範組態並不安全，不應用於正式環境。
 {: .note} 
 
 下載並執行 OpenSearch：
 
 ```bash
-docker pull opensearchproject/opensearch:latest && docker run -it -p 9200:9200 -p 9600:9600 -e "discovery.type=single-node" -e "DISABLE_SECURITY_PLUGIN=true" opensearchproject/opensearch:latest
+docker pull opensearchproject/opensearch:latest && docker run -it -p 9200:9200 -e "discovery.type=single-node" -e "DISABLE_SECURITY_PLUGIN=true" opensearchproject/opensearch:latest
 ```
 {% include copy.html %}
 
-OpenSearch 現在執行於連接埠 9200。若要確認 OpenSearch 正在執行，請傳送下列請求：
+OpenSearch 現在已在連接埠 9200 上執行。若要驗證 OpenSearch 是否正在執行，請傳送下列請求：
 
 ```bash
 curl http://localhost:9200
 ```
 {% include copy.html %}
 
-您應該會收到類似以下的回應：
+您應該會收到如下所示的回應：
 
 ```json
 {
@@ -55,14 +55,14 @@ curl http://localhost:9200
     "build_date" : <build-date>,
     "build_snapshot" : false,
     "lucene_version" : <lucene-version>,
-    "minimum_wire_compatibility_version" : "7.10.0",
-    "minimum_index_compatibility_version" : "7.0.0"
+    "minimum_wire_compatibility_version" : "2.19.0",
+    "minimum_index_compatibility_version" : "2.0.0"
   },
   "tagline" : "The OpenSearch Project: https://opensearch.org/"
 }
 ```
 
-如需更多資訊，請參閱[安裝快速入門]({{site.url}}{{site.baseurl}}/getting-started/quickstart/)和[安裝及設定 OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/)。
+如需更多資訊，請參閱[安裝快速入門]({{site.url}}{{site.baseurl}}/getting-started/quickstart/)與[安裝及設定 OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/)。
 
 </details>
 
@@ -75,7 +75,7 @@ curl http://localhost:9200
 
 ## 步驟 1：建立向量索引
 
-首先，建立一個將儲存範例飯店資料的索引。若要向 OpenSearch 表示這是向量索引，請將 `index.knn` 設為 `true`。您會將向量儲存在名為 `location` 的向量欄位中。您將匯入的向量是二維的，而向量之間的距離會使用[歐幾里得 `l2` 相似度計量]({{site.url}}{{site.baseurl}}/vector-search/getting-started/vector-search-basics/#calculating-similarity)計算：
+首先，建立一個用來儲存範例飯店資料的索引。若要向 OpenSearch 表示這是向量索引，請將 `index.knn` 設為 `true`。您會將向量儲存在名為 `location` 的向量欄位中。您要匯入的向量會是二維的，而向量之間的距離會使用 [Euclidean `l2` 相似度指標]({{site.url}}{{site.baseurl}}/vector-search/getting-started/vector-search-basics/#calculating-similarity) 計算：
 
 ```json
 PUT /hotels-index
@@ -98,7 +98,7 @@ PUT /hotels-index
 
 若要使用不同的方法或引擎，請參閱[方法與引擎]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/)。
 
-向量查詢通常會有 `size` > 0，因此預設不會進入請求快取。在 OpenSearch 2.19 或更新版本中，如果您的工作負載大多由向量查詢組成，請考慮將動態 `indices.requests.cache.maximum_cacheable_size` 叢集設定調高為更大的值，例如 `256`。這可讓 `size` 最高為 256 的查詢進入請求快取，進而提升效能。如需更多資訊，請參閱[請求快取]({{site.url}}{{site.baseurl}}/search-plugins/caching/request-cache/)。
+向量查詢通常會有 `size` > 0，因此預設不會進入請求快取。如果您的工作負載大多由向量查詢組成，請考慮將動態的 `indices.requests.cache.maximum_cacheable_size` 叢集設定提高為更大的值，例如 `256`。這可讓 `size` 最高為 256 的查詢進入請求快取，進而提升效能。如需詳細資訊，請參閱[請求快取]({{site.url}}{{site.baseurl}}/search-plugins/caching/request-cache/)。
 
 ## 步驟 2：將資料新增至您的索引
 

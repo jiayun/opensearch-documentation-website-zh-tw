@@ -66,10 +66,10 @@ Lucene `sq` 編碼器支援下列參數。
 
 參數名稱 | 必要 | 預設 | 說明
 :--- | :--- | :--- | :---
-`bits` | 是 | 1 | 用於量化每個向量維度的位元數。有效值為 `1`、`2`、`4` 及 `7`。
-`confidence_interval` | 否 | 依向量維度計算 | 用於計算量化最小值與最大值的分位數區間。僅支援 7 位元量化。如需更多資訊，請參閱[信賴區間](#confidence-interval)。
+`bits` | 是 | N/A | 用於量化每個向量維度的位元數。有效值為 `1`、`2`、`4` 和 `7`。
+`confidence_interval` | 否 | 根據向量維度計算 | 用於計算量化所需最小值與最大值的分位數區間。僅支援 7 位元量化。如需更多資訊，請參閱[信賴區間](#confidence-interval)。
 
-`confidence_interval` 參數僅支援 7 位元量化。若您將 `bits` 設為任何其他值並指定 `confidence_interval`，則該請求會被拒絕。
+`confidence_interval` 參數僅支援 7 位元量化。若您將 `bits` 設定為其他任何值並指定 `confidence_interval`，請求將會遭到拒絕。
 {: .warning}
 
 ## 1 位元、2 位元及 4 位元量化

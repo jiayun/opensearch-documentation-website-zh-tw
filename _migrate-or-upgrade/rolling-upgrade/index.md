@@ -15,9 +15,11 @@ redirect_from:
 
 # 滾動升級
 
-滾動升級（有時稱為「節點替換升級」）幾乎可以在不停機的情況下於執行中的叢集上進行。節點會逐一停止並就地升級。或者，也可以一次一個地停止節點，並以執行新版本的主機取代。在此過程中，您仍可繼續在叢集中編製索引及查詢資料。
+滾動升級（有時稱為「節點替換升級」）可在幾乎不中斷服務的情況下，對執行中的叢集進行。節點會逐一停止並就地升級。或者，也可以由執行新版本的的主機逐一停止並替換節點。在此過程中，您仍可繼續在叢集中編製索引及查詢資料。
 
-本文件提供滾動升級程序的高階、平台無關概覽。如需指令、指令碼與組態檔的具體範例，請參閱 [滾動升級實驗室]({{site.url}}{{site.baseurl}}/migrate-or-upgrade/rolling-upgrade/rolling-upgrade-lab/)。
+本文件提供滾動升級程序的高階概觀，且不限定特定平台。如需命令、指令碼與組態檔案的具體範例，請參閱[滾動升級實驗室]({{site.url}}{{site.baseurl}}/migrate-or-upgrade/rolling-upgrade/rolling-upgrade-lab/)。
+
+如果您是使用 Ansible playbook 安裝叢集，請參閱[升級使用 playbook 安裝的叢集]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/ansible/#upgrading-a-cluster-installed-using-the-playbook)。
 
 ## 準備升級
 在對您的 OpenSearch 叢集進行任何變更之前，強烈建議先備份您的組態檔，並為叢集狀態與索引建立[快照]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/snapshots/snapshot-restore/)。
@@ -41,7 +43,7 @@ redirect_from:
    ```json
    GET /_cluster/health
    ```
-{% include copy-curl.html %}
+   {% include copy-curl.html %}
    回應應類似下列範例：
    ```json
    {
@@ -71,7 +73,7 @@ redirect_from:
        }
    }
    ```
-{% include copy-curl.html %}
+   {% include copy-curl.html %}
    回應應類似下列範例：
    ```json
    {
@@ -93,7 +95,7 @@ redirect_from:
    ```json
    POST /_flush
    ```
-{% include copy-curl.html %}
+   {% include copy-curl.html %}
    回應應類似下列範例：
    ```json
    {
@@ -111,13 +113,13 @@ redirect_from:
     1. 叢集管理員節點
 
     符合資格的叢集管理員節點應最後升級，因為 OpenSearch 節點可以加入叢集管理員節點執行舊版的叢集，但無法加入所有叢集管理員節點都執行新版的叢集。
-{: .important}
+    {: .important}
 
 1. 查詢 `_cat/nodes` 端點，找出哪個節點已升格為叢集管理員。下列命令包含額外的查詢參數，僅請求 name、version、node.role 和 master 標頭。請注意，OpenSearch 1.x 版使用「master」一詞，此用語已被棄用，並在 OpenSearch 2.x 及更新版本中由「cluster_manager」取代。
    ```json
    GET /_cat/nodes?v&h=name,version,node.role,master
    ```
-{% include copy-curl.html %}
+   {% include copy-curl.html %}
    回應應類似下列範例：
    ```bash
    name        version  node.role  master
@@ -131,7 +133,7 @@ redirect_from:
    ```json
    GET /_cat/nodes?v&h=name,version,node.role,master
    ```
-{% include copy-curl.html %}
+   {% include copy-curl.html %}
    回應應類似下列範例：
    ```bash
    name        version  node.role  master
@@ -155,7 +157,7 @@ redirect_from:
    ```json
    GET /_cat/nodes?v&h=name,version,node.role,master
    ```
-{% include copy-curl.html %}
+   {% include copy-curl.html %}
    回應應類似下列範例：
    ```bash
    name        version  node.role  master
@@ -168,7 +170,7 @@ redirect_from:
    ```json
    GET /_nodes/<nodeName>?filter_path=nodes.*.name,nodes.*.version
    ```
-{% include copy-curl.html %}
+   {% include copy-curl.html %}
    回應應類似下列範例：
    ```json
    {
@@ -189,7 +191,7 @@ redirect_from:
        }
    }
    ```
-{% include copy-curl.html %}
+   {% include copy-curl.html %}
    回應應類似下列範例：
    ```json
    {
@@ -210,7 +212,7 @@ redirect_from:
    ```json
    GET /_cluster/health
    ```
-{% include copy-curl.html %}
+   {% include copy-curl.html %}
    回應應類似下列範例：
    ```json
    {
@@ -236,7 +238,7 @@ redirect_from:
    ```json
    GET /_cat/nodes?v&h=name,version,node.role,master
    ```
-{% include copy-curl.html %}
+   {% include copy-curl.html %}
    回應應類似下列範例：
    ```bash
    name        version  node.role  master
@@ -307,6 +309,6 @@ redirect_from:
 
 - [滾動升級實驗室]({{site.url}}{{site.baseurl}}/migrate-or-upgrade/rolling-upgrade/rolling-upgrade-lab/) -- 提供逐步指示的實作實驗室，可在測試環境中練習滾動升級。
 - [OpenSearch 組態]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/)
-- [Performance Analyzer]({{site.url}}{{site.baseurl}}/monitoring-plugins/pa/index/)
-- [安裝並設定 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/)
-- [關於 OpenSearch 中的安全性]({{site.url}}{{site.baseurl}}/security/index/)
+- [Performance Analyzer]({{site.url}}{{site.baseurl}}/tuning-your-cluster/monitoring/telemetry/performance-analyzer/)
+- [安裝與設定 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/)
+- [關於 OpenSearch 的安全性]({{site.url}}{{site.baseurl}}/security/index/)

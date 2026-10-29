@@ -22,32 +22,32 @@ nav_order: 55
 ```
 {% include copy.html %}
 
-## 組態參數
+## 參數
 
 下表列出 `date_index_name` 處理器的必要與選用參數。
 
-Parameter | Required/Optional | Description |
+參數 | 必要/選用 | 說明 |
 |-----------|-----------|-----------|
-`field`  | Required  | 傳入文件中的日期或時間戳記欄位。 |
-`date_rounding`  | Required | 索引名稱中日期捨入的時間單位。有效值為 `y` (年)、`M` (月)、`w` (週)、`d` (日)、`h` (小時)、`m` (分鐘) 與 `s` (秒)。支援[範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。 |
-`date_formats` | Optional | 用於解析日期或時間戳記欄位的日期格式陣列。有效選項包括 Java 時間模式，或下列格式之一：ISO8601、UNIX、UNIX_MS 或 TAI64N。預設為 `yyyy-MM-dd'T'HH:mm:ss.SSSXX`。 |
-`index_name_format` | Optional | 索引名稱中日期的格式。預設為 `yyyy-MM-dd`。支援[範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。 |
-`index_name_prefix` | Optional | 在索引名稱中加在日期前面的前置詞。支援[範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。
-`description`  | Optional  | 處理器的簡短描述。  |
-`if` | Optional | 執行此處理器的條件。 |
-`ignore_failure` | Optional | 若設為 `true`，則忽略失敗。預設為 `false`。 |
-`locale`  | Optional  | 解析日期的月份名稱與星期幾時使用的地區設定。預設為 `ENGLISH`。  |
-`on_failure` | Optional | 處理器失敗時要執行的處理器清單。 |
-`tag` | Optional | 處理器的識別標籤。有助於除錯時區分相同類型的處理器。如需更多資訊，請參閱[使用處理器標籤進行監控與除錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
-`timezone`  | Optional  | 用於解析日期，以及從日期數學運算式計算具體索引名稱時使用的時區。預設為 `UTC`。 |
+`field`  | 必要  | 輸入文件中的日期或時間戳記欄位。 |
+`date_rounding` | 必要 | 索引名稱中日期捨入的時間單位。有效值為 `y`（年）、`M`（月）、`w`（週）、`d`（日）、`h`（小時）、`m`（分鐘）與 `s`（秒）。支援[範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。 |
+`date_formats` | 選用 | 用於剖析日期或時間戳記欄位的日期格式陣列。有效選項包括 Java 時間模式，或下列格式之一：ISO8601、UNIX、UNIX_MS 或 TAI64N。預設為 `yyyy-MM-dd'T'HH:mm:ss.SSSXX`。 |
+`index_name_format` | 選用 | 索引名稱中日期的格式。預設為 `yyyy-MM-dd`。支援[範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。 |
+`index_name_prefix` | 選用 | 在索引名稱中日期之前加入的前綴。支援[範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)。
+`description`  | 選用  | 處理器的簡短說明。  |
+`if` | 選用 | 執行此處理器的條件。 |
+`ignore_failure` | 選用 | 若設為 `true`，則忽略失敗。預設為 `false`。 |
+`locale`  | 選用  | 剖析日期的月份名稱與星期幾時使用的地區設定。預設為 `ENGLISH`。  |
+`on_failure` | 選用 | 處理器失敗時要執行的處理器清單。 |
+`tag` | 選用 | 處理器的識別標籤。有助於除錯時區分相同類型的處理器。如需更多資訊，請參閱[使用處理器標籤進行監控與除錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |
+`timezone`  | 選用  | 用於剖析日期，以及從日期運算式計算具體索引名稱時使用的時區。預設為 `UTC`。 |
 
 ## 使用處理器
 
-請依照下列步驟在管線中使用此處理器。
+請依照下列步驟，在管線中使用處理器。
 
-**步驟 1：建立管線。**
+### 步驟 1：建立管線
 
-下列查詢會建立一個名為 `date-index-name1` 的管線，該管線使用 `date_index_name` 處理器將記錄檔編製索引到每週索引中：
+下列查詢會建立一個名為 `date-index-name1` 的管線，使用 `date_index_name` 處理器將記錄檔編製索引至每週索引：
 
 ```json
 PUT /_ingest/pipeline/date-index-name1
@@ -67,7 +67,7 @@ PUT /_ingest/pipeline/date-index-name1
 ```
 {% include copy-curl.html %}
 
-**步驟 2（選用）：測試管線。**
+### 步驟 2（選用）：測試管線
 
 建議您在匯入文件之前先測試管線。
 {: .tip}
@@ -90,9 +90,7 @@ POST _ingest/pipeline/date-index-name1/_simulate
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
-下列範例回應確認管線運作符合預期：
+下列範例回應確認管線運作正常：
 
 ```json
 {
@@ -113,7 +111,7 @@ POST _ingest/pipeline/date-index-name1/_simulate
 }
 ```
 
-**步驟 3：匯入文件。**
+### 步驟 3：匯入文件
 
 下列查詢會將文件匯入名為 `testindex1` 的索引：
 
@@ -125,9 +123,7 @@ PUT testindex1/_doc/1?pipeline=date-index-name1
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
-此請求會將文件編製索引到索引 `week_index-2023-10-30` 中，並且由於管線以週為單位進行捨入，所有時間戳記落在同一週內的文件都會被編製索引到同一個索引。
+此請求會將文件編製索引至索引 `week_index-2023-10-30`。由於管線以週為單位進行捨入，因此所有時間戳記落在該週內的文件都會編製索引至同一個索引中。
 
 ```json
 {
@@ -145,7 +141,7 @@ PUT testindex1/_doc/1?pipeline=date-index-name1
 }
 ```
 
-**步驟 4（選用）：擷取文件。**
+### 步驟 4（選用）：擷取文件
 
 若要擷取文件，請執行下列查詢：
 
@@ -153,3 +149,5 @@ PUT testindex1/_doc/1?pipeline=date-index-name1
 GET week_index-2023-10-30/_doc/1
 ```
 {% include copy-curl.html %}
+
+回應包含已匯入的文件，其轉換結果如步驟 2 的回應所示。

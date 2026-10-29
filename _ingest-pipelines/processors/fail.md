@@ -20,7 +20,7 @@ nav_order: 100
 ```
 {% include copy.html %}
 
-## 組態參數
+## 參數
 
 下表列出 `fail` 處理器的必要與選用參數。
 
@@ -29,9 +29,9 @@ nav_order: 100
 `message` | 必要 | 要包含在失敗回應中的自訂錯誤訊息。支援[範本片段]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#template-snippets)，例如 `Order {% raw %}{{order_id}}{% endraw %} is missing a price`。
 `description`  | 選用  | 處理器的簡短說明。  |  
 `if` | 選用 | 執行處理器的條件。 |  
-`ignore_failure` | 選用 | 指定處理器即使遇到錯誤是否仍繼續執行。若設為 `true`，則會忽略失敗。預設為 `false`。 |  
+`ignore_failure` | 選用 | 指定處理器是否在遇到錯誤時仍繼續執行。如果設為 `true`，則會忽略失敗。預設為 `false`。 |  
 `on_failure` | 選用 | 處理器失敗時要執行的處理器清單。 |  
-`tag` | 選用 | 處理器的識別標籤。有助於偵錯時區分同類型的處理器。如需詳細資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |  
+`tag` | 選用 | 處理器的識別標籤。有助於在偵錯時區分相同類型的處理器。如需詳細資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。 |  
 
 ## 使用處理器
 
@@ -57,7 +57,7 @@ PUT _ingest/pipeline/fail-log-pipeline
 ```
 {% include copy-curl.html %}
 
-### 步驟 2 (選用)：測試管線
+### 步驟 2（選用）：測試管線
 
 建議您在匯入文件之前先測試管線。
 {: .tip}
@@ -77,8 +77,6 @@ POST _ingest/pipeline/fail-log-pipeline/_simulate
 }  
 ```
 {% include copy-curl.html %}
-
-#### 回應
 
 下列範例回應確認管線如預期運作：
 
@@ -113,9 +111,7 @@ PUT testindex1/_doc/1?pipeline=fail-log-pipeline
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
-由於 `user_info` 中存在字串 `credit card`，請求無法將記錄事件編製索引至索引 `testindex1`。下列回應包含在 fail 處理器中指定的自訂錯誤訊息：
+由於 `user_info` 中出現字串 `credit card`，此請求無法將記錄事件編製索引至索引 `testindex1`。下列回應包含在 fail 處理器中指定的自訂錯誤訊息：
 
 ```json
 {
@@ -133,16 +129,16 @@ PUT testindex1/_doc/1?pipeline=fail-log-pipeline
 }
 ```
 
-### 步驟 4 (選用)：擷取文件
+### 步驟 4（選用）：擷取文件
 
-由於管線失敗，記錄事件未被編製索引，因此嘗試擷取它會導致找不到文件的錯誤 `"found": false`：
+若要擷取文件，請執行下列查詢：
 
 ```json
 GET testindex1/_doc/1
 ```
 {% include copy-curl.html %}
 
-#### 文件錯誤範例
+由於管線失敗，該文件未被編製索引，因此回應中包含 `"found": false`：
 
 ```json
 {  

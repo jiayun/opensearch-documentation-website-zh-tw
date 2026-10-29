@@ -39,15 +39,15 @@ RPM 發行版提供在 Red Hat 或以 Red Hat 為基礎的 Linux 發行版中執
 
 ### 從套件安裝 OpenSearch
 
-1. 直接從 [OpenSearch 下載頁面](https://opensearch.org/downloads.html){:target='\_blank'}下載所需版本的 RPM 套件。RPM 套件可同時支援 **x64** 與 **arm64** 架構下載。
-1. 匯入 GNU Privacy Guard (GPG) 公開金鑰。此金鑰可驗證您的 OpenSearch 執行個體已完成簽署。
+1. 直接從 [OpenSearch 下載頁面](https://opensearch.org/downloads.html){:target='\_blank'}下載所需版本的 RPM 套件。RPM 套件同時提供 **x64** 與 **arm64** 架構版本。
+1. 匯入 GNU Privacy Guard (GPG) 公鑰。此金鑰可驗證您的 OpenSearch 執行個體已經過簽署。
    
     ```bash
     sudo rpm --import https://artifacts.opensearch.org/publickeys/opensearch-release.pgp
     ```
     {% include copy.html %}
    
-1. 在命令列介面中，您可以使用 `rpm` 或 `yum` 安裝套件。
+1. 您可以在命令列介面 (CLI) 中使用 `rpm` 或 `yum` 安裝套件。
 
    對於 OpenSearch 3.7 及更新版本的新安裝，您可以使用下列安裝時的環境變數來控制 Security 外掛程式的行為：
    * `DISABLE_INSTALL_DEMO_CONFIG=true` -- 防止安裝程式設定示範安全性組態 (憑證、使用者與角色)。當您要手動設定安全性時，請在安裝時使用此選項。
@@ -59,7 +59,7 @@ RPM 發行版提供在 Red Hat 或以 Red Hat 為基礎的 Linux 發行版中執
    ```
    {% include copy.html %}
 
-   對於 OpenSearch 2.12 及更新版本的新安裝，您必須定義自訂管理員密碼，才能設定示範安全性組態。請依照 [管理員密碼需求]({{site.url}}{{site.baseurl}}/security/configuration/demo-configuration/#admin-password-requirements)，使用下列其中一個命令來定義自訂管理員密碼。
+   對於 OpenSearch 2.12 及更新版本的新安裝，您必須定義自訂管理員密碼，才能設定示範安全性組態。請依照[管理員密碼需求]({{site.url}}{{site.baseurl}}/security/configuration/demo-configuration/#admin-password-requirements)，使用下列其中一個命令來定義自訂管理員密碼。OpenSearch 僅在設定示範安全性組態時使用此密碼。若要稍後變更管理員密碼，請參閱[變更管理員密碼]({{site.url}}{{site.baseurl}}/security/configuration/passwords/#changing-the-admin-password)。
 
    使用 yum 安裝 x64 套件：
    ```bash
@@ -125,7 +125,7 @@ RPM 發行版提供在 Red Hat 或以 Red Hat 為基礎的 Linux 發行版中執
    ```
    {% include copy.html %}
 
-1. 驗證 OpenSearch 是否正確啟動：
+1. 驗證 OpenSearch 是否已正確啟動：
 
    ```bash
    sudo systemctl status opensearch

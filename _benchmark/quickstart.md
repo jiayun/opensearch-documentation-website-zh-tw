@@ -13,7 +13,7 @@ nav_order: 5
 
 若要執行快速入門的步驟，您必須符合下列先決條件：
 
-- 目前作用中的 OpenSearch 叢集。如需建立 OpenSearch 叢集的指示，請參閱[建立叢集]({{site.url}}{{site.baseurl}}/tuning-your-cluster/index/)。
+- 目前作用中的 OpenSearch 叢集。如需建立 OpenSearch 叢集的指示，請參閱[建立叢集]({{site.url}}{{site.baseurl}}/tuning-your-cluster/creating-a-cluster/)。
 - Git 2.3 或更新版本。
 - Python 3.8 或更新版本
 

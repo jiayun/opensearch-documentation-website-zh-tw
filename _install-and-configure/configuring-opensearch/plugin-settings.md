@@ -42,13 +42,13 @@ nav_order: 140
 
 如需索引狀態管理 (ISM) 設定的相關資訊，請參閱 [ISM 設定]({{site.url}}{{site.baseurl}}/im-plugin/ism/settings/)。
 
-### 索引彙整設定
+### 索引彙總設定
 
-如需索引彙整 (rollup) 設定的相關資訊，請參閱[索引彙整設定]({{site.url}}{{site.baseurl}}/im-plugin/index-rollups/settings/)。
+如需索引彙總（index rollup）設定的相關資訊，請參閱[索引彙總設定]({{site.url}}{{site.baseurl}}/im-plugin/index-rollups/settings/)。
 
 ## Job Scheduler 外掛程式設定
 
-如需 Job Scheduler 外掛程式設定的相關資訊，請參閱 [Job Scheduler 叢集設定]({{site.url}}{{site.baseurl}}/monitoring-your-cluster/job-scheduler/index/#job-scheduler-cluster-settings)。
+如需 Job Scheduler 外掛程式設定的相關資訊，請參閱[排程任務設定]({{site.url}}{{site.baseurl}}/tuning-your-cluster/scheduled-jobs/index/#scheduled-job-settings)。
 
 ## k-NN 外掛程式設定
 
@@ -93,7 +93,7 @@ Notifications 外掛程式支援下列設定。此清單中的所有設定皆為
 
 ## Query Insights 外掛程式設定
 
-如需 Query Insights 外掛程式設定的相關資訊，請參閱 [Query Insights 功能與設定]({{site.url}}{{site.baseurl}}/observing-your-data/query-insights/index#query-insights-features-and-settings)。
+如需 Query Insights 外掛程式設定的相關資訊，請參閱 [Query Insights 功能與設定]({{site.url}}{{site.baseurl}}/tuning-your-cluster/monitoring/query-insights/index#query-insights-features-and-settings)。
 
 ## Security 外掛程式設定
 
@@ -109,7 +109,7 @@ Notifications 外掛程式支援下列設定。此清單中的所有設定皆為
 
 ## Workload Management 外掛程式設定
 
-如需工作負載管理設定的相關資訊，請參閱[工作負載管理設定]({{site.url}}{{site.baseurl}}/tuning-your-cluster/availability-and-recovery/workload-management/wlm-feature-overview/#workload-management-settings)。
+如需工作負載管理設定的相關資訊，請參閱[工作負載管理設定]({{site.url}}{{site.baseurl}}/tuning-your-cluster/workload-management/wlm-feature-overview/#workload-management-settings)。
 
 ## 一般外掛程式設定
 

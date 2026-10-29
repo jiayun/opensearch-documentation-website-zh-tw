@@ -29,55 +29,13 @@ redirect_from:
 
 ## 設定混合搜尋
 
-設定混合搜尋有兩種方式：
-
-- [**自動化工作流程**](#automated-workflow)（建議用於快速設定）：以最少的組態自動建立資料匯入管線、索引及搜尋管線。
-- [**手動設定**](#manual-setup)（建議用於自訂組態）：手動設定每個元件，以獲得更大的彈性與控制權。
-
-## 自動化工作流程
-
-OpenSearch 提供[工作流程範本]({{site.url}}{{site.baseurl}}/vector-search/ai-search/workflows/workflow-templates/#hybrid-search)，可自動建立資料匯入管線、索引及搜尋管線。建立工作流程時，您必須提供所設定模型的模型 ID。請檢閱混合搜尋工作流程範本的[預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/hybrid-search-defaults.json)，以判斷是否需要更新任何參數。例如，如果模型維度與預設值 (`1024`) 不同，請在 `output_dimension` 參數中指定模型的維度。若要建立預設的混合搜尋工作流程，請傳送下列請求：
-
-```json
-POST /_plugins/_flow_framework/workflow?use_case=hybrid_search&provision=true
-{
-"create_ingest_pipeline.model_id": "mBGzipQB2gmRjlv_dOoB"
-}
-```
-{% include copy-curl.html %}
-
-OpenSearch 會回應所建立工作流程的工作流程 ID：
-
-```json
-{
-  "workflow_id" : "U_nMXJUBq_4FYQzMOS4B"
-}
-```
-
-若要檢查工作流程狀態，請傳送下列請求：
-
-```json
-GET /_plugins/_flow_framework/workflow/U_nMXJUBq_4FYQzMOS4B/_status
-```
-{% include copy-curl.html %}
-
-工作流程完成後，`state` 會變更為 `COMPLETED`。工作流程會建立下列元件：
-
-- 名為 `nlp-ingest-pipeline` 的資料匯入管線
-- 名為 `my-nlp-index` 的索引
-- 名為 `nlp-search-pipeline` 的搜尋管線
-
-您現在可以繼續進行[步驟 4 和 5](#step-4-ingest-documents-into-the-index)，將文件匯入索引並搜尋該索引。
-
-## 手動設定
-
-若要手動設定混合搜尋，請依照下列步驟操作：
+若要設定混合搜尋，請依照下列步驟進行：
 
 1. [建立資料匯入管線](#step-1-create-an-ingest-pipeline)。
 1. [建立用於匯入的索引](#step-2-create-an-index-for-ingestion)。
 1. [設定搜尋管線](#step-3-configure-a-search-pipeline)。
 1. [將文件匯入索引](#step-4-ingest-documents-into-the-index)。
-1. [使用混合搜尋來搜尋索引](#step-5-search-the-index-using-hybrid-search)。
+1. [使用混合搜尋搜尋索引](#step-5-search-the-index-using-hybrid-search)。
 
 ## 步驟 1：建立資料匯入管線
 
@@ -201,9 +159,9 @@ PUT /my-nlp-index/_doc/2
 
 若要對您的索引執行混合搜尋，請使用 [`hybrid` 查詢]({{site.url}}{{site.baseurl}}/query-dsl/compound/hybrid/)，此查詢會結合關鍵字搜尋與語意搜尋的結果。
 
-#### 範例：結合 neural 查詢與 match 查詢
+#### 範例：結合神經查詢與 match 查詢
 
-下列範例請求結合了兩個查詢子句：`neural` 查詢與 `match` 查詢。它透過查詢參數指定上一個步驟建立的搜尋管線：
+下列範例請求結合了兩個查詢子句：`neural` 查詢與 `match` 查詢。它將上一步建立的搜尋管線指定為查詢參數：
 
 ```json
 GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
@@ -227,7 +185,7 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
           "neural": {
             "passage_embedding": {
               "query_text": "Hi world",
-              "model_id": "aVeif4oB5Vm0Tdw8zYO2",
+              "model_id": "bQ1J8ooBpBj3wT4HVUsb",
               "k": 5
             }
           }
@@ -239,13 +197,13 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
 ```
 {% include copy-curl.html %}
 
-您也可以為 `my-nlp-index` 索引設定預設搜尋管線。如需詳細資訊，請參閱[預設搜尋管線]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/using-search-pipeline/#default-search-pipeline)。
+或者，您也可以為 `my-nlp-index` 索引設定預設搜尋管線。如需更多資訊，請參閱[預設搜尋管線]({{site.url}}{{site.baseurl}}/search-plugins/search-pipelines/using-search-pipeline/#default-search-pipeline)。
 
-回應包含符合條件的文件：
+回應包含符合的文件：
 
 ```json
 {
-  "took" : 36,
+  "took" : 32,
   "timed_out" : false,
   "_shards" : {
     "total" : 1,
@@ -255,15 +213,24 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
   },
   "hits" : {
     "total" : {
-      "value" : 1,
+      "value" : 2,
       "relation" : "eq"
     },
-    "max_score" : 1.2251667,
+    "max_score" : 1.0,
     "hits" : [
       {
         "_index" : "my-nlp-index",
+        "_id" : "2",
+        "_score" : 1.0,
+        "_source" : {
+          "passage_text" : "Hi planet",
+          "id" : "s2"
+        }
+      },
+      {
+        "_index" : "my-nlp-index",
         "_id" : "1",
-        "_score" : 1.2251667,
+        "_score" : 0.3007,
         "_source" : {
           "passage_text" : "Hello world",
           "id" : "s1"
@@ -273,11 +240,10 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
   }
 }
 ```
-{% include copy-curl.html %}
 
 #### 範例：結合 match 查詢與 term 查詢
 
-下列範例請求結合了兩個查詢子句：`match` 查詢與 `term` 查詢。它透過查詢參數指定上一個步驟建立的搜尋管線：
+下列範例請求結合了兩個查詢子句——`match` 查詢與 `term` 查詢。此請求將上一個步驟中建立的搜尋管線指定為查詢參數：
 
 ```json
 GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
@@ -309,15 +275,15 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
 ```
 {% include copy-curl.html %}
 
-回應包含符合條件的文件：
+回應中包含相符的文件：
 
 ```json
 {
-    "took": 11,
+    "took": 3,
     "timed_out": false,
     "_shards": {
-        "total": 2,
-        "successful": 2,
+        "total": 1,
+        "successful": 1,
         "skipped": 0,
         "failed": 0
     },
@@ -350,7 +316,9 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
     }
 }
 ```
-{% include copy-curl.html %}
+
+若要在單一步驟中建立資料匯入管線、索引與搜尋管線，您可以使用[混合搜尋工作流程範本]({{site.url}}{{site.baseurl}}/vector-search/ai-search/workflows/workflow-templates/#hybrid-search)。
+{: .tip}
 
 ## 篩選資料
 

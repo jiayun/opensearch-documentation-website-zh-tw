@@ -83,7 +83,7 @@ OpenSearch 被設計為分散式搜尋引擎，這表示它可以在一個或多
 
 每個叢集中都有一個經選舉產生的 _叢集管理員_ 節點，負責協調叢集層級的作業，例如建立索引。節點之間會互相通訊，因此如果您的請求被路由到某個節點，該節點會將請求傳送到其他節點、收集這些節點的回應，並傳回最終回應。
 
-如需其他節點類型的詳細資訊，請參閱[建立叢集]({{site.url}}{{site.baseurl}}/tuning-your-cluster/#nodes)。
+如需其他節點類型的詳細資訊，請參閱[建立叢集]({{site.url}}{{site.baseurl}}/tuning-your-cluster/creating-a-cluster/#nodes)。
 
 ### 分片
 

@@ -220,4 +220,4 @@ curl -X GET "localhost:9200/"
 
 - [投票組態管理]({{site.url}}{{site.baseurl}}/tuning-your-cluster/discovery-cluster-formation/voting-configuration/)：OpenSearch 如何在引導後管理投票
 - [探索與叢集形成設定]({{site.url}}{{site.baseurl}}/tuning-your-cluster/discovery-cluster-formation/settings/)：完整的設定參考
-- [建立叢集]({{site.url}}{{site.baseurl}}/tuning-your-cluster/)：逐步叢集設定指南
+- [建立叢集]({{site.url}}{{site.baseurl}}/tuning-your-cluster/creating-a-cluster/)：逐步叢集設定指南

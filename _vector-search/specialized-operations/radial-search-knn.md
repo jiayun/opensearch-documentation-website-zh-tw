@@ -18,13 +18,13 @@ redirect_from:
 
 ## 參數
 
-徑向搜尋支援下列參數：
+半徑搜尋支援下列參數：
 
-- `max_distance`：指定向量空間中的實際距離，找出所有與查詢點距離在此範圍內的點。此方法特別適用於需要空間鄰近性或絕對距離測量的應用。
+- `max_distance`：指定向量空間中的實體距離，找出與查詢點距離在此範圍內的所有點。此方法特別適用於需要空間鄰近性或絕對距離測量的應用程式。
 
-`min_score`：指定相似度分數，便於擷取與查詢點相比達到或超過此分數的點。當相對於特定指標的相似性比實際鄰近性更為關鍵時，此方法最為理想。
+- `min_score`：指定相似度分數，以便擷取與查詢點相比達到或超過此分數的點。在根據特定度量計算的相對相似度比實體鄰近性更重要的情境中，此方法是理想的選擇。
 
-在徑向搜尋期間，只需要指定一個查詢變數，即 `k`、`max_distance` 或 `min_score`。
+`knn` 查詢必須且只能指定 `k`、`max_distance` 或 `min_score` 其中之一。
 
 ## 空間
 
@@ -269,9 +269,9 @@ GET knn-index-test/_search
 ```
 </details>
 
-### 範例：使用 `min_score` 的徑向搜尋
+### 範例：使用 `min_score` 進行徑向搜尋
 
-下列範例顯示使用 `min_score` 執行的徑向搜尋：
+以下範例顯示使用 `min_score` 執行的徑向搜尋：
 
 ```json
 GET knn-index-test/_search
@@ -288,7 +288,7 @@ GET knn-index-test/_search
 ```
 {% include copy-curl.html %}
 
-所有分數為 0.9 或更高的文件都會被傳回，如下列回應所示：
+分數為 0.95 或更高的所有文件都會被傳回，如下列回應所示：
 
 <details markdown="block">
   <summary>
@@ -343,9 +343,9 @@ GET knn-index-test/_search
 ```
 </details>
 
-### 範例：使用 `min_score` 和篩選器進行徑向搜尋
+### 範例：使用 `min_score` 與篩選條件的徑向搜尋
 
-下列範例示範使用 `min_score` 和回應篩選器執行徑向搜尋：
+下列範例示範使用 `min_score` 與回應篩選條件執行的徑向搜尋：
 
 ```json
 GET knn-index-test/_search
@@ -373,7 +373,7 @@ GET knn-index-test/_search
 ```
 {% include copy-curl.html %}
 
-系統會傳回分數大於或等於 0.9，且價格介於 1 到 5 之間的所有文件，如下列範例所示：
+所有相關性分數為 0.95 或以上，且價格在 1 到 5 範圍內的文件都會被傳回，如下列範例所示：
 
 <details markdown="block">
   <summary>
@@ -416,9 +416,9 @@ GET knn-index-test/_search
 ```
 </details>
 
-### 範例：對巢狀欄位進行徑向搜尋
+### 範例：巢狀欄位上的徑向搜尋
 
-下列範例示範如何對巢狀向量欄位執行徑向搜尋。首先，建立包含巢狀 `knn_vector` 欄位的索引：
+以下範例說明如何對巢狀向量欄位執行徑向搜尋。首先，建立一個包含巢狀 `knn_vector` 欄位的索引：
 
 ```json
 PUT nested-knn-index
@@ -467,7 +467,7 @@ PUT _bulk?refresh=true
 ```
 {% include copy-curl.html %}
 
-對 `my_embeddings.embedding` 巢狀欄位執行徑向搜尋，找出與查詢向量相似且相似度分數至少為 0.7 的所有嵌入：
+對 `my_embeddings.embedding` 巢狀欄位執行徑向搜尋，找出所有與查詢向量相似且相似度分數至少為 0.7 的嵌入：
 
 ```json
 GET nested-knn-index/_search
@@ -490,7 +490,7 @@ GET nested-knn-index/_search
 ```
 {% include copy-curl.html %}
 
-此查詢可搭配 Lucene 和 Faiss 引擎使用，並傳回巢狀向量嵌入達到最低相似度分數門檻的文件，如下列回應所示：
+此查詢同時適用於 Lucene 與 Faiss 引擎，並會傳回巢狀向量嵌入符合最低相似度分數門檻的文件，如下列回應所示：
 
 <details markdown="block">
   <summary>
@@ -510,7 +510,7 @@ GET nested-knn-index/_search
   },
   "hits": {
     "total": {
-      "value": 2,
+      "value": 3,
       "relation": "eq"
     },
     "max_score": 1.74,
@@ -535,6 +535,18 @@ GET nested-knn-index/_search
           "my_embeddings": [
             {
               "embedding": [0.4, 0.5, 0.6]
+            }
+          ]
+        }
+      },
+      {
+        "_index": "nested-knn-index",
+        "_id": "1",
+        "_score": 1.2,
+        "_source": {
+          "my_embeddings": [
+            {
+              "embedding": [0.1, 0.2, 0.3]
             }
           ]
         }

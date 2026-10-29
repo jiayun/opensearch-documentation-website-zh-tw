@@ -123,25 +123,25 @@ GET my-knn-index-1/_search
           "nested_field": [
             {
               "my_vector": [
-                1,
-                1,
-                1
+                1.0,
+                1.0,
+                1.0
               ],
               "color": "blue"
             },
             {
               "my_vector": [
-                2,
-                2,
-                2
+                2.0,
+                2.0,
+                2.0
               ],
               "color": "yellow"
             },
             {
               "my_vector": [
-                3,
-                3,
-                3
+                3.0,
+                3.0,
+                3.0
               ],
               "color": "white"
             }
@@ -156,25 +156,25 @@ GET my-knn-index-1/_search
           "nested_field": [
             {
               "my_vector": [
-                10,
-                10,
-                10
+                10.0,
+                10.0,
+                10.0
               ],
               "color": "red"
             },
             {
               "my_vector": [
-                20,
-                20,
-                20
+                20.0,
+                20.0,
+                20.0
               ],
               "color": "green"
             },
             {
               "my_vector": [
-                30,
-                30,
-                30
+                30.0,
+                30.0,
+                30.0
               ],
               "color": "black"
             }
@@ -390,7 +390,7 @@ GET my-knn-index-1/_search
                   "_score": 0.25,
                   "fields": {
                     "nested_field.color": [
-                      "blue"
+                      "yellow"
                     ]
                   }
                 },
@@ -436,7 +436,7 @@ GET my-knn-index-1/_search
                   "_score": 0.0040983604,
                   "fields": {
                     "nested_field.color": [
-                      "blue"
+                      "red"
                     ]
                   }
                 },
@@ -450,7 +450,7 @@ GET my-knn-index-1/_search
                   "_score": 9.2250924E-4,
                   "fields": {
                     "nested_field.color": [
-                      "yellow"
+                      "green"
                     ]
                   }
                 },
@@ -464,7 +464,7 @@ GET my-knn-index-1/_search
                   "_score": 3.9619653E-4,
                   "fields": {
                     "nested_field.color": [
-                      "white"
+                      "black"
                     ]
                   }
                 }
@@ -487,7 +487,7 @@ GET my-knn-index-1/_search
 首先，建立具有巢狀欄位的向量索引：
 
 ```json
-PUT my-knn-index-1
+PUT my-knn-index-2
 {
   "settings": {
     "index": {
@@ -524,11 +524,11 @@ PUT my-knn-index-1
 
 ```json
 PUT _bulk?refresh=true
-{ "index": { "_index": "my-knn-index-1", "_id": "1" } }
+{ "index": { "_index": "my-knn-index-2", "_id": "1" } }
 {"parking": false, "nested_field":[{"my_vector":[1,1,1]},{"my_vector":[2,2,2]},{"my_vector":[3,3,3]}]}
-{ "index": { "_index": "my-knn-index-1", "_id": "2" } }
+{ "index": { "_index": "my-knn-index-2", "_id": "2" } }
 {"parking": true, "nested_field":[{"my_vector":[10,10,10]},{"my_vector":[20,20,20]},{"my_vector":[30,30,30]}]}
-{ "index": { "_index": "my-knn-index-1", "_id": "3" } }
+{ "index": { "_index": "my-knn-index-2", "_id": "3" } }
 {"parking": true, "nested_field":[{"my_vector":[100,100,100]},{"my_vector":[200,200,200]},{"my_vector":[300,300,300]}]}
 ```
 {% include copy-curl.html %}
@@ -536,7 +536,7 @@ PUT _bulk?refresh=true
 接著使用 `knn` 查詢類型搭配篩選條件，對資料執行向量搜尋。下列查詢會傳回 `parking` 欄位設為 `true` 的文件：
 
 ```json
-GET my-knn-index-1/_search
+GET my-knn-index-2/_search
 {
   "query": {
     "nested": {
@@ -584,7 +584,7 @@ GET my-knn-index-1/_search
     "max_score": 0.0040983604,
     "hits": [
       {
-        "_index": "my-knn-index-1",
+        "_index": "my-knn-index-2",
         "_id": "2",
         "_score": 0.0040983604,
         "_source": {
@@ -592,30 +592,30 @@ GET my-knn-index-1/_search
           "nested_field": [
             {
               "my_vector": [
-                10,
-                10,
-                10
+                10.0,
+                10.0,
+                10.0
               ]
             },
             {
               "my_vector": [
-                20,
-                20,
-                20
+                20.0,
+                20.0,
+                20.0
               ]
             },
             {
               "my_vector": [
-                30,
-                30,
-                30
+                30.0,
+                30.0,
+                30.0
               ]
             }
           ]
         }
       },
       {
-        "_index": "my-knn-index-1",
+        "_index": "my-knn-index-2",
         "_id": "3",
         "_score": 3.400898E-5,
         "_source": {
@@ -623,23 +623,23 @@ GET my-knn-index-1/_search
           "nested_field": [
             {
               "my_vector": [
-                100,
-                100,
-                100
+                100.0,
+                100.0,
+                100.0
               ]
             },
             {
               "my_vector": [
-                200,
-                200,
-                200
+                200.0,
+                200.0,
+                200.0
               ]
             },
             {
               "my_vector": [
-                300,
-                300,
-                300
+                300.0,
+                300.0,
+                300.0
               ]
             }
           ]

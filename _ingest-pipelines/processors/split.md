@@ -23,22 +23,22 @@ nav_order: 255
 ```
 {% include copy.html %}
 
-## 組態參數
+## 參數
 
 下表列出 `split` 處理器的必要與選用參數。
 
-參數  | 必要/選用  | 說明 
+參數  | 必要/選用  | 描述 
 :--- | :--- | :--- 
-`field` | 必要 | 包含要分割之字串的欄位。 
-`separator` | 必要 | 符合用於分割字串之分隔符號的規則表達式。若要依在規則表達式中具有特殊意義的字元（例如 `.` 或 `+`）進行分割，請將其逸出，例如 `\\.`。 
-`preserve_trailing` | 選用 | 若設為 `true`，則在產生的陣列中保留結尾的空欄位（例如 `''`）。若設為 `false`，則會從產生的陣列中移除結尾的空欄位。預設為 `false`。 
+`field` | 必要 | 包含要分割字串的欄位。 
+`separator` | 必要 | 符合分割字串所用分隔符號的規則運算式。若要依規則運算式中具有特殊意義的字元分割，例如 `.` 或 `+`，必須加以跳脫，例如 `\\.`。 
+`preserve_trailing` | 選用 | 若設為 `true`，則在產生的陣列中保留空的結尾欄位（例如 `''`）。若設為 `false`，則會從產生的陣列中移除空的結尾欄位。預設為 `false`。 
 `target_field` | 選用 | 儲存子字串陣列的欄位。若未指定，則會就地更新該欄位。 
-`ignore_missing` | 選用	| 指定處理器是否應忽略不包含所指定欄位的文件。若設為 `true`，則處理器會忽略該欄位中缺少的值，並讓 `target_field` 保持不變。預設為 `false`。  
-`description` | 選用 | 處理器的簡短說明。 
+`ignore_missing` | 選用	| 指定處理器是否應忽略不含指定欄位的文件。若設為 `true`，處理器會忽略欄位中缺少的值，並保持 `target_field` 不變。預設為 `false`。  
+`description` | 選用 | 處理器的簡短描述。 
 `if` | 選用 | 執行處理器的條件。 
-`ignore_failure` | 選用 | 指定處理器即使遇到錯誤是否仍繼續執行。若設為 `true`，則會忽略失敗。預設為 `false`。 
+`ignore_failure` | 選用 | 指定處理器在遇到錯誤時是否仍繼續執行。若設為 `true`，則會忽略失敗。預設為 `false`。 
 `on_failure` | 選用 | 處理器失敗時要執行的處理器清單。 
-`tag` | 選用 | 處理器的識別碼標籤。有助於偵錯，以便區分相同類型的處理器。如需詳細資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。
+`tag` | 選用 | 處理器的識別標籤。有助於偵錯時區分相同類型的處理器。如需更多資訊，請參閱[使用處理器標籤進行監控與偵錯]({{site.url}}{{site.baseurl}}/ingest-pipelines/create-ingest/#using-processor-tags-for-monitoring-and-debugging)。
 
 ## 使用處理器
 
@@ -65,7 +65,7 @@ PUT _ingest/pipeline/split_pipeline
 ```
 {% include copy-curl.html %}
 
-### 步驟 2 (選用)：測試管線
+### 步驟 2（選用）：測試管線
 
 建議您在匯入文件之前先測試管線。
 {: .tip}
@@ -86,9 +86,7 @@ POST _ingest/pipeline/split_pipeline/_simulate
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
-下列範例回應確認管線如預期運作：
+下列範例回應可確認管線運作正常：
 
 ```json
 {
@@ -126,9 +124,7 @@ PUT testindex1/_doc/1?pipeline=split_pipeline
 ```
 {% include copy-curl.html %}
 
-#### 回應
-
-此請求會將文件編製索引至索引 `testindex1`，並在編製索引前，依逗號分隔符號分割 `log_message` 欄位，再將結果儲存於 `log_parts` 欄位，如下列回應所示：
+此請求會將文件編製索引到 `testindex1` 索引中，並在編製索引前以逗號分隔符切割 `log_message` 欄位，再將結果儲存在 `log_parts` 欄位中，如下列回應所示：
 
 ```json
 {
@@ -146,7 +142,7 @@ PUT testindex1/_doc/1?pipeline=split_pipeline
 }
 ```
 
-### 步驟 4 (選用)：擷取文件
+### 步驟 4（選用）：擷取文件
 
 若要擷取文件，請執行下列查詢：
 
@@ -155,28 +151,7 @@ GET testindex1/_doc/1
 ```
 {% include copy-curl.html %}
 
-#### 回應 
-
-回應會顯示 `log_parts` 欄位，其中包含 `log_message` 以逗號分隔後的值：
-
-```json
-{
-  "_index": "testindex1",
-  "_id": "1",
-  "_version": 70,
-  "_seq_no": 72,
-  "_primary_term": 47,
-  "found": true,
-  "_source": {
-    "log_message": "error,warning,info",
-    "log_parts": [
-      "error",
-      "warning",
-      "info"
-    ]
-  }
-}
-```
+回應會包含已匯入的文件，並如步驟 2 的回應所示經過轉換。
 
 ## 保留尾端空欄位
 

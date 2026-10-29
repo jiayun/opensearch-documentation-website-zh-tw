@@ -20,45 +20,7 @@ redirect_from:
 
 ## 設定語意搜尋
 
-設定語意搜尋有兩種方式：
-
-- [**自動化工作流程**](#automated-workflow)（建議用於快速設定）：以最少的組態自動建立資料匯入管線與索引。
-- [**手動設定**](#manual-setup)（建議用於自訂組態）：手動設定每個元件，以獲得更大的彈性與控制權。
-- [**使用語意欄位**](#using-a-semantic-field)（建議用於可選自訂的快速設定）：使用 `semantic` 欄位手動設定索引，以簡化設定流程，同時仍允許某種程度的組態。
-
-## 自動化工作流程
-
-OpenSearch 提供 [工作流程範本]({{site.url}}{{site.baseurl}}/vector-search/ai-search/workflows/workflow-templates/#semantic-search)，會自動建立資料匯入管線與索引。建立工作流程時，您必須提供已設定模型的模型 ID。請檢閱語意搜尋工作流程範本的[預設值](https://github.com/opensearch-project/flow-framework/blob/main/src/main/resources/defaults/semantic-search-defaults.json)，以判斷是否需要更新任何參數。例如，若模型維度與預設值（`1024`）不同，請在 `output_dimension` 參數中指定模型的維度。若要建立預設的語意搜尋工作流程，請傳送下列請求：
-
-```json
-POST /_plugins/_flow_framework/workflow?use_case=semantic_search&provision=true
-{
-  "create_ingest_pipeline.model_id": "mBGzipQB2gmRjlv_dOoB"
-}
-```
-{% include copy-curl.html %}
-
-OpenSearch 會回應所建立工作流程的工作流程 ID：
-
-```json
-{
-  "workflow_id" : "U_nMXJUBq_4FYQzMOS4B"
-}
-```
-
-若要檢查工作流程狀態，請傳送下列請求：
-
-```json
-GET /_plugins/_flow_framework/workflow/U_nMXJUBq_4FYQzMOS4B/_status
-```
-{% include copy-curl.html %}
-
-工作流程完成後，`state` 會變更為 `COMPLETED`。此工作流程會建立下列元件：
-
-- 名為 `nlp-ingest-pipeline` 的資料匯入管線
-- 名為 `my-nlp-index` 的索引
-
-您現在可以繼續進行[步驟 3 和 4](#step-3-ingest-documents-into-the-index)，將文件匯入索引並搜尋該索引。
+您可以透過兩種方式之一來設定語意搜尋。在[手動設定](#manual-setup)中，您自行設定資料匯入管線與索引，可完全掌控每個元件。或者，您也可以[使用語意欄位](#using-a-semantic-field)，這種方式可簡化設定程序，同時仍允許您自訂部分組態。
 
 ## 手動設定
 
@@ -160,9 +122,9 @@ PUT /my-nlp-index/_doc/2
 
 ### 步驟 4：搜尋索引
 
-若要在索引上執行向量搜尋，請在 [Search for a Model API]({{site.url}}{{site.baseurl}}/vector-search/api/knn/#search-for-a-model) 或 [Query DSL]({{site.url}}{{site.baseurl}}/opensearch/query-dsl/index/) 查詢中使用 `neural` 查詢子句。您可以使用[向量搜尋篩選器]({{site.url}}{{site.baseurl}}/search-plugins/knn/filter-search-knn/)來調整結果。
+若要在索引上執行向量搜尋，請在 [Query DSL]({{site.url}}{{site.baseurl}}/query-dsl/) 查詢中使用 `neural` 查詢子句。若要將搜尋限制在符合條件的文件，請使用[向量搜尋篩選器]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/index/)。
 
-下列範例請求使用布林查詢來合併一個篩選子句與兩個查詢子句——一個 neural 查詢與一個 `match` 查詢。`script_score` 查詢會為查詢子句指派自訂權重：
+下列範例請求使用布林查詢來合併兩個查詢子句：一個神經查詢和一個 `match` 查詢。`script_score` 查詢會為查詢子句指派自訂權重：
 
 ```json
 GET /my-nlp-index/_search
@@ -174,9 +136,6 @@ GET /my-nlp-index/_search
   },
   "query": {
     "bool": {
-      "filter": {
-         "wildcard":  { "id": "*1" }
-      },
       "should": [
         {
           "script_score": {
@@ -213,38 +172,50 @@ GET /my-nlp-index/_search
 ```
 {% include copy-curl.html %}
 
-回應會包含相符的文件：
+回應會包含這兩份文件，並依兩個子句的合併分數排序：
 
 ```json
 {
-  "took" : 36,
-  "timed_out" : false,
-  "_shards" : {
-    "total" : 1,
-    "successful" : 1,
-    "skipped" : 0,
-    "failed" : 0
+  "took": 211,
+  "timed_out": false,
+  "_shards": {
+    "total": 1,
+    "successful": 1,
+    "skipped": 0,
+    "failed": 0
   },
-  "hits" : {
-    "total" : {
-      "value" : 1,
-      "relation" : "eq"
+  "hits": {
+    "total": {
+      "value": 2,
+      "relation": "eq"
     },
-    "max_score" : 1.2251667,
-    "hits" : [
+    "max_score": 0.5848836,
+    "hits": [
       {
-        "_index" : "my-nlp-index",
-        "_id" : "1",
-        "_score" : 1.2251667,
-        "_source" : {
-          "passage_text" : "Hello world",
-          "id" : "s1"
+        "_index": "my-nlp-index",
+        "_id": "2",
+        "_score": 0.5848836,
+        "_source": {
+          "passage_text": "Hi planet",
+          "id": "s2"
+        }
+      },
+      {
+        "_index": "my-nlp-index",
+        "_id": "1",
+        "_score": 0.5824303,
+        "_source": {
+          "passage_text": "Hello world",
+          "id": "s1"
         }
       }
     ]
   }
 }
 ```
+
+若要在一個步驟中建立資料匯入管線和索引，您可以使用[語意搜尋工作流程範本]({{site.url}}{{site.baseurl}}/vector-search/ai-search/workflows/workflow-templates/#semantic-search)。
+{: .tip}
 
 ### 在索引或欄位上設定預設模型
 
@@ -350,7 +321,7 @@ GET /my-nlp-index/_search
 
 ### 步驟 1：建立包含語意欄位的索引
 
-建立索引，並在 `semantic` 欄位中指定 `model_id`。在此範例中，`semantic` 欄位為 `passage_text`。OpenSearch 會根據模型組態自動建立對應的嵌入欄位。您無需使用資料匯入管線，OpenSearch 會在編製索引期間使用指定的模型自動產生嵌入：
+建立一個索引，並在 `semantic` 欄位中指定 `model_id`。在此範例中，`semantic` 欄位為 `passage_text`。OpenSearch 會根據模型組態自動建立對應的嵌入欄位。不需要資料匯入管線——OpenSearch 會在編製索引時使用指定的模型自動產生嵌入：
 
 ```json
 PUT /my-nlp-index
@@ -373,10 +344,16 @@ PUT /my-nlp-index
 ```
 {% include copy-curl.html %}
 
-建立索引後，您可以擷取其對應，確認嵌入欄位已自動建立：
+建立索引後，您可以擷取其對應，以驗證嵌入欄位是否已自動建立：
 
 ```json
 GET /my-nlp-index/_mapping
+```
+{% include copy-curl.html %}
+
+回應會顯示自動建立的 `passage_text_semantic_info` 欄位：
+
+```json
 {
   "my-nlp-index": {
     "mappings": {
@@ -424,7 +401,6 @@ GET /my-nlp-index/_mapping
   }
 }
 ```
-{% include copy-curl.html %}
 
 ### 步驟 2：將文件匯入索引
 
@@ -439,10 +415,16 @@ PUT /my-nlp-index/_doc/1
 ```
 {% include copy-curl.html %}
 
-在文件匯入索引之前，OpenSearch 會執行內建的資料匯入管線，產生嵌入並將其儲存在 `passage_text_semantic_info.embedding` 欄位中。若要確認嵌入已正確產生，您可以執行搜尋請求來擷取文件：
+在文件匯入索引之前，OpenSearch 會執行內建的資料匯入管線，產生嵌入並將其儲存在 `passage_text_semantic_info.embedding` 欄位中。若要確認嵌入已正確產生，請擷取該文件：
 
 ```json
 GET /my-nlp-index/_doc/1
+```
+{% include copy-curl.html %}
+
+回應會在 `passage_text_semantic_info` 欄位中包含產生的嵌入：
+
+```json
 {
   "_index": "my-nlp-index",
   "_id": "1",
@@ -467,7 +449,6 @@ GET /my-nlp-index/_doc/1
   }
 }
 ```
-{% include copy-curl.html %}
 
 ### 步驟 3：搜尋索引
 
@@ -527,4 +508,5 @@ GET /my-nlp-index/_search
 
 ## 後續步驟
 
-- 探索我們的[語意搜尋教學]({{site.url}}{{site.baseurl}}/vector-search/tutorials/semantic-search/)，瞭解如何建置 AI 搜尋應用程式。 
+- 若要將搜尋結果限制為符合條件的文件，請參閱[篩選向量搜尋結果]({{site.url}}{{site.baseurl}}/vector-search/filter-search-knn/index/)。
+- 若要了解如何建置 AI 搜尋應用程式，請探索我們的[語意搜尋教學]({{site.url}}{{site.baseurl}}/vector-search/tutorials/semantic-search/)。

@@ -116,7 +116,7 @@ POST /my-nlp-index/_bulk
 
 ### 步驟 4：使用混合搜尋搜尋索引並擷取內部命中
 
-下列請求會執行混合查詢，在兩個巢狀欄位 `user` 與 `location` 中搜尋相符項目。它會將每個欄位的結果合併為單一排名的父文件清單，同時使用 `inner_hits` 擷取相符的巢狀物件：
+下列請求會執行混合查詢，在兩個巢狀欄位中搜尋相符項目：`user` 和 `location`。它會將各欄位的結果合併成一份父文件的單一排名清單，同時使用 `inner_hits` 擷取相符的巢狀物件：
 
 ```json
 GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
@@ -154,7 +154,7 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
 ```
 {% include copy-curl.html %}
 
-回應包含相符的父文件，以及 `user` 與 `location` 兩個巢狀欄位的相關巢狀 `inner_hits`。每個內部命中會顯示哪個巢狀物件相符，以及它對整體混合分數的貢獻程度：
+回應會包含相符的父文件，以及 `user` 和 `location` 巢狀欄位中相關的巢狀 `inner_hits`。每個內部命中都會顯示哪個巢狀物件相符，以及它對整體混合分數的貢獻程度：
 
 ```json
 ...
@@ -163,18 +163,18 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
     {
       "_index": "my-nlp-index",
       "_id": "1",
-      "_score": 1.0,
+      "_score": 0.5005,
       "inner_hits": {
         "location": {
           "hits": {
-            "max_score": 0.44583148,
+            "max_score": 0.74366313,
             "hits": [
               {
                 "_nested": {
                   "field": "location",
                   "offset": 1
                 },
-                "_score": 0.44583148,
+                "_score": 0.74366313,
                 "_source": {
                   "city": "Udaipur",
                   "state": "Rajasthan"
@@ -185,14 +185,14 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
         },
         "user": {
           "hits": {
-            "max_score": 0.4394061,
+            "max_score": 0.39226836,
             "hits": [
               {
                 "_nested": {
                   "field": "user",
                   "offset": 0
                 },
-                "_score": 0.4394061,
+                "_score": 0.39226836,
                 "_source": {
                   "name": "John Alder",
                   "age": 35
@@ -207,18 +207,18 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
     {
       "_index": "my-nlp-index",
       "_id": "2",
-      "_score": 5.0E-4,
+      "_score": 0.5,
       "inner_hits": {
         "user": {
           "hits": {
-            "max_score": 0.31506687,
+            "max_score": 0.39226836,
             "hits": [
               {
                 "_nested": {
                   "field": "user",
                   "offset": 0
                 },
-                "_score": 0.31506687,
+                "_score": 0.39226836,
                 "_source": {
                   "name": "John Wick",
                   "age": 46
@@ -229,7 +229,7 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
                   "field": "user",
                   "offset": 1
                 },
-                "_score": 0.31506687,
+                "_score": 0.39226836,
                 "_source": {
                   "name": "John Snow",
                   "age": 40
@@ -249,9 +249,9 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
 
 ## 使用 explain 參數
 
-若要了解內部命中如何影響混合分數，您可以啟用說明功能。回應將包含詳細的評分資訊。如需在混合查詢中使用 `explain` 的更多資訊，請參閱[混合搜尋說明]({{site.url}}{{site.baseurl}}/vector-search/ai-search/hybrid-search/explain/)。
+若要了解內部命中如何影響混合分數，您可以啟用 explain。回應將包含詳細的評分資訊。如需在混合查詢中使用 `explain` 的更多資訊，請參閱[混合搜尋說明]({{site.url}}{{site.baseurl}}/vector-search/ai-search/hybrid-search/explain/)。
 
-`explain` 在資源與時間方面都是昂貴的操作。對於正式環境叢集，我們建議僅在疑難排解時少量使用。
+`explain` 在資源與時間上的成本都很高。對於正式環境的叢集，我們建議僅在疑難排解時謹慎使用。
 {: .warning}
 
 首先，將 `hybrid_score_explanation` 處理器加入您在步驟 2 建立的搜尋管線：
@@ -321,44 +321,44 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline&explain=true
 ```
 {% include copy-curl.html %}
 
-回應包含一個 `_explanation` 物件，其中含有詳細的評分資訊。巢狀的 `details` 陣列提供下列相關資訊：所使用的分數模式、對父文件分數有貢獻的子文件數量，以及分數如何被標準化與組合：
+回應包含一個 `_explanation` 物件，其中含有詳細的評分資訊。巢狀的 `details` 陣列提供以下相關資訊：所使用的分數模式、對父文件分數有貢獻的子文件數量，以及分數如何標準化與合併：
 
 ```json
 {
   ...
   "_explanation": {
-    "value": 1.0,
+    "value": 0.5005,
     "description": "arithmetic_mean combination of:",
     "details": [
+      {
+        "value": 0.001,
+        "description": "min_max normalization of:",
+        "details": [
+          {
+            "value": 0.39226836,
+            "description": "Score based on 1 child docs in range from 0 to 6, using score mode Total",
+            "details": [
+              {
+                "value": 0.39226836,
+                "description": "weight(user.name:john in 0) [PerFieldSimilarity], result of:"
+                // Additional details omitted for brevity
+              }
+            ]
+          }
+        ]
+      },
       {
         "value": 1.0,
         "description": "min_max normalization of:",
         "details": [
           {
-            "value": 0.4458314776420593,
-            "description": "combined score of:",
+            "value": 0.74366313,
+            "description": "Score based on 1 child docs in range from 0 to 6, using score mode Avg",
             "details": [
               {
-                "value": 0.4394061,
-                "description": "Score based on 1 child docs in range from 0 to 6, using score mode Avg",
-                "details": [
-                  {
-                    "value": 0.4394061,
-                    "description": "weight(user.name:john in 0) [PerFieldSimilarity], result of:"
-                    // Additional details omitted for brevity
-                  }
-                ]
-              },
-              {
-                "value": 0.44583148,
-                "description": "Score based on 1 child docs in range from 0 to 6, using score mode Avg",
-                "details": [
-                  {
-                    "value": 0.44583148,
-                    "description": "weight(location.city:udaipur in 5) [PerFieldSimilarity], result of:"
-                    // Additional details omitted for brevity
-                  }
-                ]
+                "value": 0.74366313,
+                "description": "weight(location.city:udaipur in 5) [PerFieldSimilarity], result of:"
+                // Additional details omitted for brevity
               }
             ]
           }
@@ -372,7 +372,7 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline&explain=true
 
 ## 使用內部命中進行排序
 
-若要套用排序，請在 `inner_hits` 子句中新增 `sort` 子句。例如，若要依 `user.age` 排序，請在 `inner_hits` 子句中指定此排序條件：
+若要套用排序，請在 `inner_hits` 子句中新增 `sort` 子子句。例如，若要依 `user.age` 排序，請在 `inner_hits` 子句中指定此排序條件：
 
 ```json
 GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
@@ -418,7 +418,7 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
 ```
 {% include copy-curl.html %}
 
-在回應中，`user` 內部命中會依 age 遞減排序，而非依相關性排序，這就是為什麼 `_score` 欄位為 `null`（套用自訂排序時不會計算分數）：
+在回應中，`user` 內部命中會依年齡遞減排序，而非依相關性排序，這就是為什麼 `_score` 欄位為 `null`（套用自訂排序時不會計算分數）：
 
 ```json
 ...
@@ -568,9 +568,7 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
             "query": {
               "match_all": {}
             },
-            "inner_hits": {
-              "name": "coordinates"
-            }
+            "inner_hits": {}
           }
         },
         {
@@ -581,7 +579,9 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
                 "location.city": "Udaipur"
               }
             },
-            "inner_hits": {}
+            "inner_hits": {
+              "name": "coordinates"
+            }
           }
         }
       ]
@@ -591,12 +591,36 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
 ```
 {% include copy-curl.html %}
 
-在回應中，`user` 欄位的內部命中會以自訂名稱 `coordinates` 顯示：
+在回應中，`location` 欄位的內部命中會顯示在自訂名稱 `coordinates` 之下：
 
 ```json
 ...
 "inner_hits": {
   "coordinates": {
+    "hits": {
+      "total": {
+        "value": 1,
+        "relation": "eq"
+      },
+      "max_score": 0.74366313,
+      "hits": [
+        {
+          "_index": "my-nlp-index",
+          "_id": "1",
+          "_nested": {
+            "field": "location",
+            "offset": 1
+          },
+          "_score": 0.74366313,
+          "_source": {
+            "city": "Udaipur",
+            "state": "Rajasthan"
+          }
+        }
+      ]
+    }
+  },
+  "user": {
     "hits": {
       "total": {
         "value": 4,
@@ -616,31 +640,8 @@ GET /my-nlp-index/_search?search_pipeline=nlp-search-pipeline
             "name": "John Alder",
             "age": 35
           }
-        }
-      ]
-    }
-  },
-  "location": {
-    "hits": {
-      "total": {
-        "value": 1,
-        "relation": "eq"
-      },
-      "max_score": 0.44583148,
-      "hits": [
-        {
-          "_index": "my-nlp-index",
-          "_id": "1",
-          "_nested": {
-            "field": "location",
-            "offset": 1
-          },
-          "_score": 0.44583148,
-          "_source": {
-            "city": "Udaipur",
-            "state": "Rajasthan"
-          }
-        }
+        },
+        ...
       ]
     }
   }

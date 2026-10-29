@@ -35,7 +35,7 @@ Ansible playbook 會將 OpenSearch 與 OpenSearch Dashboards 部署到使用 `sy
 
 ## 組態
 
-1. 複製 OpenSearch [`ansible-playbook`](https://github.com/opensearch-project/ansible-playbook) 儲存庫並瀏覽至該儲存庫目錄：
+1. 複製 OpenSearch 的 [`ansible-playbook`](https://github.com/opensearch-project/ansible-playbook) 儲存庫並前往該儲存庫目錄：
 
    ```bash
    git clone https://github.com/opensearch-project/ansible-playbook
@@ -43,18 +43,18 @@ Ansible playbook 會將 OpenSearch 與 OpenSearch Dashboards 部署到使用 `sy
    ```
    {% include copy.html %}
 
-   `main` 分支會安裝最新的 OpenSearch {{os_major}}.x 版本。若要安裝 OpenSearch {{os_previous_major}}.x，請簽出 `{{os_previous_major}}.x` 分支。
+   `main` 分支會安裝最新的 OpenSearch {{os_major}}.x 版本。若要安裝 OpenSearch {{os_previous_major}}.x，請切換至 `{{os_previous_major}}.x` 分支。
 
 1. 在 `inventories/opensearch/hosts` 檔案中設定目標主機。預設檔案定義了一個由五個 OpenSearch 節點與一個 OpenSearch Dashboards 節點組成的叢集。每一行指定一個主機名稱以及下列變數：
 
    - `ansible_host`：Ansible 用來連線至目標主機的 IP 位址。
    - `ansible_user`：Ansible 用來連線至目標主機的使用者。
-   - `ip`：OpenSearch 與 OpenSearch Dashboards 繫結的 IP 位址。請指定目標主機的私人 IP 位址或 `0.0.0.0`。
-   - `roles`：OpenSearch 節點的[節點角色]({{site.url}}{{site.baseurl}}/tuning-your-cluster/)。
+   - `ip`：OpenSearch 與 OpenSearch Dashboards 綁定的 IP 位址。請指定目標主機的私有 IP 位址或 `0.0.0.0`。
+   - `roles`：OpenSearch 節點的[節點角色]({{site.url}}{{site.baseurl}}/tuning-your-cluster/creating-a-cluster/#nodes)。
 
-   每部主機也必須列在檔案結尾的群組中：OpenSearch 節點列於 `os-cluster`、可擔任叢集管理員的節點列於 `master`，而 OpenSearch Dashboards 節點列於 `dashboards`。未列於群組中的主機不會被安裝。請將預設檔案中的 IP 位址替換為您主機的位址。
+   每個主機也必須列在檔案結尾的群組中：`os-cluster` 用於 OpenSearch 節點，`master` 用於可擔任叢集管理員的節點，`dashboards` 用於 OpenSearch Dashboards 節點。未列在任何群組中的主機不會被安裝。請將預設檔案中的 IP 位址替換為您主機的位址。
 
-   若要在單一主機上安裝 OpenSearch 與 OpenSearch Dashboards，請將檔案內容替換為下列內容，並指定您主機的 IP 位址：
+   若要在單一主機上安裝 OpenSearch 與 OpenSearch Dashboards，請將檔案內容替換為以下內容，並指定您主機的 IP 位址：
 
    ```ini
    os1 ansible_host=<public-ip-address> ansible_user=root ip=<private-ip-address> roles=data,master
@@ -70,7 +70,7 @@ Ansible playbook 會將 OpenSearch 與 OpenSearch Dashboards 部署到使用 `sy
    ```
    {% include copy.html %}
 
-   若為單一主機，還需在 `inventories/opensearch/group_vars/all/all.yml` 檔案中將 `cluster_type` 設為 `single-node`：
+   對於單一主機，還需在 `inventories/opensearch/group_vars/all/all.yml` 檔案中將 `cluster_type` 設定為 `single-node`：
 
    ```yaml
    cluster_type: single-node
@@ -94,20 +94,42 @@ Ansible playbook 會將 OpenSearch 與 OpenSearch Dashboards 部署到使用 `sy
    ```
    {% include copy.html %}
 
-   您可以使用 `admin_password`、`kibanaserver_password` 與 `logstash_password` 變數來設定保留使用者（`admin`、`kibanaserver` 與 `logstash`）的密碼。
+   您可以使用 `admin_password`、`kibanaserver_password` 與 `logstash_password` 變數，為保留使用者（`admin`、`kibanaserver` 與 `logstash`）設定密碼。若要在部署後變更管理員密碼，請參閱[變更管理員密碼]({{site.url}}{{site.baseurl}}/security/configuration/passwords/#changing-the-admin-password)。
 
-1. 部署程序完成後，您可以使用使用者名稱 `admin` 以及您為 `admin_password` 變數設定的密碼來存取 OpenSearch 與 OpenSearch Dashboards。
+1. 部署程序完成後，您可以使用使用者名稱 `admin` 以及為 `admin_password` 變數設定的密碼，存取 OpenSearch 與 OpenSearch Dashboards。
 
-   若要驗證 OpenSearch 正在執行，請將請求傳送至您在 `ip` 變數中指定的 IP 位址。如果您指定的是私人 IP 位址，請從同一網路中的機器傳送請求：
+   若要確認 OpenSearch 正在執行，請向您在 `ip` 變數中指定的 IP 位址傳送請求。若您指定的是私有 IP 位址，請從同一網路中的機器傳送請求：
 
    ```bash
    curl https://<private-ip-address>:9200 -u 'admin:Test@123' --insecure
    ```
    {% include copy.html %}
 
-   如果您指定了 `0.0.0.0`，您可以從目標主機將請求傳送至 `localhost`，或傳送至目標主機的任何 IP 位址。
+   若您指定 `0.0.0.0`，則可從目標主機向 `localhost` 傳送請求，或向目標主機的任何 IP 位址傳送請求。
 
-1. 若要存取 OpenSearch Dashboards，請在瀏覽器中前往 `http://<ip-address>:5601`。playbook 完成後，OpenSearch Dashboards 可能需要約 1 分鐘才能啟動。
+1. 若要存取 OpenSearch Dashboards，請在瀏覽器中前往 `http://<ip-address>:5601`。playbook 執行完畢後，OpenSearch Dashboards 大約需要 1 分鐘才能啟動。
+
+## 重新執行 playbook
+
+playbook 每次執行時都會同時重新啟動所有目標主機上的 OpenSearch，因此節點重新啟動期間叢集將無法使用。請規劃重新執行的時機，例如套用組態變更時，安排在維護時段內進行。
+
+預設情況下，playbook 會在控制節點的 `/tmp/opensearch-nodecerts` 目錄中產生 TLS 憑證。當您重新執行 playbook 時，如果該目錄存在，它會重複使用這些憑證，且不會再次將安全性組態複製到目標主機。如果該目錄不存在，例如控制節點重新啟動且 `/tmp` 已被清除，playbook 會產生新的根憑證授權單位 (CA) 以及新的節點與管理員憑證，並將它們複製到所有目標主機。驗證叢集憑證的用戶端屆時將需要新的 `root-ca.pem` 檔案。
+
+若要透過重複執行 playbook 來管理現有叢集，請在 `inventories/opensearch/group_vars/all/all.yml` 檔案中將 `iac_enable` 設定為 `true`。在此模式下，playbook 每次執行都會更新組態檔，但只有在至少有一部主機缺少至少一個憑證時才會複製新憑證，例如將主機加入叢集時。在這種情況下，它會取代所有主機上的憑證。
+
+### 輪替憑證
+
+產生的憑證有效期為 `cert_valid_days` 變數設定的天數（預設為 `730`）。若要改用新憑證取代，請刪除控制節點上的 `/tmp/opensearch-nodecerts` 目錄，確認 `iac_enable` 為 `false`，然後重新執行 playbook。所有節點會同時使用新憑證重新啟動。
+
+## 升級使用 playbook 安裝的叢集
+
+此 playbook 會安裝 OpenSearch，但不會升級 OpenSearch。變更 `os_version` 後重新執行 playbook 並非支援的升級方法，原因如下：
+
+- playbook 會將 OpenSearch 封存檔下載到每個目標主機上的 `/tmp/opensearch.tar.gz`，且若該檔案已存在，便會略過下載。除非 `iac_enable` 為 `true`，否則仍保有先前執行所下載封存檔的主機不會安裝新版本。
+- 安裝新版本時，playbook 會將其解壓縮並覆蓋 `/usr/share/opensearch` 中的現有安裝，因此先前版本中不屬於新版本的檔案仍會留在安裝目錄中。
+- playbook 會同時重新啟動所有節點，而不是一次重新啟動一個節點。
+
+若要升級使用 playbook 安裝的叢集，請依照[滾動升級]({{site.url}}{{site.baseurl}}/migrate-or-upgrade/rolling-upgrade/)程序，一次升級一個節點。playbook 會將 OpenSearch 安裝在 `/usr/share/opensearch` 中，並將組態、憑證及 Security 外掛程式組態儲存在 `/usr/share/opensearch/config` 中。在每個節點上安裝新版本時，請保留這些檔案。升級所有節點後，請更新 `inventories/opensearch/group_vars/all/all.yml` 中的 `os_version` 和 `os_dashboards_version`，使其與已安裝的版本相符。
 
 ## 相關文件
 

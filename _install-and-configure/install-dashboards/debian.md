@@ -25,8 +25,8 @@ The following liquid syntax declares a variable, major_version_mask, which is tr
 
 ## 從套件安裝 OpenSearch Dashboards
 
-1. 直接從 [OpenSearch 下載頁面](https://opensearch.org/downloads.html){:target='\_blank'} 下載所需版本的 Debian 套件。Debian 套件提供 **x64** 與 **arm64** 兩種架構的版本。
-1. 在 CLI 中，使用 `dpkg` 安裝。
+1. 直接從 [OpenSearch 下載頁面](https://opensearch.org/downloads.html){:target='\_blank'}下載所需版本的 Debian 套件。Debian 套件同時提供 **x64** 與 **arm64** 架構。
+1. 從命令列使用 `dpkg` 進行安裝。
 
    x64：
    ```bash
@@ -40,7 +40,7 @@ The following liquid syntax declares a variable, major_version_mask, which is tr
    ```
    {% include copy.html %}
 
-   若為 OpenSearch Dashboards 3.7 及更新版本的全新安裝，您可以在安裝命令前加上 `DISABLE_SECURITY_DASHBOARDS_PLUGIN=true` 環境變數並搭配 `env` 關鍵字，以停用 Security Dashboards 外掛程式：
+   對於 OpenSearch Dashboards 3.7 及之後版本的新安裝，您可以在安裝命令前加上 `env` 關鍵字與 `DISABLE_SECURITY_DASHBOARDS_PLUGIN=true` 環境變數，以停用 Security Dashboards 外掛程式：
    ```bash
    sudo env DISABLE_SECURITY_DASHBOARDS_PLUGIN=true dpkg -i opensearch-dashboards-{{site.opensearch_dashboards_version}}-linux-x64.deb
    ```
@@ -64,13 +64,13 @@ The following liquid syntax declares a variable, major_version_mask, which is tr
     ```
     {% include copy.html %}
 
-1. 確認 OpenSearch Dashboards 已正確啟動：
+1. 驗證 OpenSearch Dashboards 是否正確啟動：
     ```bash
     sudo systemctl status opensearch-dashboards
     ```
     {% include copy.html %}
 
-1. 在網頁瀏覽器中，前往 `http://localhost:5601`，並使用您安裝 OpenSearch 時設定的自訂管理員密碼，以 `admin` 使用者身分登入。如果 OpenSearch Dashboards 執行於遠端主機，請將 `localhost` 替換為該主機的 IP 位址或 DNS 名稱。如需更多資訊，請參閱[存取 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#accessing-opensearch-dashboards)。
+1. 在網頁瀏覽器中前往 `http://localhost:5601`，並使用安裝 OpenSearch 時設定的[自訂管理員密碼]({{site.url}}{{site.baseurl}}/security/configuration/passwords/#setting-the-initial-admin-password)，以 `admin` 使用者身分登入。如果 OpenSearch Dashboards 執行於遠端主機，請將 `localhost` 替換為該主機的 IP 位址或 DNS 名稱。如需更多資訊，請參閱[存取 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#accessing-opensearch-dashboards)。
 
 ### 指紋驗證
 
@@ -102,7 +102,7 @@ Debian 套件並未簽署。如果您想驗證指紋，OpenSearch Project 提供
 
 ## 從 APT 儲存庫安裝 OpenSearch Dashboards
 
-APT 是 Debian 系列作業系統的主要套件管理工具，可讓您從 APT 儲存庫下載並安裝 Debian 套件。
+APT 是以 Debian 為基礎之作業系統的主要套件管理工具，可讓您從 APT 儲存庫下載並安裝 Debian 套件。
 
 1. 安裝必要的套件：
    ```bash
@@ -116,7 +116,7 @@ APT 是 Debian 系列作業系統的主要套件管理工具，可讓您從 APT 
    ```
    {% include copy.html %}
 
-1. 匯入公開 GPG 金鑰。此金鑰用於驗證 APT 儲存庫已簽署。
+1. 匯入公開 GPG 金鑰。此金鑰用於驗證 APT 儲存庫的簽章。
     ```bash
     curl -o- https://artifacts.opensearch.org/publickeys/opensearch-release.pgp | sudo gpg --dearmor --batch --yes -o /etc/apt/keyrings/opensearch-release-keyring
     ```
@@ -134,26 +134,26 @@ APT 是 Debian 系列作業系統的主要套件管理工具，可讓您從 APT 
     ```
     {% include copy.html %}
 
-1. （選用）自 2024 年 5 月 22 日起，APT 儲存庫的 `Origin` 與 `Label` 值已於[此變更](https://github.com/opensearch-project/opensearch-build/issues/4485)中更新。如果您在此日期之前建立了 APT 儲存庫，請執行下列命令以接受更新後的發行資訊：
+1. （選用）自 2024 年 5 月 22 日起，APT 儲存庫的 `Origin` 與 `Label` 值已隨[此變更](https://github.com/opensearch-project/opensearch-build/issues/4485)更新。若您在此日期之前建立 APT 儲存庫，請執行下列命令以接受更新後的發行版本資訊：
     ```bash
     sudo apt-get update --allow-releaseinfo-change
     ```
     {% include copy.html %}
 
-1. 新增儲存庫資訊後，列出所有可用的 OpenSearch Dashboards 版本：
+1. 新增儲存庫資訊後，列出 OpenSearch Dashboards 所有可用的版本：
    ```bash
    sudo apt list -a opensearch-dashboards
    ```
    {% include copy.html %}
 
 1. 選擇您要安裝的 OpenSearch Dashboards 版本：
-   - 除非另有指示，否則會安裝最新可用的 OpenSearch Dashboards 版本：
+   - 除非另有指示，否則會安裝 OpenSearch Dashboards 的最新可用版本：
    ```bash
    sudo apt-get install opensearch-dashboards
    ```
    {% include copy.html %}
 
-   - 若要安裝特定版本的 OpenSearch Dashboards，請在套件名稱後加上版本號碼：
+   - 若要安裝特定版本的 OpenSearch Dashboards，請在套件名稱後方加上版本號碼：
    ```bash
    sudo apt-get install opensearch-dashboards={{site.opensearch_dashboards_version}}
    ```
@@ -177,7 +177,7 @@ APT 是 Debian 系列作業系統的主要套件管理工具，可讓您從 APT 
     ```
     {% include copy.html %}
 
-1. 在網頁瀏覽器中，前往 `http://localhost:5601`，並使用您安裝 OpenSearch 時設定的自訂管理員密碼，以 `admin` 使用者身分登入。如果 OpenSearch Dashboards 執行於遠端主機，請將 `localhost` 替換為該主機的 IP 位址或 DNS 名稱。如需更多資訊，請參閱[存取 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#accessing-opensearch-dashboards)。
+1. 在網頁瀏覽器中前往 `http://localhost:5601`，並使用您在安裝 OpenSearch 時設定的[自訂管理員密碼]({{site.url}}{{site.baseurl}}/security/configuration/passwords/#setting-the-initial-admin-password)以 `admin` 使用者身分登入。若 OpenSearch Dashboards 執行於遠端主機，請將 `localhost` 替換為該主機的 IP 位址或 DNS 名稱。如需詳細資訊，請參閱[存取 OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/index/#accessing-opensearch-dashboards)。
 
 ## （選用）允許來自其他主機的存取
 
