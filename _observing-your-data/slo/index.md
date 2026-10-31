@@ -2,7 +2,9 @@
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: "SLO"
-nav_order: 125
+parent: Application performance monitoring
+grand_parent: Observability workspace apps
+nav_order: 60
 has_children: false
 redirect_from:
   - /observing-your-data/slo/
@@ -15,7 +17,7 @@ redirect_from:
 這是實驗性功能，不建議在正式環境中使用。如欲了解功能的最新進展，或想提供意見回饋，歡迎前往 [OpenSearch 論壇](https://forum.opensearch.org/)參與討論。
 {: .warning}
 
-服務等級目標 (SLO) 可讓您為服務定義可用性與延遲目標，將支援的記錄與警示規則部署到與 Prometheus 相容的 ruler，並在 OpenSearch Dashboards 的專屬檢視中追蹤應用程式健康狀態、錯誤預算與預算消耗率 (burn rate)。
+服務等級目標 (SLO) 可讓您為服務定義可用性與延遲目標，將配套的記錄與警示規則部署到與 Prometheus 相容的 ruler，並在 OpenSearch Dashboards 的專屬檢視中追蹤應用程式健康狀態、錯誤預算與預算消耗率 (burn rate)。
 
 SLO 會彙整來自 OpenSearch 監視器與 Prometheus 警示規則的警示，讓您不必在多個工具之間切換，即可跨資料來源監控服務健康狀態。
 
@@ -85,7 +87,7 @@ SLI 定義會決定 ruler 必須能夠查詢哪些資料：
 
 ## 存取 SLO
 
-如欲存取 SLO，請從首頁選取您的可觀測性工作區，或者如果您還沒有工作區，請建立一個（請參閱[可觀測性工作區](#observability-workspace)）。然後前往 **Application Performance** > **SLOs**。
+若要存取 SLO，請從首頁選取您的可觀測性工作區；若尚未建立，請先建立一個（請參閱 [可觀測性工作區](#observability-workspace)）。然後在左側導覽選取 **Application performance** > **SLOs**。
 
 
 ## 建立 SLO

@@ -3,7 +3,7 @@
 layout: default
 title: "資料集"
 nav_order: 10
-parent: Using Discover for observability
+parent: Observability workspace apps
 redirect_from:
   - /observability-plugin/datasets/
 ---
@@ -38,16 +38,19 @@ OpenSearch 支援下列資料集類型。
 
    ```yaml
    workspace.enabled: true
-   data_source.enabled: true
    explore.enabled: true
    explore.discoverTraces.enabled: true
    datasetManagement.enabled: true
+   # Required to create datasets from indexes in other OpenSearch clusters
+   data_source.enabled: true
    ```
    {% include copy.html %}
 
+   `data_source.enabled` 設定可啟用多個資料來源。如需詳細資訊，請參閱[設定及使用多個資料來源]({{site.url}}{{site.baseurl}}/dashboards/management/multi-data-sources/)。啟用多個資料來源時，部分傳統可觀測性應用程式無法使用。如需詳細資訊，請參閱[傳統可觀測性應用程式]({{site.url}}{{site.baseurl}}/observing-your-data/classic-observability-apps/)。
+
    更新組態檔案後，請重新啟動 OpenSearch Dashboards，變更才會生效。
 
-1. **將資料編製索引**：您的記錄或追蹤資料必須已編製索引至 OpenSearch。
+1. **編製資料索引**：您的記錄檔或追蹤資料必須已編製索引至 OpenSearch。
 
 1. **確保具備適當權限**：您需要具備在工作區中建立及管理資料集的權限。
 
@@ -118,21 +121,21 @@ OpenSearch 支援下列資料集類型。
 
 資料集會與 Discover 介面整合，以便探索您的資料。
 
-### 記錄檔資料集
+### 記錄資料集
 
-若要分析記錄檔資料集，請依照下列步驟進行：
+若要分析記錄資料集，請依照下列步驟操作：
 
-1. 瀏覽至 **Discover** > **Logs**。
-2. 從資料集選取器中，選取您的記錄檔資料集。
-3. 使用 Piped Processing Language (PPL) 查詢來探索及分析您的記錄資料。
+1. 在左側導覽中選取 **Logs**。
+2. 從資料集選取器中選取您的記錄資料集。
+3. 使用 Piped Processing Language (PPL) 查詢來探索與分析您的記錄資料。
 
 ### 追蹤資料集
 
-若要分析追蹤資料集，請依照下列步驟進行：
+若要分析追蹤資料集，請依照下列步驟操作：
 
-1. 瀏覽至 **Discover** > **Traces**。
+1. 在左側導覽中，選取 **Application performance** > **Traces**。
 2. 從資料集選取器中選取您的追蹤資料集。
-3. 探索 span 資料和追蹤流程。
+3. 探索 span 資料與追蹤流程。
 
 ## 相關文件
 

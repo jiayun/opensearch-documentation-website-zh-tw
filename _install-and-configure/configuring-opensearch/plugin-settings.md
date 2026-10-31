@@ -14,7 +14,7 @@ nav_order: 140
 
 ## Alerting 外掛程式設定
 
-如需警示設定的相關資訊，請參閱[警示設定]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/settings/#alerting-settings)。
+如需警示設定的相關資訊，請參閱[警示設定]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/settings/)。
 
 ## Anomaly Detection 外掛程式設定
 

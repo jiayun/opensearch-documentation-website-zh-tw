@@ -75,7 +75,7 @@ dependencies {
 
 ## 範例資料
 
-以下各節中的範例程式使用 `Student` 類別來表示文件。請使用下列包裝類別，此類別將 `gpa` 宣告為 Boxed `Double`，使部分更新能正確序列化：
+以下各節中的範例程式使用 `Student` 類別來表示文件。請使用下列包裝類別，此類別將 `gpa` 宣告為裝箱型別 `Double`，使部分更新能正確序列化：
 
 ```java
 public class Student {
@@ -124,7 +124,6 @@ public class Student {
 
 ```java
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLEngine;
 
 import org.apache.hc.client5.http.auth.AuthScope;
 import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
@@ -132,10 +131,8 @@ import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
 import org.apache.hc.client5.http.impl.nio.PoolingAsyncClientConnectionManager;
 import org.apache.hc.client5.http.impl.nio.PoolingAsyncClientConnectionManagerBuilder;
 import org.apache.hc.client5.http.ssl.ClientTlsStrategyBuilder;
-import org.apache.hc.core5.function.Factory;
 import org.apache.hc.core5.http.HttpHost;
 import org.apache.hc.core5.http.nio.ssl.TlsStrategy;
-import org.apache.hc.core5.reactor.ssl.TlsDetails;
 import org.apache.hc.core5.ssl.SSLContextBuilder;
 import org.opensearch.client.opensearch.OpenSearchClient;
 import org.opensearch.client.transport.OpenSearchTransport;
@@ -158,13 +155,6 @@ public class OpenSearchClientExample {
     builder.setHttpClientConfigCallback(httpClientBuilder -> {
       final TlsStrategy tlsStrategy = ClientTlsStrategyBuilder.create()
         .setSslContext(sslcontext)
-        // See https://issues.apache.org/jira/browse/HTTPCLIENT-2219
-        .setTlsDetailsFactory(new Factory<SSLEngine, TlsDetails>() {
-          @Override
-          public TlsDetails create(final SSLEngine sslEngine) {
-            return new TlsDetails(sslEngine.getSession(), sslEngine.getApplicationProtocol());
-          }
-        })
         .build();
 
       final PoolingAsyncClientConnectionManager connectionManager = PoolingAsyncClientConnectionManagerBuilder
@@ -277,7 +267,7 @@ dependencies {
 
 在下列範例中，請將端點替換為您的網域端點，該端點列於 Amazon OpenSearch Service 主控台中的網域詳細資訊頁面。
 
-`AwsSdk2Transport` 會從 AWS SDK 預設憑證提供者鏈取得 AWS 憑證。下列範例示範如何連線至 Amazon OpenSearch Service：
+`AwsSdk2Transport` 會從 AWS SDK 預設認證資訊提供者鏈取得 AWS 認證資訊。下列範例示範如何連線至 Amazon OpenSearch Service：
 
 ```java
 import org.opensearch.client.opensearch.OpenSearchClient;
@@ -503,7 +493,6 @@ DeleteIndexResponse deleteIndexResponse = client.indices().delete(deleteIndexReq
 
 ```java
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLEngine;
 
 import org.apache.hc.client5.http.auth.AuthScope;
 import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
@@ -511,10 +500,8 @@ import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
 import org.apache.hc.client5.http.impl.nio.PoolingAsyncClientConnectionManager;
 import org.apache.hc.client5.http.impl.nio.PoolingAsyncClientConnectionManagerBuilder;
 import org.apache.hc.client5.http.ssl.ClientTlsStrategyBuilder;
-import org.apache.hc.core5.function.Factory;
 import org.apache.hc.core5.http.HttpHost;
 import org.apache.hc.core5.http.nio.ssl.TlsStrategy;
-import org.apache.hc.core5.reactor.ssl.TlsDetails;
 import org.apache.hc.core5.ssl.SSLContextBuilder;
 import org.opensearch.client.json.JsonData;
 import org.opensearch.client.opensearch.OpenSearchClient;
@@ -554,12 +541,6 @@ public class OpenSearchClientExample {
     builder.setHttpClientConfigCallback(httpClientBuilder -> {
       final TlsStrategy tlsStrategy = ClientTlsStrategyBuilder.create()
         .setSslContext(sslcontext)
-        .setTlsDetailsFactory(new Factory<SSLEngine, TlsDetails>() {
-          @Override
-          public TlsDetails create(final SSLEngine sslEngine) {
-            return new TlsDetails(sslEngine.getSession(), sslEngine.getApplicationProtocol());
-          }
-        })
         .build();
 
       final PoolingAsyncClientConnectionManager connectionManager =

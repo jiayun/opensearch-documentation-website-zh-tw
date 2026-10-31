@@ -2,7 +2,7 @@
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: "異常偵測器存取控制"
-nav_order: 40
+nav_order: 50
 parent: Anomaly detection
 has_children: false
 redirect_from:
@@ -11,9 +11,11 @@ redirect_from:
 
 # 異常偵測器存取控制
 
-Anomaly Detection 與 Security 外掛程式的資源共用及存取控制架構整合，為異常偵測器資源提供文件層級的授權。此機制以更具彈性的共用系統取代舊版的 `plugins.anomaly_detection.filter_by_backend_roles` 設定，讓資源擁有者能夠將特定存取層級授予使用者、角色或後端角色。
+異常偵測 (Anomaly Detection) 與 Security 外掛程式的資源共享及存取控制架構整合，為異常偵測器資源提供文件層級授權。這取代了舊有的 `plugins.anomaly_detection.filter_by_backend_roles` 設定，改用更彈性的共享系統，讓資源擁有者能夠授予使用者、角色或後端角色特定的存取層級。
 
-如需完整的架構概念與 API，請參閱[資源共用與存取控制]({{site.url}}{{site.baseurl}}/security/access-control/resources/)。
+如需預先定義的異常偵測角色與權限，請參閱[異常偵測安全性]({{site.url}}{{site.baseurl}}/observing-your-data/ad/security/)。
+
+如需端對端架構概念與 API，請參閱[資源共享與存取控制]({{site.url}}{{site.baseurl}}/security/access-control/resources/)。
 {: .note}
 
 ## 資源組態

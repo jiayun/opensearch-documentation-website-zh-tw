@@ -3,7 +3,7 @@
 layout: default
 title: "異常偵測視覺化與儀表板"
 parent: Anomaly detection
-nav_order: 50
+nav_order: 10
 ---
 
 # 異常偵測儀表板與視覺化
@@ -16,12 +16,6 @@ nav_order: 50
 
 ## 入門 
 
-開始之前，您必須：
-
-- 已安裝 OpenSearch 與 OpenSearch Dashboards 2.9 或更新版本。請參閱[安裝 OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/)。
-- 已安裝 Anomaly Detection 外掛程式 2.9 或更新版本。請參閱[安裝 OpenSearch 外掛程式]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/)。
-- 已安裝 Anomaly Detection Dashboards 外掛程式 2.9 或更新版本。請參閱[管理 OpenSearch Dashboards 外掛程式]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/plugins/)以開始使用。
-
 ## 異常偵測視覺化的一般需求
 
 異常偵測視覺化會以時間序列圖表顯示，讓您快速掌握異常發生的時間點。您最多可在圖表上顯示 10 個指標，每個序列都可以在圖表上以一條線顯示。請注意，圖表上只會顯示即時異常。如需即時與歷史異常偵測的詳細資訊，請參閱[異常偵測，步驟 3：設定偵測器工作]({{site.url}}{{site.baseurl}}/observing-your-data/ad/index/#step-3-set-up-detector-jobs)。
@@ -31,7 +25,7 @@ nav_order: 50
 - 必須是[折線圖]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualize-app/line-charts/)，且每個序列都以一條線顯示
 - 必須至少包含一個 Y 軸指標彙總
 - 不得包含非 Y 軸的指標彙總類型
-- X 軸桶 (bucket) 必須使用日期長條圖 (date histogram) 彙總類型
+- X 軸桶 (bucket) 必須使用日期直方圖 (date histogram) 彙總類型
 - X 軸必須位於底部
 - 必須定義一個 X 軸彙總桶
 - 必須具有有效的時間型 X 軸
@@ -58,15 +52,15 @@ nav_order: 50
 
 ## 將異常偵測器新增至視覺化
 
-使用單一介面新增、檢視及編輯您要與視覺化建立關聯的異常偵測器。延續前述教學中的視覺化與儀表板，請依照下列步驟將異常偵測器與視覺化建立關聯：
+使用單一介面來新增、檢視及編輯您想與視覺化建立關聯的異常偵測器。延續前一個教學中的視覺化與儀表板，請依照下列步驟將異常偵測器與視覺化建立關聯：
  
-1. 在視覺化面板中選取省略符號圖示 ({::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/ellipsis-icon.png" class="inline-icon" alt="ellipsis icon"/>{:/})，然後選取 **Anomaly Detection**。
+1. 從視覺化面板選取省略號圖示 ({::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/ellipsis-icon.png" class="inline-icon" alt="ellipsis icon"/>{:/})，然後選取 **Anomaly Detection**。
 2. 選取 **Associate a detector**。
-3. 從 **Select detector to associate** 下拉式選單中選取偵測器。下拉式選單中只會列出符合資格的偵測器。
-4. 檢視偵測器的基本資訊。若要檢視完整詳細資料，請選取 **View detector page** 以開啟 Anomaly Detection 外掛程式頁面。
+3. 從 **Select detector to associate** 下拉式功能表中選取偵測器。下拉式功能表只會列出符合資格的偵測器。
+4. 檢視偵測器的基本資訊。若要檢視完整詳細資料，請選取 **View detector page**，在 Anomaly Detection 中開啟該偵測器。
 5. 選取 **Associate detector**。現有的偵測器現在已與視覺化建立關聯，如下圖所示。
 
-![建立偵測器關聯的介面與確認訊息]({{site.url}}{{site.baseurl}}/images/dashboards/anomaly-detect-dashboard.png){: width="800" height="800" }
+![關聯偵測器的介面與確認訊息]({{site.url}}{{site.baseurl}}/images/dashboards/anomaly-detect-dashboard.png){: width="800" height="800" }
 
 ## 重新整理視覺化
 

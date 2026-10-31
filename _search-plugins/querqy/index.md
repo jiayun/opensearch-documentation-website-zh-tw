@@ -12,10 +12,10 @@ nav_order: 60
 
 # Querqy
 
-Querqy for OpenSearch 是一個社群外掛程式，用於查詢重寫，可提升搜尋相關性。它透過套用規則來提升、壓低、篩選及重新導向搜尋結果等能力，讓 OpenSearch 在比對與評分上更精確。
+Querqy for OpenSearch 是一個用於查詢改寫的社群外掛程式，可提升搜尋相關性。它會套用提升、壓低、篩選及重新導向搜尋結果等規則，讓 OpenSearch 在比對與評分上更精確。
 
-Querqy 支援 OpenSearch 2.19.2 及更早版本。
-{: .warning }
+Querqy 支援最高至 3.8.0 的 OpenSearch 版本。如需支援的 OpenSearch 版本清單，請參閱 [Querqy for OpenSearch 發行版本](https://github.com/querqy/querqy-opensearch/releases)。
+{: .note }
 
 如需更多資訊，請參閱 [Querqy 文件](https://docs.querqy.org/querqy/index.html)。
 

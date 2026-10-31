@@ -30,11 +30,13 @@ redirect_from:
 
 ## 變數類型
 
-OpenSearch Dashboards 支援兩種變數類型：
+OpenSearch Dashboards 支援下列變數類型：
 
-- **查詢變數**：選項是使用 Piped Processing Language (PPL) 或 Prometheus Query Language (PromQL) 查詢，從資料來源動態擷取而來。當值會隨時間變化或取決於基礎資料時，請使用查詢變數，例如記錄檔中的服務名稱或指標中的可用區域。
+- **查詢變數**：選項會使用 Piped Processing Language (PPL) 或 Prometheus Query Language (PromQL) 查詢，從資料來源動態擷取。當值會隨時間變動或取決於基礎資料時，請使用查詢變數，例如記錄檔中的服務名稱或指標中的可用區域。若為 Prometheus 資料連線，您可以使用 PromQL 查詢類型（標籤名稱、標籤值、指標或序列）來建構查詢，而不必撰寫原始查詢。如需詳細資訊，請參閱[使用 PromQL 查詢變數]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/dashboard-variables/managing-variables/#using-a-promql-query-variable)。
 
-- **自訂變數**：選項以靜態清單的形式手動定義。針對預先定義的類別，例如環境類型（`dev`、`staging`、`prod`）或固定的狀態碼，請使用自訂變數。
+- **自訂變數**：選項會手動定義為靜態清單。預先定義的分類（例如環境類型（`dev`、`staging`、`prod`）或固定狀態碼）請使用自訂變數。
+
+- **文字變數**：您在變數列中輸入的單一值。無法事先列出的值（例如搜尋詞或閾值）請使用文字變數。
 
 ## 變數語法
 
@@ -66,44 +68,40 @@ explore.enabled: true
 
 1. 前往 OpenSearch Dashboards 首頁。
 1. 選取 **Create workspace**。
-1. 輸入工作區名稱（例如 `My Observability`）。
-1. 在 **Use case** 下方，選取 **Observability**。
+1. 輸入工作區名稱 (例如 `My Observability`)。
+1. 在 **Use case and features** 區段中，保持選取 **Observability**。
 1. 選取 **Create workspace**。
 
-如需詳細資訊，請參閱[建立工作區]({{site.url}}{{site.baseurl}}/dashboards/workspace/create-workspace/)。
+如需更多資訊，請參閱 [建立工作區]({{site.url}}{{site.baseurl}}/dashboards/workspace/create-workspace/)。
 
 ### 步驟 2：設定範例資料
 
-1. 在工作區中，前往 **Manage workspace** > **Sample data**，並為 Web 記錄資料集選取 **Add data**。
-1. 為範例資料建立索引模式：
-   1. 前往 **Manage workspace** > **Index patterns**。
-   1. 選取 **Create index pattern**。
-   1. 在 **Index pattern name** 欄位中，輸入 `opensearch_dashboards_sample_data_logs`。
-   1. 選取 **Next step**。
-   1. 在 **Time field** 下拉式選單中，選取 `timestamp`。
-   1. 選取 **Create index pattern**。
+在工作區中，依序前往 **Manage workspace** > **Sample data**，然後為 Web 記錄檔資料集選取 **Add data**。新增範例資料也會建立 `opensearch_dashboards_sample_data_logs` 索引模式。
 
 ### 步驟 3：建立變數
 
 1. 在左側導覽中選取 **Dashboards**。
-1. 選取 **Create** > **Dashboard**。
-1. 輸入標題（例如 `Log Analysis`）並選取 **Save** 以儲存儀表板。
+1. 選取 **Create Dashboard**。
+1. 輸入標題（例如，`Log Analysis`），然後選取 **Save** 以儲存儀表板。儲存後，儀表板會切換至檢視模式。
+1. 開啟 **Edit** 切換開關。
 1. 在儀表板頂端，選取 **Add variable**。
-1. 設定下列設定：
-   - **Name**：`extension`
-   - **Type**：**Query**
-   - **Dataset**：選取 `opensearch_dashboards_sample_data_logs`
-   - **Options Query**：
+1. 在 **Name** 欄位中，輸入 `extension`。
+1. 在 **Type** 下拉式選單中，保持選取 **Query**。
+1. 在 **Query options** 區段中，選取 **Open variable editor**。
+1. 將查詢語言保持設定為 **PPL**。確認選取的資料集為 `opensearch_dashboards_sample_data_logs`。若要選擇其他資料集，請選取資料集名稱。
+1. 輸入下列查詢：
 
-     ```sql
-     source=opensearch_dashboards_sample_data_logs | stats count() by extension | fields extension
-     ```
-     {% include copy.html %}
+   ```sql
+   source=opensearch_dashboards_sample_data_logs | stats count() by extension | fields extension
+   ```
+   {% include copy.html %}
 
-1. 選取 **Preview** 以驗證結果。預覽應顯示下列值：`css`、`deb`、`gz`、`rpm` 和 `zip`。
+1. 若要驗證結果，請選取 **Preview**。預覽會顯示 `css`、`deb`、`gz`、`rpm`、`zip`，並針對沒有副檔名的文件顯示空值。
+1. 在 **Value field** 下拉式選單中，確認已選取 `extension`。預覽會自動填入此欄位。
+1. 選取 **Apply** 以儲存查詢並關閉編輯器。
 1. 選取 **Add variable** 以儲存。
 
-`extension` 變數現在會顯示在儀表板頂端，並附有一個下拉式選單。
+`extension` 變數現在會顯示在儀表板頂端，並附有下拉式選單。
 
 如需詳細資訊，請參閱[管理儀表板變數]({{site.url}}{{site.baseurl}}/dashboards/visualize/visualization-editor/dashboard-variables/managing-variables/)。
 

@@ -3,7 +3,8 @@
 layout: default
 title: "設定遙測資料匯入"
 nav_order: 10
-parent: Application Performance Monitoring
+parent: Application performance monitoring
+grand_parent: Observability workspace apps
 ---
 
 # 設定遙測資料匯入
@@ -150,15 +151,15 @@ service-map-pipeline:
 
 ### 管線架構
 
-Data Prepper 管線透過下列步驟處理遙測資料：
+Data Prepper 管線會依下列步驟處理遙測資料：
 
-1. 入口管線（`otlp-pipeline`）會在連接埠 21893 接收所有遙測資料，並將記錄檔和追蹤路由至各自的子管線。
+1. 進入管線（`otlp-pipeline`）會在連接埠 21893 上接收所有遙測資料，並將記錄檔與追蹤分別路由至各自的子管線。
 2. 記錄檔管線（`otel-logs-pipeline`）會將 `time` 欄位對應至 `@timestamp`，並使用 `log-analytics-plain` 索引類型將記錄檔寫入 OpenSearch。
-3. 追蹤管線（`otel-traces-pipeline`）會將追蹤分送至原始資料儲存管線和服務對應圖管線。
-4. 原始追蹤管線（`traces-raw-pipeline`）會使用 `otel_traces` 處理器處理個別追蹤跨度，並使用 `trace-analytics-plain-raw` 索引類型將其儲存在 OpenSearch 中。
-5. 服務對應圖管線（`service-map-pipeline`）會使用 `otel_apm_service_map` 處理器產生服務相依性對應圖和 RED 指標。服務對應圖的拓撲資料會寫入 OpenSearch，而 RED 指標則透過遠端寫入匯出至 Prometheus。
+3. 追蹤管線（`otel-traces-pipeline`）會將追蹤分送至原始儲存管線與服務對應管線。
+4. 原始追蹤管線（`traces-raw-pipeline`）會使用 `otel_traces` 處理器處理個別追蹤跨度，並使用 `trace-analytics-plain-raw` 索引類型將其儲存至 OpenSearch。
+5. 服務對應管線（`service-map-pipeline`）會使用 `otel_apm_service_map` 處理器產生服務相依性對應與 RED 指標。服務對應拓撲資料會寫入 OpenSearch，RED 指標則透過遠端寫入匯出至 Prometheus。
 
-`otel_apm_service_map` 處理器的兩個主要組態選項為 `group_by_attributes`（決定服務在應用程式對應圖中的分組方式）和 `window_duration`（設定彙總追蹤資料的時間範圍）。如需完整的組態詳細資訊，請參閱 [APM 服務對應圖處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/otel-apm-service-map/)。
+`otel_apm_service_map` 處理器的兩個關鍵組態選項為 `group_by_attributes`（決定服務在拓撲對應中的分組方式）與 `window_duration`（設定彙總追蹤資料的時間範圍）。如需完整的組態詳細資訊，請參閱 [APM 服務對應處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/otel-apm-service-map/)。
 {: .note}
 
 ## 驗證匯入
@@ -170,11 +171,11 @@ Data Prepper 管線透過下列步驟處理遙測資料：
    - `otel-v2-apm-service-map`：服務拓撲資料。
    - `logs-otel-v1-*`：應用程式記錄檔。
 
-2. 驗證 Data Prepper 的遠端寫入目標在您的 Prometheus 執行個體中是否處於作用中狀態。
+2. 驗證 Data Prepper 遠端寫入目標在您的 Prometheus 執行個體中是否處於作用中狀態。
 
-3. 在 OpenSearch Dashboards 中，前往 **Observability** > **APM**，確認您的服務出現在[服務]({{site.url}}{{site.baseurl}}/observing-your-data/apm/services/)目錄和[應用程式對應圖]({{site.url}}{{site.baseurl}}/observing-your-data/apm/application-map/)中。
+3. 在您的 Observability 工作區中，選取左側導覽中的 **Application performance** > **Services**，確認您的服務出現在 [服務]({{site.url}}{{site.baseurl}}/observing-your-data/apm/services/) 目錄和 [拓撲圖]({{site.url}}{{site.baseurl}}/observing-your-data/apm/application-map/) 中。
 
-請確保 OTel Collector、Data Prepper、OpenSearch 和 Prometheus 之間的所有連接埠對應皆正確。連接埠不符是匯入失敗的常見原因。
+請確保 OTel Collector、Data Prepper、OpenSearch 和 Prometheus 之間的所有連接埠對應皆正確。連接埠不相符是匯入失敗的常見原因。
 {: .warning}
 
 ## 後續步驟

@@ -3,6 +3,7 @@
 layout: default
 title: "分析 Jaeger 追蹤資料"
 parent: Trace analytics
+grand_parent: Classic observability apps
 nav_order: 55
 redirect_from:
   - /observability-plugin/trace/trace-analytics-jaeger/
@@ -10,20 +11,22 @@ redirect_from:
 
 # 分析 Jaeger 追蹤資料
 
-於 2.5 版推出
+ Introduced 2.5
 {: .label .label-purple }
 
-如果您使用 OpenSearch 作為 [Jaeger](https://www.jaegertracing.io/) 的儲存後端，您可以使用 OpenSearch Dashboards 中的追蹤分析來分析 Jaeger 追蹤資料。追蹤分析會顯示您的服務與作業的錯誤率和延遲。您可以篩選追蹤，並檢查個別追蹤的跨度，以找出服務問題。
+如果您使用 OpenSearch 作為 [Jaeger](https://www.jaegertracing.io/) 的儲存後端，即可在 OpenSearch Dashboards 中使用追蹤分析來分析 Jaeger 追蹤資料。追蹤分析會顯示您的服務與操作的錯誤率和延遲。您可以篩選追蹤，並檢視個別追蹤的追蹤區段（span），以找出服務問題。
 
-追蹤分析支援兩種資料來源。選取 **Data Prepper** 以分析 OpenSearch Data Prepper 匯入至 OpenSearch 的追蹤資料。選取 **Jaeger** 以分析 Jaeger 儲存在 OpenSearch 中的追蹤資料。
+追蹤分析支援兩種資料來源。選取 **Data Prepper** 可分析 OpenSearch Data Prepper 匯入 OpenSearch 的追蹤資料。選取 **Jaeger** 可分析 Jaeger 儲存在 OpenSearch 中的追蹤資料。
+
+若要改用 Data Prepper 匯入追蹤資料，請參閱[追蹤分析入門]({{site.url}}{{site.baseurl}}/observing-your-data/trace/getting-started/)。
 
 ## Jaeger 索引
 
-Jaeger 和 Data Prepper 會將追蹤資料儲存在不同的索引中。Data Prepper 會寫入名為 `otel-v1-apm-span-*` 和 `otel-v1-apm-service-map*` 的索引。Jaeger 會寫入名為 `jaeger-span-*` 和 `jaeger-service-*` 的索引。根據預設，Jaeger 每天會建立新的跨度索引和新的服務索引。
+Jaeger 和 Data Prepper 會將追蹤資料儲存在不同的索引中。Data Prepper 會寫入名為 `otel-v1-apm-span-*` 和 `otel-v1-apm-service-map*` 的索引。Jaeger 會寫入名為 `jaeger-span-*` 和 `jaeger-service-*` 的索引。根據預設，Jaeger 每天會建立新的追蹤區段（span）索引和新的服務索引。
 
 ## 錯誤資料需求
 
-追蹤分析會使用 `tag.error` 欄位來識別包含錯誤的跨度。Jaeger v2 一律會將 `error` 標籤儲存為跨度文件中的欄位，因此不需要額外的組態即可取得錯誤資料。
+追蹤分析會使用 `tag.error` 欄位來識別包含錯誤的追蹤區段。Jaeger v2 一律會將 `error` 標籤儲存為追蹤區段文件中的欄位，因此不需要額外的組態即可取得錯誤資料。
 
 較舊的 Jaeger 收集器預設會將標籤儲存在巢狀陣列中。如果您使用其中一種收集器，請將 `ES_TAGS_AS_FIELDS_ALL` 環境變數設為 `true`。否則，追蹤分析中將無法取得錯誤資料。
 
@@ -237,7 +240,7 @@ curl -sk -u admin:<custom-admin-password> "https://localhost:9200/_cat/indices/j
 
 ### 追蹤詳細資料
 
-若要檢視追蹤的詳細資料，請選取其追蹤 ID。追蹤詳細資料頁面會以時間軸、清單或樹狀結構顯示每個服務花費的時間以及追蹤的跨度。**Payload** 區段會以 JSON 格式顯示跨度文件。
+若要檢視追蹤的詳細資料，請選取其追蹤 ID。追蹤詳細資料頁面會以時間軸、清單或樹狀結構顯示每個服務花費的時間以及追蹤的追蹤區段。**Payload** 區段會以 JSON 格式顯示追蹤區段文件。
 
 ![Jaeger 追蹤詳細資料]({{site.url}}{{site.baseurl}}/images/trace-analytics/trace-details.png)
 

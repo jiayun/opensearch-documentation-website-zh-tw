@@ -3,7 +3,7 @@
 layout: default
 title: "異常偵測 API"
 parent: Anomaly detection
-nav_order: 1
+nav_order: 60
 redirect_from: 
   - /monitoring-plugins/ad/api/
 ---
@@ -545,7 +545,7 @@ POST _plugins/_anomaly_detection/detectors/_validate/model
 GET _plugins/_anomaly_detection/detectors/{detectorId}
 ```
 
-#### 範例回應
+#### 回應範例
 
 ```json
 {
@@ -625,16 +625,16 @@ GET _plugins/_anomaly_detection/detectors/{detectorId}
 }
 ```
 
-_作業（job）_ 是您排程定期執行的項目，因此僅適用於即時異常偵測，不適用於僅執行一次的歷史分析。
+_job_（工作）是您排程定期執行的項目，因此僅適用於即時異常偵測，不適用於只執行一次的歷史分析。
 
-當您啟動即時偵測器時，Anomaly Detection 外掛程式會建立一個作業，若該作業已存在則會更新它。
-當您啟動或重新啟動即時偵測器時，該外掛程式會建立一個新的即時任務（task），記錄執行階段資訊，例如偵測器組態快照、即時作業狀態（初始化中/執行中/已停止）、初始化進度等等。
+當您啟動即時偵測器時，OpenSearch 會建立一個工作；若該工作已存在，則會更新它。
+當您啟動或重新啟動即時偵測器時，OpenSearch 會建立新的即時 task（任務），記錄執行階段的資訊，例如偵測器組態快照、即時工作狀態（初始化中/執行中/已停止）、初始化進度等。
 
-單一偵測器只能有一個即時作業（作業 ID 與偵測器 ID 相同），但可以有多個即時任務，因為每次重新啟動即時作業都會建立新的即時任務。您可以使用 `plugins.anomaly_detection.max_old_ad_task_docs_per_detector` 設定來限制即時任務的數量。
+單一偵測器只能有一個即時工作（工作 ID 與偵測器 ID 相同），但可以有多個即時任務，因為每次重新啟動即時工作都會建立新的即時任務。您可以使用 `plugins.anomaly_detection.max_old_ad_task_docs_per_detector` 設定來限制即時任務的數量。
 
-歷史分析沒有相關聯的作業。當您為偵測器啟動或重新執行歷史分析時，Anomaly Detection 外掛程式會建立一個新的歷史批次任務，追蹤歷史分析的執行階段資訊，例如狀態、協調/工作節點、任務進度等等。您可以使用 `plugins.anomaly_detection.max_old_ad_task_docs_per_detector` 設定來限制歷史任務的數量。
+歷史分析沒有關聯的工作。當您啟動或重新執行偵測器的歷史分析時，OpenSearch 會建立新的歷史批次任務，追蹤歷史分析的執行階段資訊，例如狀態、協調節點/工作節點、任務進度等。您可以使用 `plugins.anomaly_detection.max_old_ad_task_docs_per_detector` 設定來限制歷史任務的數量。
 
-使用 `job=true` 取得即時分析任務資訊。
+使用 `job=true` 取得即時分析任務的資訊。
 
 #### 範例請求
 
@@ -2200,7 +2200,7 @@ POST _plugins/_anomaly_detection/detectors/tasks/_search
 
 下列範例會搜尋即時分析中異常等級大於 0 的異常結果：
 
-#### 請求範例
+#### 範例請求
 
 ```json
 GET _plugins/_anomaly_detection/detectors/results/_search/opensearch-ad-plugin-result-test
@@ -2234,11 +2234,11 @@ POST _plugins/_anomaly_detection/detectors/results/_search/opensearch-ad-plugin-
 }
 ```
 
-如果您像此範例一樣指定自訂結果索引，搜尋結果 API 會同時搜尋預設結果索引和自訂結果索引。
+如果您像此範例一樣指定自訂結果索引，搜尋結果 API 會同時搜尋預設結果索引與自訂結果索引。
 
-如果您未指定自訂結果索引，而只使用 `_plugins/_anomaly_detection/detectors/results/_search` URL，Anomaly Detection 外掛程式就只會搜尋預設結果索引。
+如果您未指定自訂結果索引，而只使用 `_plugins/_anomaly_detection/detectors/results/_search` URL，OpenSearch 只會搜尋預設結果索引。
 
-即時偵測不會將任務 ID 儲存於異常結果中，因此任務 ID 會是 null。
+即時偵測不會將任務 ID 保存在異常結果中，因此任務 ID 會是 null。
 
 如需回應本文欄位的相關資訊，請參閱[異常結果對應]({{site.url}}{{site.baseurl}}/monitoring-plugins/ad/result-mapping/#response-body-fields)。
 
@@ -2498,10 +2498,10 @@ GET _plugins/_anomaly_detection/detectors/{detectorId}/results/_topAnomalies?his
 
 選項 | 說明 | 類型 | 必要
 :--- | :--- |:--- |:--- |
-`size` |  指定您想查看的前幾名桶數量。預設為 10，最大值為 10,000。 | `integer` | 否
+`size` |  指定您想查看的前幾名桶 (bucket) 數量。預設為 10，最大值為 10,000。 | `integer` | 否
 `category_field` |  指定您要彙總的類別欄位集合。預設為偵測器的所有類別欄位。 | `list` | 否
 `order` |  指定 `severity`（異常等級）或 `occurrence`（異常數量）。預設為 `severity`。 | `string` | 否
-`task_id`  |  指定歷史任務 ID，僅查看該特定任務的結果。僅在 `historical=true` 時使用，否則 Anomaly Detection 外掛程式會忽略此參數。 | `string` | 否
+`task_id`  |  指定歷史任務 ID，只查看該特定任務的結果。僅在 `historical=true` 時使用，否則 OpenSearch 會忽略此參數。 | `string` | 否
 `start_time_ms` | 指定開始分析結果的時間，以 Epoch 毫秒表示。 | `long` | 是
 `end_time_ms` |  指定結束分析結果的時間，以 Epoch 毫秒表示。 | `long` | 是
 
@@ -2511,7 +2511,7 @@ GET _plugins/_anomaly_detection/detectors/{detectorId}/results/_topAnomalies?his
 於 1.0 版推出
 {: .label .label-purple }
 
-提供外掛程式執行效能的相關資訊。
+提供異常偵測執行狀況的相關資訊。
 
 若要取得所有統計資料：
 
@@ -2901,7 +2901,7 @@ GET _plugins/_anomaly_detection/detectors/{detectorId}/_profile/total_size_in_by
 
 針對單一實體偵測器：
 
-#### 範例回應
+#### 回應範例
 
 ```json
 {
@@ -3021,11 +3021,11 @@ GET _plugins/_anomaly_detection/detectors/{detectorId}/_profile/total_size_in_by
 
 `total_entities` 參數會顯示實體總數，包括偵測器的類別欄位數量。
 
-對於具有多個類別欄位的偵測器，取得實體總數在即時分析中是一項耗費資源的操作。根據預設，在即時偵測設定檔中，偵測器最多會計數 10,000 個實體。在歷史分析方面，Anomaly Detection 外掛程式預設只會偵測前 1,000 個實體，並將排名前幾名的實體快取在記憶體中，因此取得歷史分析的實體總數並不會耗費太多資源。
+對於具有多個類別欄位的偵測器，在即時分析中取得實體總數是一項耗費資源的作業。依預設，在即時偵測剖析中，偵測器最多會計算 10,000 個實體。對於歷史分析，異常偵測預設只會偵測排名前 1,000 的實體，並將排名最前面的實體快取在記憶體中，因此取得歷史分析的實體總數不會耗費太多資源。
 
-`profile` 操作也會提供每個實體的相關資訊，例如實體的 `last_sample_timestamp` 和 `last_active_timestamp`。`last_sample_timestamp` 會顯示輸入資料來源索引中包含該實體的最後一份文件，而 `last_active_timestamp` 則會顯示該實體模型最後一次出現在模型快取中的時間戳記。
+`profile` 作業也會提供各個實體的資訊，例如實體的 `last_sample_timestamp` 和 `last_active_timestamp`。`last_sample_timestamp` 會顯示輸入資料來源索引中包含該實體的最後一份文件，而 `last_active_timestamp` 則會顯示該實體的模型上次出現在模型快取中的時間戳記。
 
-如果某個實體沒有異常結果，可能是該實體沒有任何樣本資料，或是記憶體和磁碟 I/O 等資源相對於實體數量而言受到限制。
+如果某個實體沒有異常結果，可能是該實體沒有任何樣本資料，或是相對於實體數量，記憶體和磁碟 IO 等資源受到限制。
 
 #### 範例請求
 
@@ -3060,8 +3060,8 @@ GET _plugins/_anomaly_detection/detectors/{detectorId}/_profile?_all=true
 }
 ```
 
-若只要取得歷史分析的設定檔資訊，請指定 `ad_task`。
-對於多類別高基數偵測器，指定 `_all` 是一項成本高昂的操作。
+若只要取得歷史分析的剖析資訊，請指定 `ad_task`。
+對於多類別高基數偵測器，指定 `_all` 是一項耗費資源的作業。
 
 #### 範例請求
 

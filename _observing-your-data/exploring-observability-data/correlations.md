@@ -2,8 +2,8 @@
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: "相互關聯"
-nav_order: 60
-parent: Using Discover for observability
+nav_order: 40
+parent: Observability workspace apps
 redirect_from:
   - /observability-plugin/correlations/
 ---
@@ -20,26 +20,25 @@ redirect_from:
 - 直接從 span 詳細資料面板檢視相關記錄。
 - 在追蹤分析與記錄探索之間順暢切換。
 
-## 必要條件
+## 先決條件
 
-使用相互關聯之前，請確認您已符合下列必要條件：
+使用關聯之前，請確認您已符合下列先決條件：
 
-1. **啟用功能旗標**：在您的 `opensearch_dashboards.yml` 檔案中加入下列設定：
+1. **啟用功能旗標**：將下列設定新增至您的 `opensearch_dashboards.yml` 檔案：
 
    ```yaml
    workspace.enabled: true
-   data_source.enabled: true
    explore.enabled: true
    explore.discoverTraces.enabled: true
    datasetManagement.enabled: true
    ```
    {% include copy.html %}
 
-   更新組態檔後，請重新啟動 OpenSearch Dashboards 以讓變更生效。
+   更新組態檔案後，請重新啟動 OpenSearch Dashboards 讓變更生效。
 
-1. **建立資料集**：您必須已設定至少一個追蹤資料集與一個記錄資料集。詳細說明請參閱[資料集]({{site.url}}{{site.baseurl}}/observing-your-data/exploring-observability-data/datasets/)。
+1. **建立資料集**：您必須至少設定一個追蹤資料集和一個記錄檔資料集。如需詳細指示，請參閱[資料集]({{site.url}}{{site.baseurl}}/observing-your-data/exploring-observability-data/datasets/)。
 
-1. **設定結構對應**：您的記錄資料集必須已設定結構對應。至少需要對應 **Trace ID** 欄位，才能將記錄與追蹤進行比對。
+1. **設定結構描述對應**：您的記錄檔資料集必須設定結構描述對應。您至少需要對應 **Trace ID** 欄位，才能將記錄檔與追蹤相互比對。
 
 ## 相互關聯需求
 
@@ -97,19 +96,19 @@ redirect_from:
 
 建立相互關聯後，您可以在分析追蹤時存取相關記錄。
 
-### 在 span 詳細資料中檢視相關記錄
+### 在 span 詳細資訊中檢視相關的記錄
 
-1. 前往 **Discover** > **Traces**。
+1. 在左側導覽中，選取 **Application performance** > **Traces**。
 
-2. 選取一個追蹤以檢視其詳細資料。
+2. 選取一個追蹤以檢視其詳細資訊。
 
-3. 在追蹤中選取一個 span 以開啟 **Span details**。
+3. 在追蹤中選取一個 span，以開啟 **Span details**。
 
-4. 在 **Span details** 中，選取 **Logs** 索引標籤以開啟 **Related logs**，如下圖所示。相關記錄是透過將 span 中的追蹤 ID 與相互關聯記錄資料集中的記錄項目進行比對來擷取。
+4. 在 **Span details** 中，選取 **Logs** 索引標籤以開啟 **Related logs**，如下圖所示。相關記錄是透過將 span 中的追蹤 ID 與相關記錄資料集中的記錄項目進行比對來取得的。
 
-   ![顯示相關記錄的 span 詳細資料]({{site.url}}{{site.baseurl}}/images/datasets/correlations-span-details-logs.png)
+   ![Span details with related logs]({{site.url}}{{site.baseurl}}/images/datasets/correlations-span-details-logs.png)
 
-6. 選取一個記錄項目以檢視其完整詳細資料，或前往 **Logs** 頁面進一步探索。
+6. 選取一個記錄項目以檢視其完整詳細資訊，或前往 **Logs** 頁面進一步探索。
 
 ## 管理相互關聯
 

@@ -10,9 +10,9 @@ redirect_from:
 
 # 預測
 
-OpenSearch 中的預測功能會使用隨機切割森林 (Random Cut Forest, RCF) 模型，將任何時間序列欄位轉換為可自我更新的訊號。RCF 是一種線上學習模型，會隨著每個新資料點逐步更新。由於 RCF 會即時重新整理，因此能立即因應技術條件的變化，而不需要耗費大量成本的批次重新訓練。每個模型只使用少量儲存空間——通常為數百 KB——因此運算與儲存空間的額外負擔都維持在低水準。
+OpenSearch 的預測功能使用 Random Cut Forest（RCF）模型，將任何時間序列欄位轉換為自動更新的訊號。RCF 是一種線上學習模型，會隨著每個新資料點逐步更新。由於 RCF 會即時更新，因此能立即因應技術條件的變化，無須進行成本高昂的批次重新訓練。每個模型只使用少量儲存空間，通常為數百 KB，因此運算與儲存空間的額外負擔都維持在低水準。
 
-將預測功能與 [Alerting 外掛程式]({{site.url}}{{site.baseurl}}/monitoring-plugins/alerting/) 搭配使用，即可在預測值即將超出您的閾值時收到通知。
+將預測功能與[警示]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/index/)搭配使用，即可在預測值預計超出您設定的閾值時立即收到通知。
 {: .note}
 
 ## 典型使用案例

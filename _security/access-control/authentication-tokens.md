@@ -25,64 +25,65 @@ On-Behalf-Of 權杖是一種特殊形式的 JSON Web Token（JWT），用於管�
 
 ### 組態
 
-在 [`config/opensearch-security/config.yml` 檔案]({{site.url}}{{site.baseurl}}/security/configuration/configuration/)中，OBO 組態位於 `config.dynamic` 區段。它包含用於權杖簽章的 `signing_key`，以及用於加密權杖承載內容中 `roles` 宣告的選用 `encryption_key`：
+在 [`config/opensearch-security/config.yml` 檔案]({{site.url}}{{site.baseurl}}/security/configuration/configuration/)中，OBO 組態位於 `config.dynamic` 區段。設定 `signing_key` 以啟用 OBO 驗證。您也可以選擇設定 `encryption_key`，以加密所核發權杖中的 `roles` 宣告：
 
 ```yaml
 config:
   dynamic:
     on_behalf_of:
-      enabled: #'true'/non-specified will be consider as 'enabled'
-      signing_key: #encoded signing key here
-      encryption_key: #(optional) encoded encryption key here
+      enabled: true # Optional; defaults to true.
+      signing_key: # Required Base64-encoded signing key.
+      encryption_key: # Optional Base64-encoded encryption key.
 ...
 ```
 
 用於簽署 JWT 的預設編碼演算法為 HMAC SHA512。金鑰是 [`config/opensearch-security/config.yml` 檔案]({{site.url}}{{site.baseurl}}/security/configuration/configuration/)中以 Base64 編碼的字串。使用 `securityadmin.sh -cd <configuration directory>` 命令套用組態後，這些值會儲存在安全性系統索引中，並供整個叢集使用。
 
-省略 `encryption_key` 時，角色和後端角色會以明文儲存在權杖宣告中。提供此設定時，`roles` 宣告會經過加密。叢集管理員可根據其安全性需求，選擇是否加密角色資訊。
+省略 `encryption_key` 時，對應的角色會以純文字儲存在權杖的 `roles` 宣告中。提供 `encryption_key` 時，對應的角色會儲存在加密的 `encrypted_roles` 宣告中。叢集管理員可以根據其安全性需求，選擇是否加密角色資訊。
 
 ### 權杖結構
 
-OBO 權杖的承載內容必須包含 JWT 的所有標準組態，以及角色宣告。缺少其中任何宣告都會導致權杖格式錯誤，無法符合驗證所需的標準。
+OBO 權杖的承載內容必須包含 JWT 的所有標準組態，以及角色宣告。缺少其中任何一項宣告都會導致權杖格式錯誤，無法符合驗證所需的標準。
 
 OBO 權杖包含下列宣告：
-* 核發者（`iss`）：OpenSearch 叢集識別碼
-	* 務必將核發者驗證納入安全性控制措施。這項策略具有前瞻性，尤其適用於潛在的多租用戶情境，例如 OpenSearch Serverless，其中每個核發者可能會關聯到不同的密碼編譯金鑰。透過檢查核發者的值，每個 OBO 權杖都會限制為僅適用於其關聯的核發者。
-* 核發時間（`iat`）：核發此權杖時的目前時間
-	* 用作到期時間的參考依據。
-* 生效時間（`nbf`）：可使用權杖的最早時間點
-	* 由於 OBO 權杖是為即時使用而設計，其 `nbf` 應與核發時間（`iat`）一致，表示權杖建立的時間點。
+* 簽發者（`iss`）：OpenSearch 叢集識別碼
+	* 簽發者必須經過驗證，這是安全性控制措施的一部分。此策略具有前瞻性，尤其是在可能出現多租用戶情境時，例如 OpenSearch Serverless，其中每個簽發者可能各自關聯不同的密碼編譯金鑰。藉由檢查簽發者的值，每個 OBO 權杖都會被限制在其關聯的簽發者。
+* 簽發時間（`iat`）：簽發此權杖的目前時間
+	* 用作到期時間的參考。
+* 生效時間（`nbf`）：權杖可開始使用的最早時間點
+	* 由於 OBO 權杖是為即時使用而設計，其 `nbf` 應與簽發時間（`iat`）一致，表示權杖建立的時間點。
 * 到期時間（`exp`）：到期時間
-	* 每個 OBO 權杖都包含到期機制，並在收到權杖時進行驗證。權杖一經核發，便無法撤銷，而是僅在到期時失效。此外，擴充功能產生 OBO 權杖的行為受動態設定控制。此功能可在特定條件下阻止後續權杖的核發，藉此保護系統。
-	* 預設組態將 OBO 權杖的到期時間設為 300 秒。考量到不同情境可能需要不同的權杖有效期間，OpenSearch 可讓使用者自訂此到期時間。權杖可設定的最長有效期間為 600 秒。
-	* 就 OBO 權杖目前的設計而言，考量到其預期的即時用途和短暫有效期間，目前無須考慮權杖撤銷。不過，若未來的調整需要延長此權杖的有效期間，將會加入權杖撤銷功能。採用此策略是為了改善並強化與 OBO 權杖使用相關的安全性措施。
+	* 每個 OBO 權杖都包含到期機制，並在收到權杖時進行驗證。權杖一旦簽發即無法撤銷，只會在到期時失效。此外，擴充功能產生 OBO 權杖的行為受動態設定控制。此功能可防止在特定條件下簽發未來的權杖，藉此保護系統。
+	* 預設組態將 OBO 權杖的到期時間設為 300 秒。考量到不同情境可能需要不同的權杖有效期間，OpenSearch 允許使用者自訂此到期時間。可指派給權杖的最長期間為 600 秒。
+	* 就 OBO 權杖目前的設計而言，由於其預定用於即時使用且生命週期短暫，權杖撤銷目前並非考量重點。不過，若未來調整需要延長此權杖的生命週期，將會加入權杖撤銷功能。採用此策略是為了改善並強化與 OBO 權杖使用相關的安全性措施。
 * 主體（`sub`）：使用者識別碼
-	* 與此 OBO 權杖關聯的使用者名稱。
-* 受眾（`aud`）：擴充功能的唯一識別碼
-	* 在擴充功能使用案例中，`aud` 欄位指向代表目標服務的特定擴充功能。
-	* 在 REST API 使用案例中，API 參數 service 可用於指定使用此權杖的目標服務。預設值設為 `self-issued`。
+	* 此 OBO 權杖所關聯的使用者名稱。
+* 對象（`aud`）：擴充功能的唯一識別碼
+	* 在擴充功能的使用情境中，`aud` 欄位是對代表目標服務之特定擴充功能的參照。
+	* 在 REST API 的使用情境中，API 參數 service 可讓您使用此權杖指定目標服務。預設值設為 `self-issued`。
 * 角色：安全性權限評估
-	* 設定 `encryption_key` 時，對應的角色會在權杖承載內容中加密：
+	* 設定 `encryption_key` 時，對應的角色會加密於權杖承載內容中：
 		* 加密的對應角色（`encrypted_roles`）
-	* 未設定 `encryption_key` 時，角色會以明文儲存：
-		* 對應的角色（`roles`）
-		* 後端角色（`backend_roles`）
+	* 未設定 `encryption_key` 時，對應的角色會以純文字儲存：
+		* 對應角色（`roles`）
 
-OpenSearch Security 外掛程式負責處理加密和解密程序。這種方式可確保使用者資訊受到保護，即使資訊跨越 OpenSearch 與任何第三方服務之間的信任邊界也一樣。
+新簽發的 OBO 權杖不包含後端角色。Security 外掛程式會處理加密與解密程序。此做法可確保使用者資訊受到保護，即使資料跨越 OpenSearch 與任何第三方服務之間的信任邊界亦然。
 
 ### API 端點
 
-您可以存取 Security 外掛程式上的 `POST /_plugins/_security/api/generateonbehalfoftoken` API 端點，以建立自行核發且有效期間短暫的 OBO 權杖，代表使用者執行特定動作。
+使用 `POST /_plugins/_security/api/obo/token` 端點建立短效、自行簽發的 OBO 權杖，代表使用者執行操作。此端點在 OpenSearch 3.6 及之後版本可用。
 
-若要存取此 API 端點，請求本文應包含三個 API 參數：
+舊版 `POST /_plugins/_security/api/generateonbehalfoftoken` 端點為了相容性仍受支援，但已棄用。新的整合請使用 `/obo/token`。
 
-* `description`：此參數可讓使用者說明請求此權杖的目的，提高清晰度與透明度。
-* `service`（選用）：此參數對應至 OBO 權杖的受眾宣告。使用者可透過此參數指定預計使用權杖的目標服務。雖然這是選用參數，但若未指定，預設值會設為 `self-issued`。
-* `durationSeconds`（選用）：此參數可讓使用者根據權杖的預期用途自訂到期時間。為維護安全性，最長有效期間限制為 600 秒。若未指定，預設有效期間會設為 300 秒。
-以下範例為基於測試目的，替使用者「admin」請求有效期間為 3 分鐘的 OBO 權杖：
+若要存取此 API 端點，請求本文應包含三個參數：
+
+* `description`：此參數讓使用者說明請求此權杖的目的，提供明確性與透明度。
+* `service`（選用）：此參數對應 OBO 權杖的 audience 宣告。使用者可藉此指定打算使用此權杖的目標服務。雖然這是選用參數，但若未指定，預設值會設為 `self-issued`。
+* `durationSeconds`（選用）：此參數讓使用者根據預期用途自訂權杖的到期時間。為維持安全性，最長期限為 600 秒。若未指定，預設期限為 300 秒。
+以下範例是為使用者「admin」請求一個有效期為 3 分鐘、用於測試目的的 OBO 權杖：
 
 ```json
-POST /_plugins/_security/api/generateonbehalfoftoken
+POST /_plugins/_security/api/obo/token
 { 
    "description":"Testing",
    "service":"Testing Service",

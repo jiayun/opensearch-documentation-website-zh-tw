@@ -1,52 +1,74 @@
 ---
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: "使用 Discover 探索可觀測性資料"
-nav_order: 60
+title: "可觀測性工作區應用程式"
+nav_order: 50
 has_children: true
 has_toc: false
-description: "了解如何在可觀測性工作區中，使用專門的介面探索記錄檔、指標與追蹤資料。這些強化的資料探索功能提供查詢、分析及關聯不同類型遙測資料的工具。"
+description: "設定可觀測性工作區，以便在 Discover 中探索記錄檔、追蹤和指標，並使用應用程式效能監控、服務層級目標與代理程式監控。"
 redirect_from:
   - /observing-your-data/exploring-observability-data/
 ---
 
-# 使用 Discover 探索可觀測性資料
-**於 3.5 版導入**
+# 可觀測性工作區應用程式
+**於 3.5 版首次推出**
 {: .label .label-purple }
 
-OpenSearch 提供與資料集及關聯性搭配運作的介面，帶來完整的可觀測性體驗，讓您能快速識別問題、了解系統行為，並對分散式應用程式中的問題進行疑難排解。
+在可觀測性[工作區]({{site.url}}{{site.baseurl}}/dashboards/workspace/index/)中，OpenSearch Dashboards 提供多種應用程式，可用於在 Discover 中探索記錄檔、追蹤和指標、監控應用程式效能、追蹤服務層級目標 (SLO)，以及監控生成式 AI 代理程式。每個應用程式都由 `opensearch_dashboards.yml` 中的一項設定啟用，該設定會列在應用程式的頁面上。
 
-系統提供專門的介面，用於探索可觀測性資料的三大支柱：
+## 必要條件
 
-- **記錄檔**：使用 Piped Processing Language (PPL) 查詢與分析記錄資料。
-- **指標**：使用 PromQL 查詢探索時間序列指標資料。
-- **追蹤**：調查分散式追蹤與跨度關係。
+若要啟用所有可觀測性工作區應用程式，請將下列設定新增至 `opensearch_dashboards.yml`，然後重新啟動 OpenSearch Dashboards：
 
-## 先決條件
+```yaml
+workspace.enabled: true
+explore.enabled: true                  # Logs
+explore.discoverTraces.enabled: true   # Traces, APM, and SLOs
+explore.discoverMetrics.enabled: true  # Metrics and APM
+explore.agentTraces.enabled: true      # Agent monitoring
+datasetManagement.enabled: true        # Datasets and Correlations
+observability.slo.enabled: true        # SLOs
+```
+{% include copy.html %}
 
-若要使用這些資料探索功能，您需要：
+若只要啟用部分應用程式，請參閱每個應用程式頁面的必要條件章節，以了解該應用程式所需的設定。
 
-- **建立可觀測性工作區**：這些功能僅在 Observability 工作區內可用。若要了解如何啟用及建立工作區，請參閱 [OpenSearch Dashboards 工作區]({{site.url}}{{site.baseurl}}/dashboards/workspace/workspace/)。
-- **啟用功能旗標**：在您的 `opensearch_dashboards.yml` 檔案中設定必要的設定。每個功能頁面都會提供所需的特定組態。
-- **設定資料來源**：為您的記錄檔、指標與追蹤設定適當的資料來源。組態指引請參閱 [資料來源]({{site.url}}{{site.baseurl}}/dashboards/management/data-sources/)。
+工作區還有其他需求，例如停用多租用戶。如需更多資訊，請參閱[啟用工作區]({{site.url}}{{site.baseurl}}/dashboards/workspace/workspace/#enabling-workspaces)。
 
-### 建立可觀測性工作區
+## 建立可觀測性工作區
 
 若要建立可觀測性工作區，請依照下列步驟操作：
 
-1. 啟用工作區。如需更多資訊，請參閱 [啟用工作區]({{site.url}}{{site.baseurl}}/dashboards/workspace/workspace/#enabling-workspaces)。
-2. 在 OpenSearch Dashboards 首頁上，選取 **Create Workspace** 並選擇 **Observability**。或者，也可以選取 **Observability** 卡片上的加號來建立新的可觀測性工作區。
-3. 在 **Workspace details** 中，輸入工作區的 **Name** 與選用的 **Description**。
-4. 選取 **Observability** 作為使用案例，然後選取 **Create workspace**。
+1. 在 OpenSearch Dashboards 首頁的 **My workspaces** 中，選取 **Observability** 卡片上的 **Create workspace**。
+1. 在 **Workspace details** 中，輸入 **Name**，並可選擇性地輸入 **Description**。
+1. 在 **Use case and features** 中，確認已選取 **Observability**。
+1. 如果您使用多個資料來源，請選取要與工作區建立關聯的資料來源。
+1. 選取 **Create workspace**。
 
-詳細說明請參閱 [建立工作區]({{site.url}}{{site.baseurl}}/dashboards/workspace/create-workspace/)。
+如需更多資訊，請參閱[建立工作區]({{site.url}}{{site.baseurl}}/dashboards/workspace/create-workspace/)。
 
-## 入門
+## 探索與監控您的資料
 
-建立可觀測性工作區後，請依照下列步驟開始使用：
+建立工作區後，請依照下列方式使用這些應用程式：
 
-1. **[資料集]({{site.url}}{{site.baseurl}}/observing-your-data/exploring-observability-data/datasets/)** -- 了解如何將可觀測性資料整理成易於管理的資料集。
-1. **[探索記錄資料]({{site.url}}{{site.baseurl}}/observing-your-data/exploring-observability-data/discover-logs/)** -- 使用 PPL 查詢與視覺化探索記錄資料。
-1. **[探索追蹤資料]({{site.url}}{{site.baseurl}}/observing-your-data/exploring-observability-data/discover-traces/)** -- 分析分散式追蹤與跨度關係。
-1. **[探索指標資料]({{site.url}}{{site.baseurl}}/observing-your-data/exploring-observability-data/discover-metrics/)** -- 使用 PromQL 查詢並視覺化時間序列指標。
-1. **[關聯性]({{site.url}}{{site.baseurl}}/observing-your-data/exploring-observability-data/correlations/)** -- 了解如何連結追蹤與記錄資料集，以進行統一分析。
+1. 連接您的資料：
+   - 為您的記錄檔索引和追蹤索引建立[資料集]({{site.url}}{{site.baseurl}}/observing-your-data/exploring-observability-data/datasets/)。Logs 與 Traces 頁面、Correlations 及 APM 會使用資料集來尋找您的資料。
+   - 若要使用 Metrics、APM 或 SLO，請連接 [Prometheus 資料來源]({{site.url}}{{site.baseurl}}/dashboards/management/connect-prometheus/)。
+1. 探索您的資料：
+   - 使用 [Logs]({{site.url}}{{site.baseurl}}/observing-your-data/exploring-observability-data/discover-logs/) 以 Piped Processing Language (PPL) 搜尋、篩選並視覺化記錄資料。
+   - 使用 [Traces]({{site.url}}{{site.baseurl}}/observing-your-data/exploring-observability-data/discover-traces/) 搜尋與篩選追蹤區段（span），並將單一追蹤顯示為其追蹤區段的時間軸。
+   - 使用 [Metrics]({{site.url}}{{site.baseurl}}/observing-your-data/exploring-observability-data/discover-metrics/) 以 PromQL 查詢並視覺化 Prometheus 指標。
+   - 使用 [Correlations]({{site.url}}{{site.baseurl}}/observing-your-data/exploring-observability-data/correlations/) 將追蹤資料集連結至記錄檔資料集，以便檢視與某個追蹤相關的記錄檔項目。
+1. 監控您的應用程式：
+   - 使用[應用程式效能監控 (APM)]({{site.url}}{{site.baseurl}}/observing-your-data/apm/) 檢視每個服務的速率、錯誤與持續時間 (RED) 指標，以及服務相依性的拓撲圖。
+   - 使用 [SLO]({{site.url}}{{site.baseurl}}/observing-your-data/slo/) 為您的服務定義可用性與延遲目標，並追蹤其錯誤預算。
+1. 監控您的 AI 代理程式：
+   - 使用 [Agent monitoring]({{site.url}}{{site.baseurl}}/observing-your-data/agent-traces/) 檢視生成式 AI 代理程式的 LLM 呼叫、工具叫用與詞元用量。
+1. 分享您的結果：
+   - 將 Logs 頁面中的視覺化新增至[儀表板]({{site.url}}{{site.baseurl}}/observing-your-data/exploring-observability-data/discover-logs/#adding-visualizations-to-dashboards)。
+   - 使用 [Notebooks]({{site.url}}{{site.baseurl}}/dashboards/notebooks/) 將 Markdown 文字、SQL 與 PPL 查詢以及視覺化組合成報告與操作手冊。
+
+## 相關文件
+
+- 若要了解記錄檔、追蹤和指標如何送達 OpenSearch，請參閱[匯入可觀測性資料]({{site.url}}{{site.baseurl}}/observing-your-data/ingesting-observability-data/)。
+- 若要在顯示追蹤資料的應用程式之間做選擇，請參閱[選擇追蹤工具]({{site.url}}{{site.baseurl}}/observing-your-data/exploring-data/#choosing-a-trace-tool)。

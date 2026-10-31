@@ -34,18 +34,18 @@ redirect_from:
 
 ## 驗證流程
 
-下列步驟說明使用跨叢集搜尋，從*協調叢集*存取*遠端叢集*時的驗證流程。您可以在遠端叢集與協調叢集上使用不同的驗證與授權組態，但我們建議兩者使用相同的設定。
+下列步驟說明使用跨叢集搜尋，從 *協調叢集* 存取 *遠端叢集* 時的驗證流程。您可以在遠端叢集與協調叢集上使用不同的驗證與授權組態，但我們建議兩者使用相同的設定。
 
 1. Security 外掛程式在協調叢集上驗證使用者。
 1. Security 外掛程式在協調叢集上擷取使用者的後端角色。
-1. 呼叫連同已通過驗證的使用者資訊一起轉送至遠端叢集。
+1. 包含已通過驗證之使用者的請求會轉送至遠端叢集。
 1. 在遠端叢集上評估使用者的權限。
 
 ## 遠端叢集角色評估
 **於 3.9 版推出**
 {: .label .label-purple }
 
-預設情況下，遠端叢集會結合協調叢集傳遞的安全性角色及自身的角色對應來評估權限。因此，在協調叢集上具有廣泛權限（例如 `all_access`）的使用者，在遠端叢集上也會取得相同的權限。
+預設情況下，遠端叢集會結合協調叢集傳遞的 Security 外掛程式角色及自身的角色對應來評估權限。因此，在協調叢集上具有廣泛權限（例如 `all_access`）的使用者，在遠端叢集上也會取得相同的權限。
 
 若要讓遠端叢集獨立控制 CCS 使用者取得的權限，請在遠端叢集上設定下列叢集設定：
 
@@ -59,7 +59,7 @@ PUT /_cluster/settings
 ```
 {% include copy-curl.html %}
 
-當 `plugins.security.ccs.ignore_source_security_roles` 為 `true` 時，遠端叢集會移除協調叢集傳遞的安全性角色，並僅透過自身的 `roles_mapping.yml` 組態評估存取權限。接著，您便可以在每個叢集上獨立定義 CCS 使用者權限。此設定預設為 `false`，因此既有的 CCS 部署不受影響。
+當 `plugins.security.ccs.ignore_source_security_roles` 為 `true` 時，遠端叢集會移除協調叢集傳遞的 Security 外掛程式角色，並僅透過自身的 `roles_mapping.yml` 組態評估存取權限。接著，您便可以在每個叢集上獨立定義 CCS 使用者權限。此設定預設為 `false`，因此既有的 CCS 部署不受影響。
 
 ### 限制
 
@@ -70,7 +70,7 @@ PUT /_cluster/settings
 
 ## 設定權限
 
-若要查詢遠端叢集上的索引，使用者必須具有 `READ` 或 `SEARCH` 權限。此外，當搜尋請求包含查詢參數 `ccs_minimize_roundtrips=false`（此參數告知 OpenSearch 不要盡量減少傳送至遠端叢集及從遠端叢集接收的請求）時，使用者還需要具有下列額外的索引權限：
+若要查詢遠端叢集上的索引，使用者必須具有 `READ` 或 `SEARCH` 權限。此外，當搜尋請求包含查詢參數 `ccs_minimize_roundtrips=false`（此參數會告知 OpenSearch 不要最小化與遠端叢集之間往返的請求）時，使用者還需要具有下列額外的索引權限：
 
 ```
 indices:admin/shards/search_shards
@@ -261,7 +261,7 @@ curl -XPUT -k -u 'admin:<custom-admin-password>' -H 'Content-Type: application/j
 curl -XPUT -k -u 'admin:<custom-admin-password>' -H 'Content-Type: application/json' 'https://localhost:9200/_plugins/_security/api/rolesmapping/booksrole' -d '{"users" : ["booksuser"]}'
 ```
 
-兩個叢集都必須具有使用者角色，但只有遠端叢集需要同時具有角色與對應。在此範例中，協調叢集負責驗證（也就是「此請求是否包含有效的使用者憑證？」），而遠端叢集負責授權（也就是「此使用者是否可以存取此資料？」）。
+兩個叢集都必須具有使用者角色，但只有遠端叢集需要同時具有角色與對應。在此範例中，協調叢集負責驗證（也就是「此請求是否包含有效的使用者認證資訊？」），而遠端叢集負責授權（也就是「此使用者是否可以存取此資料？」）。
 {: .tip }
 
 最後，再次執行搜尋：
@@ -283,7 +283,7 @@ curl -XGET -k -u booksuser:password 'https://localhost:9250/opensearch-ccs-clust
 
 ## 裸機/虛擬機器設定範例
 
-如果您在裸機伺服器上執行 OpenSearch 或使用虛擬機器，可以執行相同的命令，並指定 OpenSearch 叢集的 IP (或網域)。
+如果您在裸機伺服器上執行 OpenSearch 或使用虛擬機器，可以執行相同的命令，並指定 OpenSearch 叢集的 IP（或網域）。
 例如，若要為跨叢集搜尋設定遠端叢集，請找出遠端節點的 IP 或遠端叢集的網域，然後執行以下命令：
 
 ```json
@@ -381,7 +381,7 @@ HTTP 與傳輸層通訊的監聽連接埠分別設定為 `443` 與 `8300`。
 
 ### OpenSearch 組態
 
-遠端叢集可以設定為指向 `proxy`，方法是使用以下命令：
+遠端叢集可以使用下列命令設定為指向 `proxy`：
 
 ```bash
 curl -k -XPUT -H 'Content-Type: application/json' -u 'admin:<custom-admin-password>' 'https://opensearch:9200/_cluster/settings' -d '
@@ -397,4 +397,9 @@ curl -k -XPUT -H 'Content-Type: application/json' -u 'admin:<custom-admin-passwo
 }'
 ```
 
-請留意 [Proxy 組態]({{site.url}}{{site.baseurl}}/search-plugins/cross-cluster-search/#proxy-configuration) 章節中先前設定的連接埠 `8300`。
+請留意 [Proxy 組態]({{site.url}}{{site.baseurl}}/search-plugins/cross-cluster-search/#proxy-configuration) 一節中先前設定的連接埠 `8300`。
+
+## 相關文件
+
+- 若要在事件分析或可觀測性工作區中使用 PPL 查詢遠端叢集，請參閱[使用可觀測性應用程式進行跨叢集搜尋]({{site.url}}{{site.baseurl}}/observing-your-data/cross-cluster-search/)。
+- 若要取得與某個叢集連線之遠端叢集的相關資訊，請參閱[遠端叢集資訊]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/remote-info/)。

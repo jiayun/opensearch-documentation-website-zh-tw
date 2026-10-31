@@ -2,10 +2,10 @@
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: "筆記本"
-nav_order: 90
+nav_order: 74
 redirect_from:
-  - /dashboards/notebooks/
   - /observability-plugin/notebooks/
+  - /observing-your-data/notebooks/
 has_children: false
 ---
 
@@ -25,9 +25,9 @@ OpenSearch Dashboards 中的租用戶是儲存筆記本與其他 OpenSearch Dash
 {: .note }
 
 
-## 筆記本入門
+## 開始使用筆記本
 
-若要開始使用，請在 OpenSearch Dashboards 中選擇 **Notebooks**。
+若要開啟筆記本，請在頂端功能表前往 **Observability** > **Notebooks**。在工作區中，Notebooks 位於 **Visualize and report** 功能表類別。在使用圖示側邊導覽的 Observability 工作區中，Notebooks 位於 **More** 功能表。
 
 
 ### 步驟 1：建立筆記本

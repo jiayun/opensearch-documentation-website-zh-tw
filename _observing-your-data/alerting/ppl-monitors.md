@@ -10,7 +10,7 @@ has_children: false
 
 # PPL 監視器
 
-PPL 警示監視器使用 [Piped Processing Language (PPL)]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/) 查詢來監視您的資料。它們是[每查詢監視器]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/per-query-bucket-monitors/)，以 PPL 取代 Query DSL 作為查詢語言。
+PPL 警示監視器使用 [Piped Processing Language (PPL)]({{site.url}}{{site.baseurl}}/sql-and-ppl/ppl/index/) 查詢來監視您的資料。它們是[每查詢監視器]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/per-query-bucket-monitors/)，以 PPL 取代 Query DSL 作為查詢語言。
 
 ## 設定
 

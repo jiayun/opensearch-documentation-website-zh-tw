@@ -177,54 +177,56 @@ OpenSearch Dashboards 中的查詢編輯器會為儀表板變數提供自動完�
 
 ### 依變數值篩選
 
-變數可作為視覺化中的篩選條件。您不必將篩選條件套用至整個儀表板，而是可以將變數直接嵌入 PPL 查詢，針對特定面板進行篩選。
+變數可以在您的視覺化中作為篩選條件。您不必將篩選條件套用至整個儀表板，而是可以直接將變數嵌入 PPL 查詢中，為特定面板建立目標篩選。
 
 若要依變數值篩選視覺化，請依照下列步驟操作：
 
 1. 建立 `machine_os` 變數：
-   1. 在您的 Observability 工作區中，選取左側導覽列中的 **Dashboards**。
-   1. 開啟現有的儀表板，或選取 **Create** > **Dashboard** 以建立新的儀表板。若要建立新的儀表板，請先輸入標題並選取 **Save** 加以儲存。
-   1. 在儀表板頂端選取 **Add variable**。
-   1. 在 **Name** 中輸入 `machine_os`。在 **Type** 中選取 **Query**。在 **Options Query** 中選取 `opensearch_dashboards_sample_data_logs`。在查詢方塊中輸入下列查詢：
+   1. 在您的 Observability 工作區中，於左側導覽選取 **Dashboards**。
+   1. 開啟現有的儀表板，或選取 **Create Dashboard** 建立新的儀表板。若要建立新的儀表板，請先輸入標題並選取 **Save** 予以儲存。
+   1. 如果儀表板處於檢視模式，請開啟 **Edit** 切換開關。
+   1. 在儀表板頂端，選取 **Add variable**。
+   1. 在 **Name** 欄位中輸入 `machine_os`，並將 **Type** 保持設定為 **Query**。在 **Query options** 區段中，選取 **Open variable editor**。將語言保持設定為 **PPL**，確認選取的資料集為 `opensearch_dashboards_sample_data_logs`，並輸入下列查詢：
    
       ```sql
       | FIELDS `machine.os`
       ```
       {% include copy.html %}
-   1. 選取 **Preview**，並確認 **Preview of values** 中顯示 `win 8`、`ios` 和 `win xp` 等值。接著選取 **Add variable** 以儲存。
+   1. 選取 **Preview**，並確認您在 **Preview of values** 中看到 `win 8`、`ios` 和 `win xp` 這類值。選取 **Apply** 儲存查詢，然後選取 **Add variable** 儲存。
 
 
 1. 依變數值篩選：
    1. 在儀表板中選取 **Create new**，然後選取 **Add visualization**，以開啟新的視覺化編輯器。 
-   1. 在時間篩選器中選取 **Last 30 days**。
-   1. 在查詢方塊中輸入下列查詢：
+   1. 在時間篩選器中，選取 **Last 30 days**。
+   1. 在查詢方塊中，輸入下列查詢：
 
    ```sql
    | WHERE `machine.os` = '${machine_os}' | STATS avg(memory) BY span(`@timestamp`, 1d) 
    ```
    {% include copy.html %}
 
-   若要依 `machine_os` 值篩選視覺化，請在 `machine_os` 下拉式清單中選取值（例如選取 `win 8`），如下圖所示。
+   若要依 `machine_os` 的值篩選視覺化，請在 `machine_os` 下拉式清單中選取該值（例如選取 `win 8`），如下圖所示。
 
-   ![視覺化編輯器顯示依 machine_os 設為 win 8 篩選後的平均記憶體隨時間變化]({{site.url}}{{site.baseurl}}/images/dashboard-variables/filter_case_variable.png)
+   ![視覺化編輯器顯示隨時間變化的平均記憶體，並依設為 win 8 的 machine_os 篩選]({{site.url}}{{site.baseurl}}/images/dashboard-variables/filter_case_variable.png)
    
 ### 動態選取指標
 
-使用變數來控制彙總中使用的欄位。如此一來，您無需編輯查詢，即可在不同指標之間切換（例如 `memory` 和 `bytes`）。
+使用變數控制彙總中要使用哪個欄位。這可讓您在不編輯查詢的情況下切換指標（例如 `memory` 和 `bytes`）。
 
 若要動態選取指標，請依照下列步驟操作：
 
 1. 建立 `log_metric` 變數：
-   1. 在您的 Observability 工作區中，選取左側導覽列中的 **Dashboards**。
-   1. 開啟現有的儀表板，或選取 **Create** > **Dashboard** 以建立新的儀表板。若要建立新的儀表板，請先輸入標題並選取 **Save** 加以儲存。
-   1. 在儀表板頂端選取 **Add variable**。
-   1. 在 **Name** 中輸入 `log_metric`。在 **Type** 中選取 **Custom**。在 **Custom options** 中輸入 `memory`，然後按下 **Enter** 新增。接著輸入 `bytes`，然後按下 **Enter** 新增。 
-   1. 選取 **Add variable** 以儲存。
+   1. 在您的 Observability 工作區中，於左側導覽選取 **Dashboards**。
+   1. 開啟現有的儀表板，或選取 **Create Dashboard** 建立新的儀表板。若建立新儀表板，請先輸入標題並選取 **Save** 加以儲存。
+   1. 若儀表板處於檢視模式，請開啟 **Edit** 切換開關。
+   1. 在儀表板頂端，選取 **Add variable**。
+   1. 在 **Name** 中輸入 `log_metric`。在 **Type** 中選取 **Custom**。在 **Custom options** 中輸入 `memory` 並按 **Enter** 新增。然後輸入 `bytes` 並按 **Enter** 新增。 
+   1. 選取 **Add variable** 儲存。
 
-1. 在視覺化中使用變數：
-   1. 在儀表板中選取 **Create new**，然後選取 **Add visualization**，以開啟新的視覺化編輯器。 
-   1. 在時間篩選器中選取 **Last 30 days**。
-   1. 在查詢方塊中輸入下列查詢：
+1. 在視覺化中使用該變數：
+   1. 在儀表板中選取 **Create new**，然後選取 **Add visualization**，開啟新的視覺化編輯器。 
+   1. 在時間篩選條件中，選取 **Last 30 days**。
+   1. 在查詢方塊中，輸入下列查詢：
 
       ```sql
       source=opensearch_dashboards_sample_data_logs
@@ -232,27 +234,28 @@ OpenSearch Dashboards 中的查詢編輯器會為儀表板變數提供自動完�
       ```
       {% include copy.html %}
 
-   若要在不同指標之間切換，請在 `log_metric` 下拉式清單中選取值（例如選取 `memory` 或 `bytes`）。
+   若要切換指標，請在 `log_metric` 下拉式清單中選取值（例如選取 `memory` 或 `bytes`）。
 
-   ![視覺化編輯器顯示 log_metric 變數設為 memory 時的平均記憶體隨時間變化]({{site.url}}{{site.baseurl}}/images/dashboard-variables/metrics_case_variable.png)
+   ![視覺化編輯器顯示隨時間變化的平均記憶體，並將 log_metric 變數設為 memory]({{site.url}}{{site.baseurl}}/images/dashboard-variables/metrics_case_variable.png)
 
 ### 動態變更時間間隔
 
-使用變數，讓儀表板檢視者無須編輯查詢，即可在不同的時間彙總間隔之間切換（例如 `1h`、`6h` 或 `1d`）。
+使用變數，讓儀表板檢視者可以在時間彙總間隔（例如 `1h`、`6h` 或 `1d`）之間切換，而無需編輯查詢。
 
 若要動態變更時間間隔，請依照下列步驟操作：
 
 1. 建立 `interval` 變數：
-   1. 在您的 Observability 工作區中，於左側導覽列選取 **Dashboards**。
-   1. 開啟現有的儀表板，或選取 **Create** > **Dashboard** 以建立新的儀表板。若要建立新的儀表板，請先輸入標題並選取 **Save** 加以儲存。
+   1. 在您的 Observability 工作區中，於左側導覽選取 **Dashboards**。
+   1. 開啟現有儀表板，或選取 **Create Dashboard** 建立新儀表板。若要建立新儀表板，請先輸入標題並選取 **Save** 加以儲存。
+   1. 若儀表板處於檢視模式，請開啟 **Edit** 切換開關。
    1. 在儀表板頂端，選取 **Add variable**。
-   1. 在 **Name** 中輸入 `interval`。在 **Type** 中選取 **Custom**。在 **Custom options** 中輸入 `1d`，然後按 **Enter** 加入。對 `12h`、`6h` 和 `1h` 重複此步驟。
+   1. 在 **Name** 中輸入 `interval`。在 **Type** 中選取 **Custom**。在 **Custom options** 中輸入 `1d` 並按 **Enter** 新增。接著對 `12h`、`6h` 與 `1h` 重複相同步驟。
    1. 選取 **Add variable** 以儲存。
 
 1. 在視覺化中使用變數：
-   1. 在儀表板中選取 **Create new**，然後選取 **Add visualization**，以開啟新的視覺化編輯器。
+   1. 在儀表板中選取 **Create new**，然後選取 **Add visualization**，開啟新的視覺化編輯器。
    1. 在時間篩選器中，選取 **Last 30 days**。
-   1. 在查詢方塊中，輸入下列查詢：
+   1. 在查詢方塊中輸入以下查詢：
 
       ```sql
       source=opensearch_dashboards_sample_data_logs | stats AVG(`bytes`) as avg_bytes, MAX(`bytes`) as max_bytes by span(`timestamp`, $interval)
@@ -261,24 +264,25 @@ OpenSearch Dashboards 中的查詢編輯器會為儀表板變數提供自動完�
 
    若要在不同間隔之間切換，請在 `interval` 下拉式清單中選取一個值（例如選取 `6h`），然後選取 **Update**。視覺化會反映所選的時間分桶方式，如下圖所示。
 
-   ![視覺化編輯器顯示 avg_bytes 和 max_bytes 隨時間的變化，interval 變數設為 1d]({{site.url}}{{site.baseurl}}/images/dashboard-variables/interval_case_variable.png)
+   ![視覺化編輯器顯示隨時間變化的 avg_bytes 與 max_bytes，並將 interval 變數設為 1d]({{site.url}}{{site.baseurl}}/images/dashboard-variables/interval_case_variable.png)
 
 ### 動態變更彙總函式
 
-使用變數，讓儀表板檢視者無須編輯查詢，即可在不同的彙總函式之間切換（例如 `avg`、`max` 或 `min`）。
+使用變數讓儀表板檢視者切換彙總函式（例如 `avg`、`max` 或 `min`），而不需要編輯查詢。
 
 若要動態變更彙總函式，請依照下列步驟操作：
 
 1. 建立 `function` 變數：
-   1. 在您的 Observability 工作區中，於左側導覽列選取 **Dashboards**。
-   1. 開啟現有的儀表板，或選取 **Create** > **Dashboard** 以建立新的儀表板。若要建立新的儀表板，請先輸入標題並選取 **Save** 加以儲存。
+   1. 在您的 Observability 工作區中，於左側導覽選取 **Dashboards**。
+   1. 開啟現有的儀表板，或選取 **Create Dashboard** 建立新的儀表板。若建立新的儀表板，請先輸入標題並選取 **Save** 加以儲存。
+   1. 若儀表板處於檢視模式，請開啟 **Edit** 切換開關。
    1. 在儀表板頂端，選取 **Add variable**。
-   1. 在 **Name** 中輸入 `function`。在 **Type** 中選取 **Custom**。在 **Custom options** 中輸入 `avg`，然後按 **Enter** 加入。對 `max` 和 `min` 重複此步驟。
-   1. 選取 **Add variable** 以儲存。
+   1. 在 **Name** 中輸入 `function`。在 **Type** 中選取 **Custom**。在 **Custom options** 中輸入 `avg` 並按 **Enter** 新增。針對 `max` 和 `min` 重複此操作。
+   1. 選取 **Add variable** 儲存。
 
-1. 在視覺化中使用變數：
-   1. 在儀表板中選取 **Create new**，然後選取 **Add visualization**，以開啟新的視覺化編輯器。
-   1. 在時間篩選器中，選取 **Last 30 days**。
+1. 在視覺化中使用該變數：
+   1. 在儀表板中選取 **Create new**，然後選取 **Add visualization**，開啟新的視覺化編輯器。
+   1. 在時間篩選條件中，選取 **Last 30 days**。
    1. 在查詢方塊中，輸入下列查詢：
 
       ```sql
@@ -286,9 +290,9 @@ OpenSearch Dashboards 中的查詢編輯器會為儀表板變數提供自動完�
       ```
       {% include copy.html %}
 
-   若要在不同函式之間切換，請在 `function` 下拉式清單中選取一個值（例如選取 `max`），然後選取 **Update**。視覺化會反映所選的彙總函式，如下圖所示。
+   若要切換函式，請在 `function` 下拉式清單中選取一個值（例如選取 `max`），然後選取 **Update**。視覺化會反映所選的彙總函式，如下圖所示。
 
-   ![視覺化編輯器顯示平均記憶體隨時間的變化，function 變數設為 avg]({{site.url}}{{site.baseurl}}/images/dashboard-variables/function_case_variable.png)
+   ![視覺化編輯器顯示隨時間變化的平均記憶體，並將函式變數設為 avg]({{site.url}}{{site.baseurl}}/images/dashboard-variables/function_case_variable.png)
 
 ## 串聯變數與跨面板變數
 

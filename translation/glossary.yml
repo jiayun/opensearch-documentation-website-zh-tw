@@ -38,7 +38,8 @@ terms:
   - {en: flow agent, zh: 流程代理程式, note: "一般標題與敘述使用中文，首次附英文；程式碼中的 flow 類型識別字保持原文。"}
   - {en: conversational flow agent, zh: 對話式流程代理程式, note: "一般標題與敘述使用中文，首次附英文；程式碼中的 conversational_flow 保持原文。"}
   - {en: context (LLM), zh: 脈絡, note: "例如先前任務的脈絡；與 content（內容）區分。程式碼與設定識別字保持原文。"}
-  - {en: reranking / rerank, zh: 重新排名, note: "搜尋相關性語境的一般名詞與動詞皆適用，不是依欄位值排序。「rerank 類型」這類一般敘述也須翻譯；程式碼中的 rerank 處理器識別字、模型名稱及 API 識別字保留原文。"}
+  - {en: span (distributed tracing), zh: 追蹤區段, note: "OpenTelemetry／分散式追蹤中，一次操作所對應的追蹤單位；首次附 span。一般標題與敘述須翻譯，API、欄位與設定識別字保持原文。一般時間範圍（例如 span of forecast history）不適用此譯名。"}
+  - {en: reranking / rerank, zh: 重新排名, note: "搜尋相關性語境的一般名詞與動詞皆適用，不是依欄位值排序。「rerank 類型」這類一般敘述也須翻譯；程式碼中的 rerank 處理器識別字、模型名稱及 API 識別字保留原文。預測器多序列檢視依信賴區間、預測值或閾值排列序列，屬於一般數值排序，即使原文使用 rerank，仍譯為「重新排序」，不得誤判為搜尋相關性的重新排名。"}
   - {en: rolling upgrade, zh: 滾動升級, note: "逐一升級節點；不是索引 rollover（輪替）。"}
   - {en: pull-based ingestion, zh: 拉取式匯入, note: "由匯入端主動從來源取得資料；首次附英文，與推送式匯入區分。"}
   - {en: index rollup, zh: 索引彙總, note: "首次附 index rollup；保留較低精細度的索引資料，與查詢 aggregation 不同。不得譯為 rollover 的輪替；索引彙總搭配英文或明確功能語境時可接受。"}
@@ -129,6 +130,8 @@ terms:
   - {en: visualization, zh: 視覺化}
   - {en: alerting, zh: 警示}
   - {en: monitor, zh: 監視器}
+  - {en: per-query / per query monitor, zh: 依查詢監視器, note: "評估一次查詢傳回的整組結果；不是每個查詢各建立一個監視器。一般標題與敘述使用此譯名，實際 UI 控制項名稱保留英文。"}
+  - {en: per-bucket / per bucket monitor, zh: 依桶監視器, note: "逐一評估查詢結果中的彙總桶；不是每個桶各建立一個監視器。一般標題與敘述使用此譯名，實際 UI 控制項名稱保留英文。"}
   - {en: log, zh: 記錄檔, note: "log data → 記錄資料；logging → 記錄"}
   - {en: metrics, zh: 指標}
   - {en: trace, zh: 追蹤}

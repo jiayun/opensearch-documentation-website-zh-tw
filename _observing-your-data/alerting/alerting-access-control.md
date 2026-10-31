@@ -2,7 +2,7 @@
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: "警示資源存取控制"
-nav_order: 12
+nav_order: 50
 parent: Alerting
 has_children: false
 ---

@@ -8,51 +8,106 @@ grand_parent: Alerting
 has_children: false
 ---
 
-# 個別叢集指標監視器
+# 每個叢集指標監視器 (Per cluster metrics monitors)
 
-_個別叢集指標監視器_ 是一種警示監視器，可收集並分析單一叢集的指標，提供叢集效能與健全狀態的相關資訊。您可以設定警示來監視特定條件，例如：
+每個叢集指標監視器會依排程執行叢集 API 請求，並使用觸發條件評估回應。您可以使用它來產生關於叢集狀態的警示，例如，在下列情況時：
 
-- 叢集健全狀態變為黃色或紅色。
-- 叢集層級指標（例如 CPU 使用率與 JVM 記憶體使用量）達到指定閾值。
-- 節點層級指標（例如可用磁碟空間、JVM 記憶體使用量與 CPU 使用率）達到指定閾值。
-- 儲存的文件總數達到指定閾值。
+- 叢集健康狀態達到黃色或紅色。
+- 叢集層級指標，例如 CPU 使用率與 JVM 記憶體使用率，達到指定的門檻。
+- 節點層級指標，例如可用磁碟空間、JVM 記憶體使用率與 CPU 使用率，達到指定的門檻。
+- 儲存的文件總數達到指定的門檻。
 
-## 建立叢集指標監視器
+## 建立個別叢集指標監視器
 
-若要建立叢集指標監視器，請依照下列步驟操作：
+下列範例會建立一個監視器，在叢集健全狀態不是綠色時產生警示。
 
-1. 選取 **Alerting** > **Monitors** > **Create monitor**。
-2. 選取 **Per cluster metrics monitor** 選項。
-3. 在 Query 區段中，從下拉式清單選擇 **Request type**。
-4. （選用）如果您想篩選 API 回應，僅使用特定路徑參數，請在 **Path parameters** 下輸入這些參數。大多數可用於監視叢集狀態的 API 都支援其文件中所述的路徑參數（例如以逗號分隔的索引名稱清單）。
-5. 在[觸發條件]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/triggers/)區段中，指定哪些條件會觸發警示。觸發條件會自動填入 `painless ctx` 變數。例如，監視 Cluster Stats 的叢集監視器使用觸發條件 `ctx.results[0].indices.count <= 0`，根據查詢傳回的索引數量觸發警示。若要進一步細化條件，請新增 API 支援的任何其他 Painless 條件。若要查看條件回應的範例，請選取 **Preview condition response**。
-6. 在 Actions 區段中，指定觸發條件滿足時，您希望如何通知使用者。
-7. 選取 **Create**。您的新監視器會出現在 **Monitors** 清單中。
+若要建立監視器，請依照下列步驟操作：
 
-下列範例顯示叢集指標監視器的組態。
+1. 在頂端選單中，前往 **OpenSearch Plugins** > **Alerting**。
+1. 選取 **Monitors** 索引標籤，然後選取 **Create monitor**。
+1. 在 **Monitor details** 中，輸入 **Monitor name**，例如 `Cluster health`，並選取 **Per cluster metrics monitor**。您也可以變更 **Schedule**。依預設，監視器每分鐘執行一次。
+1. 在 **Select data** 中，保持選取本機叢集。若要監控遠端叢集，請在 **Select clusters** 中選取這些叢集。如需詳細資訊，請參閱[監控遠端叢集](#monitoring-remote-clusters)。
+1. 在 **Query** 的 **Request type** 中，選取 **Cluster health**。您也可以在 **Path parameters** 中輸入路徑參數，以篩選 API 回應，例如以逗號分隔的索引名稱清單。若要檢視 API 回應，請選取 **Preview query**。
+1. 在 **Triggers** 中，選取 **Add trigger**，然後設定觸發條件：
+   - **Trigger name**：輸入 `Cluster health is not green`。
+   - **Severity level**：保留 **1 (Highest)**。
+   - **Trigger condition**：保留所選請求類型的預設條件 `ctx.results[0].status != "green"`。此條件是用來評估 API 回應的 [Painless]({{site.url}}{{site.baseurl}}/scripting/painless/) 指令碼。若要測試此條件，請選取 **Preview condition response**。
+1. 您也可以在 **Actions** 中新增動作，在符合觸發條件時傳送通知。如需詳細資訊，請參閱[動作]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/actions/)。
+1. 選取 **Create**。
 
-![叢集指標監視器]({{site.url}}{{site.baseurl}}/images/cluster-metrics.png){: width="700" }
+如果叢集健全狀態為黃色或紅色，監視器會產生處於 **Active** 狀態的警示。例如，若單一節點叢集包含具有副本的索引，其狀態會是黃色，因為無法指派副本。
+
+個別叢集指標監視器最多支援 10 個觸發條件。如需可用於觸發條件的變數，請參閱[觸發條件變數]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/triggers/#trigger-variables)。
+
+## 使用 API 建立每個叢集指標監視器
+
+若要使用 API 建立前述範例中的監視器，請傳送下列請求：
+
+```json
+POST _plugins/_alerting/monitors
+{
+  "type": "monitor",
+  "monitor_type": "cluster_metrics_monitor",
+  "name": "Cluster health",
+  "enabled": true,
+  "schedule": {
+    "period": {
+      "interval": 1,
+      "unit": "MINUTES"
+    }
+  },
+  "inputs": [
+    {
+      "uri": {
+        "api_type": "CLUSTER_HEALTH",
+        "path": "_cluster/health",
+        "path_params": ""
+      }
+    }
+  ],
+  "triggers": [
+    {
+      "query_level_trigger": {
+        "name": "Cluster health is not green",
+        "severity": "1",
+        "condition": {
+          "script": {
+            "source": "ctx.results[0].status != \"green\"",
+            "lang": "painless"
+          }
+        },
+        "actions": []
+      }
+    }
+  ]
+}
+```
+{% include copy-curl.html %}
+
+如需監視器 API 的更多資訊，請參閱 [Alerting API]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/api/)。
 
 ## 支援的 API
 
-觸發條件使用下列 API 端點的回應。大多數可用於監視叢集狀態的 API 都支援路徑參數（例如以逗號分隔的索引名稱清單）。這些 API 不支援查詢參數。
+每個叢集指標監視器可以呼叫下列 API。使用 API 建立監視器時，`api_type` 欄會列出要在 `inputs.uri.api_type` 欄位中使用的值。這些 API 支援路徑參數，例如以逗號分隔的索引名稱清單，但不支援查詢參數。
 
-- [`_cluster/health`]({{site.url}}{{site.baseurl}}/api-reference/cluster-health/)
-- [`_cluster/stats`]({{site.url}}{{site.baseurl}}/api-reference/cluster-stats/)
-- [`_cluster/settings`]({{site.url}}{{site.baseurl}}/api-reference/cluster-settings/)
-- [`_nodes/stats`]({{site.url}}{{site.baseurl}}/opensearch/popular-api/#get-node-statistics)
-- [`_cat/indices`]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-indices/)
-- [`_cat/pending_tasks`]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-pending-tasks/)
-- [`_cat/recovery`]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-recovery/)
-- [`_cat/shards`]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-shards/)
-- [`_cat/snapshots`]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-snapshots/)
-- [`_cat/tasks`]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-tasks/)
+API | `api_type` | OpenSearch Dashboards 中的請求類型
+:--- | :--- | :---
+[Cluster Health]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-health/) | `CLUSTER_HEALTH` | **Cluster health**
+[Cluster Settings]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-settings/) | `CLUSTER_SETTINGS` | **Cluster settings**
+[Cluster Stats]({{site.url}}{{site.baseurl}}/api-reference/cluster-api/cluster-stats/) | `CLUSTER_STATS` | **Cluster stats**
+[CAT Indices]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-indices/) | `CAT_INDICES` | **List indices**
+[CAT Pending Tasks]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-pending-tasks/) | `CAT_PENDING_TASKS` | **List pending tasks**
+[CAT Recovery]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-recovery/) | `CAT_RECOVERY` | **List index and shard recoveries**
+[CAT Shards]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-shards/) | `CAT_SHARDS` | **List shards**
+[CAT Snapshots]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-snapshots/) | `CAT_SNAPSHOTS` | **List snapshots**
+[CAT Tasks]({{site.url}}{{site.baseurl}}/api-reference/cat/cat-tasks/) | `CAT_TASKS` | **List tasks**
+[Nodes Stats]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/nodes-stats/) | `NODES_STATS` | 無法使用。請使用 API。
 
 ## 限制 API 欄位
 
-如果您想隱藏 API 回應中的欄位，避免將其提供給警示使用，請重新設定 Alerting 外掛程式內的 [supported_json_payloads.json](https://github.com/opensearch-project/alerting/blob/main/alerting/src/main/resources/org/opensearch/alerting/settings/supported_json_payloads.json) 檔案。此檔案可作為您想在警示中使用的 API 欄位允許清單。預設情況下，所有 API 及其參數都可用於監視器與觸發條件。
+若要限制個別叢集指標監視器可使用的 API 與回應欄位，請修改 Alerting 外掛程式內的 [supported_json_payloads.json](https://github.com/opensearch-project/alerting/blob/main/alerting/src/main/resources/org/opensearch/alerting/settings/supported_json_payloads.json) 檔案。此檔案的作用如同允許清單。預設情況下，監視器與觸發條件可以使用所有支援的 API 及其回應欄位。
 
-不過，您可以修改此檔案，讓叢集指標監視器只能針對檔案中參照的 API 建立。此外，只有支援檔案中參照的欄位才能用來建立觸發條件。此 `supported_json_payloads.json` 允許為 `_cluster/stats` API 建立叢集指標監視器，並為 `indices.shards.total` 與 `indices.shards.index.shards.min` 欄位設定觸發條件。
+如果您修改此檔案，則只能為檔案中列出的 API 建立個別叢集指標監視器，且觸發條件只能使用檔案中列出的欄位。例如，下列項目允許為 Cluster Stats API 建立監視器，並允許觸發條件使用 `indices.shards.total` 與 `indices.shards.index.shards.min` 欄位：
 
 ```json
 "/_cluster/stats": {
@@ -63,67 +118,28 @@ _個別叢集指標監視器_ 是一種警示監視器，可收集並分析單�
 }
 ```
 
-## Painless 觸發條件
+## 監視遠端叢集
 
-Painless 指令碼可定義叢集指標監視器的觸發條件，類似於使用擷取查詢定義選項所定義的個別查詢或個別桶監視器。Painless 指令碼由至少一個陳述式，以及您希望執行的任何其他函式組成。如需詳細資訊，請參閱 [Painless 指令碼語言]({{site.url}}{{site.baseurl}}/scripting/painless/)。
+每個叢集指標監視器可以在多個叢集上呼叫 API。在 OpenSearch Dashboards 中，於 **Select clusters** 選取叢集。使用 API 時，在 `inputs.uri.clusters` 欄位中列出叢集，例如 `"clusters": ["cluster-1", "cluster-2"]`。
 
-叢集指標監視器最多支援 **十個** 觸發條件。
+當監視器在多個叢集上呼叫 API 時，`ctx.results[0]` 會包含每個叢集的回應，並以叢集名稱作為鍵值。下列觸發條件會在任一叢集的健康狀態不是綠色時產生警示：
 
-在下列範例中，監視器設定為對兩個叢集 `cluster-1` 和 `cluster-2` 呼叫 Cluster Health API。當任一叢集的 `status` 不是 `green` 時，觸發條件就會建立警示。
-
-`script` 參數將 `source` 指向 Painless 指令碼 `for (cluster in ctx.results[0].keySet()) if (ctx.results[0][cluster].status != \"green\") return true`。如需更多 `painless ctx` 變數選項，請參閱[觸發條件變數]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/triggers/#trigger-variables)。
-
-```json
-{
-  "name": "Cluster Health Monitor",
-  "type": "monitor",
-  "monitor_type": "query_level_monitor",
-  "enabled": true,
-  "schedule": {
-    "period": {
-      "unit": "MINUTES",
-      "interval": 1
-    }
-  },
-  "inputs": [
-    {
-      "uri": {
-        "path": "_cluster/health/",
-        "path_params": "",
-        "url": "http://localhost:9200/_cluster/health/",
-        "clusters": ["cluster-1", "cluster-2"]
-      }
-    }
-  ],
-  "triggers": [
-    {
-      "query_level_trigger": {
-        "id": "Tf_L_nwBti6R6Bm-18qC",
-        "name": "Yellow status trigger",
-        "severity": "1",
-        "condition": {
-          "script": {
-            "source": "for (cluster in ctx.results[0].keySet()) if (ctx.results[0][cluster].status != \"green\") return true",
-            "lang": "painless"
-          }
-        },
-        "actions": []
-      }
-    }
-  ]
-}
 ```
-儀表板介面支援選取要監視的叢集及所需的 API。下圖顯示此介面。
+for (cluster in ctx.results[0].keySet()) if (ctx.results[0][cluster].status != "green") return true
+```
+{% include copy.html %}
 
-若要透過儀表板 UI 建立跨叢集監視器，需要下列[權限]({{site.url}}{{site.baseurl}}/security/access-control/permissions/)：`cluster:admin/opensearch/alerting/remote/indexes/get`、`indices:admin/resolve/index`、`cluster:monitor/health` 和 `indices:admin/mappings/get`。
+若要在 OpenSearch Dashboards 中建立跨叢集監視器，您需要下列[權限]({{site.url}}{{site.baseurl}}/security/access-control/permissions/)：`cluster:admin/opensearch/alerting/remote/indexes/get`、`indices:admin/resolve/index`、`cluster:monitor/health` 和 `indices:admin/mappings/get`。
 {: .note}
 
-![叢集指標監視器]({{site.url}}{{site.baseurl}}/images/alerting/cross-cluster-cluster-metrics-monitors.png){: width="700" }
+下圖顯示一個在兩個叢集上呼叫 Cluster Health API 的每個叢集指標監視器。
 
-### 限制
+![多個叢集的每個叢集指標監視器]({{site.url}}{{site.baseurl}}/images/alerting/cross-cluster-cluster-metrics-monitors.png){: width="700" }
 
-個別叢集指標監視器有下列限制：
+## 限制
 
-- OpenSearch 叢集必須處於可監視索引條件，並可對該索引執行動作的狀態。
-- 移除使用者對某個資源的權限，不會阻止該使用者先前為該資源建立的監視器執行。
-- 具有建立監視器權限的使用者，可以為自己沒有權限的資源建立監視器；不過，這些監視器不會執行。
+個別叢集指標監視器有以下限制：
+
+- 叢集必須處於監視器可以執行且其動作可以被執行的狀態。
+- 移除使用者的資源權限，並不會停止該使用者針對該資源既有的監視器執行。
+- 具備建立監視器權限的使用者，不會被阻止為其沒有權限的資源建立監視器。不過，這些監視器不會執行。

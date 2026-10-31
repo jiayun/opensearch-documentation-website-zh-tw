@@ -2,32 +2,35 @@
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: "事件分析"
-nav_order: 20
+parent: Classic observability apps
+nav_order: 10
 redirect_from:
   - /observability-plugin/event-analytics/
 ---
 
 # 事件分析
 
-OpenSearch Observability 中的事件分析可讓您使用 [Piped Processing Language]({{site.url}}{{site.baseurl}}/search-plugins/sql/ppl/index/) (PPL) 查詢建立資料視覺化。
+事件分析可讓您使用[管線處理語言]({{site.url}}{{site.baseurl}}/search-plugins/sql/ppl/index/)（PPL）查詢來探索記錄事件並建立資料視覺化。
+
+事件分析是[傳統可觀測性應用程式]({{site.url}}{{site.baseurl}}/observing-your-data/classic-observability-apps/)。啟用多個資料來源或新版首頁時，便無法使用此功能。若要在 Observability 工作區中探索記錄檔，請參閱[記錄檔]({{site.url}}{{site.baseurl}}/observing-your-data/exploring-observability-data/discover-logs/)。
 
 ## 事件分析入門
 
-若要開始使用，請在 OpenSearch Dashboards 中選擇 **Observability**，然後選擇 **Logs**。如果您想在不新增自有資料的情況下開始探索，請選擇 **Add samples**。Dashboards 會新增可供您互動的範例視覺化。您也可以在 [OpenSearch Playground](https://playground.opensearch.org/app/observability-logs#/) 中試用預先設定的分析。
+若要開始，請在頂端選單前往 **Observability** > **Logs**，然後選取 **Event Explorer**。如果您想在未新增自己的資料前先探索，請選取 **Add samples**。Dashboards 會新增可供操作的範例視覺化。您也可以在 [OpenSearch Playground](https://playground.opensearch.org/app/observability-logs#/) 試用預先設定的分析功能。
 
 ## 建立查詢
 
-若要產生自訂視覺化，您必須先指定 PPL 查詢。接著，OpenSearch Dashboards 會根據您的查詢結果自動建立視覺化。
+若要產生自訂視覺化，您必須先指定 PPL 查詢。OpenSearch Dashboards 接著會根據您的查詢結果自動建立視覺化。
 
-例如，下列 PPL 查詢會傳回您資料中目前有多少個主機位址的計數。
+例如，下列 PPL 查詢會傳回 OpenSearch Dashboards 範例網站記錄資料中的記錄事件數量：
 
 ```
 source = opensearch_dashboards_sample_data_logs | fields host | stats count()
 ```
 
-根據預設，Dashboards 會顯示您資料中最近 15 分鐘的結果。若要查看不同時間範圍的資料，請使用日期與時間選擇器選擇所需的設定。
+根據預設，Dashboards 會顯示您資料最近 15 分鐘的結果。若要查看不同時間範圍的資料，請使用日期與時間選擇器來選擇所需的設定。
 
-如需有關建立 PPL 查詢的詳細資訊，請參閱 [Piped Processing Language]({{site.url}}{{site.baseurl}}/search-plugins/sql/ppl/index/)。
+如需建立 PPL 查詢的詳細資訊，請參閱 [Piped Processing Language]({{site.url}}{{site.baseurl}}/search-plugins/sql/ppl/index/)。
 
 ### OpenSearch Dashboards 查詢助理
 
@@ -58,31 +61,31 @@ observability.summarize.error_summary_agent_name: "Error summary agent"
 
 Dashboards 產生視覺化之後，如果您想再次查看它，或將它納入 [作業面板]({{site.url}}{{site.baseurl}}/observing-your-data/operational-panels/)，請將其儲存。若要儲存視覺化，請展開右上角的 **Save** 下拉式選單，輸入視覺化的名稱，然後選取 **Save** 按鈕。您可以在事件分析頁面上重新開啟已儲存的視覺化。
 
-## 建立事件分析視覺化並將其新增至儀表板
+## 建立事件分析視覺化並新增至儀表板
 
-此功能適用於 OpenSearch Dashboards 2.7 及更新版本。它適用於使用 PPL 從 OpenSearch 或聯合資料來源 (例如 Prometheus) 查詢資料的新視覺化。
+此功能適用於使用 PPL 從 OpenSearch 或 Prometheus 等聯合資料來源查詢資料的新視覺化。
 {: .note}
 
 若要建立 PPL 視覺化，請依照下列步驟操作：
 
-1. 在主選單上，選擇 **Visualize** > **PPL**。
-2. 在 **Observability** > **Logs** > **Explorer** 視窗中，於 **PPL query** 欄位輸入索引來源，例如 `source = opensearch_dashboards_sample_data_flights | stats count() by DestCountry`。您必須使用 PPL 語法輸入查詢。
-3. 設定時間篩選條件，例如 **This week**，然後選取 **Refresh**。
-4. 從右側的側邊欄下拉式選單中選擇視覺化類型，例如 **Pie**。
+1. 在頂端功能表中，前往 **Visualize**，選取 **Create visualization**，然後選取 **PPL**。此時會開啟 **Observability** > **Logs** > **Explorer** 頁面。
+2. 在 **PPL query** 欄位中輸入索引來源，例如 `source = opensearch_dashboards_sample_data_flights | stats count() by DestCountry`。您必須使用 PPL 語法輸入查詢。
+3. 設定時間篩選條件，例如 **This week**，然後選取 **Update**。
+4. 選取 **Visualizations** 索引標籤，然後從右側的下拉式清單中選取視覺化類型，例如 **Pie**。
 5. 選取 **Save** 並輸入視覺化的名稱。
 
-您現在已建立一個新的視覺化，可將其新增至新的或現有的儀表板。若要將 PPL 查詢新增至儀表板，請依照下列步驟操作：
+您現在已建立一個可新增至全新或現有儀表板的視覺化。若要將 PPL 查詢新增至儀表板，請依照下列步驟操作：
 
-1. 從主選單選取 **Dashboards**。
-2. 在 **Dashboards** 視窗中，選取 **Create** > **Dashboard**。
+1. 在頂端功能表中，前往 **Dashboards**。
+2. 選取 **Create** > **Dashboard**。
 3. 在 **Editing New Dashboard** 視窗中，選擇 **Add an existing**。
-4. 在 **Add panels** 視窗中，從 **Types** 下拉式選單選擇 **PPL**，然後選取視覺化。該視覺化現在會顯示在您的儀表板上。
+4. 在 **Add panels** 視窗中，從 **Types** 下拉式選單選擇 **PPL**，然後選取該視覺化。它現在會顯示在您的儀表板上。
 5. 選取 **Save** 並輸入儀表板的名稱。
-6. 若要將更多視覺化新增至儀表板，請選擇 **Select existing visualization** 並依照步驟 1--5 操作。或者，選擇 **Create new**，然後在 **New Visualization** 視窗中選取 **PPL**。您將返回事件分析頁面，並依照前述說明中的步驟 1--5 操作。
+6. 若要新增更多視覺化至儀表板，請選擇 **Select existing visualization** 並依照步驟 1 至 5 操作。或者，選擇 **Create new**，然後在 **New Visualization** 視窗中選取 **PPL**。您將返回事件分析頁面，並依照前述說明中的步驟 1 至 5 操作。
 
-下列示範概述如何建立事件分析視覺化並將其新增至儀表板。
+下列示範提供建立事件分析視覺化並將其新增至儀表板的概觀。
 
-![建立事件分析視覺化並將其新增至儀表板的示範]({{site.url}}{{site.baseurl}}/images/dashboards/event-analytics-dashboard.gif)
+![示範如何建立事件分析視覺化並新增至儀表板]({{site.url}}{{site.baseurl}}/images/dashboards/event-analytics-dashboard.gif)
 
 ### 事件分析視覺化的限制
 

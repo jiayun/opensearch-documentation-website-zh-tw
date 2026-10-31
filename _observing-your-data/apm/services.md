@@ -2,8 +2,9 @@
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: "服務"
-nav_order: 20
-parent: Application Performance Monitoring
+nav_order: 40
+parent: Application performance monitoring
+grand_parent: Observability workspace apps
 ---
 
 # 服務
@@ -14,19 +15,19 @@ parent: Application Performance Monitoring
 
 ## 存取服務頁面
 
-若要存取 **Services** 頁面，請瀏覽至您的可觀測性工作區，然後從左側導覽選單中選取 **APM** > **Services**。下圖顯示 **Services** 頁面。
+若要存取 **Services** 頁面，請在您的可觀測性工作區中，於左側導覽選取 **Application performance** > **Services**。下圖顯示 **Services** 頁面。
 
-![服務首頁]({{site.url}}{{site.baseurl}}/images/apm/services-home.png)
+![Services 首頁]({{site.url}}{{site.baseurl}}/images/apm/services-home.png)
 
-服務首頁會顯示所有已探索服務的表格，並包含下列資訊：
+Services 首頁會以表格顯示所有已探索到的服務，並包含下列資訊：
 
-- **Service name**：OpenTelemetry SDK 所回報的已導入監測服務名稱。
+- **Service name**：由 OpenTelemetry SDK 回報的已檢測服務名稱。
 - **P99/P90/P50 latency**：服務的第 99、90 及 50 百分位回應時間。
 - **Total requests**：服務在所選時間範圍內處理的請求總數。
-- **Failure ratio**：導致錯誤的請求百分比 (`4xx` 及 `5xx` 回應)。
-- **Environment**：部署環境 (例如 `production` 或 `staging`)。
+- **Failure ratio**：導致錯誤的請求百分比（`4xx` 與 `5xx` 回應）。
+- **Environment**：部署環境（例如 `production` 或 `staging`）。
 
-服務首頁也會提供 **Top services by fault rate**（故障率最高的服務）及 **Top dependency paths by fault rate**（故障率最高的相依性路徑）相關資訊，協助您快速找出重大問題及有問題的服務對服務通訊路徑。
+Services 首頁也會提供 **Top services by fault rate** 與 **Top dependency paths by fault rate** 的相關資訊，協助您快速找出重大問題以及有問題的服務對服務通訊路徑。
 
 ## 服務概觀
 

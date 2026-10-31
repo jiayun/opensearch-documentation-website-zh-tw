@@ -2,7 +2,8 @@
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: "為您的應用程式進行檢測"
-parent: Agent traces
+parent: Agent monitoring
+grand_parent: Observability workspace apps
 nav_order: 10
 ---
 

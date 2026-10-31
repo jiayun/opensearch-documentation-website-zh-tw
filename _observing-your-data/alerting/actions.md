@@ -16,11 +16,11 @@ parent: Monitors
 若要新增動作：
 
 1. 在 **Triggers** 面板中，選取 **Add action**。
-1. 在 **Notification** 區段中輸入動作詳細資訊，包括動作名稱、通知通道與通知訊息本文。
+1. 在 **Notification** 區段中輸入動作詳細資料，包括動作名稱、通知管道及通知訊息本文。
 
-    您可以使用 [Mustache 範本](https://mustache.github.io/mustache.5.html)在訊息中加入變數。您可以使用 `ctx.action.name`、目前動作的名稱，以及所有[動作變數](#actions-variables)。
+    您可以使用 [Mustache 範本](https://mustache.github.io/mustache.5.html)在訊息中加入變數。您可以使用 `ctx.action.name`（目前動作的名稱）以及所有[動作變數](#actions-variables)。
 
-    如果您的通知通道是預期特定資料格式的自訂 webhook，請直接在訊息本文中包含 JSON（或 XML）：
+    如果您的通知管道是預期特定資料格式的自訂 webhook，請直接在訊息本文中加入 JSON（或 XML）：
 
     ```json
     {% raw %}{ "text": "Monitor {{ctx.monitor.name}} just entered alert status. Please investigate the issue. - Trigger: {{ctx.trigger.name}} - Severity: {{ctx.trigger.severity}} - Period start: {{ctx.periodStart}} - Period end: {{ctx.periodEnd}}" }{% endraw %}
@@ -28,14 +28,14 @@ parent: Monitors
 
     在上述範例中，訊息內容必須符合[自訂 webhook]({{site.url}}{{site.baseurl}}/notifications-plugin/index/) 中的 `Content-Type` 標頭。
 
-1. 如果您使用的是桶層級監視器，請選擇監視器應在每次執行時還是針對每個警示執行動作。
-1. （選用）使用動作節流來限制您在特定時間範圍內接收的通知數量。
+1. 如果您使用桶層級監視器，請選擇監視器應在每次執行時執行動作，還是在每次警示時執行動作。
+1. （選用）使用動作節流來限制您在指定時間範圍內收到的通知數量。
 
-    例如，如果監視器每分鐘檢查一次觸發條件，您可能每分鐘都會收到一次通知。如果您將動作節流設定為 60 分鐘，即使該小時內觸發條件符合數十次，您每小時也只會收到不超過一次的通知。
+    例如，如果監視器每分鐘檢查一次觸發條件，您可能會每分鐘收到一則通知。如果您將動作節流設為 60 分鐘，則每小時最多只會收到一則通知，即使該小時內觸發條件符合數十次也一樣。
 
 1. 選擇 **Create**。
 
-動作傳送訊息後，該訊息的內容即離開 Alerting 外掛程式的管轄範圍。保護訊息的存取權（例如 Slack 頻道的存取權）是您的責任。
+動作傳送訊息後，該訊息的內容不受 OpenSearch 控制。保護訊息存取安全（例如 Slack 頻道的存取權）是您的責任。
 
 #### 訊息範例
 

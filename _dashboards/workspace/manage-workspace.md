@@ -53,6 +53,23 @@ Essentials  |    Analytics Search<br> Security Analytics<br> Observability
 
 在左側導覽選單中存取 **Sample data**。選取適當的資料集，即可將其安裝至您的叢集和 OpenSearch Dashboards。
 
+## 將未指派的資產遷移至工作區
+
+在啟用工作區之前建立的已儲存物件不屬於任何工作區。工作區只會顯示指派給它的資產，因此即使這些資產仍存在於叢集中，也不會顯示在任何工作區中。[儀表板管理員]({{site.url}}{{site.baseurl}}/dashboards/workspace/workspace-acl/#configuring-dashboard-administrators)可以使用遷移精靈，將所有未指派的資產移至新的工作區。
+
+當有未指派的資產時，工作區首頁會向儀表板管理員顯示 **Migrate existing assets (N)** 按鈕，其中 N 是未指派的資產數量。
+
+若要將未指派的資產遷移至新的工作區，請依照下列步驟操作：
+
+1. 在工作區首頁上，選取 **Migrate existing assets (N)**。
+1. 在 **Workspace name** 欄位中，輸入新工作區的名稱。
+1. 檢閱未指派的資產清單。您可以搜尋清單，並依資產類型篩選。無論搜尋字詞或篩選條件為何，精靈都會遷移所有未指派的資產。
+1. 選取 **Create workspace and migrate**。OpenSearch Dashboards 會建立工作區，將所有資料來源和資料連線連接至該工作區，讓遷移後的儀表板繼續顯示資料，然後遷移資產。遷移執行期間，您無法關閉精靈。
+1. 檢閱摘要，其中會顯示已遷移的資產數量、遷移失敗的資產數量，以及已連接的資料來源數量。
+1. 選取 **Go to \<workspace name\>** 以開啟新的工作區。
+
+遷移失敗的資產仍會維持未指派狀態，摘要會逐一列出這些資產及其失敗原因。若要將這些資產遷移至同一個工作區，請選取 **Retry failed assets**。如果遷移在完成前停止，請選取 **Continue migrating**，將其餘資產遷移至同一個工作區。
+
 ## 在工作區之間複製資產
 
 不支援複製資料來源和組態。

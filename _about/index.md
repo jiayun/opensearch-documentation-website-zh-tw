@@ -6,7 +6,7 @@ nav_order: 1
 has_children: false
 has_toc: false
 nav_exclude: true
-description: "OpenSearch 與 OpenSearch Dashboards 文件。這是一套開放原始碼套件，適用於全文搜尋、應用程式監控、記錄分析與向量搜尋。"
+description: "OpenSearch 與 OpenSearch Dashboards 的文件，這是一套用於全文搜尋、應用程式監控、記錄檔分析與向量搜尋的開放原始碼套件。"
 permalink: /about/
 redirect_from:
   - /docs/opensearch/
@@ -14,7 +14,7 @@ redirect_from:
   - /opensearch/index/
 why_use:
 - heading: 向量資料庫
-  description: 將 OpenSearch 作為向量資料庫，結合傳統搜尋、分析與向量搜尋的強大功能
+  description: 將 OpenSearch 用作向量資料庫，結合傳統搜尋、分析與向量搜尋的強大功能
   link: /vector-search/
   image: /images/icons/vector-search-square.png
   image_alt: 向量搜尋圖示
@@ -24,12 +24,12 @@ why_use:
   image: /images/icons/Icon_Lexical_Search-150x150.avif
   image_alt: 詞彙搜尋圖示
 - heading: 應用程式與基礎架構監控
-  description: 使用可觀測性記錄檔、指標與追蹤，即時監控您的應用程式
+  description: 使用可觀測性記錄檔、指標與追蹤來即時監控您的應用程式
   link: /observing-your-data/
   image: /images/icons/Icon_Observability-150x150.avif
   image_alt: 可觀測性監控圖示
 - heading: 資料分析
-  description: 在 OpenSearch Dashboards 中分析資料並將其視覺化
+  description: 在 OpenSearch Dashboards 中分析並視覺化您的資料
   link: /dashboards/
   image: /images/icons/OpenSearch-Dashboards-Square.png
   image_alt: OpenSearch Dashboards 圖示
@@ -44,7 +44,7 @@ features:
   description: 建立索引、管理範本，並自動化索引生命週期
   link: /im-plugin/
 - heading: 對應
-  description: 定義欄位類型，以控制資料編製索引的方式
+  description: 定義欄位類型，以控制資料的編製索引方式
   link: /mappings/
 - heading: API 參考
   description: 所有 OpenSearch REST 與 gRPC API 的完整參考
@@ -53,41 +53,51 @@ features:
   description: 使用 OpenSearch 查詢語言搜尋您的資料
   link: /query-dsl/
 - heading: 向量搜尋
-  description: 使用向量與 AI 驅動的搜尋來建置現代化的搜尋應用程式
+  description: 使用向量與 AI 驅動的搜尋來建置現代搜尋應用程式
   link: /vector-search/
 - heading: AI 與機器學習
-  description: 部署模型、連接 AI 平台，並建置 AI 代理程式與助理
+  description: 部署模型、連線至 AI 平台，並建置 AI 代理程式與助理
   link: /ml-commons-plugin/
 getting_started:
 - heading: OpenSearch 入門
-  description: 了解 OpenSearch，並開始匯入與搜尋資料
+  description: 瞭解 OpenSearch 並開始匯入與搜尋資料
   link: /getting-started/
   image: /images/icons/OpenSearch-Core.png
   image_alt: OpenSearch Core 圖示
 - heading: OpenSearch Dashboards 入門
-  description: 了解用於將資料視覺化的 OpenSearch Dashboards 應用程式與工具
+  description: 瞭解用於視覺化資料的 OpenSearch Dashboards 應用程式與工具
   link: /dashboards/getting-started/
   image: /images/icons/OpenSearch-Dashboards.png
   image_alt: OpenSearch Dashboards 圖示
 - heading: 向量搜尋入門
-  description: 了解向量搜尋選項，並建置您的第一個向量搜尋應用程式
+  description: 瞭解向量搜尋選項並建置您的第一個向量搜尋應用程式
   link: /vector-search/getting-started/
   image: /images/icons/Vector-search-icon.avif
   image_alt: 向量搜尋圖示
 - heading: OpenSearch 安全性入門
-  description: 了解 OpenSearch 中的安全性
+  description: 瞭解 OpenSearch 中的安全性
   link: /security/getting-started/
   image: /images/icons/OpenSearch-Security.png
   image_alt: OpenSearch Security 圖示
+- heading: 可觀測性入門
+  description: 將記錄檔傳送至 OpenSearch，並在 OpenSearch Dashboards 中將其視覺化
+  link: /observing-your-data/log-ingestion/
+  image: /images/icons/OpenSearch-Observability.png
+  image_alt: OpenSearch Observability 圖示
+- heading: 探索教學
+  description: 依照逐步教學進行搜尋、向量搜尋與生成式 AI 應用程式
+  link: /tutorials/
+  image: /images/icons/Workflow-Icon.avif
+  image_alt: 工作流程圖示
 ---
 
 {%- comment -%}The `/docs/opensearch/` redirect is specifically to support the UI links in OpenSearch Dashboards 1.0.0.{%- endcomment -%}
 
-# ![OpenSearch 圖示]({{site.url}}{{site.baseurl}}/images/icons/OpenSearch-Core.png){: .heading-icon} OpenSearch 與 OpenSearch Dashboards
+# ![OpenSearch icon]({{site.url}}{{site.baseurl}}/images/icons/OpenSearch-Core.png){: .heading-icon} OpenSearch 與 OpenSearch Dashboards
 **版本 {{site.opensearch_major_minor_version}}**
 {: .label .label-blue }
 
-OpenSearch 是一套可擴充的開放原始碼搜尋與分析套件，適用於全文搜尋、應用程式監控、記錄分析與向量搜尋。OpenSearch Dashboards 則提供視覺化與管理介面。
+OpenSearch 是一套可擴充的開放原始碼搜尋與分析套件，適用於全文搜尋、應用程式監控、記錄檔分析與向量搜尋。OpenSearch Dashboards 提供視覺化與管理介面。
 
 ## 入門
 
@@ -102,10 +112,10 @@ OpenSearch 是一套可擴充的開放原始碼搜尋與分析套件，適用於
 {% include cards.html cards=page.features %}
 
 
-## 參與貢獻
+## 參與專案
 
-[OpenSearch](https://opensearch.org) 由 OpenSearch Software Foundation 支援。所有元件皆依據 [Apache License 2.0 版](https://www.apache.org/licenses/LICENSE-2.0.html)在 [GitHub](https://github.com/opensearch-project/) 上提供。
-本專案歡迎各種 GitHub 問題回報、錯誤修正、功能、外掛程式、文件等任何貢獻。若要參與，請參閱[貢獻](https://github.com/opensearch-project/.github/blob/main/CONTRIBUTING.md)。
+[OpenSearch](https://opensearch.org) 由 OpenSearch Software Foundation 支援。所有元件皆以 [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.html) 授權，並於 [GitHub](https://github.com/opensearch-project/) 上提供。
+本專案歡迎 GitHub 問題、錯誤修正、功能、外掛程式、文件等任何形式的貢獻。若要參與，請參閱[貢獻指南](https://github.com/opensearch-project/.github/blob/main/CONTRIBUTING.md)。
 
 ---
 

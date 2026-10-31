@@ -1,22 +1,22 @@
 ---
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
-title: API
+title: "警示 API"
 parent: Alerting
-nav_order: 15
+nav_order: 60
 redirect_from:
   - /monitoring-plugins/alerting/api/
 ---
 
 # 警示 API
 
-使用警示 API，以程式設計方式建立、更新及管理監視器和警示。如需專門支援複合監視器的 API，請參閱[使用 API 管理複合監視器]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/composite-monitors/#managing-composite-monitors-with-the-api)。
+使用警示 API 以程式設計方式建立、更新及管理監視器與警示。如需專門支援複合監視器的 API，請參閱 [複合監視器 API]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/composite-monitors-api/)。
 
 ## 建立查詢層級監視器
 
-查詢層級監視器會執行查詢，並判斷結果是否應觸發警示。查詢層級監視器一次只能觸發一個警示。如需查詢層級與桶 (bucket) 層級監視器的詳細資訊，請參閱[建立監視器]({{site.url}}{{site.baseurl}}/monitoring-plugins/alerting/monitors/)。
+查詢層級監視器會執行查詢，並判斷結果是否應觸發警示。查詢層級監視器一次只能觸發一個警示。如需查詢層級與桶層級監視器的詳細資訊，請參閱 [建立監視器]({{site.url}}{{site.baseurl}}/monitoring-plugins/alerting/monitors/)。
 
-#### 請求範例
+#### 範例請求
 ```json
 POST _plugins/_alerting/monitors
 {
@@ -82,8 +82,8 @@ POST _plugins/_alerting/monitors
 {% include copy-curl.html %}
 
 
-如果您的目的地使用自訂 webhook，且需要在訊息本文中嵌入 JSON，請務必將引號逸出：
-
+如果您在目的地使用自訂 webhook，並且需要在訊息本文中嵌入 JSON，請務必逸出引號：
+ 
 ```json
 {
   "message_template": {
@@ -94,11 +94,11 @@ POST _plugins/_alerting/monitors
 {% include copy-curl.html %}
 
 
-若要指定後端角色，您可以選擇在建立監視器請求的底部加入 `rbac_roles` 參數及後端角色名稱。
+您也可以選擇在建立監視器請求的底部新增 `rbac_roles` 參數及後端角色名稱，以指定後端角色。
 
-下列請求會建立查詢層級監視器，並提供兩個後端角色：`role1` 和 `role2`。請求底部的區段顯示以此語法指定角色的那一行：`"rbac_roles": ["role1", "role2"]`。如需了解如何使用後端角色限制存取，請參閱[（進階）依後端角色限制存取]({{site.url}}{{site.baseurl}}/monitoring-plugins/alerting/security/#advanced-limit-access-by-backend-role)。
-
-#### 請求範例
+下列請求會建立一個查詢層級監視器，並提供兩個後端角色 `role1` 與 `role2`。請求底部的區段顯示使用此語法指定角色的那一行：`"rbac_roles": ["role1", "role2"]`。若要瞭解如何使用後端角色限制存取，請參閱 [（進階）依後端角色限制存取]({{site.url}}{{site.baseurl}}/monitoring-plugins/alerting/security/#advanced-limit-access-by-backend-role)。
+ 
+#### 範例請求
 ```json
 POST _plugins/_alerting/monitors
 {
@@ -167,11 +167,11 @@ POST _plugins/_alerting/monitors
 
 <details markdown="block">
   <summary>
-    選取以展開回應範例
+    選取以展開範例回應
   </summary>
   {: .text-delta}
-
-#### 回應範例
+  
+#### 範例回應
 ```json
 {
   "_id": "vd5k2GsBlQ5JUWWFxhsP",
@@ -253,9 +253,9 @@ POST _plugins/_alerting/monitors
 </details>
 
 
-若要指定時區，您可以在請求的 `schedule` 區段中加入含有時區名稱的 [cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/cron-expressions/)。下列範例會建立一個監視器，於每月第一天太平洋時間下午 12:10 執行。
+若要指定時區，可以在請求的 `schedule` 區段中包含帶有時區名稱的 [cron 運算式]({{site.url}}{{site.baseurl}}/api-reference/cron-expressions/)。下列範例建立一個監視器，於每個月的第一天太平洋時間下午 12:10 執行。
 
-#### 請求範例
+#### 範例請求
 ```json
 {
   "type": "monitor",
@@ -320,13 +320,13 @@ POST _plugins/_alerting/monitors
 {% include copy-curl.html %}
 
 
-如需完整的時區名稱清單，請參閱 [`tz` 資料庫時區清單](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)。Alerting 外掛程式使用 Java [`TimeZone`](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/TimeZone.html) 類別，將 [`ZoneId`](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/ZoneId.html) 轉換為有效的時區。
+如需時區名稱的完整清單，請參閱 [`tz` 資料庫時區清單](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)。警示功能使用 Java [`TimeZone`](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/TimeZone.html) 類別，將 [`ZoneId`](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/ZoneId.html) 轉換為有效的時區。
 
 ---
 
 ## 桶層級監視器
 
-桶層級監視器會將結果依欄位分類至不同的桶。接著，監視器會以每個桶的結果執行指令碼，並評估是否觸發警示。如需桶層級與查詢層級監視器的詳細資訊，請參閱[建立監視器]({{site.url}}{{site.baseurl}}/monitoring-plugins/alerting/monitors/)。
+桶層級監視器會依欄位將結果分類成桶。接著，監視器會以每個桶的結果執行指令碼，並評估是否要觸發警示。如需桶層級與查詢層級監視器的詳細資訊，請參閱[建立監視器]({{site.url}}{{site.baseurl}}/monitoring-plugins/alerting/monitors/)。
 
 #### 範例請求
 ```json
@@ -598,25 +598,25 @@ POST _plugins/_alerting/monitors
 ---
 
 ## 文件層級監視器
-於 2.0 版推出
+2.0 版新增
 {: .label .label-purple }
 
-文件層級監視器會檢查索引中的個別文件是否符合觸發條件。若符合，監視器會產生警示通知。當您使用文件層級監視器執行查詢時，會針對每個符合觸發條件的文件回傳結果。您可以根據查詢名稱、查詢 ID 或結合多個查詢的標籤來建立觸發條件。
+文件層級監視器會檢查索引中的個別文件是否符合觸發條件。若符合，監視器會產生警示通知。當您使用文件層級監視器執行查詢時，會針對每個符合觸發條件的文件回傳結果。您可以依據查詢名稱、查詢 ID，或合併多個查詢的標籤來建立觸發條件。
 
-若要進一步瞭解功能類似文件層級監視器 API 的每文件監視器，請參閱[監視器]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/monitors/)。
+若要進一步了解功能類似文件層級監視器 API 的個別文件監視器，請參閱[監視器]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/monitors/)。
 
-### 搜尋發現結果索引
+### 搜尋 findings 索引
 
-您可以使用警示搜尋 API 操作，透過 GET 請求搜尋發現結果索引 `.opensearch-alerting-finding*` 以取得可用的文件發現結果。預設情況下，不含路徑參數的 GET 請求會回傳所有可用的發現結果。
+您可以使用警示搜尋 API 操作，以 GET 請求搜尋 findings 索引 `.opensearch-alerting-finding*` 中的可用文件發現結果。預設情況下，不含路徑參數的 GET 請求會回傳所有可用的發現結果。
 
-若要擷取所有可用的發現結果，請依照下列方式傳送不含任何路徑參數的 GET 請求：
+若要擷取任何可用的發現結果，請如下傳送不含任何路徑參數的 GET 請求：
 
 ```json
 GET /_plugins/_alerting/findings/_search?
 ```
 {% include copy-curl.html %}
 
-若要擷取單一文件發現項目的中繼資料，您可以依照下列方式以 `findingId` 搜尋該發現結果：
+若要擷取單一文件發現項目的中繼資料，您可以如下所示依其 `findingId` 搜尋該發現項目：
 
 ```json
 GET /_plugins/_alerting/findings/_search?findingId=gKQhj8WJit3BxjGfiOXC
@@ -630,23 +630,23 @@ GET /_plugins/_alerting/findings/_search?findingId=gKQhj8WJit3BxjGfiOXC
 路徑參數 | 說明 | 用法
 :--- | :--- | :---
 `findingId` | 發現項目的識別碼。 | 發現 ID 會在初始查詢回應中回傳。
-`sortString` | 此欄位指定 Alerting 外掛程式用來排序發現結果的字串。 | 預設值為 `id`。
-`sortOrder` | 發現結果清單的排序方式，可為遞增或遞減。 | 使用 `sortOrder=asc` 表示遞增，或 `sortOrder=desc` 表示遞減排序。
-`size` | 選用的限制，指定回應中回傳結果的最大數量。 | 沒有最小值或最大值限制。
+`sortString` | 此欄位指定警示功能用來排序發現結果的字串。 | 預設值為 `id`。
+`sortOrder` | 發現結果清單的排序方式，遞增或遞減。 | 使用 `sortOrder=asc` 表示遞增排序，或 `sortOrder=desc` 表示遞減排序。
+`size` | 選用的限制，指定回應中最多回傳的結果數量。 | 沒有最小值或最大值限制。
 `startIndex` | 分頁指示器。 | 預設為 `0`。
-`searchString` | 您希望在搜尋中回傳的發現結果屬性。 | 若要在特定索引中搜尋，請在請求路徑中指定索引名稱。例如，若要搜尋 `indexABC` 索引中的發現結果，請使用 `searchString=indexABC'。
+`searchString` | 您希望在搜尋結果中回傳的發現屬性。 | 若要在特定索引中搜尋，請在請求路徑中指定索引名稱。例如，若要搜尋 `indexABC` 索引中的發現結果，請使用 `searchString=indexABC'。
 
 ### 建立文件層級監視器
 
-您可以透過 POST 請求建立文件層級監視器，並在請求本文中提供監視器詳細資訊。至少需要提供以下詳細資訊：使用 `inputs` 欄位指定查詢或依標籤組合的查詢、有效的觸發條件，並在 `action` 欄位中提供通知訊息。
+您可以使用 POST 請求建立文件層級監視器，並在請求本文中提供監視器詳細資訊。至少需要提供以下內容：以 `inputs` 欄位指定查詢或依標籤組合的查詢、有效的觸發條件，並在 `action` 欄位中提供通知訊息。
 
-下表提供每個觸發選項的語法。
+下表提供各觸發選項的語法。
 
 觸發選項 | 定義 | 語法
 :--- | :--- | :---
-標籤 | 為套用此標籤之多個查詢所比對到的文件建立警示。如果您依單一標籤將多個查詢分組，則可設定當此標籤名稱回傳結果時觸發警示。| `query[tag=<tag-name>]`
-依名稱查詢 | 為具名查詢所比對到或回傳的文件建立警示。 | `query[name=<query-name>]`
-依 ID 查詢 | 為指定查詢所回傳的文件建立警示。 | `query[id=<query-id>]`
+標籤 | 為套用此標籤之多個查詢所符合的文件建立警示。若您將多個查詢依同一標籤分組，即可設定當此標籤名稱回傳結果時觸發警示。| `query[tag=<tag-name>]`
+依名稱查詢 | 為具名查詢所符合或回傳的文件建立警示。 | `query[name=<query-name>]`
+依 ID 查詢 | 為所識別查詢回傳的文件建立警示。 | `query[id=<query-id>]`
 
 
 #### 範例請求
@@ -738,13 +738,13 @@ POST _plugins/_alerting/monitors
 
 ### 限制
 
-如果您在索引正在重建索引時執行文件層級查詢，API 回應將不會回傳重建索引後的結果。若要取得更新，請等待重建索引程序完成後，再重新執行查詢。
+如果您在索引正在重新建立索引時執行文件層級查詢，API 回應將不會回傳重新編製索引後的結果。若要取得更新，請等待重新編製索引的程序完成，然後重新執行查詢。
 
 ---
 
 ## 更新監視器
 
-更新監視器時，您可以選擇性地包含 `if_seq_no` 和 `if_primary_term` 查詢參數，例如 `?if_seq_no=3&if_primary_term=1`。如果這些數字與現有監視器不符，或該監視器不存在，Alerting 外掛程式會擲回錯誤。OpenSearch 會自動遞增版本號碼和序號（請參閱範例回應）。
+更新監視器時，您可以選擇性地包含 `if_seq_no` 與 `if_primary_term` 查詢參數，例如 `?if_seq_no=3&if_primary_term=1`。如果這些數字與現有監視器不符，或該監視器不存在，OpenSearch 會回傳錯誤。OpenSearch 會自動遞增版本號碼與序號（請參閱範例回應）。
 
 #### 範例請求
 ```json
@@ -809,7 +809,7 @@ PUT _plugins/_alerting/monitors/{monitor_id}
   </summary>
   {: .text-delta}
 
-#### 回應範例
+#### 範例回應
 ```json
 {
   "_id": "Q9aXOmkBC25HCRGmzfw-",
@@ -876,9 +876,9 @@ PUT _plugins/_alerting/monitors/{monitor_id}
 
 ## 取得監視器
 
-使用下列請求擷取特定監視器的詳細資訊。
+使用下列請求擷取特定監視器的詳細資料。
 
-#### 請求範例
+#### 範例請求
 ```
 GET _plugins/_alerting/monitors/{monitor_id}
 ```
@@ -887,11 +887,11 @@ GET _plugins/_alerting/monitors/{monitor_id}
 
 <details markdown="block">
   <summary>
-    選取以展開回應範例
+    選取以展開範例回應
   </summary>
   {: .text-delta}
 
-#### 回應範例
+#### 範例回應
 ```json
 {
   "_id": "Q9aXOmkBC25HCRGmzfw-",
@@ -958,9 +958,9 @@ GET _plugins/_alerting/monitors/{monitor_id}
 
 ## 監視器統計資料
 
-傳回警示功能的統計資料。使用 `_plugins/_alerting/stats` 來尋找節點 ID 與指標，然後即可使用這些值進一步深入查詢。
+傳回警示功能的統計資料。使用 `_plugins/_alerting/stats` 尋找節點 ID 與指標。接著您可以使用這些值進一步深入分析。
 
-#### 請求範例
+#### 範例請求
 ```json
 GET _plugins/_alerting/stats
 GET _plugins/_alerting/stats/{metric}
@@ -971,11 +971,11 @@ GET _plugins/_alerting/{node-id}/stats/{metric}
 
 <details markdown="block">
   <summary>
-    選取以展開回應範例
+    選取以展開範例回應
   </summary>
   {: .text-delta}
 
-#### 回應範例
+#### 範例回應
 ```json
 {
   "_nodes": {
@@ -1194,7 +1194,7 @@ DELETE _plugins/_alerting/monitors/{monitor_id}
 
 ## 搜尋監視器
 
-使用下列請求，根據特定條件 (例如監視器名稱) 查詢並擷取現有監視器的資訊。
+使用下列請求，依據特定條件（例如監視器名稱）查詢並擷取現有監視器的資訊。
 
 #### 範例請求
 ```json
@@ -1301,7 +1301,7 @@ GET _plugins/_alerting/monitors/_search
 
 ## 執行監視器
 
-您可以在 URL 中加入選用的 `?dryrun=true` 參數，以顯示執行結果，而不會有任何動作傳送訊息。
+您可以在 URL 中加入選用的 `?dryrun=true` 參數，在不傳送任何訊息動作的情況下顯示執行結果。
 
 #### 範例請求
 ```json
@@ -1341,7 +1341,7 @@ POST _plugins/_alerting/monitors/{monitor_id}/_execute
 
 ## 取得警示
 
-傳回包含所有警示的陣列。
+回傳包含所有警示的陣列。
 
 #### 路徑參數
 
@@ -1350,12 +1350,12 @@ POST _plugins/_alerting/monitors/{monitor_id}/_execute
 | 參數 | 資料類型 | 說明
 | :--- | :--- | :---
 | `sortString` | 字串 | 定義結果的排序方式。預設為 `monitor_name.keyword`。
-| `sortOrder` | 字串 | 定義結果的順序。選項為 `asc` 或 `desc`。預設為 `asc`。
-| `missing` | 字串 | 指定是否在回應中包含遺漏的資料。
-| `size` | 字串 | 定義要傳回的結果數量。預設為 `20`。
-| `startIndex` | 字串 | 定義結果的起始位置，用於分頁。預設為 `0`。
+| `sortOrder` | 字串 | 定義結果的排序順序。選項為 `asc` 或 `desc`。預設為 `asc`。
+| `missing` | 字串 | 指定是否在回應中包含缺失的資料。
+| `size` | 字串 | 定義要回傳的請求大小。預設為 `20`。
+| `startIndex` | 字串 | 定義起始的索引。用於結果分頁。預設為 `0`。
 | `searchString` | 字串 | 定義用於搜尋特定警示的搜尋字串。預設為空字串。
-| `severityLevel` | 字串 | 定義要篩選的嚴重性層級。預設為 `ALL`。
+| `severityLevel` | 字串 | 定義要篩選的嚴重性等級。預設為 `ALL`。
 | `alertState` | 字串 | 定義要篩選的警示狀態。預設為 `ALL`。
 | `monitorId` | 字串 | 依監視器 ID 篩選。
 | `workflowIds` | 字串 | 允許在單一儀表板中監視來自多個工作流程的鏈結警示狀態。適用於 OpenSearch 2.9 或更新版本。
@@ -1471,7 +1471,7 @@ POST _plugins/_alerting/monitors/{monitor-id}/_acknowledge/alerts
 
 ## 目的地
 
-目的地已在 OpenSearch 2.0 中被棄用，並由通知通道取代。建立、更新及刪除目的地的作業已在同一版本中移除，現有的目的地也已自動遷移至通知通道。若要設定警示的傳送目的地，請使用 [Notifications API]({{site.url}}{{site.baseurl}}/observing-your-data/notifications/api/)。下列讀取作業仍可用於擷取尚未遷移的目的地。
+目的地已在 OpenSearch 2.0 中棄用，並由通知通道取代。建立、更新和刪除目的地的作業已在同一版本中移除，現有的目的地已自動遷移至通知通道。若要設定警示的傳送目的地，請使用 [通知 API]({{site.url}}{{site.baseurl}}/observing-your-data/notifications/api/)。下列讀取作業仍可用於擷取尚未遷移的目的地。
 {: .warning}
 
 ### 取得目的地
@@ -1525,7 +1525,7 @@ GET _plugins/_alerting/destinations/{destination-id}
 
 </details>
 
-### 取得目的地
+### 取得所有目的地
 
 使用下列請求擷取所有目的地。
 
@@ -1578,7 +1578,7 @@ GET _plugins/_alerting/destinations
 
 ### 取得電子郵件帳戶
 
-使用下列請求擷取為警示用途所設定的特定電子郵件帳戶詳細資料。
+使用下列請求擷取為警示用途所設定之特定電子郵件帳戶的詳細資料。
 
 #### 範例請求
 ```json
@@ -1623,7 +1623,7 @@ GET _plugins/_alerting/destinations/email_accounts/{email_account_id}
 
 ### 搜尋電子郵件帳戶
 
-使用下列請求擷取用於電子郵件警示的已設定電子郵件帳戶相關資訊。
+使用下列請求擷取已設定、用於電子郵件警示之電子郵件帳戶的相關資訊。
 
 #### 範例請求
 ```json
@@ -1743,7 +1743,7 @@ GET _plugins/_alerting/destinations/email_groups/{email_group_id}
 
 ### 搜尋電子郵件群組
 
-查詢並擷取用於警示的現有電子郵件群組相關資訊，讓您能依據各種條件篩選及排序結果。下列請求顯示一個範例。
+查詢並擷取現有、用於警示用途之電子郵件群組的相關資訊，讓您能依各種條件篩選及排序結果。下列請求提供範例。
 
 #### 範例請求
 ```json
@@ -1819,7 +1819,7 @@ POST _plugins/_alerting/destinations/email_groups/_search
 
 ## 建立註解
 
-使用下列請求為特定警示新增註解，提供與該警示相關的額外背景資訊或備註。
+使用下列請求為特定警示新增註解，提供與該警示相關的額外脈絡或備註。
 
 #### 範例請求
 ```json
@@ -1859,9 +1859,9 @@ POST _plugins/_alerting/comments/{alert-id}
 
 ## 更新註解
 
-使用下列請求修改先前新增且與警示相關的註解內容。
+使用下列請求修改先前新增、與警示相關聯之註解的內容。
 
-#### 請求範例
+#### 範例請求
 
 ```json
 PUT _plugins/_alerting/comments/{comment-id}
@@ -1873,10 +1873,10 @@ PUT _plugins/_alerting/comments/{comment-id}
 
 
 <details markdown="block">
-  <summary>
-    選取以展開回應範例
-  </summary>
-  {: .text-delta}
+<summary>
+    選取以展開範例回應
+</summary>
+{: .text-delta}
   
 #### 回應範例
 ```json
@@ -1900,9 +1900,9 @@ PUT _plugins/_alerting/comments/{comment-id}
 
 ## 搜尋註解
 
-使用下列請求來查詢並擷取與警示相關聯的現有註解。
+使用下列請求查詢並擷取與警示相關聯的現有註解。
 
-#### 請求範例
+#### 範例請求
 ```json
 GET _plugins/_alerting/comments/_search
 {
@@ -1915,10 +1915,10 @@ GET _plugins/_alerting/comments/_search
 
 
 <details markdown="block">
-  <summary>
-    選取以展開回應範例
-  </summary>
-  {: .text-delta}
+<summary>
+    選取以展開範例回應
+</summary>
+{: .text-delta}
   
 #### 回應範例
 ```json
@@ -1980,9 +1980,9 @@ GET _plugins/_alerting/comments/_search
 
 ## 刪除註解
 
-使用下列請求來移除與警示相關聯的特定註解。
+使用下列請求移除與警示相關聯的特定註解。
 
-#### 請求範例
+#### 範例請求
 ```json
 DELETE _plugins/_alerting/comments/{comment-id}
 ```
@@ -1990,10 +1990,10 @@ DELETE _plugins/_alerting/comments/{comment-id}
 
 
 <details markdown="block">
-  <summary>
-    選取以展開回應範例
-  </summary>
-  {: .text-delta}
+<summary>
+    選取以展開範例回應
+</summary>
+{: .text-delta}
 
 #### 回應範例
 ```json

@@ -102,7 +102,7 @@ has_children: false
 OpenSearch Dashboards 中的 **Suggest parameters** 按鈕會啟動近期歷史資料的檢視，以建議合理的預設值。您可以調整下列參數來覆寫這些預設值：
 
 * **Forecasting interval** – 指定彙總桶的時間間隔（例如 10 分鐘）。較長的間隔可平滑雜訊並降低運算成本，但會延遲偵測。較短的間隔能更早偵測變化，但會增加資源使用量，且可能引入雜訊。請選擇仍能產生穩定訊號的最短間隔。
-* **Window delay** – 告知預測器事件發生與資料匯入之間的預期延遲時間。此延遲會將預測間隔向前移，以確保完整涵蓋資料。例如，如果預測間隔為 10 分鐘，且匯入延遲 1 分鐘，將視窗延遲設為 1 分鐘可確保預測器評估 1:49 至 1:59 的資料，而非 1:50 至 2:00 的資料。
+* **Window delay** – 告知預測器事件發生與資料匯入之間的預期延遲時間。此延遲會將預測間隔往較早的時間調整，以確保完整涵蓋資料。例如，如果預測間隔為 10 分鐘，且匯入延遲 1 分鐘，將視窗延遲設為 1 分鐘可確保預測器評估 1:49 至 1:59 的資料，而非 1:50 至 2:00 的資料。
   * 為避免遺漏資料，請將視窗延遲設為預期匯入延遲的上限。不過，較長的延遲會降低預測的即時回應能力。
 * **Horizon** – 指定要預測多少個未來的桶。預測準確度會隨預測時間的距離增加而下降，因此請僅選擇對實際作業有意義的預測視窗。
 * **History** – 設定用於訓練初始（冷啟動）模型的歷史資料點數量。上限為 10,000。在此上限內，更多歷史資料可提高初始模型的準確度。
@@ -129,27 +129,27 @@ OpenSearch Dashboards 中的 **Suggest parameters** 按鈕會啟動近期歷史�
 根據預設，預測結果會儲存在 `opensearch-forecast-results` 索引別名中。您可以：
 
 * 建立儀表板和視覺化。
-* 將結果連接至 Alerting 外掛程式。
-* 像查詢任何其他 OpenSearch 索引一樣查詢結果。
+* 在[警示監視器]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/monitors/)中使用這些結果。
+* 像查詢任何其他 OpenSearch 索引一樣查詢這些結果。
 
-為了管理儲存空間，此外掛程式會套用輪替原則：
+為了管理儲存空間，OpenSearch 會套用輪替原則：
 
 * **輪替觸發條件** – 當主要分片達到約 65 GB 時，會建立新的後端索引並更新別名。
-* **保留期** – 已輪替的索引會保留至少 30 天後才刪除。
+* **保留期限** – 已輪替的索引在刪除前至少會保留 30 天。
 
-您可以使用下列設定來自訂此行為。
+您可以使用下列設定自訂此行為。
 
 | 設定 | 說明 | 預設值 |
 |---------|-------------|---------|
 | `plugins.forecast.forecast_result_history_max_docs_per_shard` | 觸發輪替前，每個分片允許的 Lucene 文件數上限。一筆結果約為 4 份文件，每份約 47 位元組，總計約 65 GB。 | `1_350_000_000` |
-| `plugins.forecast.forecast_result_history_retention_period` | 預測結果的保留期間。支援 `7d`、`90d` 等期間格式。 | `30d` |
+| `plugins.forecast.forecast_result_history_retention_period` | 保留預測結果的期間。支援 `7d`、`90d` 等期間格式。 | `30d` |
 
 ### 指定自訂結果索引
 
-您可以選取 **Custom index** 並提供別名名稱 (例如 `abc`)，將預測結果儲存在自訂索引中。此外掛程式會建立類似 `opensearch-forecast-result-abc` 的別名，指向後端索引 (例如 `opensearch-forecast-result-abc-history-2024.06.12-000002`)。
+您可以選取 **Custom index** 並提供別名名稱（例如 `abc`），將預測結果儲存在自訂索引中。OpenSearch 會建立一個類似 `opensearch-forecast-result-abc` 的別名，指向後端索引（例如 `opensearch-forecast-result-abc-history-2024.06.12-000002`）。
 
-若要管理權限，請使用以連字號分隔的命名空間。例如，將 `opensearch-forecast-result-financial-us-*` 指派給 `financial` 部門 `us` 群組的角色。
-{: .note } 如果已啟用 Security 外掛程式，請確保已設定適當的[權限]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/security/#custom-result-index-permissions)。
+若要管理權限，請使用連字號命名空間。例如，將 `opensearch-forecast-result-financial-us-*` 指派給 `financial` 部門的 `us` 群組的角色。
+{: .note } 若已啟用 Security 外掛程式，請確保已設定適當的[權限]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/security/#custom-result-index-permissions)。
 
 ### 扁平化巢狀欄位
 
@@ -161,15 +161,15 @@ OpenSearch Dashboards 中的 **Suggest parameters** 按鈕會啟動近期歷史�
 
 請使用 [Index State Management]({{site.url}}{{site.baseurl}}/im-plugin/ism/index/) 來管理扁平化結果索引的輪替和刪除。
 
-### 自訂結果索引生命週期管理
+### 自訂結果索引的生命週期管理
 
-當符合下列任一條件時，此外掛程式會觸發自訂結果索引的輪替。
+當符合下列任一條件時，OpenSearch 會輪替自訂結果索引。
 
-| 參數 | 說明 | 類型 | 單位 | 預設值 | 必要 |
+| 參數 | 說明 | 類型 | 單位 | 預設 | 必要 |
 |----------|-------------|------|------|---------|----------|
-| `result_index_min_size` | 觸發輪替所需的主要分片大小總和下限。 | 整數 | MB | `51200` (50 GB) | 否 |
+| `result_index_min_size` | 觸發輪替所需的主要分片總大小下限。 | 整數 | MB | `51200` (50 GB) | 否 |
 | `result_index_min_age` | 觸發輪替所需的索引存在時間下限。 | 整數 | 天 | `7` | 否 |
-| `result_index_ttl` | 已輪替索引遭到刪除前的最短保留時間 | 整數 | 天 | `60` | 否 |
+| `result_index_ttl` | 輪替後的索引在被刪除前的最短保留時間 | 整數 | 天 | `60` | 否 |
 
 
 ## 步驟 3：測試您的預測器

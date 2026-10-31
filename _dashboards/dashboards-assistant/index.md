@@ -109,7 +109,7 @@ OpenSearch Assistant 會建議提示，以協助您入門、延伸您現有的�
 
 ### 透過 Notebooks 分享對話
 
-您可以使用 [Notebooks]({{site.url}}{{site.baseurl}}/observing-your-data/notebooks/) 來儲存您的對話。若要使用此選項，請從 **OpenSearch Assistant** 右側的下拉式選單中選取 **Save to notebook**。輸入 Notebook 的名稱，然後選取 **Save**。右下角會出現快顯訊息，確認對話已儲存。
+您可以使用 [Notebooks]({{site.url}}{{site.baseurl}}/dashboards/notebooks/) 來儲存您的對話。若要使用此選項，請從 **OpenSearch Assistant** 右側的下拉式選單中選取 **Save to notebook**。輸入 Notebook 的名稱，然後選取 **Save**。右下角會出現快顯訊息，確認對話已儲存。
 
 您與大型語言模型 (LLM) 之間的所有對話（提示與回應／問題與答案）都會儲存到此 Notebook。
 

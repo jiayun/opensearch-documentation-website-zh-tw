@@ -8,9 +8,9 @@ has_children: true
 
 # 資料來源
 
-OpenSearch 資料來源是 OpenSearch 可以連接並從中匯入資料的應用程式。連接資料來源並匯入資料後，即可使用 [REST API]({{site.url}}{{site.baseurl}}/api-reference/index/) 或 [OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/dashboards/) 將資料編製索引、搜尋及分析。
+OpenSearch 資料來源是指 OpenSearch 可以連線並從中匯入資料的應用程式。當您的資料來源完成連線並匯入資料後，即可使用 [REST API]({{site.url}}{{site.baseurl}}/api-reference/index/) 或 [OpenSearch Dashboards]({{site.url}}{{site.baseurl}}/dashboards/) 來編製索引、搜尋與分析這些資料。
 
-本文件著重說明如何使用 OpenSearch Dashboards 網頁介面來連接及管理您的資料來源。如需使用 API 連接資料來源的相關資訊，請參閱[後續步驟](#next-steps)中所連結的開發人員資源。
+本文件著重於使用 OpenSearch Dashboards 的網頁介面來連線及管理您的資料來源。如需透過 API 連線資料來源的相關資訊，請參閱[後續步驟](#next-steps)下方連結的開發人員資源。
 
 ## 先決條件
 

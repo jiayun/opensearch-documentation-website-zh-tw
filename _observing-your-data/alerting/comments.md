@@ -2,7 +2,7 @@
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: "新增評論"
-nav_order: 35
+nav_order: 30
 parent: Alerting
 has_children: false
 redirect_from:

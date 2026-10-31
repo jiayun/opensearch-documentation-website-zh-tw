@@ -2,7 +2,7 @@
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: "異常偵測安全性"
-nav_order: 10
+nav_order: 40
 parent: Anomaly detection
 has_children: false
 redirect_from: 
@@ -11,31 +11,33 @@ redirect_from:
 
 # 異常偵測安全性
 
-您可以在 OpenSearch 中搭配異常偵測使用 Security 外掛程式，將非管理員使用者限制為特定動作。例如，您可能會希望某些使用者只能建立、更新或刪除偵測器，而其他使用者只能檢視偵測器。
+您可以在 OpenSearch 中將 Security 外掛程式與異常偵測搭配使用，以限制非管理員使用者只能執行特定動作。例如，您可能希望某些使用者只能建立、更新或刪除偵測器，而其他使用者只能檢視偵測器。
 
-所有異常偵測索引都會受到保護，做為系統索引。只有超級管理員使用者，或具有 TLS 憑證的管理員使用者，才能存取系統索引。如需詳細資訊，請參閱[系統索引]({{site.url}}{{site.baseurl}}/security/configuration/system-indices/)。
+若要使用資源共用來控制個別偵測器的存取權，請參閱[異常偵測器存取控制]({{site.url}}{{site.baseurl}}/observing-your-data/ad/detector-access-control/)。
+
+所有異常偵測索引都會受到保護，視為系統索引。只有超級管理員使用者或具有 TLS 憑證的管理員使用者才能存取系統索引。如需詳細資訊，請參閱[系統索引]({{site.url}}{{site.baseurl}}/security/configuration/system-indices/)。
 
 
-異常偵測的安全性運作方式與[警示的安全性]({{site.url}}{{site.baseurl}}/monitoring-plugins/alerting/security/)相同。
+異常偵測的安全性運作方式與[警示的安全性]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/security/)相同。
 
 ## 基本權限
 
-身為管理員使用者，您可以根據使用者需要存取哪些 API，使用 Security 外掛程式指派特定權限給他們。如需支援的 API 清單，請參閱[異常偵測 API]({{site.url}}{{site.baseurl}}/monitoring-plugins/ad/api/)。
+身為管理員使用者，您可以依使用者需要存取的 API，使用 Security 外掛程式指派特定權限給他們。如需支援的 API 清單，請參閱 [異常偵測 API]({{site.url}}{{site.baseurl}}/monitoring-plugins/ad/api/)。
 
-Security 外掛程式有兩個內建角色，涵蓋大多數異常偵測使用案例：`anomaly_full_access` 和 `anomaly_read_access`。如需各角色的說明，請參閱[預先定義的角色]({{site.url}}{{site.baseurl}}/security/access-control/users-roles#predefined-roles)。
+Security 外掛程式內建兩個角色，涵蓋大多數異常偵測使用案例：`anomaly_full_access` 和 `anomaly_read_access`。各角色的說明請參閱[預先定義的角色]({{site.url}}{{site.baseurl}}/security/access-control/users-roles#predefined-roles)。
 
-如果您使用 OpenSearch Dashboards 建立異常偵測器，即使具有 `anomaly_full_access`，仍可能會遇到存取問題。此問題已在 OpenSearch 2.17 中解決，但若為較早的版本，則需要新增下列額外權限：
+如果您使用 OpenSearch Dashboards 建立異常偵測器，即使具備 `anomaly_full_access`，仍可能遇到存取問題。此問題已在 OpenSearch 2.17 中解決，但若使用較早版本，則需要新增下列額外權限：
 
-- `indices:data/read/search` -- 您需要此權限，因為 Anomaly Detection 外掛程式需要搜尋資料來源，以驗證是否有足夠的資料可訓練模型。
-- `indices:admin/mappings/fields/get` 和 `indices:admin/mappings/fields/get*` -- 您需要這些權限，以驗證指定的資料來源是否具有有效的時間戳記欄位和類別欄位 (在建立高基數偵測器的情況下)。
+- `indices:data/read/search` -- 您需要此權限，因為異常偵測需要搜尋資料來源，以驗證是否有足夠的資料可訓練模型。
+- `indices:admin/mappings/fields/get` 和 `indices:admin/mappings/fields/get*` -- 您需要這些權限，以驗證指定的資料來源是否具有有效的時間戳記欄位和類別欄位（在建立高基數偵測器的情況下）。
 
-如果這些角色不符合您的需求，您可以混合搭配個別的異常偵測[權限]({{site.url}}{{site.baseurl}}/security/access-control/permissions/)以符合您的使用案例。每個動作都對應 REST API 中的一項操作。例如，`cluster:admin/opensearch/ad/detector/delete` 權限可讓您刪除偵測器。
+如果這些角色不符合您的需求，您可以混搭個別的異常偵測[權限]({{site.url}}{{site.baseurl}}/security/access-control/permissions/)以符合您的使用案例。每個動作都對應 REST API 中的一項操作。例如，`cluster:admin/opensearch/ad/detector/delete` 權限可讓您刪除偵測器。
 
-### 關於警示與精細存取控制的注意事項
+### 關於警示與細微存取控制的注意事項
 
-當觸發條件產生警示時，偵測器和監視器組態、警示本身，以及傳送至頻道的任何通知，都可能包含描述所查詢索引的中繼資料。依設計，此外掛程式必須擷取資料，並將其儲存為索引外的中繼資料。[文件層級安全性]({{site.url}}{{site.baseurl}}/security/access-control/document-level-security/) (DLS) 和[欄位層級安全性]({{site.url}}{{site.baseurl}}/security/access-control/field-level-security/) (FLS) 存取控制旨在保護索引中的資料。但一旦資料以中繼資料形式儲存在索引外，有權存取偵測器和監視器組態、警示及其通知的使用者，就能檢視此中繼資料，並可能推斷索引中資料的內容和品質，而這些資料原本會受到 DLS 和 FLS 存取控制的保護。
+當觸發條件產生警示時，偵測器與監視器組態、警示本身，以及傳送至頻道的任何通知，都可能包含描述被查詢索引的中繼資料。依照設計，異常偵測必須擷取資料並將其作為中繼資料儲存在索引之外。[文件層級安全性]({{site.url}}{{site.baseurl}}/security/access-control/document-level-security/) (DLS) 與[欄位層級安全性]({{site.url}}{{site.baseurl}}/security/access-control/field-level-security/) (FLS) 存取控制是為了保護索引中的資料。但是一旦資料以中繼資料形式儲存在索引之外，能夠存取偵測器與監視器組態、警示及其通知的使用者，就能檢視這些中繼資料，並可能推斷出索引中資料的內容與品質，而這些本來會被 DLS 與 FLS 存取控制所隱藏。
 
-為降低非預期使用者檢視可能描述索引之中繼資料的機會，我們建議管理員啟用以角色為基礎的存取控制，並在將權限指派給目標使用者群組時，將這類設計要素納入考量。如需詳細資訊，請參閱[依後端角色限制存取](#advanced-limit-access-by-backend-role)。
+為了降低非預期使用者檢視可能描述索引之中繼資料的機會，建議管理員啟用以角色為基礎的存取控制，並在將權限指派給目標使用者群組時，留意這類設計要素。詳細資訊請參閱[依後端角色限制存取權](#advanced-limit-access-by-backend-role)。
 
 ### 使用精細存取控制選取遠端索引
 

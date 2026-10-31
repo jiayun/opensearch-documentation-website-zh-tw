@@ -12,13 +12,13 @@ redirect_from:
 
 # 異常偵測
 
-OpenSearch 中的_異常_是指時間序列資料中任何不尋常的行為變化。異常可以為您的資料提供寶貴的洞察。例如，對 IT 基礎架構資料而言，記憶體使用量指標中的異常有助於及早發現系統故障的徵兆。
+OpenSearch 中的_異常_是指您的時間序列資料出現任何不尋常的行為變化。異常可為您的資料提供寶貴的洞察。例如，對於 IT 基礎設施資料，記憶體使用量指標的異常有助於找出系統故障的早期徵兆。
 
-視覺化和儀表板等傳統技術可能難以發掘異常。雖然可以根據靜態閾值設定警示，但這種方法需要領域知識，而且可能無法適應有機成長或季節性趨勢的資料。
+視覺化與儀表板等傳統技術可能難以發現異常。您可以根據靜態閾值設定警示，但這種做法需要先備的領域知識，且可能無法適應自然成長或季節性趨勢的資料。
 
-異常偵測會使用 Random Cut Forest (RCF) 演算法，以近乎即時的方式自動偵測 OpenSearch 資料中的異常。RCF 是一種非監督式機器學習演算法，會為傳入的資料串流建立模型草圖，以計算每個傳入資料點的_異常等級_和_信賴分數_。這些數值用於區分異常與正常變化。如需 RCF 運作方式的詳細資訊，請參閱 [Robust Random Cut Forest Based Anomaly Detection on Streams](https://www.semanticscholar.org/paper/Robust-Random-Cut-Forest-Based-Anomaly-Detection-on-Guha-Mishra/ecb365ef9b67cd5540cc4c53035a6a7bd88678f9)。
+異常偵測使用隨機切割森林 (Random Cut Forest, RCF) 演算法，以近乎即時的方式自動偵測 OpenSearch 資料中的異常。RCF 是一種非監督式機器學習演算法，會為傳入的資料串流建立概略模型，據以計算每個傳入資料點的_異常等級_與_信賴分數_。這些值可用來區分異常與正常變異。如需 RCF 運作方式的詳細資訊，請參閱 [Robust Random Cut Forest Based Anomaly Detection on Streams](https://www.semanticscholar.org/paper/Robust-Random-Cut-Forest-Based-Anomaly-Detection-on-Guha-Mishra/ecb365ef9b67cd5540cc4c53035a6a7bd88678f9)。
 
-您可以將 Anomaly Detection 外掛程式與 [Alerting 外掛程式]({{site.url}}{{site.baseurl}}/monitoring-plugins/alerting/)搭配使用，在偵測到異常時立即通知您。
+您可以將異常偵測與 [警示]({{site.url}}{{site.baseurl}}/observing-your-data/alerting/index/) 搭配使用，以便在偵測到異常時立即通知您。
 {: .note}
 
 ## 在 OpenSearch Dashboards 中開始使用異常偵測
@@ -34,7 +34,7 @@ _偵測器_是一個獨立的異常偵測任務。您可以定義多個偵測器
 
 3. 在 **Select data** 窗格中，從 **Index** 下拉式選單選取一個或多個來源，以指定資料來源。您可以選取索引、索引模式或別名。
 
-   - 偵測器可以使用遠端索引，您可以透過 `cluster-name:index-name` 模式存取。如需詳細資訊，請參閱[跨叢集搜尋]({{site.url}}{{site.baseurl}}/search-plugins/cross-cluster-search/)。您也可以直接選取叢集和索引。如果已啟用 Security 外掛程式，請參閱[異常偵測安全性]({{site.url}}{{site.baseurl}}/observing-your-data/ad/security/)文件中的[以細微存取控制選取遠端索引]({{site.url}}{{site.baseurl}}/observing-your-data/ad/security/#selecting-remote-indexes-with-fine-grained-access-control)。
+   - 偵測器可以使用遠端索引，您可以透過 `cluster-name:index-name` 模式存取。如需詳細資訊，請參閱[跨叢集搜尋]({{site.url}}{{site.baseurl}}/search-plugins/cross-cluster-search/)。您也可以直接選取叢集和索引。如果已啟用 Security 外掛程式，請參閱[異常偵測安全性]({{site.url}}{{site.baseurl}}/observing-your-data/ad/security/)文件中的[以細粒度存取控制選取遠端索引]({{site.url}}{{site.baseurl}}/observing-your-data/ad/security/#selecting-remote-indexes-with-fine-grained-access-control)。
 
    - 若要在 OpenSearch Dashboards 中建立跨叢集偵測器，您必須具備下列[權限]({{site.url}}{{site.baseurl}}/security/access-control/permissions/)：`indices:data/read/field_caps`、`indices:admin/resolve/index` 和 `cluster:monitor/remote/info`。
 
@@ -43,9 +43,9 @@ _偵測器_是一個獨立的異常偵測任務。您可以定義多個偵測器
 
 
 
-### 範例：使用 query DSL 篩選資料
+### 範例：使用 Query DSL 篩選資料
 
-下列範例查詢會擷取 `urlPath.keyword` 欄位符合任何指定值的文件：
+下列範例查詢會擷取 `urlPath.keyword` 欄位符合任一指定值的文件：
 
 ```json
  {
@@ -72,52 +72,52 @@ _偵測器_是一個獨立的異常偵測任務。您可以定義多個偵測器
 ```
 {% include copy-curl.html %}
 
-5. 在 **Timestamp** 窗格中，從 **Timestamp field** 下拉式清單選取一個欄位。
+5. 在 **Timestamp** 面板中，從 **Timestamp field** 下拉式清單選取一個欄位。
 
-6. (選用) 若要將異常偵測結果儲存在自訂索引中，請選取 **Enable custom results index**，並提供索引名稱 (例如 `abc`)。此外掛程式會建立一個以 `opensearch-ad-plugin-result-` 為前置詞、後接您所選名稱的別名 (例如 `opensearch-ad-plugin-result-abc`)。此別名指向名稱包含日期和序號的實際索引，例如 `opensearch-ad-plugin-result-abc-history-2024.06.12-000002`，您的結果會儲存在其中。
+6. （選用）若要將異常偵測結果儲存在自訂索引中，請選取 **Enable custom results index** 並提供您的索引名稱（例如 `abc`）。OpenSearch 會建立一個別名，其前綴為 `opensearch-ad-plugin-result-`，後面接著您選擇的名稱（例如 `opensearch-ad-plugin-result-abc`）。此別名指向一個實際索引，其名稱包含日期與序號，例如 `opensearch-ad-plugin-result-abc-history-2024.06.12-000002`，您的結果就會儲存在該索引中。
 
-您可以使用 `-` 來分隔命名空間，以管理自訂結果索引的權限。例如，如果您使用 `opensearch-ad-plugin-result-financial-us-group1` 作為結果索引，您可以根據 `opensearch-ad-plugin-result-financial-us-*` 模式建立權限角色，以細微層級代表 `us` 群組的 `financial` 部門。
+您可以使用 `-` 來分隔命名空間，以管理自訂結果索引的權限。例如，如果您使用 `opensearch-ad-plugin-result-financial-us-group1` 作為結果索引，您可以依據模式 `opensearch-ad-plugin-result-financial-us-*` 建立權限角色，在細粒度層級代表 `us` 群組的 `financial` 部門。
 {: .note }
 
 #### 權限
 
-啟用 Security 外掛程式 (細微存取控制) 時，預設結果索引會變成系統索引，且無法再透過標準 Index 或 Search API 存取。若要存取其內容，您必須使用 Anomaly Detection RESTful API 或儀表板。因此，如果已啟用 Security 外掛程式，您就無法使用預設結果索引建立自訂儀表板。不過，您可以建立自訂結果索引來建立自訂儀表板。
+啟用 Security 外掛程式（精細存取控制）時，預設結果索引會成為系統索引，且無法再透過標準 Index 或 Search API 存取。若要存取其內容，您必須使用 Anomaly Detection RESTful API 或儀表板。因此，若已啟用 Security 外掛程式，您就無法使用預設結果索引建立自訂儀表板。不過，您可以建立自訂結果索引，以便建立自訂儀表板。
 
-如果您指定的自訂索引不存在，Anomaly Detection 外掛程式會在您建立偵測器並開始即時或歷史分析時建立它。
+若您指定的自訂索引不存在，OpenSearch 會在您建立偵測器並開始即時或歷史分析時建立該索引。
 
-如果自訂索引已存在，此外掛程式會驗證索引對應是否符合異常結果所需的結構。在此情況下，請確保自訂索引具有 [`anomaly-results.json`](https://github.com/opensearch-project/anomaly-detection/blob/main/src/main/resources/mappings/anomaly-results.json) 檔案中定義的有效對應。
+若自訂索引已存在，OpenSearch 會驗證索引對應是否符合異常結果所需的結構。在此情況下，請確保自訂索引具有 [`anomaly-results.json`](https://github.com/opensearch-project/anomaly-detection/blob/main/src/main/resources/mappings/anomaly-results.json) 檔案中所定義的有效對應。
 若要使用自訂結果索引選項，您必須具備下列權限：
 
-- `indices:admin/create` -- 需要 `create` 權限才能建立及輪替自訂索引。
-- `indices:admin/aliases` -- 需要 `aliases` 權限才能建立及管理自訂索引的別名。
-- `indices:data/write/index` -- 需要 `write` 權限才能將結果寫入單一實體偵測器的自訂索引。
-- `indices:data/read/search` -- 需要 `search` 權限才能搜尋自訂結果索引，以在 Anomaly Detection 介面上顯示結果。
-- `indices:data/write/delete` -- 偵測器可能會產生大量異常結果。需要 `delete` 權限才能刪除舊資料並節省磁碟空間。
-- `indices:data/write/bulk*` -- 需要 `bulk*` 權限，因為外掛程式使用 Bulk API 將結果寫入自訂索引。
+- `indices:admin/create` -- 需要 `create` 權限，才能建立及輪替自訂索引。
+- `indices:admin/aliases` -- 需要 `aliases` 權限，才能建立及管理自訂索引的別名。
+- `indices:data/write/index` -- 需要 `write` 權限，才能將單一實體偵測器的結果寫入自訂索引。
+- `indices:data/read/search` -- 需要 `search` 權限，才能搜尋自訂結果索引，以在 Anomaly Detection 介面上顯示結果。
+- `indices:data/write/delete` -- 偵測器可能會產生許多異常結果。需要 `delete` 權限，才能刪除舊資料並節省磁碟空間。
+- `indices:data/write/bulk*` -- 需要 `bulk*` 權限，因為異常偵測會使用 Bulk API 將結果寫入自訂索引。
 
 #### 攤平巢狀欄位
 
-包含巢狀欄位的自訂結果索引對應會造成彙總和視覺化方面的挑戰。**Enable flattened custom result index** 選項會攤平自訂結果索引中的巢狀欄位。選取此選項時，外掛程式會建立一個以自訂結果索引名稱和偵測器名稱為前置詞的個別索引。例如，如果偵測器 `Test` 使用自訂結果索引 `abc`，則會由一個具有別名 `opensearch-ad-plugin-result-abc-flattened-test` 的個別索引來儲存巢狀欄位已攤平的異常偵測結果。
+使用巢狀欄位的自訂結果索引對應，會在彙總與視覺化時造成困難。**Enable flattened custom result index** 選項會將自訂結果索引中的巢狀欄位攤平。選取此選項時，OpenSearch 會建立一個額外的索引，名稱以自訂結果索引名稱與偵測器名稱作為字首。例如，若偵測器 `Test` 使用自訂結果索引 `abc`，則具有別名 `opensearch-ad-plugin-result-abc-flattened-test` 的額外索引將會儲存巢狀欄位已攤平的異常偵測結果。
 
-除了建立個別索引之外，外掛程式還會設定一個包含指令碼處理器的資料匯入管線。此管線繫結至該個別索引，並使用 Painless 指令碼攤平自訂結果索引中的所有巢狀欄位。如需詳細資訊，請參閱 [Painless scripting language]({{site.url}}{{site.baseurl}}/scripting/painless/)。
+除了建立額外的索引之外，OpenSearch 也會設定一個含 script 處理器的資料匯入管線。此管線會繫結至該額外索引，並使用 Painless 指令碼攤平自訂結果索引中的所有巢狀欄位。如需更多資訊，請參閱 [Painless 指令碼語言]({{site.url}}{{site.baseurl}}/scripting/painless/)。
 
-在執行中的偵測器上停用此選項會移除其攤平用的資料匯入管線；它也不再是結果索引的預設值。
-使用攤平自訂結果選項時，請考慮下列事項：
+在執行中的偵測器上停用此選項，會移除其攤平用的資料匯入管線；該管線也不再是結果索引的預設管線。
+使用攤平自訂結果選項時，請考量以下事項：
 
-- Anomaly Detection 外掛程式會根據自訂結果索引和偵測器名稱建構索引名稱，而由於偵測器名稱可以編輯，因此可能會發生衝突。如果發生衝突，外掛程式會重複使用該索引名稱。
-- 管理自訂結果索引時，請考慮下列事項：
-   - Anomaly Detection 儀表板會查詢所有自訂結果索引中的所有偵測器結果。自訂結果索引過多可能會影響外掛程式的效能。
-   - 您可以使用 [Index State Management]({{site.url}}{{site.baseurl}}/im-plugin/ism/index/) 來輪替舊的結果索引。您也可以手動刪除或封存任何舊的結果索引。建議將自訂結果索引重複用於多個偵測器。
+- OpenSearch 會依自訂結果索引與偵測器名稱建構索引名稱，而由於偵測器名稱可以編輯，可能會發生衝突。若發生衝突，OpenSearch 會重複使用該索引名稱。
+- 管理自訂結果索引時，請考量以下事項：
+   - Anomaly Detection 儀表板會查詢所有自訂結果索引中所有偵測器的結果。自訂結果索引過多可能會影響異常偵測效能。
+   - 您可以使用 [索引狀態管理]({{site.url}}{{site.baseurl}}/im-plugin/ism/index/) 來輪替舊的結果索引。您也可以手動刪除或封存任何舊的結果索引。建議讓多個偵測器重複使用同一個自訂結果索引。
 
-當自訂結果索引符合下表中的任一條件時，外掛程式會將別名輪替至新索引。
+當自訂結果索引符合下表任何條件時，OpenSearch 會將別名輪替到新索引。
 
 參數 | 說明 | 類型 | 單位 | 範例 | 必要
 :--- | :--- |:--- |:--- |:--- |:---
-`result_index_min_size` | 索引輪替所需的最小主要分片總大小 (不含副本)。當索引有 5 個主要分片及 5 個副本分片，且每個分片皆為 20 GiB，並將此值設為 100 GiB 時，就會執行輪替。 | `integer` | `MB` | `51200` | 否
+`result_index_min_size` | 索引輪替所需的最小主要分片總大小（不含副本）。設為 100 GiB 時，若索引有 5 個主要分片與 5 個副本分片、每個分片 20 GiB，則會執行輪替。 | `integer` | `MB` | `51200` | 否
 `result_index_min_age` | 輪替所需的最小索引存在時間，從索引建立時間計算至目前時間。 | `integer` |`day` | `7` | 否
-`result_index_ttl` | 刪除已輪替索引所需的最小存在時間。 | `integer` | `day` | `60` | 否
+`result_index_ttl` | 刪除已輪替索引所需的最小索引存在時間。 | `integer` | `day` | `60` | 否
 
-定義偵測器設定之後，選取 **Next** 以設定模型。
+定義偵測器設定後，選取 **Next** 以設定模型。
 
 ## 步驟 2：設定模型
 
@@ -320,7 +320,7 @@ OpenSearch Dashboards 中的 **Suggest parameters** 按鈕會啟動近期歷史�
 
 ### 預覽範例異常
 
-您可以根據範例特徵輸入預覽異常，並視需要調整特徵設定。Anomaly Detection 外掛程式會選取少量資料樣本——例如每 30 分鐘 1 個資料點——並使用內插法估算其餘資料點，以近似實際的特徵資料。樣本資料集會載入偵測器，偵測器再使用該樣本資料集產生異常預覽。
+您可以根據範例特徵輸入來預覽異常，並視需要調整特徵設定。OpenSearch 會選取少量資料樣本（例如每 30 分鐘 1 個資料點），並使用內插法估算其餘資料點，以近似實際的特徵資料。範例資料集會載入偵測器，偵測器接著會使用範例資料集來產生異常預覽。
 
 1. 選取 **Preview sample anomalies**。
     - 如果未顯示範例異常結果，請檢查偵測器間隔，確認在預覽日期範圍內為實體設定了 400 個以上的資料點。
@@ -328,13 +328,13 @@ OpenSearch Dashboards 中的 **Suggest parameters** 按鈕會啟動近期歷史�
 
 ## 步驟 3：設定偵測器工作
 
-若要啟動偵測器以近乎即時地找出資料中的異常，請選取 **Start real-time detector automatically (recommended)**。
+若要啟動偵測器，以近乎即時的方式找出資料中的異常，請選取 **Start real-time detector automatically (recommended)**。
 
-或者，如果您想執行歷史分析，並在較長的歷史資料視窗（數週或數月）中尋找模式，請勾選 **Run historical analysis detection** 方塊，並選取至少 128 個偵測間隔的日期範圍。
+或者，如果您想要執行歷史分析，並在較長的歷史資料時間範圍（數週或數月）中找出模式，請勾選 **Run historical analysis detection** 方塊，並選取至少涵蓋 128 個偵測間隔的日期範圍。
 
-分析歷史資料可以幫助您熟悉 Anomaly Detection 外掛程式。例如，您可以針對歷史資料評估偵測器的效能，以便進行微調。
+分析歷史資料有助於您熟悉異常偵測。例如，您可以使用歷史資料評估偵測器的效能，以便微調偵測器。
 
-您可以在使用即時偵測器之前，先以不同的特徵集實驗歷史分析，並檢查精確度。
+您可以使用不同的特徵集來嘗試歷史分析，並在使用即時偵測器之前檢查精確率。
 
 ## 步驟 4：檢閱偵測器設定
 
@@ -345,38 +345,38 @@ OpenSearch Dashboards 中的 **Suggest parameters** 按鈕會啟動近期歷史�
 
 ## 步驟 5：觀察結果
 
-選取 **Real-time results** 或 **Historical analysis** 索引標籤。若為即時結果，顯示異常結果需要一些時間。例如，如果偵測器間隔為 10 分鐘，偵測器可能需要一小時才會啟動，因為它正在等待足夠的資料才能產生異常。
+選取 **Real-time results** 或 **Historical analysis** 索引標籤。若要取得即時結果，異常結果需要一些時間才會顯示。例如，如果偵測器的間隔是 10 分鐘，偵測器可能需要一小時才會啟動，因為它必須等待足夠的資料才能產生異常。
 
-較短的間隔會讓模型更快通過 shingle 處理程序，並更快產生異常結果。您可以使用 [profile detector]({{site.url}}{{site.baseurl}}/monitoring-plugins/ad/api#profile-detector) 操作來確認您有足夠的資料點。
+間隔越短，模型通過 shingle 程序的速度就越快，也會更快產生異常結果。您可以使用 [profile detector]({{site.url}}{{site.baseurl}}/monitoring-plugins/ad/api#profile-detector) 操作來確保有足夠的資料點。
 
-如果偵測器停留在「initialization」狀態超過 1 天，請彙總現有資料，並使用偵測器間隔檢查是否有遺漏的資料點。如果發現許多遺漏的資料點，請考慮增加偵測器間隔。
+如果偵測器在「initialization」（初始化）狀態停留超過 1 天，請彙總現有資料，並使用偵測器間隔檢查是否有遺漏的資料點。如果發現許多遺漏的資料點，請考慮增加偵測器間隔。
 
-在異常折線圖上按住並拖曳即可放大，檢視異常的詳細畫面。
+在異常折線圖上按住並拖曳即可放大，查看某個異常的詳細檢視。
 {: .note }
 
 您可以使用下列視覺化來分析異常：
 
-- **Live anomalies**（適用於即時結果）顯示最近 60 個間隔的即時異常結果。例如，如果間隔為 `10`，則會顯示最近 600 分鐘的結果。圖表每 30 秒重新整理一次。
-- **Anomaly overview**（適用於即時結果）或 **Anomaly history**（適用於 **Historical analysis** 索引標籤上的歷史分析）會繪製異常等級與對應的信心量測值。該窗格包括：
-    - 依據給定資料時間範圍計算的異常發生次數。
-    - **Average anomaly grade**：介於 0 到 1 之間的數字，表示資料點的異常程度。異常等級為 `0` 代表「非異常」，非零值則代表異常的相對嚴重性。
-    - **Confidence**：所回報異常等級符合預期異常等級的機率估計值。隨著模型觀察到更多資料並學習資料行為與趨勢，信心會隨之提高。請注意，信心與模型準確性不同。
+- **Live anomalies**（用於即時結果）顯示最近 60 個間隔的即時異常結果。例如，如果間隔為 `10`，就會顯示最近 600 分鐘的結果。圖表每 30 秒重新整理一次。
+- **Anomaly overview**（用於即時結果）或 **Anomaly history**（用於 **Historical analysis** 索引標籤上的歷史分析）會繪製異常等級及其對應的信心度量。該面板包含：
+    - 依據指定資料時間範圍計算的異常發生次數。
+    - **Average anomaly grade**：介於 0 到 1 之間的數字，表示某個資料點的異常程度。異常等級為 `0` 代表「不是異常」，而非零值則代表異常的相對嚴重程度。
+    - **Confidence**：估計回報的異常等級符合預期異常等級的機率。隨著模型觀察到更多資料並學習資料的行為與趨勢，信心會隨之提高。請注意，信心不同於模型準確度。
     - **Last anomaly occurrence**：最後一次異常發生的時間。
 
-在 **Anomaly overview** 與 **Anomaly history** 之下可以找到下列區段：
+**Anomaly overview** 與 **Anomaly history** 之下可以找到下列區段：
 
-- **Feature breakdown** 依據彙總方法繪製特徵。您可以變更偵測器的日期時間範圍。選取特徵折線圖上的某個點，會顯示 **Feature output**（欄位在索引中出現的次數）以及 **Expected value**（特徵輸出的預測值）。在沒有異常的情況下，輸出值與預期值會相等。
+- **Feature breakdown** 依據彙總方法繪製特徵。您可以變更偵測器的日期時間範圍。選取特徵折線圖上的某個點，會顯示 **Feature output**（欄位在您的索引中出現的次數）以及 **Expected value**（特徵輸出的預測值）。在沒有異常的情況下，輸出值與預期值會相等。
 
-- **Anomaly occurrences** 顯示每個偵測到的異常的 `Start time`、`End time`、`Data confidence` 與 `Anomaly grade`。若要在 Discover 中檢視與某次異常相關的記錄檔，請在 **Actions** 欄位中選取 **View in Discover** 圖示。記錄檔包含開始與結束時間前後各 10 分鐘的緩衝資料。
+- **Anomaly occurrences** 顯示每個已偵測異常的 `Start time`、`End time`、`Data confidence` 和 `Anomaly grade`。若要在 Discover 中檢視與某次異常相關的記錄檔，請在 **Actions** 欄選取 **View in Discover** 圖示。記錄檔包含開始與結束時間前後 10 分鐘的緩衝範圍。
 
-選取異常折線圖上的某個點，會顯示 **Feature Contribution**，即該特徵對異常的貢獻百分比。
+在異常折線圖上選取某個點，會顯示 **Feature Contribution**（特徵對該異常的貢獻百分比）
 
-如果您設定了類別欄位，會看到額外的 **Heat map** 圖表。熱度圖會將異常實體的結果相互關聯。在您選取某個異常實體之前，此圖表是空白的。您也會看到該異常時段的異常折線圖與特徵折線圖（`anomaly_grade` > 0）。
+如果設定了類別欄位，您會看到額外的 **Heat map** 圖表。熱力圖會將異常實體的結果相互關聯。在選取異常實體之前，此圖表為空白。您也會看到該異常時間範圍的異常折線圖與特徵折線圖（`anomaly_grade` > 0）。
 
 
-如果您設定了多個類別欄位，可以選取欄位的子集來篩選與排序欄位。選取欄位子集可讓您查看某個欄位中與另一個欄位共用相同值的前幾名值。
+如果您設定了多個類別欄位，可以選取欄位的子集來篩選與排序。選取欄位子集後，您可以檢視一個欄位中與另一個欄位共享共同值的前幾個值。
 
-例如，如果您的偵測器具有類別欄位 `ip` 與 `endpoint`，您可以在 **View by** 下拉式選單中選取 `endpoint`。然後選取特定儲存格，將 `ip` 的前 20 名值疊加在圖表上。Anomaly Detection 外掛程式預設會選取排名最前面的 `ip`。您最多可以同時查看 5 個個別的時間序列值。
+例如，如果您的偵測器具有類別欄位 `ip` 和 `endpoint`，可以在 **View by** 下拉式選單中選取 `endpoint`。然後選取特定儲存格，即可在圖表上疊加顯示 `ip` 的前 20 個值。預設會選取排名第一的 `ip`。您最多可以同時檢視 5 個個別的時間序列值。
 
 ## 步驟 6：設定警示
 

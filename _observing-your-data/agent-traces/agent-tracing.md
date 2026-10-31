@@ -2,7 +2,8 @@
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: "檢視代理程式追蹤"
-parent: Agent traces
+parent: Agent monitoring
+grand_parent: Observability workspace apps
 nav_order: 20
 ---
 
@@ -14,19 +15,18 @@ OpenSearch Dashboards 中的 **Agent Traces** 頁面可讓您探索、偵錯及�
 
 ## 啟用代理程式追蹤
 
-預設的 OpenSearch 發行版本包含代理程式追蹤功能。若要啟用代理程式追蹤，請將下列功能旗標新增至您的 `opensearch_dashboards.yml` 組態檔案：
+代理程式追蹤功能已包含在預設的 OpenSearch 發行版中。若要啟用代理程式追蹤，請將下列功能旗標新增至您的 `opensearch_dashboards.yml` 組態檔：
 
 ```yaml
 workspace.enabled: true
-data_source.enabled: true
 explore.enabled: true
 explore.agentTraces.enabled: true
 ```
 {% include copy.html %}
 
-更新組態後，請重新啟動 OpenSearch Dashboards，讓變更生效。
+更新組態後，請重新啟動 OpenSearch Dashboards 讓變更生效。
 
-預設的 OpenSearch 發行版本預設會啟用 [PPL]({{site.url}}{{site.baseurl}}/search-plugins/sql/ppl/index/) 查詢支援。如果您執行的是 OpenSearch 精簡發行版本，請先[安裝 SQL 外掛程式]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/)，再使用代理程式追蹤。
+預設的 OpenSearch 發行版預設即支援 [PPL]({{site.url}}{{site.baseurl}}/search-plugins/sql/ppl/index/) 查詢。如果您執行的是 OpenSearch 的精簡發行版，請先[安裝 SQL 外掛程式]({{site.url}}{{site.baseurl}}/install-and-configure/plugins/)，再使用代理程式追蹤。
 {: .note}
 
 ## 瞭解追蹤與跨度
@@ -93,7 +93,7 @@ explore.agentTraces.enabled: true
 
 ## 使用介面
 
-若要在 OpenSearch Dashboards 中存取代理程式追蹤，請從主選單選取 **Observability**，然後選取 **Agent Traces**。
+若要存取代理程式追蹤，請在您的 Observability 工作區中，從左側導覽列選取 **Agent monitoring** > **Traces** 或 **Agent monitoring** > **Spans**。這兩個選項都會開啟 **Agent Traces** 頁面，分別顯示 **Traces** 索引標籤或 **Spans** 索引標籤。
 
 **Agent Traces** 頁面包含下列元件。
 

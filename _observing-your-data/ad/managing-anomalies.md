@@ -2,7 +2,7 @@
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: "設定異常警示"
-nav_order: 60
+nav_order: 20
 parent: Anomaly detection
 has_children: false
 ---

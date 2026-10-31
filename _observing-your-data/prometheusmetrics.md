@@ -2,27 +2,30 @@
 # Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 layout: default
 title: "指標分析"
-nav_order: 50
+parent: Classic observability apps
+nav_order: 30
 ---
 
 # 指標分析
 於 2.4 版推出
 {: .label .label-purple }
 
-您可以使用 **Metrics** 工具，匯入並視覺化直接儲存在 OpenSearch 中的指標資料。這讓您能夠使用各種工具，分析並關聯記錄檔、追蹤與指標之間的資料。
+您可以使用 **Metrics** 工具匯入並視覺化直接儲存在 OpenSearch 中的指標資料。這提供了讓您分析記錄資料、追蹤與指標，並找出彼此關聯的工具。
 
-在推出此功能之前，您只能匯入並視覺化受監控環境中的記錄檔與追蹤。透過 **Metrics** 工具，您可以更精細地觀察您的數位資產、更深入了解基礎架構的健康狀態，並為根本原因分析提供更充分的依據。
+指標分析是[傳統可觀測性應用程式]({{site.url}}{{site.baseurl}}/observing-your-data/classic-observability-apps/)。若要在 Observability 工作區中探索指標，請參閱[指標]({{site.url}}{{site.baseurl}}/observing-your-data/exploring-observability-data/discover-metrics/)。
 
-除了下列功能外，**Metrics** 工具還提供聯合視覺化功能：
+在推出此功能之前，您只能從受監控的環境匯入並視覺化記錄資料與追蹤。使用 **Metrics** 工具，您可以更細緻地觀察數位資產、更深入瞭解基礎架構的健全狀況，並為根本原因分析提供更充分的資訊。
 
- - 包含[與 OpenTelemetry (OTel) 相容的指標索引](https://github.com/opensearch-project/opensearch-catalog/tree/main/docs/schema/observability/metrics)且具有 OTel 型訊號的 OpenSearch 叢集。如需 OTel 的概觀，請參閱[什麼是 OpenTelemetry？](https://opentelemetry.io/docs/what-is-opentelemetry/)。
- - 包含已連線至 Prometheus 伺服器之 [Prometheus 資料來源](https://github.com/opensearch-project/sql/blob/{{site.opensearch_major_minor_version}}/docs/dev/datasource-prometheus.md)的 OpenSearch 叢集。
+**Metrics** 工具除了提供下列功能外，也具備聯合視覺化功能：
+
+ - 包含具有 OTel 訊號的 [OpenTelemetry（OTel）相容指標索引](https://github.com/opensearch-project/opensearch-catalog/tree/main/docs/schema/observability/metrics)的 OpenSearch 叢集。如需 OTel 的概觀，請參閱[什麼是 OpenTelemetry？](https://opentelemetry.io/docs/what-is-opentelemetry/)。
+ - 包含連線至 Prometheus 伺服器的 [Prometheus 資料來源](https://github.com/opensearch-project/sql/blob/{{site.opensearch_major_minor_version}}/docs/dev/datasource-prometheus.md)的 OpenSearch 叢集。 
 
 下圖顯示從 Prometheus 擷取指標並將其顯示在視覺化儀表板上的流程。
 
 ![Prometheus 資料來源]({{site.url}}{{site.baseurl}}/images/metrics/prom-metrics.png){: width="700" }
 
-下圖顯示一個可觀測性儀表板，該儀表板使用 OTel 查詢將 OpenSearch 索引中的指標資料視覺化。
+下圖顯示使用 OTel 查詢將 OpenSearch 索引中的指標資料視覺化的可觀測性儀表板。
 
 ![OTel 資料來源]({{site.url}}{{site.baseurl}}/images/metrics/otel-metrics.png){: width="700" }
 
@@ -172,16 +175,16 @@ OpenSearch [`opentelemetry-demo` 儲存庫](https://github.com/opensearch-projec
 
 ## 根據自訂指標建立視覺化
 
-您可以使用 OpenSearch 叢集收集的指標資料來建立視覺化，包括 Prometheus 指標和自訂指標。
+您可以使用 OpenSearch 叢集收集的指標資料建立視覺化，包括 Prometheus 指標和自訂指標。
 
 若要建立這些視覺化，請依照下列步驟操作：
 
-1. 從 OpenSearch Dashboards 主選單，前往 **Observability** > **Metrics**。
+1. 在頂端功能表中，前往 **Observability** > **Metrics**。
 2. 在 **Metrics source** 清單中，選取 **Prometheus** 或 **OpenTelemetry**。
-3. 在 **Available Metrics** 清單中，選取要新增至視覺化的指標。如果您有多個 Prometheus 連線，各連線的指標會分別列出。視覺化標題會顯示連線和指標名稱，例如 `my_prometheus.go_goroutines`。
+3. 在 **Available Metrics** 清單中，選取要加入視覺化的指標。如果您有多個 Prometheus 連線，每個連線的指標會分別列出。視覺化標題會顯示連線與指標名稱，例如 `my_prometheus.go_goroutines`。
 4. 選取 **Save as visualization**。
-5. 您可以選擇編輯指標名稱，並選取要將視覺化新增至哪些作業儀表板或應用程式。
-6. 選取 **Save** 以儲存您的視覺化。下圖顯示視覺化範例。
+5. 您可以選擇性地編輯指標名稱，並選取要加入此視覺化的營運儀表板或應用程式。
+6. 選取 **Save** 儲存您的視覺化。下圖為視覺化範例。
 
 ![含有視覺化的指標分析儀表板]({{site.url}}{{site.baseurl}}/images/metrics/metrics2.png){: width="700" }
 
@@ -198,13 +201,13 @@ source = my_prometheus.prometheus_http_requests_total | stats avg(@value) by spa
 
 若要根據 PPL 查詢建立自訂視覺化，請依照下列步驟操作：
 
-1. 在 OpenSearch Dashboards 主選單中，前往 **Observability** > **Logs**，然後選取 **Event Explorer**。
+1. 在頂端選單中，前往 **Observability** > **Logs**，然後選取 **Event Explorer**。
 2. 輸入您的 PPL 查詢，然後選取 **Run**。
 3. 選取 **Visualizations** 索引標籤，然後選取 **Save**。
-4. 您也可以選擇在 **Custom operational dashboards/application** 清單中，選取要加入此視覺化的儀表板或應用程式。輸入視覺化的 **Name**。若要將視覺化儲存為指標，請開啟 **Save as Metric**。
+4. 您也可以選擇在 **Custom operational dashboards/application** 清單中，選取要新增此視覺化的儀表板或應用程式。為此視覺化輸入 **Name**。若要將此視覺化儲存為指標，請開啟 **Save as Metric**。
 5. 選取 **Save** 以儲存您的自訂視覺化。
 
-只有包含時間序列視覺化以及統計或跨度資訊的查詢才能儲存為指標，如下圖所示。
+只有包含時間序列視覺化以及統計或跨度資訊的查詢，才能儲存為指標，如下圖所示。
 
 ![將查詢儲存為指標]({{site.url}}{{site.baseurl}}/images/metrics/metrics3.png){: width="700" }
 

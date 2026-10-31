@@ -9,27 +9,29 @@ has_children: false
 
 # 預測安全性
 
-預測功能使用與異常偵測相同的安全性框架。本頁面說明如何設定權限，讓使用者能夠建立、執行及檢視預測器；如何限制對系統索引的存取；以及如何在各團隊之間隔離預測結果。
+預測使用與異常偵測相同的安全性框架。本頁說明如何設定權限，讓使用者能夠建立、執行和檢視預測器；如何限制對系統索引的存取；以及如何隔離各團隊之間的預測結果。
 
-在所有範例中，請將憑證、索引名稱和角色名稱替換為適合您環境的值。
+若要使用資源共享控制個別預測器的存取權，請參閱 [預測器存取控制]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/forecaster-access-control/)。
+
+在所有範例中，請將認證資訊、索引名稱和角色名稱替換為適合您環境的值。
 {: .note}
 
-## 預測功能建立的索引
+## 由預測建立的索引
 
-下表說明 Forecasting API 所使用的索引，以及一般使用者對這些索引的可見性。
+下表說明 Forecasting API 使用的索引，以及一般使用者能否看到這些索引。
 
-| 索引模式 | 用途 | 一般使用者可見？ |
+| 索引模式 | 用途 | 一般使用者是否可見？ |
 |---------------|---------|---------------------------|
 | `.opensearch-forecasters` | 儲存預測器組態。 | 否 |
-| `.opensearch-forecast-checkpoints` | 儲存模型快照 (檢查點)。 | 否 |
+| `.opensearch-forecast-checkpoints` | 儲存模型快照（檢查點）。 | 否 |
 | `.opensearch-forecast-state` | 儲存即時與單次執行預測的工作中繼資料。 | 否 |
 | `opensearch-forecast-result*` | 儲存回溯測試與即時預測的預測結果。 | 是 |
 
-使用者不需要直接存取 `.opensearch-forecast-checkpoints`；該索引由外掛程式在內部使用。  
+使用者不需要直接存取 `.opensearch-forecast-checkpoints`；該索引由預測功能在內部使用。  
 
 若要檢視 `.opensearch-forecasters`，請使用 [Get forecaster]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/api/#get-forecaster) 或 [Search forecasters]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/api/#search-forecasters) API。
 
-若要檢視 `.opensearch-forecast-state`，請使用帶有 `?task=true` 查詢參數的 [Get forecaster]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/api/#get-forecaster) API，或直接呼叫 [Search tasks]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/api/#search-tasks) API。
+若要檢視 `.opensearch-forecast-state`，請使用 [Get forecaster]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/api/#get-forecaster) API 並搭配 `?task=true` 查詢參數，或直接呼叫 [Search tasks]({{site.url}}{{site.baseurl}}/observing-your-data/forecast/api/#search-tasks) API。
 
 
 ## 叢集權限
@@ -134,7 +136,7 @@ forecast_full_access:
 
 ### 資料來源 `read` 角色
 
-每個預測器都會使用建立者的使用者認證來查詢來源索引。若要啟用此功能，您必須授予該使用者對您自有資料索引的讀取權限。
+每個預測器都會使用建立該預測器的使用者認證資訊來查詢來源索引。若要啟用此功能，您必須授予該使用者對您自有資料索引的讀取權限。
 
 下列範例請求會建立一個最小權限角色，允許讀取 `network-metrics` 索引：
 
@@ -449,20 +451,20 @@ curl -X PUT "https://localhost:9200/_cluster/settings" \
 
 ---
 
-## 自訂結果索引權限
+## 自訂結果索引的權限
 
-您可以為預測結果指定自訂索引，而不使用預設的結果索引。如果自訂索引尚不存在，系統會在您建立預測器並開始即時分析或測試執行時自動建立。
+您可以為預測結果指定自訂索引，而不使用預設的結果索引。如果該自訂索引尚不存在，系統會在您建立預測器並開始即時分析或測試執行時自動建立。
 
-如果自訂索引已存在，Forecasting API 會檢查索引對應是否符合預期的預測結果結構。為確保相容性，索引必須符合 [`forecast-results.json`](https://github.com/opensearch-project/anomaly-detection/blob/main/src/main/resources/mappings/forecast-results.json) 檔案中定義的架構。
+如果自訂索引已經存在，Forecasting API 會檢查索引對應是否符合預期的預測結果結構。為確保相容性，索引必須符合 [`forecast-results.json`](https://github.com/opensearch-project/anomaly-detection/blob/main/src/main/resources/mappings/forecast-results.json) 檔案中定義的綱要。
 
-當使用者建立預測器時（無論是透過 OpenSearch Dashboards 或呼叫 Forecasting API），系統會驗證使用者是否具備自訂索引的下列索引層級權限：
+當使用者建立預測器時——無論是透過 OpenSearch Dashboards 或呼叫 Forecasting API——系統會驗證使用者是否具備下列針對該自訂索引的索引層級權限：
 
-- `indices:admin/create` – 建立及輪替自訂結果索引時需要。
-- `indices:admin/aliases` – 建立及管理索引別名時需要。
+- `indices:admin/create` – 建立與輪替自訂結果索引時需要。
+- `indices:admin/aliases` – 建立與管理索引別名時需要。
 - `indices:data/write/index` – 將預測結果寫入索引時需要（單一串流預測器）。
 - `indices:data/read/search` – 顯示預測結果時搜尋自訂索引需要。
 - `indices:data/write/delete` – 刪除較舊的預測結果及管理磁碟用量時需要。
-- `indices:data/write/bulk*` – 由於外掛程式使用 Bulk API 寫入結果，因此需要。
+- `indices:data/write/bulk*` – 因為預測使用 Bulk API 寫入結果，所以需要。
 
 ## 下一步
 

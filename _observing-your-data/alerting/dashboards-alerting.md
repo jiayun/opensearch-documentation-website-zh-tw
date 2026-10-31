@@ -3,7 +3,7 @@
 layout: default
 title: "警示儀表板與視覺化"
 parent: Alerting
-nav_order: 50
+nav_order: 20
 has_children: true
 ---
 
@@ -21,12 +21,7 @@ has_children: true
 
 ![警示視覺化範例]({{site.url}}{{site.baseurl}}/images/dashboards/alerting-dashboard.png){: width="800" height="800" }
 
-## 入門
-
-開始之前，您必須具備：
-
-- 已安裝 OpenSearch 與 OpenSearch Dashboards 2.9 或更新版本。請參閱[安裝 OpenSearch]({{site.url}}{{site.baseurl}}/install-and-configure/install-opensearch/index/)。
-- 已安裝 Alerting 與 Notifications Dashboards 外掛程式。請參閱[管理 OpenSearch Dashboards 外掛程式]({{site.url}}{{site.baseurl}}/install-and-configure/install-dashboards/plugins/)以開始使用。
+## 入門 
 
 ## 設定管理員設定
 
@@ -66,15 +61,15 @@ has_children: true
 
 ## 關聯監視器
 
-您可以使用 Dashboard 介面而非外掛程式頁面，將特定監視器類型與視覺化關聯，讓您透過單一介面新增、檢視及編輯監視器資料。
+您可以使用 Dashboard 介面（而非 Alerting 頁面）將特定類型的監視器與視覺化建立關聯，讓您可以透過單一介面新增、檢視及編輯監視器資料。
 
-延續上一節建立的警示視覺化與儀表板，依照下列步驟將現有監視器與視覺化關聯：
+延續上一節建立的警示視覺化與儀表板，依照下列步驟將現有的監視器與視覺化建立關聯： 
 
-1. 在視覺化面板中，選擇省略號圖示 ({::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/ellipsis-icon.png" class="inline-icon" alt="ellipsis icon"/>{:/})。
+1. 從視覺化面板中，選擇刪節號圖示 ({::nomarkdown}<img src="{{site.url}}{{site.baseurl}}/images/ellipsis-icon.png" class="inline-icon" alt="ellipsis icon"/>{:/})。
 2. 選取 **Associated monitors**。
-3. 在 **Select monitor to associate** 下拉式選單中，選取監視器。下拉式選單中只會列出符合資格的監視器。
-4. 檢視監視器的基本資訊。若要檢視完整詳細資料，請選取 **View monitor page** 以開啟 Alerting 外掛程式頁面。
-5. 選取 **Associate monitor**。現有監視器即會與視覺化關聯。
+3. 從 **Select monitor to associate** 下拉式選單中，選取監視器。下拉式選單中只會列出符合條件的監視器。 
+4. 檢視監視器的基本資訊。若要檢視完整詳細資料，請選取 **View monitor page**，在 Alerting 中開啟監視器。
+5. 選取 **Associate monitor**。現有的監視器即會與視覺化建立關聯。
 
 ## 探索警示監視器詳細資料
 

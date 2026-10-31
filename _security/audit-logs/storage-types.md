@@ -37,16 +37,16 @@ plugins.security.audit.type: <debug|internal_opensearch|internal_opensearch_data
 
 名稱 | 資料類型 | 說明
 :--- | :--- | :---
-`plugins.security.audit.config.data_stream.name` | String | 稽核記錄資料串流的名稱。預設為 `opensearch-security-auditlog`。
+`plugins.security.audit.config.data_stream.name` | 字串 | 稽核記錄資料串流的名稱。預設為 `opensearch-security-auditlog`。
 
 ### 範本設定
 
 名稱 | 資料類型 | 說明
 :--- | :--- | :---
-`plugins.security.audit.config.data_stream.template.manage` | Boolean | 當 `true` 時，資料串流的範本由 OpenSearch 管理。預設為 `true`。
-`plugins.security.audit.config.data_stream.template.name` | String | 資料串流範本的名稱。預設為 `opensearch-security-auditlog`。
-`plugins.security.audit.config.data_stream.template.number_of_replicas` | Integer | 資料串流的副本數。預設為 `0`。
-`plugins.security.audit.config.data_stream.template.number_of_shards` | Integer | 資料串流的分片數。預設為 `1`。
+`plugins.security.audit.config.data_stream.template.manage` | 布林值 | 當 `true` 時，資料串流的範本由 OpenSearch 管理。預設為 `true`。
+`plugins.security.audit.config.data_stream.template.name` | 字串 | 資料串流範本的名稱。預設為 `opensearch-security-auditlog`。
+`plugins.security.audit.config.data_stream.template.number_of_replicas` | 整數 | 資料串流的副本數。預設為 `0`。
+`plugins.security.audit.config.data_stream.template.number_of_shards` | 整數 | 資料串流的分片數。預設為 `1`。
 
 
 ## 外部 OpenSearch
@@ -73,16 +73,16 @@ plugins.security.audit.config.http_endpoints: ['https://my-opensearch-cluster.co
 
 名稱 | 資料類型 | 說明
 :--- | :--- | :---
-`plugins.security.audit.config.enable_ssl` | Boolean | 如果您在接收叢集上啟用了 SSL/TLS，請設為 true。預設為 `false`。
-`plugins.security.audit.config.verify_hostnames` |  Boolean | 是否驗證接收叢集之 SSL/TLS 憑證的主機名稱。預設為 `true`。
-`plugins.security.audit.config.pemtrustedcas_filepath` | String | 外部 OpenSearch 叢集的受信任根憑證，相對於 `config` 目錄。
-`plugins.security.audit.config.pemtrustedcas_content` | String | 除了指定路徑（`plugins.security.audit.config.pemtrustedcas_filepath`）之外，您也可以直接設定 Base64 編碼的憑證內容。
-`plugins.security.audit.config.enable_ssl_client_auth` | Boolean | 是否啟用 SSL/TLS 用戶端驗證。如果您將此設為 true，稽核記錄模組會隨請求一併傳送節點的憑證。接收叢集可使用此憑證來驗證呼叫方的身分。
-`plugins.security.audit.config.pemcert_filepath` | String | 要傳送至外部 OpenSearch 叢集之 TLS 憑證的路徑，相對於 `config` 目錄。
-`plugins.security.audit.config.pemcert_content` | String | 除了指定路徑（`plugins.security.audit.config.pemcert_filepath`）之外，您也可以直接設定 Base64 編碼的憑證內容。
-`plugins.security.audit.config.pemkey_filepath` | String | 要傳送至外部 OpenSearch 叢集之 TLS 憑證私密金鑰的路徑，相對於 `config` 目錄。
-`plugins.security.audit.config.pemkey_content` | String | 除了指定路徑（`plugins.security.audit.config.pemkey_filepath`）之外，您也可以直接設定 Base64 編碼的憑證內容。
-`plugins.security.audit.config.pemkey_password` | String | 私密金鑰的密碼。
+`plugins.security.audit.config.enable_ssl` | 布林值 | 如果您在接收叢集上啟用了 SSL/TLS，請設為 true。預設為 `false`。
+`plugins.security.audit.config.verify_hostnames` |  布林值 | 是否驗證接收叢集之 SSL/TLS 憑證的主機名稱。預設為 `true`。
+`plugins.security.audit.config.pemtrustedcas_filepath` | 字串 | 外部 OpenSearch 叢集的受信任根憑證，相對於 `config` 目錄。
+`plugins.security.audit.config.pemtrustedcas_content` | 字串 | 除了指定路徑（`plugins.security.audit.config.pemtrustedcas_filepath`）之外，您也可以直接設定 Base64 編碼的憑證內容。
+`plugins.security.audit.config.enable_ssl_client_auth` | 布林值 | 是否啟用 SSL/TLS 用戶端驗證。如果您將此設為 true，稽核記錄模組會隨請求一併傳送節點的憑證。接收叢集可使用此憑證來驗證呼叫方的身分。
+`plugins.security.audit.config.pemcert_filepath` | 字串 | 要傳送至外部 OpenSearch 叢集之 TLS 憑證的路徑，相對於 `config` 目錄。
+`plugins.security.audit.config.pemcert_content` | 字串 | 除了指定路徑（`plugins.security.audit.config.pemcert_filepath`）之外，您也可以直接設定 Base64 編碼的憑證內容。
+`plugins.security.audit.config.pemkey_filepath` | 字串 | 要傳送至外部 OpenSearch 叢集之 TLS 憑證私密金鑰的路徑，相對於 `config` 目錄。
+`plugins.security.audit.config.pemkey_content` | 字串 | 除了指定路徑（`plugins.security.audit.config.pemkey_filepath`）之外，您也可以直接設定 Base64 編碼的憑證內容。
+`plugins.security.audit.config.pemkey_password` | 字串 | 私密金鑰的密碼。
 
 
 ### 基本驗證設定
@@ -97,15 +97,17 @@ plugins.security.audit.config.password: <password>
 
 ## Webhook
 
-使用下列索引鍵來設定 `webhook` 儲存類型。
+請使用下列設定鍵來設定 `webhook` 儲存類型。
 
 名稱 | 資料類型 | 說明
 :--- | :--- | :---
-`plugins.security.audit.config.webhook.url` | String | 要將記錄傳送至的 HTTP 或 HTTPS URL。
-`plugins.security.audit.config.webhook.ssl.verify` | Boolean | 若為 true，則會驗證端點所提供的 TLS 憑證（若有）。若設為 false，則不執行驗證。如果您使用自我簽署憑證，可以停用此檢查。
-`plugins.security.audit.config.webhook.ssl.pemtrustedcas_filepath` | String | 用來驗證 webhook TLS 憑證的受信任憑證路徑。
-`plugins.security.audit.config.webhook.ssl.pemtrustedcas_content` | String | 與 `plugins.security.audit.config.webhook.ssl.pemtrustedcas_content` 相同，但您可以直接設定 Base64 編碼的憑證內容。
-`plugins.security.audit.config.webhook.format` | String | 稽核記錄訊息的記錄格式，可為 `URL_PARAMETER_GET`、`URL_PARAMETER_POST`、`TEXT`、`JSON`、`SLACK` 其中之一。請參閱[格式](#formats)。
+`plugins.security.audit.config.webhook.url` | 字串 | 用於接收記錄檔的 HTTP 或 HTTPS URL。
+`plugins.security.audit.config.webhook.ssl.verify` | 布林值 | 若為 true，就會驗證端點提供的 TLS 憑證（如有）。若設定為 false，則不執行任何驗證。若您使用自簽憑證，可以停用此檢查。
+`plugins.security.audit.config.webhook.ssl.pemtrustedcas_filepath` | 字串 | 受信任憑證的路徑，webhook 的 TLS 憑證會以此憑證進行驗證。
+`plugins.security.audit.config.webhook.ssl.pemtrustedcas_content` | 字串 | 與 `plugins.security.audit.config.webhook.ssl.pemtrustedcas_content` 相同，但您可以直接設定 Base64 編碼的憑證內容。
+`plugins.security.audit.config.webhook.format` | 字串 | 記錄稽核記錄訊息時使用的格式，可為 `URL_PARAMETER_GET`、`URL_PARAMETER_POST`、`TEXT`、`JSON`、`SLACK` 其中之一。請參閱 [格式](#formats)。
+`plugins.security.audit.config.username` | 字串 | 用於 HTTP 基本驗證的使用者名稱（若 webhook 端點有此需求）。
+`plugins.security.audit.config.password` | 字串 | 用於 HTTP 基本驗證的密碼（若 webhook 端點有此需求）。
 
 
 ### 格式

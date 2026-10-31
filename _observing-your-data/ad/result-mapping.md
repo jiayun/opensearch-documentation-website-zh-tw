@@ -3,14 +3,14 @@
 layout: default
 title: "異常結果對應"
 parent: Anomaly detection
-nav_order: 6
+nav_order: 30
 redirect_from: 
   - /monitoring-plugins/ad/result-mapping/
 ---
 
 # 異常結果對應
 
-當您在 **Custom result index** 窗格中選取 **Enable custom result index** 方塊時，Anomaly Detection 外掛程式會將結果儲存到您選擇的索引。當異常偵測器未偵測到異常時，結果格式如下：
+當您在「**Custom result index**」窗格上勾選「**Enable custom result index**」核取方塊時，OpenSearch 會將結果儲存到您選擇的索引。當異常偵測器未偵測到異常時，結果格式如下：
 
 ```json
 {
@@ -396,13 +396,13 @@ redirect_from:
 ```
 {% include copy-curl.html %}
 
-## 攤平的異常結果對應
+## 扁平化異常結果對應
 
-當您在 **Custom result index** 窗格中選取 **Enable flattened custom result index** 選項時，Anomaly Detection 外掛程式會將所有巢狀欄位攤平後的結果儲存在索引中。
+在 **Custom result index** 窗格中選取 **Enable flattened custom result index** 選項時，OpenSearch 會將結果儲存到索引中，並將所有巢狀欄位扁平化。
 
-儲存在索引中的巢狀欄位會使用下列攤平規則。
+儲存在索引中的巢狀欄位會依下列扁平化規則處理。
 
-欄位 | 攤平規則 | 巢狀輸入範例 | 攤平後的輸出範例
+欄位 | 扁平化規則 | 巢狀輸入範例 | 扁平化輸出範例
 :--- | :--- | :--- | :---
 `relevant_attribution` | `relevant_attribution_$FEATURE_NAME_data: $RELEVANT_ATTRIBUTION_FEATURE_DATA` | `relevant_attribution : [{"feature_id": "deny_max1", "data": 0.07339452532666227}]` | `relevant_attribution_deny_max1_data: 0.07339452532666227`
 `past_values` | `past_values_$FEATURE_NAME_data: $PAST_VALUES_FEATURE_DATA`  | `"past_values": [{"feature_id": "processing_bytes_max", "data": 905}]`                                           | `past_values_processing_bytes_max_data: 905`
@@ -410,7 +410,7 @@ redirect_from:
 `expected_values` | `expected_values_$FEATURE_NAME_data: $EXPECTED_VALUES_FEATURE_DATA`  | `"expected_values": [{"likelihood": 1, "value_list": [{"feature_id": "processing_bytes_max", "data": 905}]}]`    | `expected_values_processing_bytes_max_data: 905` 
 `entity` | `entity_$NAME_value: $ENTITY_VALUE ` | `"entity": [{"name": "process_name", "value": "process_3"}]` | `entity_process_name_value: process_3 `
 
-例如，當偵測器延遲偵測到異常時，攤平後的結果會以下列格式顯示：
+例如，當偵測器延遲偵測到異常時，扁平化結果會以下列格式呈現：
 
 ```json
 {

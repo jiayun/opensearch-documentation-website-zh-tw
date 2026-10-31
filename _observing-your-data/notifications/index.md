@@ -12,7 +12,7 @@ redirect_from:
 
 # 通知
 
-Notifications 外掛程式提供一個集中位置，用來設定 OpenSearch 外掛程式（例如 Alerting 和 Index State Management (ISM)）傳送通知時所使用的管道。支援的管道類型包括 Amazon Chime、Amazon Simple Notification Service (Amazon SNS)、透過 SMTP 或 Amazon Simple Email Service (Amazon SES) 傳送的電子郵件、Slack、Microsoft Teams，以及自訂 Webhook。
+「通知」提供一個集中位置，用於設定 OpenSearch 外掛程式（例如 Alerting 與 Index State Management (ISM)）用來傳送通知的頻道。支援的頻道類型包括 Amazon Chime、Amazon Simple Notification Service (Amazon SNS)、透過 SMTP 或 Amazon Simple Email Service (Amazon SES) 傳送的電子郵件、Slack、Microsoft Teams，以及自訂 webhook。
 
 ## 設定通知
 
@@ -36,11 +36,11 @@ Notifications 外掛程式提供一個集中位置，用來設定 OpenSearch 外
 Webhook 設定（包括標頭）會以純文字形式儲存在 OpenSearch 叢集中。標頭中經過編碼的認證資訊既未加密也未雜湊處理，其他 OpenSearch 使用者可能看得到這些資訊。
 {: .warning}
 
-### Amazon SNS 作為頻道類型
+### 以 Amazon SNS 作為頻道類型
 
-Notifications 外掛程式可以將訊息發布到 Amazon SNS 主題。透過 SNS 主題訂閱，您可以將通知以電子郵件或簡訊方式傳送，或用來叫用 AWS Lambda 函式。如需 Amazon SNS 的更多資訊，請參閱 [Amazon Simple Notification Service Developer Guide](https://docs.aws.amazon.com/sns/latest/dg/welcome.html)。
+通知可以將訊息發布至 Amazon SNS 主題。透過 SNS 主題訂閱，您可以將通知以電子郵件訊息或簡訊形式傳送，或用來叫用 AWS Lambda 函式。如需 Amazon SNS 的詳細資訊，請參閱 [Amazon Simple Notification Service 開發人員指南](https://docs.aws.amazon.com/sns/latest/dg/welcome.html)。
 
-若要建立 Amazon SNS 頻道，請輸入 **SNS topic ARN**，並可選擇輸入 **IAM role ARN**。OpenSearch 會透過預設的 AWS 認證資訊供應商鏈（例如環境變數或 Amazon EC2 執行個體設定檔）使用每個節點上可取得的 AWS 認證資訊。如果您未指定 IAM role ARN，這些認證資訊必須具備發布到該主題的權限。如果您指定了 IAM role ARN，OpenSearch 會使用這些認證資訊擔任該角色，然後以該角色的權限發布到主題。
+若要建立 Amazon SNS 頻道，請輸入 **SNS topic ARN**，並可選擇性輸入 **IAM role ARN**。OpenSearch 會透過預設 AWS 認證提供者鏈，使用每個節點上可用的 AWS 認證資訊，例如環境變數或 Amazon EC2 執行個體設定檔。若未指定 IAM role ARN，這些認證資訊必須具備發布至該主題的權限。若指定 IAM role ARN，OpenSearch 會使用這些認證資訊來擔任該角色，然後以該角色的權限發布至該主題。
 
 #### 使用節點認證資訊發佈
 
@@ -95,11 +95,11 @@ Notifications 外掛程式可以將訊息發布到 Amazon SNS 主題。透過 SN
 }
 ```
 
-## 電子郵件作為頻道類型
+## 電子郵件作為通道類型
 
-若要透過電子郵件傳送通知，請選取 **Email** 作為頻道類型。接著選取 **Sender type**、寄件者，以及至少一位預設收件者。一個頻道會使用一位寄件者，即 **SMTP sender** 或透過 Amazon SES 傳送電子郵件的 **SES sender**。在 **Default recipients** 中，輸入電子郵件地址或選取收件者群組，即可將通知傳送給多位收件人。如果寄件者或收件者群組尚未存在，請選取 **Create SMTP sender**、**Create SES sender** 或 **Create recipient group** 來建立。
+若要透過電子郵件傳送通知，請選取 **Email** 作為通道類型。接著選取一個 **Sender type**、傳送者，以及至少一名預設收件者。一個通道會使用一名傳送者，可以是 **SMTP sender**，或是透過 Amazon SES 傳送電子郵件的 **SES sender**。在 **Default recipients** 中輸入電子郵件地址，或選取收件人群組，以傳送通知給多位人士。如果該傳送者或收件人群組尚不存在，請選取 **Create SMTP sender**、**Create SES sender** 或 **Create recipient group** 來建立一個。
 
-您也可以在 Notifications 外掛程式的 **Email senders** 與 **Email recipient groups** 頁面管理寄件者與收件者群組。
+您也可以在 Notifications 的 **Email senders** 與 **Email recipient groups** 頁面管理傳送者與收件人群組。
 
 ### 建立電子郵件寄件者
 

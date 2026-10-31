@@ -36,19 +36,19 @@ POST _bulk
 
 ## 選擇匯入方法
 
-Bulk API 適合一次載入資料集。對於持續送達或來自其他系統的資料，請依資料所在位置選擇方法。下表列出常見資料來源的匯入方法。
+Bulk API 適合一次性載入資料集。若是持續抵達或來自其他系統的資料，請依據資料所在位置選擇適合的方法。下表列出常見資料來源的匯入方法。
 
 | 資料來源 | 匯入方法 |
 | :--- | :--- |
-| 您的應用程式 | OpenSearch 語言用戶端，會以您應用程式撰寫時所用的語言傳送請求。如需詳細資訊，請參閱[語言用戶端]({{site.url}}{{site.baseurl}}/clients/)。 |
-| 主機上的記錄檔 | 記錄收集器（例如 Fluent Bit），會將記錄轉送至伺服器端資料收集器 [OpenSearch Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/)。如需詳細資訊，請參閱[記錄匯入]({{site.url}}{{site.baseurl}}/observing-your-data/log-ingestion/)。 |
-| 使用 OpenTelemetry 檢測的應用程式 | Data Prepper OTLP 來源，可接收記錄、指標和追蹤。如需詳細資訊，請參閱 [OTLP 來源]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/otlp-source/)。若要使用此資料監視服務效能，請參閱[應用程式效能監控]({{site.url}}{{site.baseurl}}/observing-your-data/apm/configuring-telemetry-ingestion/)。 |
-| 您已在執行的收集器，例如 Jaeger、Logstash 或 Beats | 將 Jaeger 設定為使用 OpenSearch 作為其儲存後端、為 Logstash 安裝 OpenSearch 輸出外掛程式，或使用相容版本的 Beats。如需詳細資訊，請參閱[分析 Jaeger 追蹤資料]({{site.url}}{{site.baseurl}}/observing-your-data/trace/trace-analytics-jaeger/)、[Logstash]({{site.url}}{{site.baseurl}}/tools/logstash/) 和[代理程式與匯入工具]({{site.url}}{{site.baseurl}}/tools/#agents-and-ingestion-tools)。 |
-| Apache Kafka 或 Amazon Kinesis 中的串流 | 拉取式匯入 (pull-based ingestion)，由 OpenSearch 直接從串流讀取。如需詳細資訊，請參閱[拉取式匯入]({{site.url}}{{site.baseurl}}/api-reference/document-apis/pull-based-ingestion/)。 |
-| Amazon S3 中的物件 | Data Prepper S3 來源。如需詳細資訊，請參閱 [S3 來源]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/s3/)。 |
-| 資料庫和應用程式，例如 Atlassian Confluence 或 Jira | 該系統適用的 Data Prepper 來源。如需詳細資訊，請參閱[來源]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/sources/)。 |
+| 您的應用程式 | OpenSearch 語言用戶端，會以應用程式所使用的程式語言傳送請求。更多資訊請參閱 [語言用戶端]({{site.url}}{{site.baseurl}}/clients/)。 |
+| 主機上的記錄檔 | 記錄收集器，例如 Fluent Bit，可將記錄檔轉送至 [OpenSearch Data Prepper]({{site.url}}{{site.baseurl}}/data-prepper/) 這個伺服器端資料收集器。更多資訊請參閱 [記錄分析入門]({{site.url}}{{site.baseurl}}/observing-your-data/log-ingestion/)。 |
+| 使用 OpenTelemetry 埋設的應用程式 | Data Prepper OTLP 來源，可接收記錄資料、指標與追蹤。更多資訊請參閱 [OTLP 來源]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/otlp-source/)。若要使用這些資料監控服務效能，請參閱 [應用程式效能監控]({{site.url}}{{site.baseurl}}/observing-your-data/apm/configuring-telemetry-ingestion/)。 |
+| 您已執行的收集器，例如 Jaeger、Logstash 或 Beats | 將 Jaeger 設定為使用 OpenSearch 作為其儲存後端、安裝 Logstash 的 OpenSearch output 外掛程式，或使用相容版本的 Beats。更多資訊請參閱 [分析 Jaeger 追蹤資料]({{site.url}}{{site.baseurl}}/observing-your-data/trace/trace-analytics-jaeger/)、[Logstash]({{site.url}}{{site.baseurl}}/tools/logstash/) 與 [代理程式與匯入工具]({{site.url}}{{site.baseurl}}/tools/#agents-and-ingestion-tools)。 |
+| Apache Kafka 或 Amazon Kinesis 中的串流 | 拉取式匯入 (pull-based ingestion)，由 OpenSearch 直接從串流讀取資料。更多資訊請參閱 [拉取式匯入]({{site.url}}{{site.baseurl}}/api-reference/document-apis/pull-based-ingestion/)。 |
+| Amazon S3 中的物件 | Data Prepper S3 來源。更多資訊請參閱 [S3 來源]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/s3/)。 |
+| Atlassian Confluence 或 Jira 等資料庫與應用程式 | 適用於該系統的 Data Prepper 來源。更多資訊請參閱 [來源]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/sources/)。 |
 
-從常見來源（例如 NGINX 或 Amazon VPC Flow 記錄檔）匯入資料後，您可以安裝 OpenSearch Dashboards 整合，為該來源提供對應和視覺化。如需詳細資訊，請參閱[整合]({{site.url}}{{site.baseurl}}/dashboards/integrations/index/)。
+從常見來源（例如 NGINX 或 Amazon VPC Flow 記錄）匯入資料後，您可以安裝 OpenSearch Dashboards 整合，為該來源提供對應與視覺化。更多資訊請參閱 [整合]({{site.url}}{{site.baseurl}}/dashboards/integrations/index/)。
 
 ## 在匯入期間轉換資料
 
