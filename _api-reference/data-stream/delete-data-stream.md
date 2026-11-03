@@ -3,7 +3,7 @@
 layout: default
 title: "刪除資料串流"
 parent: Data stream APIs
-nav_order: 40
+nav_order: 50
 ---
 
 # 刪除資料串流 API

@@ -78,25 +78,27 @@ response = client.cat.help()
 /_cat/pit_segments/{pit_id}
 ```
 
-## 選用的查詢參數
+## 選用查詢參數
 
-根 `_cat` API 不接受任何參數，但個別的 API，例如 `/_cat/nodes`，接受下列查詢參數。
+根 `_cat` API 不接受任何參數，但個別 API（例如 `/_cat/nodes`）接受下列查詢參數。
 
 參數 | 說明
 :--- | :--- |
-`v` |  在欄位上方加入標頭，以提供詳細輸出。它也會加入一些格式設定，協助將各欄位對齊。本節的所有範例都包含 `v` 參數。
+`v` |  在欄上加入標頭，以提供詳細輸出。
 `help` | 列出指定操作的預設標頭及其他可用標頭。
-`h`  |  將輸出限制為特定標頭。
-`format` |  傳回結果時使用的格式。有效值為 `json`、`yaml`、`cbor` 和 `smile`。
-`s` | 依指定的欄位排序輸出。
+`h`  |  將輸出限制為特定標頭。接受欄名稱、欄別名及萬用字元（例如 `routing.*`）。
+`format` |  傳回結果的格式。有效值為 `text`（預設）、`json`、`yaml`、`cbor` 及 `smile`。
+`s` | 依指定的欄排序輸出。接受欄名稱及欄別名，每個名稱後面可選擇性加上 `:asc` 或 `:desc`（例如 `s=a:desc`）。每個排序鍵都必須是現有的欄名稱或別名。
+`bytes` | 用於顯示位元組值的單位。有效值為 `b`、`kb`、`mb`、`gb`、`tb` 及 `pb`。如需詳細資訊，請參閱[支援的單位]({{site.url}}{{site.baseurl}}/api-reference/units/)。
+`time` | 用於顯示時間值的單位。有效值為 `nanos`、`micros`、`ms`、`s`、`m`、`h` 及 `d`。如需詳細資訊，請參閱[支援的單位]({{site.url}}{{site.baseurl}}/api-reference/units/)。
+`ts` | 布林值。是否在提供時間戳記欄的操作（例如 `_cat/health`）中包含這些欄。預設為 `true`。
+`pri` | 布林值。是否在提供主要分片統計資料的操作（例如 `_cat/indices`）中加入這些統計資料。對於 `h` 參數中指定且具有對應主要分片欄的每一欄，都會加入一個 `pri.` 欄。例如，`h=i,ss` 搭配 `pri` 會傳回 `i`、`ss` 及 `pri.ss` 欄。
 
-### 查詢參數使用範例
-
-您可以對任何 CAT 操作指定查詢參數，以取得更具體的結果。
+在任何 CAT 操作中指定這些查詢參數，即可取得更具體的結果。下列範例使用 CAT aliases 操作。
 
 ### 取得詳細輸出
 
-若要查詢別名並取得包含回應中所有欄位標題的詳細輸出，請使用 `v` 查詢參數。
+若要查詢別名，並在回應中取得包含所有欄標題的詳細輸出，請使用 `v` 查詢參數。
 
 <!-- spec_insert_start
 component: example_code
@@ -120,18 +122,21 @@ response = client.cat.aliases(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-回應會提供更多詳細資訊，例如回應中每個欄位的名稱。
+回應會提供更多詳細資訊，例如回應中每一欄的名稱。
 
 ```
-alias index filter routing.index routing.search is_write_index
-.kibana .kibana_1 - - - -
-sample-alias1 sample-index-1 - - - -
+alias         index          filter routing.index routing.search is_write_index
+.kibana       .kibana_1      -      -             -              -
+sample-alias1 sample-index-1 -      -             -              -
+sample-alias2 sample-index-2 -      -             -              -
 ```
-若未使用 verbose 參數 `v`，回應只會傳回別名名稱：
+
+若未使用詳細輸出參數 `v`，回應會包含相同的欄，但不含標題列：
 
 ```
-.kibana .kibana_1 - - - -
+.kibana       .kibana_1      - - - -
 sample-alias1 sample-index-1 - - - -
+sample-alias2 sample-index-2 - - - -
 ```
 
 ### 取得所有可用的標頭
@@ -177,15 +182,15 @@ routing.search | rs,routingSearch | search routing
 is_write_index | w,isWriteIndex   | write index
 ```
 
-### 取得標頭的子集
+### 取得部分標頭
 
-若要將輸出限制為標頭的子集，請使用 `h` 參數：
+若要將輸出限制為部分標頭，請使用 `h` 參數：
 
 ```
-GET _cat/{operation_name}?h={header_name_1},{header_name_2}&v
+GET _cat/{operation_name}?h={header_name_1},{header_name_2}
 ```
 
-例如，若要將別名限制為只顯示別名名稱與索引，請傳送下列請求：
+例如，若要將別名的輸出限制為僅包含別名名稱和索引，請傳送下列請求：
 
 <!-- spec_insert_start
 component: example_code
@@ -212,21 +217,22 @@ response = client.cat.aliases(
 回應包含所請求的資訊：
 
 ```
-.kibana .kibana_1
+.kibana       .kibana_1
 sample-alias1 sample-index-1
+sample-alias2 sample-index-2
 ```
 
-一般而言，對於任何操作，您都可以使用 `help` 參數找出有哪些可用的標頭，然後使用 `h` 參數將輸出限制為只顯示您關心的標頭。
+一般而言，對於任何操作，您都可以使用 `help` 參數找出可用的標頭，然後使用 `h` 參數將輸出限制為僅包含您關注的標頭。
 
 ### 依標頭排序
 
-若要依標頭排序輸出結果，請使用 `s` 參數：
+若要依標頭排序輸出，請使用 `s` 參數：
 
-```json
+```
 GET _cat/{operation_name}?s={header_name_1},{header_name_2}
 ```
 
-例如，若要先依索引再依別名排序別名，請傳送以下請求：
+例如，若要先依索引、再依別名排序別名，請傳送下列請求：
 
 <!-- spec_insert_start
 component: example_code
@@ -250,20 +256,21 @@ response = client.cat.aliases(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-回應包含所要求的資訊：
+回應包含所請求的資訊：
 
 ```
-sample-alias2 sample-index-1
-sample-alias1 sample-index-2
+.kibana       .kibana_1      - - - -
+sample-alias1 sample-index-1 - - - -
+sample-alias2 sample-index-2 - - - -
 ```
 
 ### 以 JSON 格式擷取資料
 
-預設情況下，CAT API 會以 `text/plain` 格式傳回資料。
+CAT API 預設會以 `text/plain` 格式傳回資料。
 
 若要以 JSON 格式擷取資料，請使用 `format=json` 參數：
 
-```json
+```
 GET _cat/{operation_name}?format=json
 ```
 
@@ -296,11 +303,12 @@ response = client.cat.aliases(
 ```json
 [
   {"alias":".kibana","index":".kibana_1","filter":"-","routing.index":"-","routing.search":"-","is_write_index":"-"},
-  {"alias":"sample-alias-1","index":"sample-index-1","filter":"-","routing.index":"-","routing.search":"-","is_write_index":"-"}
+  {"alias":"sample-alias1","index":"sample-index-1","filter":"-","routing.index":"-","routing.search":"-","is_write_index":"-"},
+  {"alias":"sample-alias2","index":"sample-index-2","filter":"-","routing.index":"-","routing.search":"-","is_write_index":"-"}
 ]
 ```
 
-其他支援的格式有 [YAML](https://yaml.org/)、[CBOR](https://cbor.io/) 和 [Smile](https://github.com/FasterXML/smile-format-specification)。
+其他支援的格式包括 [YAML](https://yaml.org/)、[CBOR](https://cbor.io/) 和 [Smile](https://github.com/FasterXML/smile-format-specification)。
 
 ## CAT API 操作
 

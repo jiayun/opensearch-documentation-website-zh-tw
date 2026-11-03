@@ -43,11 +43,11 @@ POST /{index}/_flush
 
 | 參數 | 資料類型 | 說明 |
 | :--- | :--- | :--- |
-| `allow_no_indices` | 布林值 | 設為 `false` 時，若任何萬用字元運算式或索引別名指向任何已關閉或遺失的索引，請求將回傳錯誤。預設為 `true`。 |
-| `expand_wildcards` | 字串 | 指定萬用字元運算式可展開的索引類型。支援逗號分隔值。有效值為：<br> - `all`：展開至所有開啟與關閉的索引，包括隱藏索引。<br> - `open`：展開至開啟的索引。<br> - `closed`：展開至關閉的索引。<br> - `hidden`：展開時包含隱藏索引。必須與 `open`、`closed` 或兩者一併使用。<br> - `none`：不接受萬用字元運算式。<br> 預設為 `open`。 |
-| `force` | 布林值 | 設為 `true` 時，即使記憶體內沒有索引變更，也會強制執行排清。預設為 `true`。 |
-| `ignore_unavailable` | 布林值 | 設為 `true` 時，OpenSearch 會忽略遺失或已關閉的索引。設為 `false` 時，若強制合併作業遇到遺失或已關閉的索引，OpenSearch 會回傳錯誤。預設為 `false`。 |
-| `wait_if_ongoing` | 布林值 | 設為 `true` 時，若有另一個排清請求正在執行，Flush API 不會執行。設為 `false` 時，若有另一個排清請求正在執行，OpenSearch 會回傳錯誤。預設為 `true`。 |
+| `allow_no_indices` | 布林值 | 若為 `false`，當任何萬用字元運算式或索引別名指向任何已關閉或不存在的索引時，請求會傳回錯誤。預設為 `true`。 |
+| `expand_wildcards` | 字串 | 指定萬用字元運算式可展開的索引類型。支援以逗號分隔的值。有效值如下：<br> - `all`：展開至所有已開啟和已關閉的索引，包括隱藏索引。<br> - `open`：展開至已開啟的索引。<br> - `closed`：展開至已關閉的索引。<br> - `hidden`：展開時包含隱藏索引。必須與 `open`、`closed` 或兩者合併使用。<br> - `none`：不接受萬用字元運算式。<br> 預設為 `open`。<br> Flush API 無法排清已關閉的索引。若萬用字元運算式展開至已關閉的索引，除非 `ignore_unavailable` 為 `true`，否則請求會失敗；在此情況下會略過已關閉的索引。 |
+| `force` | 布林值 | 若為 `true`，即使記憶體中沒有任何索引變更，也會強制執行排清。若為 `true`，則 `wait_if_ongoing` 也必須為 `true`，否則請求會遭到拒絕。預設為 `false`。 |
+| `ignore_unavailable` | 布林值 | 若為 `true`，OpenSearch 會忽略不存在或已關閉的索引。若為 `false`，當排清作業遇到不存在或已關閉的索引時，OpenSearch 會傳回錯誤。預設為 `false`。 |
+| `wait_if_ongoing` | 布林值 | 若為 `true`，當另一個排清作業正在進行時，OpenSearch 會等待該作業完成後再執行排清。若為 `false`，當某個分片上已有另一個排清作業正在執行時，該分片會略過排清，且不會傳回錯誤。預設為 `true`。 |
 
 ## 範例請求：排清特定索引
 
@@ -104,9 +104,9 @@ response = client.indices.flush()
 
 ## 範例回應
 
-OpenSearch 會回應確認排清請求的分片數量、完成請求的分片數量，以及失敗的分片數量：
+OpenSearch 的回應會包含排清請求所針對的分片複本數量（包括未指派的副本）、已完成請求的分片複本數量，以及失敗的分片複本數量：
 
-```
+```json
 {
   "_shards": {
     "total": 10,

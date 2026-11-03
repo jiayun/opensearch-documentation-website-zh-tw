@@ -25,11 +25,16 @@ List API 支援兩種操作：
 
 參數 | 說明
 :--- | :--- |
-`v` |  為各欄加入標頭以提供詳細輸出。它也會加入一些格式設定，以協助對齊各欄。本節的所有範例都包含 `v` 參數。
+`v` |  為欄位加上標頭，以提供詳細輸出。
 `help` | 列出指定操作的預設標頭及其他可用標頭。
 `h`  |  將輸出限制為特定標頭。
 `format` |  傳回結果的格式。有效值為 `json`、`yaml`、`cbor` 和 `smile`。
-`s` | 依指定欄排序輸出。
+`s` | 依指定的欄位排序輸出。
+`next_token` | 用於擷取下一頁結果的權杖。每個分頁回應的結尾都會有一個 `next_token` 值。請在下一個請求中傳遞此值，以擷取下一頁。當 `next_token` 為 `null` 時，表示已傳回所有結果。
+`size` | 單一頁面傳回的項目數上限。
+`sort` | 根據索引建立時間傳回項目的順序。有效值為 `asc`（最舊的優先）和 `desc`（最近建立的優先）。預設為 `asc`。
+
+`size` 的預設值和允許值因操作而異。如需詳細資訊，請參閱[列出索引]({{site.url}}{{site.baseurl}}/api-reference/list/list-indices/)和[列出分片]({{site.url}}{{site.baseurl}}/api-reference/list/list-shards/)。
 
 ## 範例
 
@@ -67,9 +72,9 @@ response = client.list.indices(
 #### 回應
 
 ```json
-health status index           uuid    pri rep  docs.count  docs.deleted
-green  open   .kibana_1 - - - -              
-yellow open    sample-index-1 - - - -
+health status index          uuid                   pri rep docs.count docs.deleted store.size pri.store.size
+green  open   sample-index-1 L4tj1plyQLCjGegvdEI16A   1   0          3            0      4.7kb          4.7kb
+yellow open   sample-index-2 n9sq3RtJR2mMmTqJF2Xh6w   1   1          5            0      4.8kb          4.8kb
 next_token null
 ```
 
@@ -111,16 +116,21 @@ response = client.list.indices(
 
 #### 回應
 
-下列範例以表格顯示索引及其健康狀態：
+回應會列出每個可用的標頭，並附上其別名與說明。以下範例回應已截斷：
 
 ```json
-health     | h                              | current health status
-status     | s                              | open/close status
-index      | i,idx                          | index name
-uuid       | id,uuid                        | index uuid
-pri        | p,shards.primary,shardsPrimary | number of primary shards
-rep        | r,shards.replica,shardsReplica | number of replica shards
-docs.count | dc,docsCount                   | available docs
+health                                 | h                                                    | current health status
+status                                 | s                                                    | open/close status
+index                                  | i,idx                                                | index name
+uuid                                   | id,uuid                                              | index uuid
+pri                                    | p,shards.primary,shardsPrimary                       | number of primary shards
+rep                                    | r,shards.replica,shardsReplica                       | number of replica shards
+docs.count                             | dc,docsCount                                         | available docs
+docs.deleted                           | dd,docsDeleted                                       | deleted docs
+creation.date                          | cd                                                   | index creation date (millisecond value)
+creation.date.string                   | cds                                                  | index creation date (as string)
+store.size                             | ss,storeSize                                         | store size of primaries & replicas
+pri.store.size                         |                                                      | store size of primaries
 ```
 
 ### 取得部分標頭
@@ -160,11 +170,11 @@ response = client.list.indices(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### 回應
+#### 回應
 
 ```json
-green  .kibana_1
-yellow sample-index-1
+green  sample-index-1
+yellow sample-index-2
 next_token null
 ```
 
@@ -180,21 +190,21 @@ GET _list/{operation_name}?s={header_name_1},{header_name_2}
 
 #### 請求
 
-下列範例請求會依索引名稱排序索引：
+下列範例請求會先依健康狀態、再依索引名稱排序索引，並將輸出限制為健康狀態與索引名稱這兩個標頭：
 
 <!-- spec_insert_start
 component: example_code
-rest: GET /_list/indices?s=h,i
+rest: GET /_list/indices?s=h,i&h=health,index
 -->
 {% capture step1_rest %}
-GET /_list/indices?s=h,i
+GET /_list/indices?s=h,i&h=health,index
 {% endcapture %}
 
 {% capture step1_python %}
 
 
 response = client.list.indices(
-  params = { "s": "h,i" }
+  params = { "s": "h,i", "h": "health,index" }
 )
 
 {% endcapture %}
@@ -207,27 +217,25 @@ response = client.list.indices(
 #### 回應
 
 ```json
-green sample-index-2
-yellow sample-index-1
+green  sample-index-1
+yellow sample-index-2
 next_token null
 ```
 
 ### 以 JSON 格式擷取資料
 
-預設情況下，List API 會以 `text/plain` 格式傳回資料。其他支援的格式為 [YAML](https://yaml.org/)、[CBOR](https://cbor.io/) 和 [Smile](https://github.com/FasterXML/smile-format-specification)。
+List API 預設以 `text/plain` 格式傳回資料。其他支援的格式包括 [YAML](https://yaml.org/)、[CBOR](https://cbor.io/) 和 [Smile](https://github.com/FasterXML/smile-format-specification)。
 
 
-若要以 JSON 格式擷取資料，請以下列語法使用 `format=json` 參數。
-
-如果您使用 Security 外掛程式，請確保您具有適當的權限。
-{: .note }
-
-#### 請求
+若要以 JSON 格式擷取資料，請依下列語法使用 `format=json` 參數：
 
 ```json
-GET _list/{operation_name}?help
+GET _list/{operation_name}?format=json
 ```
 {% include copy-curl.html %}
+
+如果您使用 Security 外掛程式，請確認您具有適當的權限。
+{: .note }
 
 #### 請求
 
@@ -253,7 +261,7 @@ response = client.list.indices(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### 回應
+#### 回應
 
 回應包含 JSON 格式的資料：
 
@@ -263,29 +271,28 @@ response = client.list.indices(
   "indices": [
     {
       "health": "green",
-      "status": "-",
-      "index": ".kibana_1",
-      "uuid": "-",
-      "pri": "-",
-      "rep": "-",
-      "docs.count": "-",
-      "docs.deleted": "-",
-      "store.size": "-",
-      "pri.store.size": "-"
+      "status": "open",
+      "index": "sample-index-1",
+      "uuid": "L4tj1plyQLCjGegvdEI16A",
+      "pri": "1",
+      "rep": "0",
+      "docs.count": "3",
+      "docs.deleted": "0",
+      "store.size": "4.7kb",
+      "pri.store.size": "4.7kb"
     },
     {
       "health": "yellow",
-      "status": "-",
-      "index": "sample-index-1",
-      "uuid": "-",
-      "pri": "-",
-      "rep": "-",
-      "docs.count": "-",
-      "docs.deleted": "-",
-      "store.size": "-",
-      "pri.store.size": "-"
+      "status": "open",
+      "index": "sample-index-2",
+      "uuid": "n9sq3RtJR2mMmTqJF2Xh6w",
+      "pri": "1",
+      "rep": "1",
+      "docs.count": "5",
+      "docs.deleted": "0",
+      "store.size": "4.8kb",
+      "pri.store.size": "4.8kb"
     }
   ]
 }
 ```
-

@@ -242,11 +242,11 @@ OpenSearch 現在應已在您的 GPU 加速叢集中執行。但是，如果佈�
 
 #### 手動準備 ML 節點
 
-如果前兩個指令碼無法正確佈建您的 GPU 加速節點，您可以手動安裝 AWS Inferentia 的驅動程式：
+如果前述兩個指令碼未能正確佈建您的 GPU 加速節點，您可以手動安裝 AWS Inferentia 的驅動程式：
 
-1. 依您選擇的 Linux 作業系統部署 AWS 加速器執行個體。相關說明請參閱 [PyTorch Neuron 設定](https://awsdocs-neuron.readthedocs-hosted.com/en/latest/frameworks/torch/torch-setup.html#pytorch-neuron-setup)。
+1. 根據您選擇的 Linux 作業系統部署 AWS 加速器執行個體。如需相關說明，請參閱 [PyTorch Neuron 設定](https://awsdocs-neuron.readthedocs-hosted.com/en/latest/setup/pytorch/index.html)。
 
-2. 將 Neuron 程式庫複製到 OpenSearch。下列命令使用名為 `opensearch-2.5.0` 的目錄：
+2. 將 Neuron 程式庫複製到 OpenSearch 中。下列命令使用名為 `opensearch-2.5.0` 的目錄：
 
    ```bash
    OPENSEARCH_HOME=~/opensearch-2.5.0
@@ -262,7 +262,7 @@ OpenSearch 現在應已在您的 GPU 加速叢集中執行。但是，如果佈�
    export PYTORCH_EXTRA_LIBRARY_PATH=$OPENSEARCH_HOME/lib/torch_neuron/lib/libtorchneuron.so
   ```
 
-4. (選用) 若要監控加速器執行個體的 GPU 使用量，請安裝 [Neuron 工具](https://awsdocs-neuron.readthedocs-hosted.com/en/latest/tools/neuron-sys-tools/index.html)，讓模型可以在您的執行個體內使用：
+4. （選用）若要監視加速器執行個體的 GPU 使用量，請安裝 [Neuron 工具](https://awsdocs-neuron.readthedocs-hosted.com/en/latest/tools/neuron-sys-tools/index.html)，讓模型能夠在您的執行個體中使用：
 
    ```bash
    # Install Neuron Tools
@@ -280,7 +280,7 @@ OpenSearch 現在應已在您的 GPU 加速叢集中執行。但是，如果佈�
    ```
 
 
-5. 為確保有足夠的記憶體上傳模型，請將 JVM 堆疊大小增加到至少 2 MB：
+5. 為確保您有足夠的記憶體上傳模型，請將 JVM 堆疊大小增加至至少 2 MB：
 
    ```bash
    echo "-Xss2m" | sudo tee -a $OPENSEARCH_HOME/config/jvm.options

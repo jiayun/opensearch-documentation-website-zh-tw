@@ -37,17 +37,16 @@ OpenSearch 也接受對 `_bulk/stream` 路徑的 PUT 請求，但我們強烈建
 
 下表列出可用的查詢參數。所有查詢參數皆為選用。
 
-Parameter | Data type | Description
+參數 | 資料類型 | 說明
 :--- | :--- | :---
-`pipeline` | String | 用於預先處理文件的管線 ID。
-`refresh` | Enum | 執行編製索引作業後，是否重新整理受影響的分片。預設為 `false`。`true` 會讓變更立即顯示在搜尋結果中，但會降低叢集效能。`wait_for` 則會等待重新整理。請求需要較長時間才會回傳，但不會降低叢集效能。
-`require_alias` | Boolean | 設為 `true` 可要求所有動作都以索引別名而非索引為目標。預設為 `false`。
-`routing` | String | 將請求路由至指定的分片。
-`timeout` | Time | 等待請求回傳的時間長度。預設為 `1m`。
-`type` | String | (已棄用) 未指定類型的文件所使用的預設文件類型。預設為 `_doc`。我們強烈建議忽略此參數，並對所有索引使用 `_doc` 類型。
-`wait_for_active_shards` | String | 指定 OpenSearch 處理大量請求之前，必須處於可用狀態的作用中分片數量。預設為 `1` (僅主要分片)。可設為 `all` 或正整數。大於 1 的值需要副本。例如，若指定值為 3，索引必須有 2 個副本分散在另外 2 個節點上，請求才能成功。
-`batch_interval` | Time | 指定大量作業要累積成批次多久之後，才將批次傳送至資料節點。
-`batch_size` | Time | 指定在將批次傳送至資料節點之前，要累積多少筆大量作業成一個批次。預設為 `1`。
+`pipeline` | 字串 | 用於預先處理文件的管線 ID。
+`refresh` | Enum | 執行編製索引作業後，是否重新整理受影響的分片。預設為 `false`。`true` 會使變更立即顯示在搜尋結果中，但會降低叢集效能。`wait_for` 會等待重新整理。請求需要較長時間才會傳回，但不會降低叢集效能。
+`require_alias` | 布林值 | 設為 `true` 時，要求所有動作都以索引別名而非索引為目標。預設為 `false`。
+`routing` | 字串 | 適用於未指定自身路由之作業的預設路由值。
+`timeout` | Time | 等待請求傳回的時間長度。預設為 `1m`。
+`wait_for_active_shards` | 字串 | 指定在 OpenSearch 處理大量請求之前，必須可用的作用中分片數量。預設為 `1`（僅主要分片）。可設為 `all` 或正整數。大於 1 的值需要副本。例如，若您指定的值為 3，索引必須有 2 個副本分散在另外 2 個節點上，請求才能成功。
+`batch_interval` | Time | 指定在將批次傳送至資料節點之前，應將大量作業累積成批次的時間長度。必須大於 0。若未指定，則不會依時間將作業分批。
+`batch_size` | 整數 | 指定在將批次傳送至資料節點之前，應將多少個大量作業累積成一個批次。必須大於 0。預設為 `1`。
 {% comment %}_source | List | asdf
 `_source_excludes` | List | asdf
 `_source_includes` | List | asdf{% endcomment %}
@@ -71,12 +70,15 @@ curl -X POST "http://localhost:9200/_bulk/stream" -H "Transfer-Encoding: chunked
 ```
 {% include copy.html %}
 
-## 範例回應
+## 回應範例
 
-視批次設定而定，每個串流回應區塊可能回報一或多筆 (批次) 大量作業的結果。例如，對於前述未進行批次處理 (預設) 的請求，串流回應可能如下所示：
+根據批次設定，每個串流回應區塊可能會回報一個或多個（批次）大量操作的結果。OpenSearch 會針對收到的每個 HTTP 區塊傳回結果，因此回應區塊的數量也取決於用戶端如何分割請求串流。
+
+以下回應假設 ID 為 `tt1392214` 的文件已存在於 `movies` 索引中，因此 `create` 操作會導致版本衝突。ID 為 `tt2229499` 和 `tt0816711` 的文件不存在，因此 `delete` 操作會傳回 `not_found`，而 `update` 操作會失敗。對於前述未使用批次處理（預設）的請求，串流回應可能如下所示：
 
 ```json
-{"took": 11, "errors": false, "items": [ { "index": {"_index": "movies", "_id": "tt1979320", "_version": 1, "result": "created", "_shards": { "total": 2 "successful": 1, "failed": 0 }, "_seq_no": 1, "_primary_term": 1, "status": 201 } } ] }
+{"took": 4, "errors": false, "items": [ { "delete": { "_index": "movies", "_id": "tt2229499", "_version": 1, "result": "not_found", "_shards": { "total": 2, "successful": 1, "failed": 0 }, "_seq_no": 1, "_primary_term": 1, "status": 404 } } ] }
+{"took": 11, "errors": false, "items": [ { "index": { "_index": "movies", "_id": "tt1979320", "_version": 1, "result": "created", "_shards": { "total": 2, "successful": 1, "failed": 0 }, "_seq_no": 2, "_primary_term": 1, "status": 201 } } ] }
 {"took": 2, "errors": true, "items": [ { "create": { "_index": "movies", "_id": "tt1392214", "status": 409, "error": { "type": "version_conflict_engine_exception", "reason": "[tt1392214]: version conflict, document already exists (current version [1])", "index": "movies", "shard": "0", "index_uuid": "yhizhusbSWmP0G7OJnmcLg" } } } ] }
-{"took": 4, "errors": true, "items": [ { "update": { "_index": "movies", "_id": "tt0816711", "status": 404, "error": { "type": "document_missing_exception", "reason": "[_doc][tt0816711]: document missing", "index": "movies", "shard": "0", "index_uuid": "yhizhusbSWmP0G7OJnmcLg" } } } ] }
+{"took": 4, "errors": true, "items": [ { "update": { "_index": "movies", "_id": "tt0816711", "status": 404, "error": { "type": "document_missing_exception", "reason": "[tt0816711]: document missing", "index": "movies", "shard": "0", "index_uuid": "yhizhusbSWmP0G7OJnmcLg" } } } ] }
 ```

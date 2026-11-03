@@ -44,22 +44,23 @@ GET /{index}/_stats/{metric}
 
 指標 | 說明
 :--- |:----
-`_all` | 傳回所有統計資訊。 
-`completion` | 完成建議器的統計資訊。 
-`docs` | 傳回文件數目，以及尚未合併的已刪除文件數目。索引重新整理作業可能會影響此統計資訊。 
-`fielddata` | Field data 統計資訊。 
-`flush` | 排清統計資訊。 
-`get` | 取得作業的統計資訊，包括找不到文件時的統計資訊。 
-`indexing` | 索引編製統計資訊。 
-`merge` | 合併統計資訊。 
-`query_cache` | 查詢快取統計資訊。 
-`refresh` | 重新整理統計資訊。 
-`request_cache` | 分片請求快取統計資訊。 
-`search` | 搜尋統計資訊，包括建議作業的統計資訊。搜尋作業可與一個或多個群組相關聯。您可以提供 `groups` 參數來包含自訂群組的統計資訊，該參數接受以逗號分隔的群組名稱清單。若要傳回所有群組的統計資訊，請使用 `_all`。 
-`segments` | 所有開啟分段的記憶體使用統計資訊。若 `include_segment_file_sizes` 參數為 `true`，此指標會包含每個 Lucene 索引檔案的彙總磁碟用量。
+`_all` | 傳回所有統計資料。無法與其他指標合併使用。
+`completion` | 自動完成建議器 (completion suggester) 統計資料。 
+`docs` | 傳回文件數量，以及尚未合併的已刪除文件數量。索引重新整理操作可能會影響此統計資料。 
+`fielddata` | 欄位資料統計資料。 
+`flush` | 排清統計資料。 
+`get` | Get 操作統計資料，包括找不到文件 (missing) 的統計資料。 
+`indexing` | 編製索引統計資料。 
+`merge` | 合併統計資料。 
+`query_cache` | 查詢快取統計資料。 
+`recovery` | 復原統計資料，包括分片作為來源 (`current_as_source`) 或目標 (`current_as_target`) 的進行中復原數量，以及復原節流時間 (`throttle_time_in_millis`)。
+`refresh` | 重新整理統計資料。 
+`request_cache` | 分片請求快取統計資料。 
+`search` | 搜尋統計資料，包括建議操作統計資料。搜尋操作可與一個或多個群組相關聯。若要包含自訂群組的統計資料，請在 `groups` 查詢參數中提供以逗號分隔的群組名稱清單。若要傳回所有群組的統計資料，請使用 `_all`。如果設定了 `groups`，`search` 物件會包含一個 `groups` 物件，其中含有每個群組的統計資料。
+`segments` | 所有開啟中分段的記憶體使用統計資料。如果 `include_segment_file_sizes` 參數為 `true`，此指標會包含每個 Lucene 索引檔案的彙總磁碟使用量。
 `store` | 以位元組為單位的索引大小。 
-`translog` | Translog 統計資訊。 
-`warmer` | Warmer 統計資訊。 
+`translog` | 交易記錄 (translog) 統計資料。 
+`warmer` | 預熱器 (warmer) 統計資料。 
 
 ## 查詢參數
 
@@ -67,15 +68,18 @@ GET /{index}/_stats/{metric}
 
 參數 | 資料類型 | 說明 
 :--- | :--- | :--- 
-`expand_wildcards` | 字串 | 指定萬用字元運算式可展開的索引類型。支援以逗號分隔的值。有效值為：<br> - `all`：展開至所有開啟與關閉的索引，包括隱藏索引。<br> - `open`：展開至開啟的索引。<br> - `closed`：展開至關閉的索引。<br> - `hidden`：展開時包含隱藏索引。必須與 `open`、`closed` 或兩者合併使用。<br> - `none`：不接受萬用字元運算式。<br> 預設為 `open`。
-`fields` | 字串 | 以逗號分隔的清單或萬用字元運算式，指定要包含在統計資訊中的欄位。若未提供 `completion_fields` 與 `fielddata_fields`，則指定預設欄位清單。
-`completion_fields` | 字串 | 以逗號分隔的清單或萬用字元運算式，指定要包含在欄位層級 `completion` 統計資訊中的欄位。
-`fielddata_fields` | 字串 | 以逗號分隔的清單或萬用字元運算式，指定要包含在欄位層級 `fielddata` 統計資訊中的欄位。
-`forbid_closed_indices` | 布林值 | 指定不收集已關閉索引的統計資訊。預設為 `true`。
-`groups` | 字串 | 以逗號分隔的搜尋群組清單，用於包含在 `search` 統計資訊中。搜尋群組是透過 [Search API]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search/#search-stats-groups) 的 `stats` 參數指派給搜尋請求的自訂標籤。使用 `_all` 可傳回所有群組的統計資訊。
-`level` | 字串 | 指定用於彙總統計資訊的層級。有效值為：<br> - `cluster`：叢集層級統計資訊。<br> - `indices`：索引層級統計資訊。<br> - `shards`：分片層級統計資訊。<br> 預設為 `indices`。
-`include_segment_file_sizes` | 布林值 | 指定是否回報每個 Lucene 索引檔案的彙總磁碟用量。僅適用於 `segments` 統計資訊。預設為 `false`。
-`include_unloaded_segments` | 布林值 | 指定是否包含未載入記憶體之分段的資訊。預設為 `false`。
+`expand_wildcards` | 字串 | 指定萬用字元運算式可展開的索引類型。支援以逗號分隔的值。有效值為：<br> - `all`：展開至所有開啟和關閉的索引，包括隱藏索引。<br> - `open`：展開至開啟的索引。<br> - `closed`：展開至關閉的索引。<br> - `hidden`：展開時包含隱藏索引。必須與 `open`、`closed` 或兩者搭配使用。<br> - `none`：不接受萬用字元運算式。<br> 預設為 `open`。
+`fields` | 字串 | 以逗號分隔的清單或萬用字元運算式，指定要納入統計資料的欄位。若未提供 `completion_fields` 和 `fielddata_fields`，則此參數會指定預設的欄位清單。
+`completion_fields` | 字串 | 以逗號分隔的清單或萬用字元運算式，指定要納入欄位層級 `completion` 統計資料的欄位。
+`fielddata_fields` | 字串 | 以逗號分隔的清單或萬用字元運算式，指定要納入欄位層級 `fielddata` 統計資料的欄位。
+`forbid_closed_indices` | 布林值 | 若為 `true`，以關閉的索引為目標或將萬用字元展開至關閉索引的請求會傳回錯誤。設定為 `false` 可傳回關閉索引的統計資料。預設為 `true`。
+`groups` | 字串 | 以逗號分隔的搜尋群組清單，指定要納入 `search` 統計資料的搜尋群組。搜尋群組是使用 [Search API]({{site.url}}{{site.baseurl}}/api-reference/search-apis/search/#search-stats-groups) 的 `stats` 參數指派給搜尋請求的自訂標籤。使用 `_all` 可傳回所有群組的統計資料。
+`level` | 字串 | 指定用來彙總統計資料的層級。有效值為：<br> - `cluster`：叢集層級統計資料。<br> - `indices`：索引層級統計資料。<br> - `shards`：分片層級統計資料。<br> 預設為 `indices`。
+`include_segment_file_sizes` | 布林值 | 指定是否回報每個 Lucene 索引檔案的彙總磁碟使用量。僅適用於 `segments` 統計資料。預設為 `false`。
+`include_unloaded_segments` | 布林值 | 指定是否納入關閉索引的分段統計資料，這些索引的分段不會載入記憶體。僅在 `forbid_closed_indices` 為 `false` 時適用。預設為 `false`。
+`ignore_unavailable` | 布林值 | 若為 `true`，回應中會省略不存在或已關閉的索引。若為 `false`，當請求以不存在或已關閉的索引為目標時，會傳回錯誤。預設為 `false`。
+`allow_no_indices` | 布林值 | 若為 `false`，當任何萬用字元運算式、索引別名或 `_all` 值不符合任何索引時，請求會傳回錯誤。預設為 `true`。
+`timeout` | 時間 | 等待每個節點回應的時間長度。預設為 `30s`。
 
 ## 範例請求
 
@@ -159,9 +163,9 @@ response = client.indices.stats(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-### 特定統計資訊
+### 特定統計資料
 
-以下範例傳回與索引及排清作業相關的索引統計資訊：
+下列範例會傳回與重新整理及排清操作相關的索引統計資料：
 
 <!-- spec_insert_start
 component: example_code
@@ -188,7 +192,7 @@ response = client.indices.stats(
 
 ### 展開萬用字元
 
-以下範例展開所有與索引統計資訊相關的萬用字元：
+下列範例會傳回名稱以 `testindex` 開頭的所有開啟中索引（包括隱藏索引）的統計資料：
 
 <!-- spec_insert_start
 component: example_code
@@ -267,15 +271,15 @@ response = client.indices.stats(
     python=step1_python %}
 <!-- spec_insert_end -->
 
-## 範例回應
+## 回應範例
 
-根據預設，傳回的統計資料會分成兩個群組：`primaries` 與 `total`。`primaries` 群組包含僅針對主要分片計算的值，而 `total` 群組則包含主要分片與副本分片累計的值。以下是 Index Stats API 回應的範例：
+根據預設，傳回的統計資料會分成兩組：`primaries` 和 `total`。`primaries` 群組僅包含針對主要分片計算的值，而 `total` 群組則包含主要分片與副本分片的累計值。以下是 Index Stats API 回應範例：
 
 <details markdown="block">
-  <summary>
+<summary>
     回應
-  </summary>
-  {: .text-delta}
+</summary>
+{: .text-delta}
 
 ```json
 {
@@ -291,12 +295,12 @@ response = client.indices.stats(
         "deleted": 0
       },
       "store": {
-        "size_in_bytes": 15531,
+        "size_in_bytes": 5172,
         "reserved_in_bytes": 0
       },
       "indexing": {
         "index_total": 4,
-        "index_time_in_millis": 10,
+        "index_time_in_millis": 1,
         "index_current": 0,
         "index_failed": 0,
         "delete_total": 0,
@@ -304,24 +308,35 @@ response = client.indices.stats(
         "delete_current": 0,
         "noop_update_total": 0,
         "is_throttled": false,
-        "throttle_time_in_millis": 0
+        "throttle_time_in_millis": 0,
+        "max_last_index_request_timestamp": 1792186272652
       },
       "get": {
-        "total": 0,
+        "total": 2,
+        "getTime": "0s",
         "time_in_millis": 0,
-        "exists_total": 0,
+        "exists_total": 1,
         "exists_time_in_millis": 0,
-        "missing_total": 0,
+        "missing_total": 1,
         "missing_time_in_millis": 0,
         "current": 0
       },
       "search": {
         "open_contexts": 0,
-        "query_total": 12,
-        "query_time_in_millis": 11,
+        "query_total": 3,
+        "query_time_in_millis": 2,
         "query_current": 0,
-        "fetch_total": 12,
-        "fetch_time_in_millis": 5,
+        "query_failed": 0,
+        "concurrent_query_total": 0,
+        "concurrent_query_time_in_millis": 0,
+        "concurrent_query_current": 0,
+        "concurrent_avg_slice_count": 0.0,
+        "startree_query_total": 0,
+        "startree_query_time_in_millis": 0,
+        "startree_query_current": 0,
+        "startree_query_failed": 0,
+        "fetch_total": 3,
+        "fetch_time_in_millis": 0,
         "fetch_current": 0,
         "scroll_total": 0,
         "scroll_time_in_millis": 0,
@@ -331,7 +346,8 @@ response = client.indices.stats(
         "point_in_time_current": 0,
         "suggest_total": 0,
         "suggest_time_in_millis": 0,
-        "suggest_current": 0
+        "suggest_current": 0,
+        "search_idle_reactivate_count_total": 0
       },
       "merges": {
         "current": 0,
@@ -343,23 +359,34 @@ response = client.indices.stats(
         "total_size_in_bytes": 0,
         "total_stopped_time_in_millis": 0,
         "total_throttled_time_in_millis": 0,
-        "total_auto_throttle_in_bytes": 20971520
+        "total_auto_throttle_in_bytes": 20971520,
+        "unreferenced_file_cleanups_performed": 0,
+        "warmer": {
+          "total_invocations_count": 0,
+          "total_time_millis": 0,
+          "total_failure_count": 0,
+          "total_bytes_sent": 0,
+          "total_bytes_received": 0,
+          "total_send_time_millis": 0,
+          "total_receive_time_millis": 0,
+          "ongoing_count": 0
+        }
       },
       "refresh": {
-        "total": 8,
-        "total_time_in_millis": 58,
-        "external_total": 7,
-        "external_total_time_in_millis": 60,
+        "total": 3,
+        "total_time_in_millis": 13,
+        "external_total": 3,
+        "external_total_time_in_millis": 13,
         "listeners": 0
       },
       "flush": {
-        "total": 1,
-        "periodic": 1,
-        "total_time_in_millis": 21
+        "total": 0,
+        "periodic": 0,
+        "total_time_in_millis": 0
       },
       "warmer": {
         "current": 0,
-        "total": 6,
+        "total": 2,
         "total_time_in_millis": 0
       },
       "query_cache": {
@@ -373,14 +400,13 @@ response = client.indices.stats(
       },
       "fielddata": {
         "memory_size_in_bytes": 0,
-        "evictions": 0,
-        "item_count": 0
+        "evictions": 0
       },
       "completion": {
         "size_in_bytes": 0
       },
       "segments": {
-        "count": 4,
+        "count": 1,
         "memory_in_bytes": 0,
         "terms_memory_in_bytes": 0,
         "stored_fields_memory_in_bytes": 0,
@@ -392,51 +418,56 @@ response = client.indices.stats(
         "version_map_memory_in_bytes": 0,
         "fixed_bit_set_memory_in_bytes": 0,
         "max_unsafe_auto_id_timestamp": -1,
-        "remote_store" : {
-          "upload" : {
-            "total_upload_size" : {
-              "started_bytes" : 152419,
-              "succeeded_bytes" : 152419,
-              "failed_bytes" : 0
+        "remote_store": {
+          "upload": {
+            "total_upload_size": {
+              "started_bytes": 0,
+              "succeeded_bytes": 0,
+              "failed_bytes": 0
             },
-            "refresh_size_lag" : {
-              "total_bytes" : 0,
-              "max_bytes" : 0
+            "refresh_size_lag": {
+              "total_bytes": 0,
+              "max_bytes": 0
             },
-            "max_refresh_time_lag_in_millis" : 0,
-            "total_time_spent_in_millis" : 516,
-            "pressure" : {
-              "total_rejections" : 0
+            "max_refresh_time_lag_in_millis": 0,
+            "total_time_spent_in_millis": 0,
+            "pressure": {
+              "total_rejections": 0
             }
           },
-          "download" : {
-            "total_download_size" : {
-              "started_bytes" : 0,
-              "succeeded_bytes" : 0,
-              "failed_bytes" : 0
+          "download": {
+            "total_download_size": {
+              "started_bytes": 0,
+              "succeeded_bytes": 0,
+              "failed_bytes": 0
             },
-            "total_time_spent_in_millis" : 0
+            "total_time_spent_in_millis": 0
           }
+        },
+        "segment_replication": {
+          "max_bytes_behind": 0,
+          "total_bytes_behind": 0,
+          "max_replication_lag": 0
         },
         "file_sizes": {}
       },
       "translog": {
-        "operations": 0,
-        "size_in_bytes": 55,
-        "uncommitted_operations": 0,
-        "uncommitted_size_in_bytes": 55,
-        "earliest_last_modified_age": 142622215,
-        "remote_store" : {
-          "upload" : {
-            "total_uploads" : {
-              "started" : 57,
-              "failed" : 0,
-              "succeeded" : 57
+        "operations": 4,
+        "size_in_bytes": 363,
+        "uncommitted_operations": 4,
+        "uncommitted_size_in_bytes": 363,
+        "earliest_last_modified_age": 300,
+        "remote_store": {
+          "upload": {
+            "total_uploads": {
+              "started": 0,
+              "failed": 0,
+              "succeeded": 0
             },
-            "total_upload_size" : {
-              "started_bytes" : 16830,
-              "failed_bytes" : 0,
-              "succeeded_bytes" : 16830
+            "total_upload_size": {
+              "started_bytes": 0,
+              "failed_bytes": 0,
+              "succeeded_bytes": 0
             }
           }
         }
@@ -459,12 +490,12 @@ response = client.indices.stats(
         "deleted": 0
       },
       "store": {
-        "size_in_bytes": 15531,
+        "size_in_bytes": 5172,
         "reserved_in_bytes": 0
       },
       "indexing": {
         "index_total": 4,
-        "index_time_in_millis": 10,
+        "index_time_in_millis": 1,
         "index_current": 0,
         "index_failed": 0,
         "delete_total": 0,
@@ -472,24 +503,35 @@ response = client.indices.stats(
         "delete_current": 0,
         "noop_update_total": 0,
         "is_throttled": false,
-        "throttle_time_in_millis": 0
+        "throttle_time_in_millis": 0,
+        "max_last_index_request_timestamp": 1792186272652
       },
       "get": {
-        "total": 0,
+        "total": 2,
+        "getTime": "0s",
         "time_in_millis": 0,
-        "exists_total": 0,
+        "exists_total": 1,
         "exists_time_in_millis": 0,
-        "missing_total": 0,
+        "missing_total": 1,
         "missing_time_in_millis": 0,
         "current": 0
       },
       "search": {
         "open_contexts": 0,
-        "query_total": 12,
-        "query_time_in_millis": 11,
+        "query_total": 3,
+        "query_time_in_millis": 2,
         "query_current": 0,
-        "fetch_total": 12,
-        "fetch_time_in_millis": 5,
+        "query_failed": 0,
+        "concurrent_query_total": 0,
+        "concurrent_query_time_in_millis": 0,
+        "concurrent_query_current": 0,
+        "concurrent_avg_slice_count": 0.0,
+        "startree_query_total": 0,
+        "startree_query_time_in_millis": 0,
+        "startree_query_current": 0,
+        "startree_query_failed": 0,
+        "fetch_total": 3,
+        "fetch_time_in_millis": 0,
         "fetch_current": 0,
         "scroll_total": 0,
         "scroll_time_in_millis": 0,
@@ -499,7 +541,8 @@ response = client.indices.stats(
         "point_in_time_current": 0,
         "suggest_total": 0,
         "suggest_time_in_millis": 0,
-        "suggest_current": 0
+        "suggest_current": 0,
+        "search_idle_reactivate_count_total": 0
       },
       "merges": {
         "current": 0,
@@ -511,23 +554,34 @@ response = client.indices.stats(
         "total_size_in_bytes": 0,
         "total_stopped_time_in_millis": 0,
         "total_throttled_time_in_millis": 0,
-        "total_auto_throttle_in_bytes": 20971520
+        "total_auto_throttle_in_bytes": 20971520,
+        "unreferenced_file_cleanups_performed": 0,
+        "warmer": {
+          "total_invocations_count": 0,
+          "total_time_millis": 0,
+          "total_failure_count": 0,
+          "total_bytes_sent": 0,
+          "total_bytes_received": 0,
+          "total_send_time_millis": 0,
+          "total_receive_time_millis": 0,
+          "ongoing_count": 0
+        }
       },
       "refresh": {
-        "total": 8,
-        "total_time_in_millis": 58,
-        "external_total": 7,
-        "external_total_time_in_millis": 60,
+        "total": 3,
+        "total_time_in_millis": 13,
+        "external_total": 3,
+        "external_total_time_in_millis": 13,
         "listeners": 0
       },
       "flush": {
-        "total": 1,
-        "periodic": 1,
-        "total_time_in_millis": 21
+        "total": 0,
+        "periodic": 0,
+        "total_time_in_millis": 0
       },
       "warmer": {
         "current": 0,
-        "total": 6,
+        "total": 2,
         "total_time_in_millis": 0
       },
       "query_cache": {
@@ -541,14 +595,13 @@ response = client.indices.stats(
       },
       "fielddata": {
         "memory_size_in_bytes": 0,
-        "evictions": 0,
-        "item_count": 0
+        "evictions": 0
       },
       "completion": {
         "size_in_bytes": 0
       },
       "segments": {
-        "count": 4,
+        "count": 1,
         "memory_in_bytes": 0,
         "terms_memory_in_bytes": 0,
         "stored_fields_memory_in_bytes": 0,
@@ -560,51 +613,56 @@ response = client.indices.stats(
         "version_map_memory_in_bytes": 0,
         "fixed_bit_set_memory_in_bytes": 0,
         "max_unsafe_auto_id_timestamp": -1,
-        "remote_store" : {
-          "upload" : {
-            "total_upload_size" : {
-              "started_bytes" : 152419,
-              "succeeded_bytes" : 152419,
-              "failed_bytes" : 0
+        "remote_store": {
+          "upload": {
+            "total_upload_size": {
+              "started_bytes": 0,
+              "succeeded_bytes": 0,
+              "failed_bytes": 0
             },
-            "refresh_size_lag" : {
-              "total_bytes" : 0,
-              "max_bytes" : 0
+            "refresh_size_lag": {
+              "total_bytes": 0,
+              "max_bytes": 0
             },
-            "max_refresh_time_lag_in_millis" : 0,
-            "total_time_spent_in_millis" : 516,
-            "pressure" : {
-              "total_rejections" : 0
+            "max_refresh_time_lag_in_millis": 0,
+            "total_time_spent_in_millis": 0,
+            "pressure": {
+              "total_rejections": 0
             }
           },
-          "download" : {
-            "total_download_size" : {
-              "started_bytes" : 0,
-              "succeeded_bytes" : 0,
-              "failed_bytes" : 0
+          "download": {
+            "total_download_size": {
+              "started_bytes": 0,
+              "succeeded_bytes": 0,
+              "failed_bytes": 0
             },
-            "total_time_spent_in_millis" : 0
+            "total_time_spent_in_millis": 0
           }
+        },
+        "segment_replication": {
+          "max_bytes_behind": 0,
+          "total_bytes_behind": 0,
+          "max_replication_lag": 0
         },
         "file_sizes": {}
       },
       "translog": {
-        "operations": 0,
-        "size_in_bytes": 55,
-        "uncommitted_operations": 0,
-        "uncommitted_size_in_bytes": 55,
-        "earliest_last_modified_age": 142622215,
-        "remote_store" : {
-          "upload" : {
-            "total_uploads" : {
-              "started" : 57,
-              "failed" : 0,
-              "succeeded" : 57
+        "operations": 4,
+        "size_in_bytes": 363,
+        "uncommitted_operations": 4,
+        "uncommitted_size_in_bytes": 363,
+        "earliest_last_modified_age": 300,
+        "remote_store": {
+          "upload": {
+            "total_uploads": {
+              "started": 0,
+              "failed": 0,
+              "succeeded": 0
             },
-            "total_upload_size" : {
-              "started_bytes" : 16830,
-              "failed_bytes" : 0,
-              "succeeded_bytes" : 16830
+            "total_upload_size": {
+              "started_bytes": 0,
+              "failed_bytes": 0,
+              "succeeded_bytes": 0
             }
           }
         }
@@ -624,19 +682,19 @@ response = client.indices.stats(
   },
   "indices": {
     "testindex": {
-      "uuid": "0SXXSpe9Rp-FpxXXWLOD8Q",
+      "uuid": "fnaTkGq4QIqB__mdUzGqiw",
       "primaries": {
         "docs": {
           "count": 4,
           "deleted": 0
         },
         "store": {
-          "size_in_bytes": 15531,
+          "size_in_bytes": 5172,
           "reserved_in_bytes": 0
         },
         "indexing": {
           "index_total": 4,
-          "index_time_in_millis": 10,
+          "index_time_in_millis": 1,
           "index_current": 0,
           "index_failed": 0,
           "delete_total": 0,
@@ -644,24 +702,35 @@ response = client.indices.stats(
           "delete_current": 0,
           "noop_update_total": 0,
           "is_throttled": false,
-          "throttle_time_in_millis": 0
+          "throttle_time_in_millis": 0,
+          "max_last_index_request_timestamp": 1792186272652
         },
         "get": {
-          "total": 0,
+          "total": 2,
+          "getTime": "0s",
           "time_in_millis": 0,
-          "exists_total": 0,
+          "exists_total": 1,
           "exists_time_in_millis": 0,
-          "missing_total": 0,
+          "missing_total": 1,
           "missing_time_in_millis": 0,
           "current": 0
         },
         "search": {
           "open_contexts": 0,
-          "query_total": 12,
-          "query_time_in_millis": 11,
+          "query_total": 3,
+          "query_time_in_millis": 2,
           "query_current": 0,
-          "fetch_total": 12,
-          "fetch_time_in_millis": 5,
+          "query_failed": 0,
+          "concurrent_query_total": 0,
+          "concurrent_query_time_in_millis": 0,
+          "concurrent_query_current": 0,
+          "concurrent_avg_slice_count": 0.0,
+          "startree_query_total": 0,
+          "startree_query_time_in_millis": 0,
+          "startree_query_current": 0,
+          "startree_query_failed": 0,
+          "fetch_total": 3,
+          "fetch_time_in_millis": 0,
           "fetch_current": 0,
           "scroll_total": 0,
           "scroll_time_in_millis": 0,
@@ -671,7 +740,8 @@ response = client.indices.stats(
           "point_in_time_current": 0,
           "suggest_total": 0,
           "suggest_time_in_millis": 0,
-          "suggest_current": 0
+          "suggest_current": 0,
+          "search_idle_reactivate_count_total": 0
         },
         "merges": {
           "current": 0,
@@ -683,23 +753,34 @@ response = client.indices.stats(
           "total_size_in_bytes": 0,
           "total_stopped_time_in_millis": 0,
           "total_throttled_time_in_millis": 0,
-          "total_auto_throttle_in_bytes": 20971520
+          "total_auto_throttle_in_bytes": 20971520,
+          "unreferenced_file_cleanups_performed": 0,
+          "warmer": {
+            "total_invocations_count": 0,
+            "total_time_millis": 0,
+            "total_failure_count": 0,
+            "total_bytes_sent": 0,
+            "total_bytes_received": 0,
+            "total_send_time_millis": 0,
+            "total_receive_time_millis": 0,
+            "ongoing_count": 0
+          }
         },
         "refresh": {
-          "total": 8,
-          "total_time_in_millis": 58,
-          "external_total": 7,
-          "external_total_time_in_millis": 60,
+          "total": 3,
+          "total_time_in_millis": 13,
+          "external_total": 3,
+          "external_total_time_in_millis": 13,
           "listeners": 0
         },
         "flush": {
-          "total": 1,
-          "periodic": 1,
-          "total_time_in_millis": 21
+          "total": 0,
+          "periodic": 0,
+          "total_time_in_millis": 0
         },
         "warmer": {
           "current": 0,
-          "total": 6,
+          "total": 2,
           "total_time_in_millis": 0
         },
         "query_cache": {
@@ -713,14 +794,13 @@ response = client.indices.stats(
         },
         "fielddata": {
           "memory_size_in_bytes": 0,
-          "evictions": 0,
-          "item_count": 0
+          "evictions": 0
         },
         "completion": {
           "size_in_bytes": 0
         },
         "segments": {
-          "count": 4,
+          "count": 1,
           "memory_in_bytes": 0,
           "terms_memory_in_bytes": 0,
           "stored_fields_memory_in_bytes": 0,
@@ -732,51 +812,56 @@ response = client.indices.stats(
           "version_map_memory_in_bytes": 0,
           "fixed_bit_set_memory_in_bytes": 0,
           "max_unsafe_auto_id_timestamp": -1,
-          "remote_store" : {
-            "upload" : {
-              "total_upload_size" : {
-                "started_bytes" : 152419,
-                "succeeded_bytes" : 152419,
-                "failed_bytes" : 0
+          "remote_store": {
+            "upload": {
+              "total_upload_size": {
+                "started_bytes": 0,
+                "succeeded_bytes": 0,
+                "failed_bytes": 0
               },
-              "refresh_size_lag" : {
-                "total_bytes" : 0,
-                "max_bytes" : 0
+              "refresh_size_lag": {
+                "total_bytes": 0,
+                "max_bytes": 0
               },
-              "max_refresh_time_lag_in_millis" : 0,
-              "total_time_spent_in_millis" : 516,
-              "pressure" : {
-                "total_rejections" : 0
+              "max_refresh_time_lag_in_millis": 0,
+              "total_time_spent_in_millis": 0,
+              "pressure": {
+                "total_rejections": 0
               }
             },
-            "download" : {
-              "total_download_size" : {
-                "started_bytes" : 0,
-                "succeeded_bytes" : 0,
-                "failed_bytes" : 0
+            "download": {
+              "total_download_size": {
+                "started_bytes": 0,
+                "succeeded_bytes": 0,
+                "failed_bytes": 0
               },
-              "total_time_spent_in_millis" : 0
+              "total_time_spent_in_millis": 0
             }
+          },
+          "segment_replication": {
+            "max_bytes_behind": 0,
+            "total_bytes_behind": 0,
+            "max_replication_lag": 0
           },
           "file_sizes": {}
         },
         "translog": {
-          "operations": 0,
-          "size_in_bytes": 55,
-          "uncommitted_operations": 0,
-          "uncommitted_size_in_bytes": 55,
-          "earliest_last_modified_age": 142622215,
-          "remote_store" : {
-            "upload" : {
-              "total_uploads" : {
-                "started" : 57,
-                "failed" : 0,
-                "succeeded" : 57
+          "operations": 4,
+          "size_in_bytes": 363,
+          "uncommitted_operations": 4,
+          "uncommitted_size_in_bytes": 363,
+          "earliest_last_modified_age": 300,
+          "remote_store": {
+            "upload": {
+              "total_uploads": {
+                "started": 0,
+                "failed": 0,
+                "succeeded": 0
               },
-              "total_upload_size" : {
-                "started_bytes" : 16830,
-                "failed_bytes" : 0,
-                "succeeded_bytes" : 16830
+              "total_upload_size": {
+                "started_bytes": 0,
+                "failed_bytes": 0,
+                "succeeded_bytes": 0
               }
             }
           }
@@ -799,12 +884,12 @@ response = client.indices.stats(
           "deleted": 0
         },
         "store": {
-          "size_in_bytes": 15531,
+          "size_in_bytes": 5172,
           "reserved_in_bytes": 0
         },
         "indexing": {
           "index_total": 4,
-          "index_time_in_millis": 10,
+          "index_time_in_millis": 1,
           "index_current": 0,
           "index_failed": 0,
           "delete_total": 0,
@@ -812,24 +897,35 @@ response = client.indices.stats(
           "delete_current": 0,
           "noop_update_total": 0,
           "is_throttled": false,
-          "throttle_time_in_millis": 0
+          "throttle_time_in_millis": 0,
+          "max_last_index_request_timestamp": 1792186272652
         },
         "get": {
-          "total": 0,
+          "total": 2,
+          "getTime": "0s",
           "time_in_millis": 0,
-          "exists_total": 0,
+          "exists_total": 1,
           "exists_time_in_millis": 0,
-          "missing_total": 0,
+          "missing_total": 1,
           "missing_time_in_millis": 0,
           "current": 0
         },
         "search": {
           "open_contexts": 0,
-          "query_total": 12,
-          "query_time_in_millis": 11,
+          "query_total": 3,
+          "query_time_in_millis": 2,
           "query_current": 0,
-          "fetch_total": 12,
-          "fetch_time_in_millis": 5,
+          "query_failed": 0,
+          "concurrent_query_total": 0,
+          "concurrent_query_time_in_millis": 0,
+          "concurrent_query_current": 0,
+          "concurrent_avg_slice_count": 0.0,
+          "startree_query_total": 0,
+          "startree_query_time_in_millis": 0,
+          "startree_query_current": 0,
+          "startree_query_failed": 0,
+          "fetch_total": 3,
+          "fetch_time_in_millis": 0,
           "fetch_current": 0,
           "scroll_total": 0,
           "scroll_time_in_millis": 0,
@@ -839,7 +935,8 @@ response = client.indices.stats(
           "point_in_time_current": 0,
           "suggest_total": 0,
           "suggest_time_in_millis": 0,
-          "suggest_current": 0
+          "suggest_current": 0,
+          "search_idle_reactivate_count_total": 0
         },
         "merges": {
           "current": 0,
@@ -851,23 +948,34 @@ response = client.indices.stats(
           "total_size_in_bytes": 0,
           "total_stopped_time_in_millis": 0,
           "total_throttled_time_in_millis": 0,
-          "total_auto_throttle_in_bytes": 20971520
+          "total_auto_throttle_in_bytes": 20971520,
+          "unreferenced_file_cleanups_performed": 0,
+          "warmer": {
+            "total_invocations_count": 0,
+            "total_time_millis": 0,
+            "total_failure_count": 0,
+            "total_bytes_sent": 0,
+            "total_bytes_received": 0,
+            "total_send_time_millis": 0,
+            "total_receive_time_millis": 0,
+            "ongoing_count": 0
+          }
         },
         "refresh": {
-          "total": 8,
-          "total_time_in_millis": 58,
-          "external_total": 7,
-          "external_total_time_in_millis": 60,
+          "total": 3,
+          "total_time_in_millis": 13,
+          "external_total": 3,
+          "external_total_time_in_millis": 13,
           "listeners": 0
         },
         "flush": {
-          "total": 1,
-          "periodic": 1,
-          "total_time_in_millis": 21
+          "total": 0,
+          "periodic": 0,
+          "total_time_in_millis": 0
         },
         "warmer": {
           "current": 0,
-          "total": 6,
+          "total": 2,
           "total_time_in_millis": 0
         },
         "query_cache": {
@@ -881,14 +989,13 @@ response = client.indices.stats(
         },
         "fielddata": {
           "memory_size_in_bytes": 0,
-          "evictions": 0,
-          "item_count": 0
+          "evictions": 0
         },
         "completion": {
           "size_in_bytes": 0
         },
         "segments": {
-          "count": 4,
+          "count": 1,
           "memory_in_bytes": 0,
           "terms_memory_in_bytes": 0,
           "stored_fields_memory_in_bytes": 0,
@@ -900,51 +1007,56 @@ response = client.indices.stats(
           "version_map_memory_in_bytes": 0,
           "fixed_bit_set_memory_in_bytes": 0,
           "max_unsafe_auto_id_timestamp": -1,
-          "remote_store" : {
-            "upload" : {
-              "total_upload_size" : {
-                "started_bytes" : 152419,
-                "succeeded_bytes" : 152419,
-                "failed_bytes" : 0
+          "remote_store": {
+            "upload": {
+              "total_upload_size": {
+                "started_bytes": 0,
+                "succeeded_bytes": 0,
+                "failed_bytes": 0
               },
-              "refresh_size_lag" : {
-                "total_bytes" : 0,
-                "max_bytes" : 0
+              "refresh_size_lag": {
+                "total_bytes": 0,
+                "max_bytes": 0
               },
-              "max_refresh_time_lag_in_millis" : 0,
-              "total_time_spent_in_millis" : 516,
-              "pressure" : {
-                "total_rejections" : 0
+              "max_refresh_time_lag_in_millis": 0,
+              "total_time_spent_in_millis": 0,
+              "pressure": {
+                "total_rejections": 0
               }
             },
-            "download" : {
-              "total_download_size" : {
-                "started_bytes" : 0,
-                "succeeded_bytes" : 0,
-                "failed_bytes" : 0
+            "download": {
+              "total_download_size": {
+                "started_bytes": 0,
+                "succeeded_bytes": 0,
+                "failed_bytes": 0
               },
-              "total_time_spent_in_millis" : 0
+              "total_time_spent_in_millis": 0
             }
+          },
+          "segment_replication": {
+            "max_bytes_behind": 0,
+            "total_bytes_behind": 0,
+            "max_replication_lag": 0
           },
           "file_sizes": {}
         },
         "translog": {
-          "operations": 0,
-          "size_in_bytes": 55,
-          "uncommitted_operations": 0,
-          "uncommitted_size_in_bytes": 55,
-          "earliest_last_modified_age": 142622215,
-          "remote_store" : {
-            "upload" : {
-              "total_uploads" : {
-                "started" : 57,
-                "failed" : 0,
-                "succeeded" : 57
+          "operations": 4,
+          "size_in_bytes": 363,
+          "uncommitted_operations": 4,
+          "uncommitted_size_in_bytes": 363,
+          "earliest_last_modified_age": 300,
+          "remote_store": {
+            "upload": {
+              "total_uploads": {
+                "started": 0,
+                "failed": 0,
+                "succeeded": 0
               },
-              "total_upload_size" : {
-                "started_bytes" : 16830,
-                "failed_bytes" : 0,
-                "succeeded_bytes" : 16830
+              "total_upload_size": {
+                "started_bytes": 0,
+                "failed_bytes": 0,
+                "succeeded_bytes": 0
               }
             }
           }
@@ -969,7 +1081,83 @@ response = client.indices.stats(
 
 ## 回應本文欄位
 
-如需回應欄位的相關資訊，請參閱 [Nodes Stats API 回應欄位]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/nodes-stats/#indices)。
+下表列出所有回應本文欄位。
+
+| 欄位 | 資料類型 | 說明 |
+| :--- | :--- | :--- |
+| `_shards` | 物件 | 包含此請求的 `total`、`successful` 和 `failed` 分片數。 |
+| `_all` | 物件 | 彙總所有符合請求之索引的統計資料。 |
+| `indices` | 物件 | 每個符合請求之索引的統計資料，以索引名稱作為鍵。若 `level` 為 `cluster`，則不會傳回。 |
+
+`_all` 物件包含下列欄位。
+
+| 欄位 | 資料類型 | 說明 |
+| :--- | :--- | :--- |
+| `primaries` | 物件 | 僅針對主要分片計算的統計資料。 |
+| `total` | 物件 | 跨主要分片與副本分片累計的統計資料。 |
+
+`indices` 中的每個物件包含下列欄位。
+
+| 欄位 | 資料類型 | 說明 |
+| :--- | :--- | :--- |
+| `uuid` | 字串 | 索引的通用唯一識別碼 (UUID)。 |
+| `primaries` | 物件 | 僅針對主要分片計算的索引統計資料。 |
+| `total` | 物件 | 跨主要分片與副本分片累計的索引統計資料。 |
+| `shards` | 物件 | 索引中每個分片的統計資料，以分片編號作為鍵。每個鍵包含一個分片複本物件陣列。僅在 `level` 為 `shards` 時傳回。 |
+
+`shards` 中的每個分片複本物件包含該分片複本的統計資料群組，以及下列欄位。
+
+| 欄位 | 資料類型 | 說明 |
+| :--- | :--- | :--- |
+| `routing` | 物件 | 分片複本的路由資訊。 |
+| `commit` | 物件 | 分片複本最近一次 Lucene 提交 (commit) 的相關資訊。 |
+| `seq_no` | 物件 | 分片複本的序號資訊。 |
+| `retention_leases` | 物件 | 分片複本的保留租約 (retention lease)。 |
+| `shard_path` | 物件 | 分片複本的檔案系統路徑。 |
+
+`routing` 物件包含下列欄位。
+
+| 欄位 | 資料類型 | 說明 |
+| :--- | :--- | :--- |
+| `state` | 字串 | 分片複本的狀態，例如 `STARTED` 或 `RELOCATING`。 |
+| `primary` | 布林值 | 分片複本是否為主要分片。 |
+| `node` | 字串 | 存放此分片複本之節點的 ID。 |
+| `relocating_node` | 字串 | 分片複本正在重新配置前往之節點的 ID；若分片複本未在重新配置，則為 `null`。 |
+
+`commit` 物件包含下列欄位。
+
+| 欄位 | 資料類型 | 說明 |
+| :--- | :--- | :--- |
+| `id` | 字串 | 提交的 ID。 |
+| `generation` | 整數 | 提交的世代編號。 |
+| `user_data` | 物件 | 與提交一起儲存的中繼資料，例如 translog UUID 以及提交當時的本機檢查點。 |
+| `num_docs` | 整數 | 提交中的文件數。 |
+
+`seq_no` 物件包含下列欄位。
+
+| 欄位 | 資料類型 | 說明 |
+| :--- | :--- | :--- |
+| `max_seq_no` | 整數 | 為分片複本核發的最高序號。 |
+| `local_checkpoint` | 整數 | 分片複本已處理完所有作業的最高序號。 |
+| `global_checkpoint` | 整數 | 所有作用中分片複本皆已處理的最高序號。 |
+
+`retention_leases` 物件包含下列欄位。
+
+| 欄位 | 資料類型 | 說明 |
+| :--- | :--- | :--- |
+| `primary_term` | 整數 | 分片的主要分片任期。 |
+| `version` | 整數 | 保留租約集合的版本。 |
+| `leases` | 物件陣列 | 保留租約。每個租約包含 `id`、`retaining_seq_no`、`timestamp` 和 `source` 欄位。 |
+
+`shard_path` 物件包含下列欄位。
+
+| 欄位 | 資料類型 | 說明 |
+| :--- | :--- | :--- |
+| `state_path` | 字串 | 儲存分片狀態之節點資料目錄的路徑。 |
+| `data_path` | 字串 | 儲存分片資料之節點資料目錄的路徑。 |
+| `is_custom_data_path` | 布林值 | 索引是否使用自訂資料路徑。 |
+
+如需各統計資料群組（例如 `docs`、`indexing` 和 `search`）中欄位的相關資訊，請參閱 [Nodes Stats API 回應欄位]({{site.url}}{{site.baseurl}}/api-reference/nodes-apis/nodes-stats/#indices)。
 
 ## 必要權限
 

@@ -8,10 +8,10 @@ nav_order: 70
 ---
 
 # Roll Over Index API
-**1.0 版引入**
+**1.0 版推出**
 {: .label .label-purple }
 
-Roll Over Index API 操作會根據 `wait_for_active_shards` 設定，為資料串流或索引別名建立新的索引。
+Roll Over Index API 會為資料串流或索引別名建立新索引，可以無條件建立，也可以在目前的寫入索引符合指定條件時建立。
 
 ## 端點
 
@@ -26,7 +26,7 @@ POST /{rollover-target}/_rollover/{target-index}
 
 ### 資料串流
 
-當您對資料串流執行輪替操作時，API 會為該串流產生新的寫入索引。同時，該串流先前的寫入索引會轉換為一般的後端索引（backing index）。此外，輪替程序會遞增資料串流的世代計數。資料串流的輪替不支援在請求本文中指定索引設定。
+當您對資料串流執行輪替操作時，API 會為該串流產生新的寫入索引。同時，該串流先前的寫入索引會轉換為一般的後端索引。此外，輪替程序會遞增資料串流的世代計數。資料串流輪替不支援 `target-index` 路徑參數，也不支援 `aliases`、`mappings` 和 `settings` 請求本文欄位，因為後端索引由資料串流命名，並由其索引範本進行設定。
 
 ### 只有一個索引的索引別名
 
@@ -34,7 +34,7 @@ POST /{rollover-target}/_rollover/{target-index}
 
 ### 具有寫入索引的索引別名
 
-當索引別名參照多個索引時，必須將其中一個索引指定為寫入索引。在輪替期間，API 會建立新的寫入索引，並將其 `is_write_index` 屬性設為 `true`，同時將先前寫入索引的 `is_write_index property` 設為 `false.` 以更新該索引。
+當索引別名參照多個索引時，必須將其中一個索引指定為寫入索引。在輪替期間，API 會建立一個新的寫入索引，並將其 `is_write_index` 屬性設為 `true`，同時將先前寫入索引的 `is_write_index` 屬性設為 `false` 以更新該索引。
 
 ## 遞增別名的索引名稱
 
@@ -59,28 +59,28 @@ POST /{rollover-target}/_rollover/{target-index}
 
 參數 | 資料類型 | 說明 
 :--- | :--- | :--- 
-`cluster_manager_timeout` | 時間 | 等待連線至叢集管理員節點的時間量。預設為 `30s`。
-`dry_run` | 布林值 | 若為 `true`，OpenSearch 會檢查目前索引是否符合輪替條件，並傳回將建立的索引名稱，但不會執行輪替。預設為 `false`。
-`timeout` | 時間 | 等待回應的時間量。預設為 `30s`。
-`wait_for_active_shards` | 字串 | OpenSearch 處理請求前必須可用的作用中分片數量。預設為 `1`（僅主要分片）。您也可以設為 `all` 或正整數。大於 `1` 的值需要副本。例如，若您指定值為 `3`，則該索引必須有兩個副本分散於另外兩個節點上，操作才能成功。
+`cluster_manager_timeout` | 時間 | 等待連線至叢集管理員節點的時間長度。預設為 `30s`。
+`dry_run` | 布林值 | 若為 `true`，OpenSearch 會檢查目前的索引是否符合輪替條件，並傳回將要建立的索引名稱，但不會實際執行輪替。預設為 `false`。
+`timeout` | 時間 | 等待回應的時間長度。預設為 `30s`。
+`wait_for_active_shards` | 字串 | OpenSearch 傳回回應之前，新索引必須處於作用中狀態的分片副本數量。預設為 `1`（僅主要分片）。您也可以設定為 `all` 或正整數。大於 `1` 的值需要副本。例如，若您指定的值為 `3`，則新索引必須有兩個副本，分散在另外兩個節點上。無論此設定為何，都會執行輪替。若必要的分片未在 `cluster_manager_timeout` 期間內進入作用中狀態，則回應會包含 `"shards_acknowledged": false`。
 
 ## 請求本文欄位
 
 支援下列請求本文欄位。
 
-### `alias`
+### `aliases`
 
-`alias` 參數以別名名稱作為鍵。當請求本文中存在 `template` 選項時，此參數為必要。物件本文包含下列選用參數。
+`aliases` 參數指定要新增至新索引的別名。此參數為選用。`aliases` 物件以別名名稱作為鍵。每個別名物件支援下列選用參數。
 
 
 參數 | 類型 | 說明
 :--- | :--- | :---
-`filter` | Query DSL 物件 | 限制別名可存取文件數量的查詢。
-`index_routing` | 字串 | 將編製索引操作路由至特定分片的值。指定時，會覆寫編製索引操作的 `routing` 值。
-`is_hidden` | 布林值 | 隱藏或顯示別名。當值為 `true` 時，別名會隱藏。預設為 `false`。該別名的所有索引在此設定上的值必須一致。
-`is_write_index` | 布林值 | 指定寫入索引。當值為 `true` 時，該索引即為別名的寫入索引。預設為 `false`。
-`routing` | 字串 | 用於將編製索引與搜尋操作路由至特定分片的值。
-`search_routing` | 字串 | 將搜尋操作路由至特定分片。指定時，會覆寫搜尋操作的 `routing`。
+`filter` | Query DSL 物件 | 限制別名可存取之文件數量的查詢。
+`index_routing` | 字串 | 將編製索引作業路由至特定分片的值。指定時，會覆寫編製索引作業的 `routing` 值。
+`is_hidden` | 布林值 | 隱藏或顯示別名。若為 `true`，則隱藏別名。預設為 `false`。別名所屬的索引在此設定上的值必須一致。
+`is_write_index` | 布林值 | 指定寫入索引。若為 `true`，則該索引為此別名的寫入索引。預設為 `false`。
+`routing` | 字串 | 用於將索引與搜尋作業路由至特定分片的值。
+`search_routing` | 字串 | 將搜尋作業路由至特定分片。指定時，會覆寫搜尋作業的 `routing`。
 
 ### `mappings`
 
@@ -112,69 +112,27 @@ POST /{rollover-target}/_rollover/{target-index}
 
 ### 輪替資料串流
 
-如果目前的寫入索引符合任一指定條件，下列請求會輪替資料串流：
-
-<!-- spec_insert_start
-component: example_code
-rest: POST /my-alias/_rollover
-body: |
-{
-  "conditions": {
-    "max_age": "5d",
-    "max_docs": 500,
-    "max_size": "100gb"
-  }
-}
--->
-{% capture step1_rest %}
-POST /my-alias/_rollover
-{
-  "conditions": {
-    "max_age": "5d",
-    "max_docs": 500,
-    "max_size": "100gb"
-  }
-}
-{% endcapture %}
-
-{% capture step1_python %}
-
-
-response = client.indices.rollover(
-  alias = "my-alias",
-  body =   {
-    "conditions": {
-      "max_age": "5d",
-      "max_docs": 500,
-      "max_size": "100gb"
-    }
-  }
-)
-
-{% endcapture %}
-
-{% include code-block.html
-    rest=step1_rest
-    python=step1_python %}
-<!-- spec_insert_end -->
-
-### 輪替具有寫入索引的索引別名
-
-下列請求會建立日期時間索引，並將其設為 `my-alias` 的寫入索引。索引名稱必須經過 URL 編碼：`%3Cmy-index-%7Bnow%2Fd%7D-000001%3E` 是 `<my-index-{now/d}-000001>` 的編碼形式，而 `{now/d}` 會解析為目前日期：
+若要建立資料串流，請先建立索引範本，為符合 `my-data-stream*` 模式的索引啟用資料串流：
 
 ```json
-PUT %3Cmy-index-%7Bnow%2Fd%7D-000001%3E
+PUT _index_template/my-data-stream-template
 {
-  "aliases": {
-    "my-alias": {
-      "is_write_index": true
-    }
-  }
+  "index_patterns": ["my-data-stream*"],
+  "data_stream": {}
 }
 ```
 {% include copy-curl.html %}
 
-下一個請求會使用別名執行輪替：
+接著建立資料串流：
+
+```json
+PUT _data_stream/my-data-stream
+```
+{% include copy-curl.html %}
+
+如需更多資訊，請參閱[資料串流]({{site.url}}{{site.baseurl}}/im-plugin/data-streams/)。
+
+若目前的寫入索引符合任一指定條件，下列請求會輪替該資料串流：
 
 <!-- spec_insert_start
 component: example_code
@@ -204,6 +162,68 @@ POST /my-data-stream/_rollover
 
 response = client.indices.rollover(
   alias = "my-data-stream",
+  body =   {
+    "conditions": {
+      "max_age": "5d",
+      "max_docs": 500,
+      "max_size": "100gb"
+    }
+  }
+)
+
+{% endcapture %}
+
+{% include code-block.html
+    rest=step1_rest
+    python=step1_python %}
+<!-- spec_insert_end -->
+
+### 使用具有寫入索引的索引別名進行輪替
+
+下列請求會建立一個日期時間索引，並將其設定為 `my-alias` 的寫入索引。索引名稱必須經過 URL 編碼：`%3Cmy-index-%7Bnow%2Fd%7D-000001%3E` 是 `<my-index-{now/d}-000001>` 的編碼形式，而 `{now/d}` 會解析為目前日期：
+
+```json
+PUT %3Cmy-index-%7Bnow%2Fd%7D-000001%3E
+{
+  "aliases": {
+    "my-alias": {
+      "is_write_index": true
+    }
+  }
+}
+```
+{% include copy-curl.html %}
+
+下一個請求會使用該別名執行輪替：
+
+<!-- spec_insert_start
+component: example_code
+rest: POST /my-alias/_rollover
+body: |
+{
+  "conditions": {
+    "max_age": "5d",
+    "max_docs": 500,
+    "max_size": "100gb"
+  }
+}
+-->
+{% capture step1_rest %}
+POST /my-alias/_rollover
+{
+  "conditions": {
+    "max_age": "5d",
+    "max_docs": 500,
+    "max_size": "100gb"
+  }
+}
+{% endcapture %}
+
+{% capture step1_python %}
+
+
+response = client.indices.rollover(
+  alias = "my-alias",
   body =   {
     "conditions": {
       "max_age": "5d",
@@ -263,16 +283,16 @@ response = client.indices.rollover(
 <!-- spec_insert_end -->
 
 
-## 範例回應
+## 回應範例
 
-OpenSearch 會傳回下列回應，確認除了 `max_size` 以外的所有條件皆已符合：
+以下資料串流輪替的回應範例顯示，除了 `max_size` 之外的所有條件皆已符合。如果寫入索引是新建立的且不符合任何條件，則回應會包含 `"rolled_over": false`，且 OpenSearch 不會建立新索引：
 
 ```json
 {
   "acknowledged": true,
   "shards_acknowledged": true,
-  "old_index": ".ds-my-data-stream-2029.06.11-000001",
-  "new_index": ".ds-my-data-stream-2029.06.12-000002",
+  "old_index": ".ds-my-data-stream-000001",
+  "new_index": ".ds-my-data-stream-000002",
   "rolled_over": true,
   "dry_run": false,
   "conditions": {
