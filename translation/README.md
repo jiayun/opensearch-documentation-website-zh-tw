@@ -20,7 +20,7 @@ The source inventory contains 1,886 pages. Translation and independent review ru
 | `translation/schemas/*.json` | yes | JSON Schemas for the model request/result formats |
 | `.translation-cache/` | no (ignored) | Validated chunk results, approved reviews, commit journal, run logs |
 
-Baseline commit: `cb0ac71febda3e93baddf91a6135f6cf9f74b31b`. Pages are all
+Baseline commit: `7639af70d8f40f3980dba74eb0e47a0aa2b092f6`. Pages are all
 `output: true` collections in the baseline `_config.yml` (files with front
 matter) plus `index.md`, `search.md` and `404.md`. `translation/` (including
 the inventory and source store) is excluded from the Jekyll build by

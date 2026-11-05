@@ -16,27 +16,27 @@ Security 外掛程式提供多個 YAML 組態檔案，用於儲存必要的設�
 
 Security 外掛程式支援下列一般設定：
 
--  `plugins.security.nodes_dn`（靜態）：指定一份辨別名稱 (DN) 清單，用以表示叢集中的其他節點。此設定支援萬用字元與規則運算式。當 `plugins.security.nodes_dn_dynamic_config_enabled` 為 `true` 時，除了 YAML 組態之外，**還會**從安全性索引讀取 DN 清單。若此設定未正確設定，叢集將無法形成，因為節點之間無法互相信任，並會產生下列錯誤：`Transport client authentication no longer supported`。
+-  `plugins.security.nodes_dn`（靜態）：指定一份辨別名稱（DN）清單，用來表示叢集中的其他節點。此設定支援萬用字元與規則運算式。當 `plugins.security.nodes_dn_dynamic_config_enabled` 為 `true` 時，除了 YAML 組態**之外**，也會從安全性索引讀取 DN 清單。如果此設定未正確設定，節點將無法互相信任，導致叢集無法形成，並產生下列錯誤：`Transport client authentication no longer supported`。
 
-- `plugins.security.nodes_dn_dynamic_config_enabled`（靜態）：適用於 `cross_cluster` 使用案例，即需要管理允許清單中的 `nodes_dn`，而不必在每次設定新的 `cross_cluster` 遠端時重新啟動節點。
-  將 `nodes_dn_dynamic_config_enabled` 設定為 `true` 會啟用**可由超級管理員呼叫**的 Distinguished Names API，這些 API 提供動態更新或擷取 `nodes_dn` 的方法。此設定僅在未設定 `plugins.security.cert.intercluster_request_evaluator_class` 時才會生效。預設為 `false`。
+- `plugins.security.nodes_dn_dynamic_config_enabled`（靜態）：適用於 `cross_cluster` 使用案例。在這類案例中，您需要管理允許清單中的 `nodes_dn`，而不必在每次設定新的 `cross_cluster` 遠端時重新啟動節點。
+  將 `nodes_dn_dynamic_config_enabled` 設為 `true` 會啟用**可由超級管理員呼叫**的 Distinguished Names API，以提供動態更新或擷取 `nodes_dn` 的方法。只有在未設定 `plugins.security.cert.intercluster_request_evaluator_class` 時，此設定才會生效。預設值為 `false`。
 
-- `plugins.security.authcz.admin_dn`（靜態）：定義應獲指派管理員權限的憑證 DN。必要。
+- `plugins.security.authcz.admin_dn`（靜態）：定義應指派管理員權限的憑證 DN。必要。
 
-- `plugins.security.roles_mapping_resolution`（靜態）：定義後端角色如何對應至 Security 角色。支援下列值：
+- `plugins.security.roles_mapping_resolution`（靜態）：定義後端角色如何對應至安全性角色。支援下列值：
     - `MAPPING_ONLY`（預設）：必須在 `roles_mapping.yml` 中明確設定對應。
-    - `BACKENDROLES_ONLY`：後端角色會直接對應至安全性角色。`roles_mapping.yml` 中的設定不會生效。
-    - `BOTH`：後端角色會同時直接對應以及透過 `roles_mapping.yml` 對應至安全性角色。
+    - `BACKENDROLES_ONLY`：後端角色直接對應至安全性角色。`roles_mapping.yml` 中的設定不會生效。
+    - `BOTH`：後端角色會直接對應，也會透過 `roles_mapping.yml` 對應至安全性角色。
 
-- `plugins.security.dls.mode`（靜態）：設定文件層級安全性 (DLS) 的評估模式。預設為 `adaptive`。請參閱[如何設定 DLS 評估模式]({{site.url}}{{site.baseurl}}/security/access-control/document-level-security/#how-to-set-the-dls-evaluation-mode-in-opensearchyml)。
+- `plugins.security.dls.mode`（靜態）：設定文件層級安全性（DLS）的評估模式。預設值為 `adaptive`。請參閱[如何設定 DLS 評估模式]({{site.url}}{{site.baseurl}}/security/access-control/document-level-security/#how-to-set-the-dls-evaluation-mode-in-opensearchyml)。
 
-- `plugins.security.compliance.salt`（靜態）：為欄位遮罩產生雜湊值時使用的 salt。長度至少須為 32 個字元。僅允許 ASCII 字元。選用。
+- `plugins.security.compliance.salt`（靜態）：為欄位遮罩產生雜湊值時使用的鹽值。必須包含至少 16 個 ASCII 字元。只會使用前 16 個位元組。選用。
 
-- `plugins.security.compliance.immutable_indices`（靜態）：標記為不可變更的索引中的文件遵循「一次寫入、多次讀取」模式。在這些索引中建立的文件無法變更，因此是不可變更的。
+- `plugins.security.compliance.immutable_indices`（靜態）：標記為不可變更之索引中的文件遵循「寫入一次、讀取多次」模式。在這些索引中建立的文件無法變更，因此是不可變更的。
 
-- `config.dynamic.http.anonymous_auth_enabled`（靜態）：啟用匿名驗證。這會使所有 HTTP 驗證器都不發出驗證挑戰。預設為 `false`。
+- `config.dynamic.http.anonymous_auth_enabled`（靜態）：啟用匿名驗證。這會使所有 HTTP 驗證器都不發出驗證挑戰。預設值為 `false`。
 
-- `http.detailed_errors.enabled`（靜態）：為針對 OpenSearch 叢集執行的 REST 呼叫啟用詳細錯誤訊息。若設定為 `true`，會連同錯誤程式碼一併提供 `root_cause`。預設為 `true`。
+- `http.detailed_errors.enabled`（靜態）：為針對 OpenSearch 叢集執行的 REST 呼叫啟用詳細錯誤訊息。如果設為 `true`，會連同錯誤碼一起提供 `root_cause`。預設值為 `true`。  
 
 ## REST 管理 API 設定
 
@@ -390,7 +390,7 @@ Security 外掛程式支援下列傳輸層安全性設定：
 
 - `plugins.sercurity.ssl.transport.client.truststore_alias`（靜態）：用戶端信任儲存區的別名。
 
-- `plugins.security.ssl.client.external_context_id`（靜態）：為傳輸用戶端提供用於外部 SSL 內容的 ID。
+- `plugins.security.ssl.client.external_context_id`（靜態）：為傳輸用戶端提供用於外部 SSL context 的 ID。
 
 - `plugins.secuirty.ssl.transport.principal_extractor_class`（靜態）：指定實作擷取器的類別，以便將憑證的自訂部分用作主體。
 

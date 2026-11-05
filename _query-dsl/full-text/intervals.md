@@ -120,7 +120,7 @@ GET /testindex/_search
 
 ## 參數
 
-此查詢接受欄位名稱 (`<field>`) 作為最上層參數：
+此查詢接受欄位名稱（`<field>`）作為頂層參數：
 
 ```json
 GET _search
@@ -136,16 +136,17 @@ GET _search
 ```
 {% include copy-curl.html %}
 
-`<field>` 接受下列規則物件，這些物件用於根據詞元、順序與鄰近程度來比對文件。
+`<field>` 接受下列規則物件，這些物件用於根據詞彙、順序與鄰近程度來比對文件。
 
 規則 | 說明
 :--- | :---
-[`match`](#the-match-rule) | 比對分析後的文字。
-[`prefix`](#the-prefix-rule) | 比對以指定字元集開頭的詞元。
-[`wildcard`](#the-wildcard-rule) | 使用萬用字元模式比對詞元。
-[`fuzzy`](#the-fuzzy-rule) | 比對與所提供詞元在指定編輯距離內相似的詞元。
-[`all_of`](#the-all_of-rule) | 使用合取 (`AND`) 合併多個規則。
-[`any_of`](#the-any_of-rule) | 使用析取 (`OR`) 合併多個規則。
+[`match`](#the-match-rule) | 比對經過分析的文字。
+[`prefix`](#the-prefix-rule) | 比對以指定字元集開頭的詞彙。
+[`wildcard`](#the-wildcard-rule) | 使用萬用字元模式比對詞彙。
+[`regexp`](#the-regexp-rule) | 使用規則運算式比對詞彙。
+[`fuzzy`](#the-fuzzy-rule) | 比對在指定編輯距離內與所提供詞彙相似的詞彙。
+[`all_of`](#the-all_of-rule) | 使用合取（`AND`）組合多個規則。
+[`any_of`](#the-any_of-rule) | 使用析取（`OR`）組合多個規則。
 
 ## `match` 規則
 
@@ -182,6 +183,92 @@ GET _search
 
 指定以 `*` 或 `?` 開頭的模式可能會降低搜尋效能，因為這會增加比對詞元所需的迭代次數。
 {: .important}
+
+## `regexp` 規則
+
+`regexp` 規則使用[規則運算式]({{site.url}}{{site.baseurl}}/query-dsl/regex-syntax/)比對詞彙。規則運算式必須比對完整的詞彙。根據預設，規則運算式在每個索引分段中最多可展開比對 128 個詞彙。如果在某個分段中比對到的詞彙數量超過此限制，系統會傳回錯誤。若要變更此限制，請指定 `max_expansions` 參數。下表列出 `regexp` 規則支援的所有參數。
+
+參數 | 必要/選用 | 資料類型 | 說明
+:--- | :--- | :--- | :---
+`pattern` | 必要 | 字串 | 用於比對詞彙的[規則運算式]({{site.url}}{{site.baseurl}}/query-dsl/regex-syntax/)。
+`flags` | 選用 | 字串 | 啟用選用的規則運算式運算子。多個運算子之間請以直線符號分隔。如需有效值，請參閱[選用運算子]({{site.url}}{{site.baseurl}}/query-dsl/regex-syntax/#optional-operators)。預設為 `ALL`。
+`flags_value` | 選用 | 整數 | 以 Lucene 規則運算式語法旗標的整數位元遮罩表示的 `flags`。如果同時指定 `flags` 和 `flags_value`，則以 `flags_value` 為優先。
+`case_insensitive` | 選用 | 布林值 | 若為 `true`，`pattern` 會比對詞彙而不區分英文字母大小寫。預設為 `false`。
+`max_expansions` | 選用 | 整數 | 規則運算式在每個索引分段中可展開的詞彙數量上限。如果規則運算式在某個分段中比對到更多詞彙，系統會傳回錯誤。如果值為 `0` 或更小，則會使用預設值。此值不得超過 [`indices.query.bool.max_clause_count`]({{site.url}}{{site.baseurl}}/install-and-configure/configuring-opensearch/cluster-settings-for-indexes/) 設定的值（預設為 `1024`）。預設為 `128`。
+`use_field` | 選用 | 字串 | 要搜尋的欄位，用以取代頂層的 `<field>`。`pattern` 會與此欄位中已編製索引的詞彙進行比對。
+
+`regexp` 規則不接受 `analyzer` 參數，因此 `pattern` 不會經過分析或正規化。模式會完全依照撰寫的內容，與索引中儲存的詞彙進行比對。例如，使用 `standard` 分析器的欄位會儲存小寫詞彙，因此除非將 `case_insensitive` 設定為 `true`，否則模式 `Stor(e|ed)` 不會傳回任何結果。
+
+### 範例：比對單字變體
+
+下列查詢使用本頁開頭編製索引的文件。它會搜尋符合以下條件的文件：符合規則運算式 `stor(e|ed)` 的詞彙（`store` 或 `stored`）與詞彙 `hash` 之間最多相隔三個位置：
+
+```json
+GET /testindex/_search
+{
+  "query": {
+    "intervals": {
+      "title": {
+        "all_of": {
+          "max_gaps": 3,
+          "intervals": [
+            {
+              "regexp": {
+                "pattern": "stor(e|ed)"
+              }
+            },
+            {
+              "match": {
+                "query": "hash"
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}
+```
+{% include copy-curl.html %}
+
+回應中只包含文件 1。在文件 1 中，詞彙 `stored` 與 `hash` 之間相隔兩個詞彙（`in` 和 `a`）。在文件 2 中，詞彙 `store` 與 `hash` 之間相隔五個詞彙（`key`、`value`、`pairs`、`in` 和 `a`），超過了 `max_gaps` 的值 `3`：
+
+<details markdown="block">
+<summary>
+    回應
+</summary>
+{: .text-delta}
+
+```json
+{
+  "took": 2,
+  "timed_out": false,
+  "_shards": {
+    "total": 1,
+    "successful": 1,
+    "skipped": 0,
+    "failed": 0
+  },
+  "hits": {
+    "total": {
+      "value": 1,
+      "relation": "eq"
+    },
+    "max_score": 0.25,
+    "hits": [
+      {
+        "_index": "testindex",
+        "_id": "1",
+        "_score": 0.25,
+        "_source": {
+          "title": "key-value pairs are efficiently stored in a hash table"
+        }
+      }
+    ]
+  }
+}
+```
+</details>
 
 ## `fuzzy` 規則
 
@@ -232,9 +319,9 @@ GET _search
 `overlapping` | 選用 | 查詢物件 | 用於傳回與篩選規則中所指定區間重疊的區間的查詢。
 `script` | 選用 | 指令碼物件 | 用於比對文件的指令碼。此指令碼必須傳回 `true` 或 `false`。
 
-#### 範例：篩選器
+### 範例：篩選器
 
-下列查詢搜尋包含 `pairs` 與 `hash` 兩個詞、彼此相距五個位置以內，且兩者之間不含 `efficiently` 一詞的文件：
+以下查詢會搜尋包含 `pairs` 和 `hash` 這兩個字詞的文件，這兩個字詞彼此相距不超過五個位置，且兩者之間不包含 `efficiently` 這個字詞：
 
 ```json
 POST /testindex/_search
@@ -260,7 +347,7 @@ POST /testindex/_search
 ```
 {% include copy-curl.html %}
 
-回應只包含文件 2：
+回應中僅包含文件 2：
 
 <details markdown="block">
 <summary>
@@ -299,15 +386,15 @@ POST /testindex/_search
 ```
 </details>
 
-#### 範例：指令碼篩選器
+### 範例：指令碼篩選器
 
-您也可以自行撰寫指令碼篩選器，搭配 `intervals` 查詢使用，並可使用下列變數：
+或者，您也可以使用下列變數撰寫自己的指令碼篩選器，並將其加入 `intervals` 查詢中：
 
-- `interval.start`：區間開始的位置（詞元編號）。
-- `interval.end`：區間結束的位置（詞元編號）。
-- `interval.gap`：詞元之間的單字數。
+- `interval.start`：區間開始的位置（詞彙編號）。
+- `interval.end`：區間結束的位置（詞彙編號）。
+- `interval.gap`：詞彙之間的單字數。
 
-例如，下列查詢搜尋在指定區間內彼此相鄰的 `map` 與 `hash` 兩個詞。詞元從 0 開始編號，因此在文字 `store key-value pairs in a hash map` 中，`store` 位於位置 0，`key` 位於位置 `1`，依此類推。指定的區間應在 `a` 之後開始，並在字串結尾之前結束：
+例如，下列查詢會在指定區間內搜尋彼此相鄰的字詞 `map` 和 `hash`。詞彙從 0 開始編號，因此在文字 `store key-value pairs in a hash map` 中，`store` 位於位置 0，`key` 位於位置 `1`，依此類推。指定的區間應在 `a` 之後開始，並在字串結尾之前結束：
 
 ```json
 POST /testindex/_search

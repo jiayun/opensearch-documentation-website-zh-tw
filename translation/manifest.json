@@ -1,5 +1,5 @@
 {
- "baseline_commit": "cb0ac71febda3e93baddf91a6135f6cf9f74b31b",
+ "baseline_commit": "7639af70d8f40f3980dba74eb0e47a0aa2b092f6",
  "pages": {
   "404.md": {
    "attempts": 1,
@@ -13034,7 +13034,7 @@
    "updated_at": "2026-10-16T07:57:05+00:00"
   },
   "_api-reference/index-apis/blocks.md": {
-   "attempts": 3,
+   "attempts": 1,
    "last_error": null,
    "original_front_matter": {
     "grand_parent": "Index APIs",
@@ -13043,21 +13043,21 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-08T04:55:52+00:00",
-    "family": "codex:gpt-6-sol",
+    "at": "2026-11-05T09:59:05+00:00",
+    "family": "xai:grok",
     "issues": [],
-    "model": "gpt-6-sol",
-    "prompt_version": "969e9ac2fc469d77",
-    "provider": "codex-review",
-    "target_sha256": "5c1265a4cecd7ccdad50f58587c08e173f907d3166535aa968580bd69e9c7c6e"
+    "model": "grok-4.7-build-fast",
+    "prompt_version": "b4fedb3349fa56d6",
+    "provider": "grok",
+    "target_sha256": "3fe1b8d10dafff244a21552e41ef1dc8e05896d67f648c0e4141096cd76c8151"
    },
-   "source_sha256": "292b162e0a4cb4893034375e9c7d8530f2d2131a1e04cb61d900b2bd6cc8d05d",
+   "source_sha256": "8c8acf05488c8c333addb3319931125c9bc5358135fac57d70c644c101971e90",
    "status": "reviewed",
-   "target_sha256": "5c1265a4cecd7ccdad50f58587c08e173f907d3166535aa968580bd69e9c7c6e",
-   "translated_source_sha256": "292b162e0a4cb4893034375e9c7d8530f2d2131a1e04cb61d900b2bd6cc8d05d",
+   "target_sha256": "3fe1b8d10dafff244a21552e41ef1dc8e05896d67f648c0e4141096cd76c8151",
+   "translated_source_sha256": "8c8acf05488c8c333addb3319931125c9bc5358135fac57d70c644c101971e90",
    "translator": {
-    "at": "2026-10-08T04:55:14+00:00",
-    "prompt_version": "969e9ac2fc469d77",
+    "at": "2026-11-05T09:58:27+00:00",
+    "prompt_version": "b4fedb3349fa56d6",
     "providers": [
      {
       "chunks": [
@@ -13066,10 +13066,58 @@
       "family": "codex:gpt-6.1-sol",
       "model": "gpt-6.1-sol",
       "provider": "codex"
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "upstream_section": 3
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "upstream_section": 4
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "upstream_section": 5
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "upstream_section": 6
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "upstream_section": 7
      }
-    ]
+    ],
+    "upstream_patch": {
+     "from": "cb0ac71febda3e93baddf91a6135f6cf9f74b31b",
+     "from_path": "_api-reference/index-apis/blocks.md",
+     "kind": "unchanged_sections_reused",
+     "reused_sections": [
+      0,
+      1,
+      2
+     ],
+     "to": "7639af70d8f40f3980dba74eb0e47a0aa2b092f6",
+     "translated_sections": [
+      3,
+      4,
+      5,
+      6,
+      7
+     ]
+    }
    },
-   "updated_at": "2026-10-08T04:55:52+00:00"
+   "updated_at": "2026-11-05T09:59:05+00:00"
   },
   "_api-reference/index-apis/clear-index-cache.md": {
    "attempts": 1,
@@ -45900,7 +45948,7 @@
    "updated_at": "2026-10-07T16:14:46+00:00"
   },
   "_install-and-configure/configuring-opensearch/security-settings.md": {
-   "attempts": 2,
+   "attempts": 3,
    "last_error": null,
    "original_front_matter": {
     "parent": "Configuring OpenSearch",
@@ -45908,21 +45956,21 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-08T16:19:38+00:00",
+    "at": "2026-11-05T10:01:08+00:00",
     "family": "codex:gpt-6-sol",
     "issues": [],
     "model": "gpt-6-sol",
-    "prompt_version": "0343516bacbffe7a",
+    "prompt_version": "b4fedb3349fa56d6",
     "provider": "codex-review",
-    "target_sha256": "e7056e650d9df9e27ed2d64b63d736c322408236afd6098b990ad556a367c384"
+    "target_sha256": "85de2adb7a3201475a810feffd3e6f0f83a1e333a19e68765662be27d056d93b"
    },
-   "source_sha256": "3dae3d799ad58635cd308e6aa489bb7725d82830d935e28ac01544f91bd9d096",
+   "source_sha256": "1bfb2c25cf67f803145fed366f1e1dfe9ab9d4300c66fdb24190a5f7058698db",
    "status": "reviewed",
-   "target_sha256": "e7056e650d9df9e27ed2d64b63d736c322408236afd6098b990ad556a367c384",
-   "translated_source_sha256": "3dae3d799ad58635cd308e6aa489bb7725d82830d935e28ac01544f91bd9d096",
+   "target_sha256": "85de2adb7a3201475a810feffd3e6f0f83a1e333a19e68765662be27d056d93b",
+   "translated_source_sha256": "1bfb2c25cf67f803145fed366f1e1dfe9ab9d4300c66fdb24190a5f7058698db",
    "translator": {
-    "at": "2026-10-08T16:18:03+00:00",
-    "prompt_version": "0343516bacbffe7a",
+    "at": "2026-11-05T10:00:26+00:00",
+    "prompt_version": "b4fedb3349fa56d6",
     "providers": [
      {
       "chunks": [
@@ -45953,10 +46001,58 @@
        "section.004",
        "section.015"
       ]
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "upstream_section": 2
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.014"
+      ]
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.014"
+      ]
      }
-    ]
+    ],
+    "upstream_patch": {
+     "from": "cb0ac71febda3e93baddf91a6135f6cf9f74b31b",
+     "from_path": "_install-and-configure/configuring-opensearch/security-settings.md",
+     "kind": "unchanged_sections_reused",
+     "reused_sections": [
+      0,
+      1,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+     ],
+     "to": "7639af70d8f40f3980dba74eb0e47a0aa2b092f6",
+     "translated_sections": [
+      2
+     ]
+    }
    },
-   "updated_at": "2026-10-08T16:19:38+00:00"
+   "updated_at": "2026-11-05T10:01:08+00:00"
   },
   "_install-and-configure/configuring-opensearch/thread-pool-settings.md": {
    "attempts": 0,
@@ -75220,7 +75316,7 @@
    "updated_at": "2026-10-08T22:20:36+00:00"
   },
   "_query-dsl/full-text/intervals.md": {
-   "attempts": 2,
+   "attempts": 1,
    "last_error": null,
    "original_front_matter": {
     "parent": "Full-text queries",
@@ -75228,34 +75324,34 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-16T08:15:54+00:00",
+    "at": "2026-11-05T10:01:41+00:00",
     "family": "agy",
     "issues": [
      {
-      "id": "section.002",
-      "problem": "中文句子中的括號使用了半形括號，且部分與前文字元之間帶有空白，與排版規範建議的全形括號不一致。",
+      "id": "section.001",
+      "problem": "全文中對於「term」一詞混用了「詞元」（通常對應 token）與「詞彙」兩種譯法（例如 section.001、003、004、005、009、014 譯為「詞元」，而 section.002、006、007、008、013 譯為「詞彙」）。",
       "severity": "minor",
-      "suggestion": "將 `(` 與 `)` 改為全形括號 `（` 與 `）`，例如：`此查詢接受欄位名稱（`<field>`）作為最上層參數：`、`使用合取（`AND`）合併多個規則。`、`使用析取（`OR`）合併多個規則。`"
+      "suggestion": "建議全篇統一將「term」譯為「詞彙」，以與「token（詞元）」有所區別。"
      },
      {
-      "id": "section.006",
-      "problem": "此段落將「term」譯為「詞彙」，而同頁其他段落皆譯為「詞元」，同一篇文件內術語前後略不一致。",
+      "id": "section.010",
+      "problem": "表格欄位標題「Description」在 section.010 與 section.011 譯為「描述」，與前文各節的「說明」不一致。",
       "severity": "minor",
-      "suggestion": "若欲與同頁其他段落維持一致，可將此處指稱索引/查詢 term 的「詞彙」統一改為「詞元」（或全篇統一用法）。"
+      "suggestion": "建議將表格標題統一改為「說明」：參數 | 必要/選用 | 資料類型 | 說明"
      }
     ],
     "model": "gemini-4-argon-high",
-    "prompt_version": "02fda88b4e44fe8a",
+    "prompt_version": "b4fedb3349fa56d6",
     "provider": "agy",
-    "target_sha256": "91ccf319ca5db6732780fdd8b1bba53d61589a45d3fc1364a2d9cd99c74531da"
+    "target_sha256": "adb758a28ea8a9fee72cbb38c2819fbb1df28836d2f06a55a96a0f94d6b18095"
    },
-   "source_sha256": "ff39e85c3ff60fd8730b36b0ea498efafd3a3516e4f1da8c8d5fedafa9ce7f27",
+   "source_sha256": "4de213722caa0176db30c7d5e78cfd195a2ba5ea0543a64f09d9257ab689404c",
    "status": "reviewed",
-   "target_sha256": "91ccf319ca5db6732780fdd8b1bba53d61589a45d3fc1364a2d9cd99c74531da",
-   "translated_source_sha256": "ff39e85c3ff60fd8730b36b0ea498efafd3a3516e4f1da8c8d5fedafa9ce7f27",
+   "target_sha256": "adb758a28ea8a9fee72cbb38c2819fbb1df28836d2f06a55a96a0f94d6b18095",
+   "translated_source_sha256": "4de213722caa0176db30c7d5e78cfd195a2ba5ea0543a64f09d9257ab689404c",
    "translator": {
-    "at": "2026-10-16T08:15:28+00:00",
-    "prompt_version": "02fda88b4e44fe8a",
+    "at": "2026-11-05T10:01:17+00:00",
+    "prompt_version": "b4fedb3349fa56d6",
     "providers": [
      {
       "chunks": [
@@ -75305,32 +75401,73 @@
        "section.006",
        "section.007"
       ]
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "upstream_section": 2
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "upstream_section": 6
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "upstream_section": 7
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "upstream_section": 12
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "upstream_section": 13
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "repairs": [
+       "section.013"
+      ]
      }
     ],
     "upstream_patch": {
-     "from": "716c4c1d6ef0c9744fd99ef50e83b13e559a6d31",
+     "from": "cb0ac71febda3e93baddf91a6135f6cf9f74b31b",
+     "from_path": "_query-dsl/full-text/intervals.md",
      "kind": "unchanged_sections_reused",
      "reused_sections": [
       0,
       1,
-      2,
       3,
       4,
       5,
-      7,
       8,
       9,
       10,
       11,
-      12
+      14
      ],
-     "to": "b8c25e7e8a2c392c5bb3fe993fdbc4c5221afde3",
+     "to": "7639af70d8f40f3980dba74eb0e47a0aa2b092f6",
      "translated_sections": [
-      6
+      2,
+      6,
+      7,
+      12,
+      13
      ]
     }
    },
-   "updated_at": "2026-10-16T08:15:54+00:00"
+   "updated_at": "2026-11-05T10:01:41+00:00"
   },
   "_query-dsl/full-text/match-bool-prefix.md": {
    "attempts": 2,
@@ -78705,7 +78842,7 @@
    "updated_at": "2026-10-08T23:17:39+00:00"
   },
   "_query-dsl/term/regexp.md": {
-   "attempts": 2,
+   "attempts": 1,
    "last_error": null,
    "original_front_matter": {
     "parent": "Term-level queries",
@@ -78713,28 +78850,28 @@
    },
    "reviewer": {
     "approved": true,
-    "at": "2026-10-08T23:18:14+00:00",
-    "family": "codex:gpt-6-sol",
+    "at": "2026-11-05T09:58:37+00:00",
+    "family": "agy",
     "issues": [
      {
       "id": "section.002",
-      "problem": "`<details>` 區塊內的縮排與原文不一致。",
+      "problem": "Terminology across sections is slightly inconsistent: section.001 translates 'regular expression' as '規則運算式' and 'term' as '詞彙' (distinguishing it from 'token' / '詞元'), whereas section.002 and section.003 use '規則表達式' and '詞元'.",
       "severity": "minor",
-      "suggestion": "保留原文中 `<summary>`、`</summary>` 和 `{: .text-delta}` 的縮排。"
+      "suggestion": "統一全篇用語，建議將「規則表達式」統一為「規則運算式」，並視語境將「term」統一譯為「詞彙」（與 token「詞元」區分）。"
      }
     ],
-    "model": "gpt-6-sol",
-    "prompt_version": "0343516bacbffe7a",
-    "provider": "codex-review",
-    "target_sha256": "f3ad26bf1d0a6c4928d540731639a048c4ea1378724aaefb8f31d6722e0b70f2"
+    "model": "gemini-4-argon-high",
+    "prompt_version": "b4fedb3349fa56d6",
+    "provider": "agy",
+    "target_sha256": "ae796a123975685b7486f63ea7aa399079e9aec053d9bd8665be709e2656c871"
    },
-   "source_sha256": "3cfa57b91aeb17bd142a08aa71be824244e5012d853c6acbec255f685bc06b09",
+   "source_sha256": "310332c4c61a35fadf1b3676a12750c36fe3c9e904a07f3fd97990799dad884a",
    "status": "reviewed",
-   "target_sha256": "f3ad26bf1d0a6c4928d540731639a048c4ea1378724aaefb8f31d6722e0b70f2",
-   "translated_source_sha256": "3cfa57b91aeb17bd142a08aa71be824244e5012d853c6acbec255f685bc06b09",
+   "target_sha256": "ae796a123975685b7486f63ea7aa399079e9aec053d9bd8665be709e2656c871",
+   "translated_source_sha256": "310332c4c61a35fadf1b3676a12750c36fe3c9e904a07f3fd97990799dad884a",
    "translator": {
-    "at": "2026-10-08T23:17:31+00:00",
-    "prompt_version": "0343516bacbffe7a",
+    "at": "2026-11-05T09:58:07+00:00",
+    "prompt_version": "b4fedb3349fa56d6",
     "providers": [
      {
       "chunks": [
@@ -78752,10 +78889,30 @@
        "section.002",
        "section.003"
       ]
+     },
+     {
+      "family": "claude",
+      "model": "claude-opus-5-5",
+      "provider": "claude",
+      "upstream_section": 1
      }
-    ]
+    ],
+    "upstream_patch": {
+     "from": "cb0ac71febda3e93baddf91a6135f6cf9f74b31b",
+     "from_path": "_query-dsl/term/regexp.md",
+     "kind": "unchanged_sections_reused",
+     "reused_sections": [
+      0,
+      2,
+      3
+     ],
+     "to": "7639af70d8f40f3980dba74eb0e47a0aa2b092f6",
+     "translated_sections": [
+      1
+     ]
+    }
    },
-   "updated_at": "2026-10-08T23:18:14+00:00"
+   "updated_at": "2026-11-05T09:58:37+00:00"
   },
   "_query-dsl/term/term.md": {
    "attempts": 3,

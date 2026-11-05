@@ -8,9 +8,11 @@ nav_order: 100
 
 # Regexp 查詢
 
-使用 `regexp` 查詢來搜尋符合規則表達式的詞元。如需撰寫規則表達式的詳細資訊，請參閱[規則表達式語法]({{site.url}}{{site.baseurl}}/query-dsl/regex-syntax/)。
+使用 `regexp` 查詢來搜尋符合規則運算式的詞彙。如需撰寫規則運算式的詳細資訊，請參閱[規則運算式語法]({{site.url}}{{site.baseurl}}/query-dsl/regex-syntax/)。
 
-下列查詢會搜尋任何以大寫或小寫字母開頭，且後面接著 `amlet` 的詞元：
+若要搜尋符合規則運算式且出現在其他詞彙附近的詞彙，請使用 `intervals` 查詢的 `regexp` 規則。如需詳細資訊，請參閱[`regexp` 規則]({{site.url}}{{site.baseurl}}/query-dsl/full-text/intervals/#the-regexp-rule)。
+
+下列查詢會搜尋任何以大寫或小寫字母開頭、後接 `amlet` 的詞彙：
 
 ```json
 GET shakespeare/_search
@@ -24,14 +26,14 @@ GET shakespeare/_search
 ```
 {% include copy-curl.html %}
 
-請注意下列重要考量：
+請注意下列重要事項：
 
-- 規則表達式會套用至欄位中的詞元 (亦即 token)，而非整個欄位。
-- 根據預設，規則表達式的長度上限為 1,000 個字元。若要變更長度上限，請更新 `index.max_regex_length` 設定。
-- 規則表達式使用 Lucene 語法，這與較標準化的實作方式不同。請徹底測試，以確保您獲得預期的結果。如需深入了解，請參閱 [Lucene 文件](https://lucene.apache.org/core/{{site.lucene_version}}/core/index.html)。
-- 若要提升 regexp 查詢效能，請避免使用沒有前置字元或後置字元的萬用字元模式，例如 `.*` 或 `.*?+`。
-- `regexp` 查詢可能是成本高昂的操作，且需要將 [`search.allow_expensive_queries`]({{site.url}}{{site.baseurl}}/query-dsl/#expensive-queries) 設定設為 `true`。在頻繁執行 `regexp` 查詢之前，請先測試其對叢集效能的影響，並檢視可能可達到類似結果的替代查詢。
-- [wildcard 欄位類型]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/wildcard/) 會建立專門設計來非常有效率地處理萬用字元和規則表達式查詢的索引。
+- 規則運算式會套用至欄位中的詞彙（也就是詞元），而非整個欄位。
+- 根據預設，規則運算式的最大長度為 1,000 個字元。若要變更最大長度，請更新 `index.max_regex_length` 設定。
+- 規則運算式使用 Lucene 語法，這與較標準化的實作有所不同。請徹底測試，以確保您取得預期的結果。若要深入瞭解，請參閱 [Lucene 文件](https://lucene.apache.org/core/{{site.lucene_version}}/core/index.html)。
+- 若要提升 regexp 查詢的效能，請避免使用沒有前綴或後綴的萬用字元模式，例如 `.*` 或 `.*?+`。
+- `regexp` 查詢可能是成本高昂的操作，且需要將 [`search.allow_expensive_queries`]({{site.url}}{{site.baseurl}}/query-dsl/#expensive-queries) 設定設為 `true`。在頻繁執行 `regexp` 查詢之前，請先測試其對叢集效能的影響，並評估可能達到類似結果的替代查詢。
+- [wildcard 欄位類型]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/wildcard/)會建立一種專門設計的索引，可讓萬用字元與規則運算式查詢的執行效率極高。
 
 ## 比對詞元而非欄位值
 
