@@ -40,27 +40,28 @@ cdc-pipeline:
 
 ## 組態選項
 
-下列表格說明 `dynamodb` 來源的組態選項。
+下表說明 `dynamodb` 來源的組態選項。
 
 選項 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`aws` | 是 | AWS | AWS 組態。如需更多資訊，請參閱[`aws`](#aws)。
-`acknowledgments` | 否 | 布林值  | 當 `true` 時，啟用 `s3` 來源，以便在 OpenSearch 接收器收到事件時接收[端對端確認]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/pipelines#end-to-end-acknowledgments)。
-`shared_acknowledgement_timeout` | 否 | 持續時間 | 搭配確認使用時，從 DynamoDB 串流讀取的資料到期前所經過的時間量。預設為 10 分鐘。
-`s3_data_file_acknowledgment_timeout` | 否 | 持續時間 | 搭配確認使用時，從 DynamoDB 匯出讀取的資料到期前所經過的時間量。預設為 5 分鐘。
-`tables` | 是 | 清單 | DynamoDB 資料表的組態。如需更多資訊，請參閱[tables](#tables)。
+`aws` | 是 | AWS | AWS 組態。如需詳細資訊，請參閱 [`aws`](#aws)。
+`acknowledgments` | 否 | 布林值  | 設為 `true` 時，可讓 `dynamodb` 來源在 OpenSearch 接收器 (sink) 收到事件時接收[端對端確認]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/pipelines#end-to-end-acknowledgments)。預設值為 `false`。
+`shard_acknowledgment_timeout` | 否 | Duration | 搭配確認機制使用時，從 DynamoDB 串流讀取的資料到期前所經過的時間。預設值為 30 分鐘。
+`s3_data_file_acknowledgment_timeout` | 否 | Duration | 搭配確認機制使用時，從 DynamoDB 匯出讀取的資料到期前所經過的時間。預設值為 15 分鐘。
+`tables` | 是 | List | DynamoDB 資料表的組態。如需詳細資訊，請參閱[資料表](#tables)。
 
 <!-- vale off -->
 ### aws
 <!-- vale on -->
 
-在 AWS 組態中使用下列選項。
+請在 AWS 組態中使用下列選項。
 
 選項 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`region` | 否 | 字串 | 用於憑證的 AWS Region。預設為[決定 Region 的標準 SDK 行為](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/region-selection.html)。
-`sts_role_arn` | 否 | 字串 | 對 Amazon Simple Queue Service (Amazon SQS) 與 Amazon Simple Storage Service (Amazon S3) 的請求所要擔任的 AWS Security Token Service (AWS STS) 角色。預設為 `null`，其將使用[憑證的標準 SDK 行為](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/credentials.html)。
-`aws_sts_header_overrides` | 否 | 對應表 | 接收器外掛程式擔任 AWS Identity and Access Management (IAM) 角色時使用的標頭覆寫對應。
+`region` | 否 | 字串 | 用於認證資訊的 AWS 區域。預設採用[標準 SDK 行為來判斷區域](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/region-selection.html)。
+`sts_role_arn` | 否 | 字串 | 對 Amazon Simple Queue Service（Amazon SQS）與 Amazon Simple Storage Service（Amazon S3）發出請求時所擔任的 AWS Security Token Service（AWS STS）角色。預設為 `null`，此時將使用[標準 SDK 認證資訊行為](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/credentials.html)。
+`sts_external_id` | 否 | 字串 | 擔任 STS 角色時使用的外部 ID。長度必須介於 2 到 1,224 個字元之間。
+`sts_header_overrides` | 否 | Map | 來源外掛程式擔任 AWS Identity and Access Management（IAM）角色時所套用的標頭覆寫對應表。最多 5 個標頭。
 
 
 <!-- vale off -->
@@ -82,18 +83,20 @@ cdc-pipeline:
 選項 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
 `s3_bucket` | 是 | 字串 | 儲存匯出資料檔案的目的地儲存貯體。
-`s3_prefix` | 否 | 字串 | S3 儲存貯體的自訂前置詞。
+`s3_prefix` | 否 | 字串 | S3 儲存貯體的自訂前綴。
 `s3_sse_kms_key_id` | 否 | 字串 |  用於加密匯出資料檔案的 AWS Key Management Service (AWS KMS) 金鑰。`key_id` 是 KMS 金鑰的 ARN，例如 `arn:aws:kms:us-west-2:123456789012:key/0a4bc22f-bb96-4ad4-80ca-63b12b3ec147`。
-`s3_region` | 否 | 字串 | S3 儲存貯體的 Region。
+`s3_region` | 否 | 字串 | S3 儲存貯體的區域。
 
 #### 串流選項
 
-下列選項可讓您自訂管線如何從 DynamoDB 資料表讀取事件。
+下列選項可讓您自訂管線從 DynamoDB 資料表讀取事件的方式。
 
 選項 | 必要 | 類型   | 說明
 :--- | :--- | :--- | :---
 `start_position` | 否 | 字串 | 啟用 DynamoDB 串流選項時，來源開始讀取串流事件的位置。`LATEST` 會從最新的串流記錄開始讀取事件。 
-`view_on_remove` | 否 | 列舉 | 用於 DynamoDB 串流中 REMOVE 事件的[串流記錄檢視](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Streams.html)。必須是 `NEW_IMAGE` 或 `OLD_IMAGE`。預設為 `NEW_IMAGE`。如果使用 `OLD_IMAGE` 選項且找不到舊映像，來源會尋找 `NEW_IMAGE`。
+`view_on_remove` | 否 | 列舉 | 用於 DynamoDB 串流中 REMOVE 事件的[串流記錄檢視](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Streams.html)。必須是 `NEW_IMAGE` 或 `OLD_IMAGE`。預設為 `NEW_IMAGE`。如果使用 `OLD_IMAGE` 選項且找不到舊映像，來源會改用 `NEW_IMAGE`。
+`disable_checkpointing` | 否 | 布林值 | 設為 `true` 時，來源不會從已儲存的檢查點繼續讀取分片。每次來源開始讀取分片時，都會從該分片中最舊的可用記錄開始讀取。預設為 `false`。
+`shard_discovery_interval` | 否 | 持續時間 | 領導節點檢查 DynamoDB 串流是否有新分片的頻率。由於 DynamoDB Streams 會持續關閉分片並開啟新的子分片，新分片中的記錄要到下一次檢查時才會被讀取。較短的間隔可縮短此延遲，但代價是更頻繁地發出 DynamoDB Streams API 請求。最小值為 `1s`。預設為 `60s`。
 
 ## 公開的中繼資料屬性
 
@@ -104,7 +107,7 @@ cdc-pipeline:
 * `sort_key`：DynamoDB 項目的排序索引鍵。如果資料表不包含排序索引鍵，這會是 null。
 * `dynamodb_timestamp`：DynamoDB 項目的時間戳記。對於匯出項目，這會是匯出時間；對於串流項目，這會是 DynamoDB 串流事件時間。接收器會使用此時間戳記，為 DynamoDB 串流事件發出 `EndtoEndLatency` 指標，以追蹤 DynamoDB 資料表中發生變更與該變更套用至接收器之間的延遲。
 * `document_version`：使用 `dynamodb_timestamp` 調整同一秒內收到的串流項目在時間戳記相同時的排序判定。建議搭配 `opensearch` 接收器的 `document_version` 設定使用。
-* `opensearch_action`：將 DynamoDB 事件動作對應至 OpenSearch 動作的預設值。對於匯出項目，此動作會是 `index`；對於串流事件，則會是 `INSERT` 或 `MODIFY`；而當 OpenSearch 動作為 `delete` 時，則為 `REMOVE` 串流事件。
+* `opensearch_action`：將 DynamoDB 事件動作對應至 OpenSearch 動作的預設值。對於匯出項目，此動作會是 `index`；對於串流事件，則會是 `INSERT` 或 `MODIFY`；對於 `REMOVE` 串流事件，OpenSearch 動作則為 `delete`。
 * `dynamodb_event_name`：項目的確切事件類型。對於匯出項目會是 `null`，對於串流事件則會是 `INSERT`、`MODIFY` 或 `REMOVE`。
 * `table_name`：事件來源的 DynamoDB 資料表名稱。
 * `ttl_delete`：一個布林值，指出 `REMOVE` 事件是否由 DynamoDB Time-To-Live (TTL) 觸發。對於以 TTL 為基礎的刪除，`ttl_delete` 屬性為 `true`；對於所有其他事件則為 `false`。此中繼資料可搭配條件式路由或篩選使用，以不同於手動刪除的方式處理 TTL 刪除。

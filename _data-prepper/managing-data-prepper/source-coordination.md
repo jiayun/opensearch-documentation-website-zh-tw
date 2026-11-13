@@ -48,26 +48,41 @@ Data Prepper 會為來源所選取的每個工作分割區，在其用於來源�
 
 ## 組態
 
-下表提供 `source_coordination` 的選用組態值。
+下表列出 `source_coordination` 的選用組態值。
 
 | 值 | 類型 | 說明 |
 | :--- | :--- | :--- |
-| `partition_prefix` | 字串 | `sourceIdentifier` 的字首，用於區分共用同一個分散式儲存庫的多個 Data Prepper 叢集。 |
-| `store` | 物件  | 構成所用儲存庫組態的物件，其中鍵是儲存庫的名稱，例如 `in_memory` 或 `dynamodb`，值則是該儲存庫類型上可用的任何組態。 |
+| `partition_prefix` | 字串 | `sourceIdentifier` 的前置詞，用於區分共用同一個分散式儲存區的 Data Prepper 叢集。 |
+| `store` | 物件 | 包含一組鍵值對的物件，用於設定儲存區。鍵為儲存區名稱，例如 `in_memory` 或 `dynamodb`；值為包含該儲存區選項的物件。如需所有支援的儲存區清單，請參閱[支援的儲存區](#supported-stores)。 |
 
-### 支援的儲存庫
-從 Data Prepper 2.4 開始，僅支援 `in_memory` 與 `dynamodb` 儲存庫：
+### 支援的儲存區
 
-- `in_memory` 儲存庫是在 `data-prepper-config.yaml` 檔案中未設定任何 `source_coordination` 設定時的預設值，且僅應用於單一節點組態。
-- `dynamodb` 儲存庫用於多節點的 Data Prepper 環境。`dynamodb` 儲存庫可在需要使用來源協調的一或多個 Data Prepper 叢集之間共用。
+Data Prepper 支援下列來源協調儲存區。
 
-#### DynamoDB 儲存庫
+| 儲存區 | 環境 | 說明 |
+| :--- | :--- | :--- |
+| `in_memory` | 單一節點 | 當 `data-prepper-config.yaml` 檔案中未設定任何 `source_coordination` 設定時的預設儲存區。如需更多資訊，請參閱[記憶體內儲存區](#in-memory-store)。 |
+| `dynamodb` | 多節點 | 將協調資料儲存在 Amazon DynamoDB 中。多個使用來源協調的 Data Prepper 叢集可以共用此儲存區。如需更多資訊，請參閱 [DynamoDB 儲存區](#dynamodb-store)。 |
+| `jdbc` | 多節點 | 將協調資料儲存在 PostgreSQL 或 MySQL 中。如需更多資訊，請參閱 [JDBC 儲存區](#jdbc-store)。 |
 
-Data Prepper 會在啟動時嘗試建立 `dynamodb` 資料表，除非 `skip_table_creation` 旗標被設定為 `true`。您也可以選擇性地在資料表上設定[存留時間](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/TTL.html) (`ttl`)，讓儲存庫隨著時間清理項目。有些來源依賴來源協調來進行資料去重，因此請務必為管線執行期間設定足夠大的 `ttl`。 
+#### 記憶體內儲存區
 
-如果資料表上未設定 `ttl`，則資料表中不再需要的項目必須手動清理。
+`in_memory` 儲存區是預設的儲存區，沒有任何選項。請僅將其用於單一節點的 Data Prepper 部署。
 
-以下顯示 Data Prepper 建立資料表、啟用 `ttl` 以及與資料表互動所需的完整權限集合：
+以下範例設定 `in_memory` 儲存區：
+
+```yaml
+source_coordination:
+  store:
+    in_memory:
+```
+{% include copy.html %}
+
+#### DynamoDB 儲存區
+
+`dynamodb` 儲存區使用 Amazon DynamoDB 資料表，在各 Data Prepper 節點之間協調工作。多個 Data Prepper 叢集可以共用同一個資料表。若要區分這些叢集，請設定 `partition_prefix`。
+
+根據預設，Data Prepper 會在儲存區啟動時建立資料表及其索引。若資料表已存在，請將 `skip_table_creation` 設為 `true`。下列政策陳述式授予 Data Prepper 建立資料表、啟用 TTL 以及讀取和寫入項目所需的權限：
 
 ```json
 {
@@ -83,48 +98,83 @@ Data Prepper 會在啟動時嘗試建立 `dynamodb` 資料表，除非 `skip_tab
     "dynamodb:Query"
   ],
   "Resource": [
-    "arn:aws:dynamodb:${REGION}:${AWS_ACCOUNT_ID}:table/${TABLE_NAME}",
-    "arn:aws:dynamodb:${REGION}:${AWS_ACCOUNT_ID}:table/${TABLE_NAME}/index/source-status"
+    "arn:aws:dynamodb:<region>:<account-id>:table/<table-name>",
+    "arn:aws:dynamodb:<region>:<account-id>:table/<table-name>/index/source-status"
   ]
 }
 ```
+{% include copy.html %}
 
+您可以設定 `ttl` 來啟用 DynamoDB [存留時間 (TTL)](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/TTL.html)，以從資料表中移除已過期的項目。部分來源會使用這些項目來防止重複處理，因此請將 `ttl` 設定為超過預期的管線執行時間。若未設定 `ttl`，您必須手動刪除不再需要的項目。
 
-| 值 | 必要 | 類型 | 說明 |
-| :--- | :--- | :--- | :--- | 
-| `table_name` | 是 | 字串  | 用於來源協調的資料表名稱。 |
-| `region` | 是 | 字串 | DynamoDB 資料表的區域。 |
-| `sts_role_arn` | 否  | 字串  |  包含資料表權限的 `sts` 角色。未提供時會使用預設憑證。 |
-| `sts_external_id` | 否 | 字串  | 在 API 呼叫中用來擔任 `sts_role_arn` 的外部 ID。 |
-| `skip_table_creation` | 否 | 布林值  | 使用現有儲存庫時，若設定為 `true`，則會略過建立儲存庫的嘗試。預設值為 `false`。 |
-| `provisioned_write_capacity_units` | 否 | 整數 |  要在資料表上設定的寫入容量單位數量。預設值為 `10`。 |
-| `provisioned_read_capacity_units`  | 否 | 整數 | 要在資料表上設定的讀取容量單位數量。預設值為 `10`。 |
-| `ttl` | Duration | 選用。資料表中項目的 TTL 持續時間。對項目進行更新時，TTL 會延長此持續時間。預設為資料表上不使用 TTL。 |
-  
-以下範例顯示 `dynamodb` 儲存庫：
+當 `skip_table_creation` 為 `true` 時，Data Prepper 不會在資料表上啟用 TTL。若您為現有資料表設定 `ttl`，請在啟動 Data Prepper 之前，於該資料表的 `expirationTime` 屬性上啟用 TTL。
 
-```yaml
-source_coordination:
-  store:
-     dynamodb:
-       table_name: "DataPrepperSourceCoordinationStore"
-       region: "us-east-1"
-       sts_role_arn: "arn:aws:iam::##########:role/SourceCoordinationTableRole"
-       ttl: "P7D"
-       skip_table_creation: true
-```
+`dynamodb` 儲存區支援下列選項。
 
-#### 記憶體內儲存庫（預設）
+| 選項 | 必要 | 類型 | 說明 |
+| :--- | :--- | :--- | :--- |
+| `table_name` | 是 | 字串 | 用於來源協調的資料表名稱。 |
+| `region` | 是 | 字串 | DynamoDB 資料表所在的 AWS 區域。 |
+| `sts_role_arn` | 否 | 字串 | 具有資料表權限之 AWS Identity and Access Management (IAM) 角色的 Amazon Resource Name (ARN)。若未提供，Data Prepper 會使用預設認證資訊。 |
+| `sts_external_id` | 否 | 字串 | 在 API 呼叫中用於擔任 `sts_role_arn` 角色的外部 ID。 |
+| `skip_table_creation` | 否 | 布林值 | 設為 `true` 時，Data Prepper 不會建立資料表。預設為 `false`。 |
+| `provisioned_write_capacity_units` | 否 | 整數 | 要在資料表上設定的寫入容量單位數。預設為 `10`。 |
+| `provisioned_read_capacity_units` | 否 | 整數 | 要在資料表上設定的讀取容量單位數。預設為 `10`。 |
+| `ttl` | 否 | 持續時間 | 用於設定資料表中項目到期時間的持續時間。請使用 ISO 8601 持續時間格式，例如 `P7D`。Data Prepper 更新項目時會延長其到期時間。根據預設，項目不會過期。 |
 
-以下範例顯示 `in_memory` 儲存庫，最適合與單一節點叢集搭配使用：
-
+下列範例將 DynamoDB 資料表設定為來源協調儲存區：
 
 ```yaml
 source_coordination:
   store:
-    in_memory:
+    dynamodb:
+      table_name: "DataPrepperSourceCoordinationStore"
+      region: "us-east-1"
+      sts_role_arn: "arn:aws:iam::123456789012:role/SourceCoordinationTableRole"
+      ttl: "P7D"
+      skip_table_creation: true
 ```
+{% include copy.html %}
 
+#### JDBC 儲存區
+
+`jdbc` 儲存區使用關聯式資料庫，在各個 Data Prepper 節點之間協調工作。Data Prepper 內建適用於 PostgreSQL 和 MySQL 的 Java Database Connectivity (JDBC) 驅動程式。
+
+根據預設，Data Prepper 會在儲存區啟動時建立協調資料表及其索引。資料庫使用者必須具備建立資料表和索引的權限，以及選取、插入、更新和刪除資料列的權限。若所需的資料表和索引已存在，請將 `skip_table_creation` 設為 `true`。
+
+Data Prepper 會在使用來源協調的來源啟動時驗證儲存區設定，而不是在 Data Prepper 啟動時驗證。如果某項設定無效，Data Prepper 會記錄錯誤，且不會執行該管線。
+
+您可以設定 `ttl`，定期移除已過期的分割區記錄。部分來源會使用這些記錄來避免重複處理，因此請將 `ttl` 設定為超過預期的管線執行時間。
+
+`jdbc` 儲存區支援下列選項。
+
+| 選項 | 必要 | 類型 | 說明 |
+| :--- | :--- | :--- | :--- |
+| `url` | 是 | 字串 | JDBC 連線 URL。 |
+| `username` | 是 | 字串 | 資料庫使用者名稱。 |
+| `password` | 是 | 字串 | 資料庫密碼。 |
+| `table_name` | 否 | 字串 | 用於來源協調的資料表名稱。您可以指定未限定名稱，或以結構描述 (schema) 限定的名稱，例如 `schema.table`。預設值為 `source_coordination`。 |
+| `skip_table_creation` | 否 | 布林值 | 設為 `true` 時，Data Prepper 不會建立協調資料表或其索引。預設值為 `false`。 |
+| `max_pool_size` | 否 | 整數 | JDBC 連線集區中的連線數上限。此值至少須為 `2`，因為儲存區在開啟另一個連線以更新分割區時，會同時保留一個連線。預設值為 `5`。 |
+| `ttl` | 否 | 持續時間 | 用於設定分割區記錄到期時間的持續時間。請使用 ISO 8601 持續時間格式，例如 `P7D`。Data Prepper 更新記錄時會延長其到期時間。根據預設，記錄不會過期。 |
+| `connection_properties` | 否 | 對應表 | 要傳遞給每個資料庫連線的 JDBC 驅動程式屬性。 |
+
+下列範例將要求 TLS 連線的 PostgreSQL 資料庫設定為來源協調儲存區。如果您的資料庫不支援 TLS，請移除 `ssl` 連線屬性：
+
+```yaml
+source_coordination:
+  store:
+    jdbc:
+      url: "jdbc:postgresql://db:5432/dataprepper"
+      username: "dp_user"
+      password: {% raw %}"${{aws_secrets:db-secrets:password}}"{% endraw %}
+      table_name: "source_coordination"
+      max_pool_size: 5
+      ttl: "P7D"
+      connection_properties:
+        ssl: "true"
+```
+{% include copy.html %}
 
 ## 指標
 

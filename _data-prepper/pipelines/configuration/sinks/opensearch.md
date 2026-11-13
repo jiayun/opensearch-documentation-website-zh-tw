@@ -49,52 +49,87 @@ pipeline:
 
 ## 組態選項
 
-下表說明您可以為 `opensearch` 接收器設定的選項。
+下表說明您可以為 `opensearch` 接收器 (sink) 設定的選項。
 
 選項 | 必要 | 類型 | 說明
 :--- | :--- |:---| :---
 `hosts` | 是 | 清單 | 要寫入的 OpenSearch 主機清單，例如 `["https://localhost:9200", "https://remote-cluster:9200"]`。
 `cert` | 否 | 字串 | 安全性憑證的路徑。例如，若叢集使用 OpenSearch Security 外掛程式，則為 `"config/root-ca.pem"`。
 `username` | 否 | 字串  | HTTP 基本驗證的使用者名稱。
-`password` | 否 | 字串 | HTTP 基本驗證的密碼。許多 Data Prepper 範例會以 `admin` 使用者進行驗證，並使用 `<custom-admin-password>` 預留位置作為其[密碼]({{site.url}}{{site.baseurl}}/security/configuration/passwords/#admin-password)。您也可以使用僅具備接收器所需權限的使用者進行驗證。如需詳細資訊，請參閱 [OpenSearch 叢集安全性](#opensearch-cluster-security)。
+`password` | 否 | 字串 | HTTP 基本驗證的密碼。許多 Data Prepper 範例會以 `admin` 使用者身分進行驗證，並使用 `<custom-admin-password>` 預留位置代表其[密碼]({{site.url}}{{site.baseurl}}/security/configuration/passwords/#admin-password)。您也可以使用僅具備接收器所需權限的使用者進行驗證。如需詳細資訊，請參閱 [OpenSearch 叢集安全性](#opensearch-cluster-security)。
+`authentication` | 否 | 物件 | 連線至 OpenSearch 時使用的驗證組態。使用此物件設定 HTTP 基本驗證或用戶端憑證驗證。不能與頂層的 `username` 和 `password` 選項一起使用。如需詳細資訊，請參閱[驗證](#authentication)。
+`api_token` | 否 | 字串 | 接收器在傳送至 OpenSearch 的每個請求中，以持有人權杖 (bearer token) 形式放入 `Authorization` 標頭的權杖。設定 `authentication` 時會忽略此選項。
 `aws` | 否 | AWS  | [AWS](#aws) 組態。 
-[max_retries](#configure-max_retries) | 否 | 整數 | `opensearch` 接收器在視為失敗之前，嘗試將資料推送至 OpenSearch 伺服器的次數上限。預設為 `Integer.MAX_VALUE`。若未提供，接收器會持續嘗試將資料推送至 OpenSearch 伺服器，且指數退避會增加重試前的等待時間。
-`aws_sigv4` | 否 | 布林值 | **已於 Data Prepper 2.7 棄用。** 預設為 `false`。是否使用 AWS Identity and Access Management (IAM) 簽署來連線至 Amazon OpenSearch Service 網域。對於您的存取金鑰、私密金鑰及選用的工作階段權杖，OpenSearch Data Prepper 會使用預設認證鏈（環境變數、Java 系統屬性、`~/.aws/credential`）。 
-`aws_region` | 否 | 字串 | **已於 Data Prepper 2.7 棄用。** 連線至 Amazon OpenSearch Service 時，網域所在的 AWS 區域（例如 `"us-east-1"`）。
-`aws_sts_role_arn` | 否 | 字串 | **已於 Data Prepper 2.7 棄用。** 此外掛程式用來簽署傳送至 Amazon OpenSearch Service 之請求的 IAM 角色。若未提供此資訊，此外掛程式會使用預設認證資訊。
-`socket_timeout` | 否 | 整數 | 等待資料傳回時的逾時值（毫秒，即兩個連續資料封包之間的最長閒置期間）。逾時值 `0` 會解譯為無限逾時。若此逾時值為負數或未設定，則基礎的 Apache HttpClient 會依賴作業系統設定來管理通訊端逾時。
-`connect_timeout` | 否 | 整數| 從連線管理員請求連線時的逾時值（毫秒）。逾時值 `0` 會解譯為無限逾時。若此逾時值為負數或未設定，則基礎的 Apache HttpClient 會依賴作業系統設定來管理連線逾時。
+[`max_retries`](#configure-max_retries) | 否 | 整數 | `opensearch` 接收器在將推送視為失敗之前，嘗試將資料推送至 OpenSearch 伺服器的最大次數。預設為 `Integer.MAX_VALUE`。若未提供，接收器會無限期地嘗試將資料推送至 OpenSearch 伺服器，且指數退避會增加重試前的等待時間。
+`aws_sigv4` | 否 | 布林值 | **已於 Data Prepper 2.7 中棄用。** 預設為 `false`。是否使用 AWS Identity and Access Management (IAM) 簽署來連線至 Amazon OpenSearch Service 網域。對於您的存取金鑰、秘密金鑰及選用的工作階段權杖，OpenSearch Data Prepper 會使用預設的認證資訊鏈（環境變數、Java 系統屬性、`~/.aws/credential`）。 
+`aws_region` | 否 | 字串 | **已於 Data Prepper 2.7 中棄用。** 連線至 Amazon OpenSearch Service 時，網域所在的 AWS 區域（例如 `"us-east-1"`）。
+`aws_sts_role_arn` | 否 | 字串 | **已於 Data Prepper 2.7 中棄用。** 外掛程式用來簽署傳送至 Amazon OpenSearch Service 之請求的 IAM 角色。若未提供此資訊，外掛程式會使用預設的認證資訊。
+`socket_timeout` | 否 | 整數 | 等待資料傳回時的逾時值（以毫秒為單位），即兩個連續資料封包之間的最長閒置時間。逾時值 `0` 會被解讀為無限逾時。若此逾時值為負數或未設定，底層的 Apache HttpClient 將依賴作業系統設定來管理通訊端逾時。
+`connect_timeout` | 否 | 整數| 向連線管理員請求連線時的逾時值（以毫秒為單位）。逾時值 `0` 會被解讀為無限逾時。若此逾時值為負數或未設定，底層的 Apache HttpClient 將依賴作業系統設定來管理連線逾時。
 `insecure` | 否 | 布林值  | 是否驗證 SSL 憑證。若設為 `true`，則會停用憑證授權單位 (CA) 憑證驗證，並改為傳送不安全的 HTTP 請求。預設為 `false`。
-`proxy` | 否 | 字串 | [轉送 HTTP 代理伺服器](https://en.wikipedia.org/wiki/Proxy_server)的位址。格式為 `"&lt;hostname or IP&gt;:&lt;port&gt;"`（例如 `"example.com:8100"`、`"http://example.com:8100"`、`"112.112.112.112:8100"`）。連接埠號碼不可省略。
-`index` | 視條件而定 | 字串 | 匯出索引的名稱。僅當 `index_type` 為 `custom` 時才需要。索引可以是純字串，例如 `my-index-name`；可包含 [Java 日期時間模式](https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html)，例如 `my-index-%{yyyy.MM.dd}` 或 `my-%{yyyy-MM-dd-HH}-index`；可使用欄位值格式化，例如 `my-index-${/my_field}`；或使用 [Data Prepper 運算式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/)，例如 `my-index-${getMetadata(\"my_metadata_field\"}`。所有格式化選項皆可合併使用，以便在建立靜態、動態及輪替索引時提供彈性。 
-`index_type` | 否 | 字串 | 指定接收器外掛程式處理的資料類型。有效值包括 `custom`、`trace-analytics-raw`、`trace-analytics-plain-raw`、`trace-analytics-service-map`、`log-analytics`、`log-analytics-plain`、`metric-analytics`、`metric-analytics-plain` 及 `management-disabled`。<br><br>若要從 `otel_logs_source` 搭配 `output_format: otel` 產生符合 Amazon Security Lake 規範的資料，請將 `index_type` 設為 `log-analytics-plain`。<br>若為 `otel_metrics_source` 搭配 `output_format: otel`，請將 `index_type` 設為 `metric-analytics-plain`。<br>若為 `otel_trace_source` 搭配 `output_format: otel`，請將 `index_type` 設為 `trace-analytics-plain-raw`。<br><br>預設為 `custom`。
+`proxy` | 否 | 字串 | [正向 HTTP 代理伺服器](https://en.wikipedia.org/wiki/Proxy_server)的位址。格式為 `"&lt;hostname or IP&gt;:&lt;port&gt;"`（例如 `"example.com:8100"`、`"http://example.com:8100"`、`"112.112.112.112:8100"`）。連接埠號碼不可省略。
+`path_prefix` | 否 | 字串 | 接收器加在傳送至 OpenSearch 之每個請求路徑前的路徑前置詞，例如 `/opensearch`。當 OpenSearch 需透過子路徑存取時（例如位於反向代理伺服器之後），請使用此選項。
+`index` | 視條件而定 | 字串 | 匯出索引的名稱。僅在 `index_type` 為 `custom` 時為必要。索引可以是一般字串（例如 `my-index-name`）、包含 [Java 日期時間模式](https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html)（例如 `my-index-%{yyyy.MM.dd}` 或 `my-%{yyyy-MM-dd-HH}-index`）、使用欄位值格式化（例如 `my-index-${/my_field}`），或使用 [Data Prepper 運算式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/)（例如 `my-index-${getMetadata(\"my_metadata_field\"}`）。所有格式化選項皆可組合使用，以便在建立靜態、動態及輪替索引時提供彈性。 
+`index_type` | 否 | 字串 | 指定接收器外掛程式所處理的資料類型。有效值包括 `custom`、`trace-analytics-raw`、`trace-analytics-plain-raw`、`trace-analytics-plain-raw-v2`、`trace-analytics-service-map`、`otel-v2-apm-service-map`、`log-analytics`、`log-analytics-plain`、`metric-analytics`、`metric-analytics-plain`、`tsdb` 及 `management_disabled`。<br><br>若要從搭配 `output_format: otel` 的 `otel_logs_source` 產生符合 Amazon Security Lake 規範的資料，請將 `index_type` 設為 `log-analytics-plain`。<br>若為搭配 `output_format: otel` 的 `otel_metrics_source`，請將 `index_type` 設為 `metric-analytics-plain`。<br>若為搭配 `output_format: otel` 的 `otel_trace_source`，請將 `index_type` 設為 `trace-analytics-plain-raw`。<br><br>`trace-analytics-plain-raw-v2` 值會使用可組合索引範本，將追蹤區段 (span) 寫入 `otel-v2-apm-span` 索引別名。當 `distribution_version` 為 `es6` 時不支援此值。<br><br>預設為 `custom`。
 
 
-`template_type` | 否 | 字串 | 定義要使用的 OpenSearch 範本類型。可用選項為 `v1` 和 `index-template`。預設值為 `v1`，其使用 `_template` API 端點提供的原始 OpenSearch 範本。`index-template` 選項使用可組合的[索引範本]({{site.url}}{{site.baseurl}}/opensearch/index-templates/)，可透過 OpenSearch `_index_template` API 取得。可組合索引類型比預設值提供更大的彈性，且當 OpenSearch 叢集包含現有索引範本時必須使用。可組合範本適用於所有版本的 OpenSearch 及部分較後期的 Elasticsearch 版本。當 `distribution_version` 設為 `es6` 時，Data Prepper 會強制將 `template_type` 設為 `v1`。
-`template_file` | 否 | 字串 | 當 `index_type` 設為 `custom` 時，JSON [索引範本]({{site.url}}{{site.baseurl}}/opensearch/index-templates/)檔案的路徑，例如 `/your/local/template-file.json`。如需範本檔案範例，請參閱 [otel-v1-apm-span-index-template.json](https://github.com/opensearch-project/data-prepper/blob/main/data-prepper-plugins/opensearch/src/main/resources/otel-v1-apm-span-index-template.json)。若您提供範本檔案，則其必須符合 `template_type` 參數所指定的範本格式。
-`template_content` | 否 | JSON | 包含索引[索引範本]({{site.url}}{{site.baseurl}}/opensearch/index-templates/)內所有內嵌 JSON。如需範本內容範例，請參閱[範本內容範例](#example-with-template_content-and-actions)。
-`document_id_field` | 否 | 字串 | **在 Data Prepper 2.7 中已棄用，請改用 `document_id`。** 當 `index_type` 為 `custom` 時，用於 OpenSearch 文件 ID 的來源資料欄位（例如 `"my-field"`）。
-`document_id` | 否 | 字串 | 用作 OpenSearch 文件中 `_id` 的格式字串。若要指定事件中的單一欄位，請使用 `${/my_field}`。您也可以使用 Data Prepper 運算式建構 `document_id`，例如 `${getMetadata(\"some_metadata_key\")}`。這些選項可合併為更複雜的格式，例如 `${/my_field}-test-${getMetadata(\"some_metadata_key\")}`。
-`document_version` | 否 | 字串  | 用作 OpenSearch 文件中 `_version` 的格式字串。若要指定事件中的單一欄位，請使用 `${/my_field}`。您也可以使用 Data Prepper 運算式建構 `document_version`，例如 `${getMetadata(\"some_metadata_key\")}`。這些選項可合併為更複雜的版本，例如 `${/my_field}${getMetadata(\"some_metadata_key\")}`。`document_version` 格式必須評估為 long 類型，且僅能在 `document_version_type` 設為 `external` 或 `external_gte` 時使用。
-`document_version_type` | 否 | 字串  | 索引作業的文件版本類型。必須是 `external`、`external_gte` 或 `internal` 其中之一。若設為 `external` 或 `external_gte`，則需要 `document_version`。
+`template_type` | 否 | 字串 | 定義要使用的 OpenSearch 範本類型。可用選項為 `v1` 和 `index-template`。預設值為 `v1`，會使用 `_template` API 端點所提供的原始 OpenSearch 範本。`index-template` 選項使用可組合的[索引範本]({{site.url}}{{site.baseurl}}/opensearch/index-templates/)，可透過 OpenSearch `_index_template` API 取得。可組合的索引類型比預設值更具彈性，且當 OpenSearch 叢集中已有現有的索引範本時必須使用。所有版本的 OpenSearch 以及部分較新版本的 Elasticsearch 皆提供可組合範本。當 `distribution_version` 設為 `es6` 時，Data Prepper 會將 `template_type` 強制設為 `v1`。
+`template_file` | 否 | 字串 | 當 `index_type` 設為 `custom` 時，JSON [索引範本]({{site.url}}{{site.baseurl}}/opensearch/index-templates/)檔案的路徑，例如 `/your/local/template-file.json`。如需範本檔案範例，請參閱 [otel-v1-apm-span-index-template.json](https://github.com/opensearch-project/data-prepper/blob/main/data-prepper-plugins/opensearch/src/main/resources/otel-v1-apm-span-index-template.json)。若您提供範本檔案，該檔案必須符合 `template_type` 參數所指定的範本格式。
+`template_content` | 否 | JSON | 包含索引[索引範本]({{site.url}}{{site.baseurl}}/opensearch/index-templates/)中的所有內嵌 JSON。如需範本內容範例，請參閱[範本內容範例](#example-with-template_content-and-actions)。
+`component_templates` | 否 | 清單 | 要新增至 Data Prepper 所建立之索引範本 `composed_of` 清單中的[元件範本]({{site.url}}{{site.baseurl}}/im-plugin/index-templates/#reusing-configuration-with-component-templates)名稱清單。這些名稱會新增在索引範本已列出的任何元件範本之後，無論索引範本來自 `template_file`、`template_content`，或是 `index_type` 的內建範本。OpenSearch 會依序套用元件範本，而索引範本本身的設定與對應優先於所有元件範本。Data Prepper 不會建立這些元件範本，因此這些範本必須在管線啟動前就已存在於叢集中。需要將 `template_type` 設為 `index-template`。`trace-analytics-plain-raw-v2` 索引類型一律使用 `index-template`，因此不需要設定 `template_type`。當 `index_type` 為 `management_disabled` 時無法使用。
+`document_id_field` | 否 | 字串 | **已在 Data Prepper 2.7 中棄用，請改用 `document_id`。** 當 `index_type` 為 `custom` 時，來源資料中要用作 OpenSearch 文件 ID 的欄位（例如 `"my-field"`）。
+`document_id` | 否 | 字串 | 用作 OpenSearch 文件中 `_id` 的格式字串。若要指定事件中的單一欄位，請使用 `${/my_field}`。您也可以使用 Data Prepper 運算式來建構 `document_id`，例如 `${getMetadata(\"some_metadata_key\")}`。這些選項可組合成更複雜的格式，例如 `${/my_field}-test-${getMetadata(\"some_metadata_key\")}`。 
+`document_version` | 否 | 字串  |  用作 OpenSearch 文件中 `_version` 的格式字串。若要指定事件中的單一欄位，請使用 `${/my_field}`。您也可以使用 Data Prepper 運算式來建構 `document_version`，例如 `${getMetadata(\"some_metadata_key\")}`。這些選項可組合成更複雜的版本，例如 `${/my_field}${getMetadata(\"some_metadata_key\")}`。`document_version` 格式的求值結果必須為 long 類型，且只能在 `document_version_type` 設為 `external` 或 `external_gte` 時使用。
+`document_version_type` | 否 | 字串  | 索引操作的文件版本類型。必須是 `external`、`external_gte` 或 `internal` 其中之一。若設為 `external` 或 `external_gte`，則 `document_version` 為必要項目。
 `dlq_file` | 否 | 字串 | 您偏好的死信佇列檔案路徑（例如 `/your/local/dlq-file`）。當 Data Prepper 無法在 OpenSearch 叢集上將文件編製索引時，會寫入此檔案。
-`dlq` | 否 | 不適用 | [DLQ 組態]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/dlq/)。
-`bulk_size` | 否 | 整數 (long) | 傳送至 OpenSearch 叢集的批次請求大小上限（以 MiB 為單位）。低於 `0` 的值表示大小無限制。若單一文件超過批次請求大小上限，則 Data Prepper 會個別傳送每個請求。預設值為 `5`。
-`ism_policy_file` | 否 | 字串 | 索引狀態管理 (ISM) 政策 JSON 檔案的絕對檔案路徑。此政策檔案僅在索引類型沒有內建政策檔案時才有效。例如，`custom` 索引類型目前是唯一沒有內建政策檔案的類型，因此若透過此參數提供，便會使用此政策檔案。如需政策 JSON 檔案的詳細資訊，請參閱 [ISM 政策]({{site.url}}{{site.baseurl}}/im-plugin/ism/policies/)。
-`number_of_shards` | 否 | 整數  | 目的地 OpenSearch 伺服器上索引應有的主要分片數。此參數僅在 `template_file` 於接收器組態中明確提供或為內建值時才有效。若設定此參數，則會覆寫索引範本檔案中的值。如需詳細資訊，請參閱[建立索引]({{site.url}}{{site.baseurl}}/api-reference/index-apis/create-index/)。
-`number_of_replicas` | 否 | 整數 | 目的地 OpenSearch 伺服器上每個主要分片應有的副本分片數。例如，若您有 4 個主要分片並將 `number_of_replicas` 設為 `3`，則該索引會有 12 個副本分片。此參數僅在 `template_file` 於接收器組態中明確提供或為內建值時才有效。若設定此參數，則會覆寫索引範本檔案中的值。如需詳細資訊，請參閱[建立索引]({{site.url}}{{site.baseurl}}/api-reference/index-apis/create-index/)。
+`dlq` | 否 | 不適用 | [DLQ 組態]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/dlq/)。 
+`bulk_size` | 否 | 整數 (long) | 傳送至 OpenSearch 叢集之大量請求的大小上限（單位為 MiB）。低於 `0` 的值表示大小不受限制。若單一文件超過大量請求大小上限，Data Prepper 會個別傳送每個請求。預設值為 `5`。
+`estimate_bulk_size_using_compression` | 否 | 布林值 | 判斷請求是否已達到 `bulk_size` 時，是否以壓縮後的大小來估算大量請求的大小。接收器會在本機壓縮部分填入的請求，以計算近似大小。停用請求壓縮時會忽略此設定（請參閱 `enable_request_compression`）。預設為 `false`。
+`max_local_compressions_for_estimation` | 否 | 整數 | 接收器為估算大小而壓縮部分填入之大量請求的最大次數。值越高，估算越準確，但效能會降低。僅在 `estimate_bulk_size_using_compression` 為 `true` 時適用。預設為 `2`。
+`ism_policy_file` | 否 | 字串 | Index State Management (ISM) 政策 JSON 檔案的絕對檔案路徑。此政策檔案僅在該索引類型沒有內建政策檔案時生效。例如，`custom` 索引類型是目前唯一沒有內建政策檔案的類型，因此若透過此參數提供政策檔案，就會使用該檔案。如需政策 JSON 檔案的詳細資訊，請參閱 [ISM 政策]({{site.url}}{{site.baseurl}}/im-plugin/ism/policies/)。
+`number_of_shards` | 否 | 整數  | 索引在目的地 OpenSearch 伺服器上應具有的主要分片數量。此參數僅在接收器組態中明確提供 `template_file` 或其為內建時才會生效。若設定此參數，將會覆寫索引範本檔案中的值。如需詳細資訊，請參閱[建立索引]({{site.url}}{{site.baseurl}}/api-reference/index-apis/create-index/)。
+`number_of_replicas` | 否 | 整數 | 每個主要分片在目的地 OpenSearch 伺服器上應具有的副本分片數量。例如，若您有 4 個主要分片並將 `number_of_replicas` 設為 `3`，則該索引會有 12 個副本分片。此參數僅在接收器組態中明確提供 `template_file` 或其為內建時才會生效。若設定此參數，將會覆寫索引範本檔案中的值。如需詳細資訊，請參閱[建立索引]({{site.url}}{{site.baseurl}}/api-reference/index-apis/create-index/)。
 `distribution_version` | 否 | 字串  | 指出接收器的後端版本是否為 Elasticsearch 6 或更新版本。`es6` 代表 Elasticsearch 6。`default` 代表最新的相容後端版本，例如 Elasticsearch 7.x、OpenSearch 1.x 或 OpenSearch 2.x。預設為 `default`。
-`enable_request_compression` | 否 | 布林值 | 傳送請求至 OpenSearch 時是否啟用壓縮。當 `distribution_version` 設為 `es6` 時，預設為 `false`。對於所有其他後端發行套件版本值，預設為 `true`。
-`action` | 否 | 字串 | 用於文件的 OpenSearch 批次動作。必須是 `create`、`index`、`update`、`upsert` 或 `delete` 其中之一。預設為 `index`。
-`actions` | 否 | 清單 | [動作清單](#actions)，可作為 `action` 的替代方案，其讀取方式如同 switch case 陳述式，會依條件決定要對事件採取的批次動作。
-`flush_timeout` | 否 | 長整數 | 一個 long 類別，包含嘗試將批次請求打包至 `bulk_size` 再排清請求的時間量（以毫秒為單位）。若在批次請求達到 `bulk_size` 之前此逾時已到期，則會排清該請求。設為 `-1` 可停用排清逾時，改為在每個批次結束時排清當下存在的內容。預設為 `60,000`，即 1 分鐘。
-`normalize_index` | 否 | 布林值 | 若為 true，則 OpenSearch 接收器會嘗試建立動態索引名稱。在 `${})` 中指定格式選項的索引名稱，依[索引命名限制]({{site.url}}{{site.baseurl}}/api-reference/index-apis/create-index/#index-naming-restrictions)為有效。任何無效字元都會被移除。預設值為 `false`。
-`routing` | 否 | 字串 | 當文件儲存於 OpenSearch 時，用於產生該文件 `shard_id` 的雜湊字串。會搜尋每個傳入的記錄。存在時，該字串會用作文件的路由欄位。不存在時，OpenSearch 儲存文件時會使用預設路由機制 (`document_id`)。支援以事件中的欄位及 [Data Prepper 運算式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/)進行格式化，例如 `${/my_field}-test-${getMetadata(\"some_metadata_key\")}`。
-`document_root_key` | 否 | 字串  | 事件中將用作文件根層級的鍵。預設為事件的根層級。若該鍵不存在，則會將整個事件寫入為文件。若 `document_root_key` 為基本值類型（例如字串或整數），則文件結構會是 `{"data": <value of the document_root_key>}`。
-`serverless` | 否 | 布林值 | **在 Data Prepper 2.7 中已棄用。請改搭配 `aws` 組態使用此選項。** 判斷 OpenSearch 後端是否為 Amazon OpenSearch Serverless。當 `opensearch` 接收器的目的地為 Amazon OpenSearch Serverless 集合時，請將此值設為 `true`。預設為 `false`。
-`serverless_options` | 否 | 物件 | **在 Data Prepper 2.7 中已棄用。請改搭配 `aws` 組態使用此選項。** 當 `opensearch` 接收器的後端設為 Amazon OpenSearch Serverless 時可用的網路組態選項。如需詳細資訊，請參閱 [Serverless 選項](#serverless-options)。
+`enable_request_compression` | 否 | 布林值 | 傳送請求至 OpenSearch 時是否啟用壓縮。當 `distribution_version` 設為 `es6` 時，預設為 `false`。對於所有其他發行版本，預設為 `true`。
+`action` | 否 | 字串 | 用於文件的 OpenSearch 大量動作。必須是 `create`、`index`、`update`、`upsert` 或 `delete` 其中之一。預設為 `index`。
+`actions` | 否 | 清單 | 可作為 `action` 替代方案的[動作清單](#actions)，其運作方式如同 switch case 陳述式，會依條件決定對事件採取的大量動作。 
+`script` | 否 | 物件 | OpenSearch 為更新文件而執行的 [Painless]({{site.url}}{{site.baseurl}}/scripting/painless/) 指令碼。僅能在 `action` 設為 `update`、`upsert` 或運算式時使用。如需詳細資訊，請參閱[指令碼](#script)。
+`flush_timeout` | 否 | Long | 一個 long 類別，包含在排清請求前，嘗試將大量請求填充至 `bulk_size` 的時間長度（單位為毫秒）。若此逾時在大量請求達到 `bulk_size` 之前到期，就會排清該請求。設為 `-1` 可停用排清逾時，改為在每個批次結束時排清目前所有內容。預設為 `60,000`，即 1 分鐘。
+`normalize_index` | 否 | 布林值 | 若為 true，OpenSearch 接收器會嘗試建立動態索引名稱。依據[索引命名限制]({{site.url}}{{site.baseurl}}/api-reference/index-apis/create-index/#index-naming-restrictions)，在 `${})` 中指定格式選項的索引名稱為有效名稱。任何無效字元都會被移除。預設值為 `false`。
+`routing` | 否 | 字串 | 在 OpenSearch 中儲存文件時，用來作為產生該文件 `shard_id` 之雜湊的字串。系統會搜尋每一筆傳入記錄。若存在該字串，則會將其用作文件的路由欄位。若不存在，OpenSearch 在儲存文件時會使用預設路由機制（`document_id`）。支援使用事件中的欄位及 [Data Prepper 運算式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/)進行格式化，例如 `${/my_field}-test-${getMetadata(\"some_metadata_key\")}`。
+`document_root_key` | 否 | 字串  | 事件中要用作文件根的鍵。預設為事件的根。若該鍵不存在，則整個事件會寫入為文件。若 `document_root_key` 為基本值類型（例如字串或整數），則文件結構將為 `{"data": <value of the document_root_key>}`。
+`serverless` | 否 | 布林值 | **已在 Data Prepper 2.7 中棄用。請改為搭配 `aws` 組態使用此選項。** 判斷 OpenSearch 後端是否為 Amazon OpenSearch Serverless。當 `opensearch` 接收器的目的地為 Amazon OpenSearch Serverless 集合時，請將此值設為 `true`。預設為 `false`。
+`serverless_options` | 否 | 物件 | **已在 Data Prepper 2.7 中棄用。請改為搭配 `aws` 組態使用此選項。** 當 `opensearch` 接收器的後端設為 Amazon OpenSearch Serverless 時可用的網路組態選項。如需詳細資訊，請參閱 [Serverless 選項](#serverless-options)。
 `query_lookup` | 否 | 物件 | 在編製索引前查詢現有文件以防止重複的組態。如需詳細資訊，請參閱[查詢查閱](#query-lookup)。
+`pull_indexing` | 否 | 物件 | 設定接收器將文件寫入串流平台，再由 OpenSearch 索引透過拉取式匯入 (pull-based ingestion) 從該平台匯入這些文件。設定此選項後，接收器不會傳送大量請求至 OpenSearch。這是實驗性功能。如需詳細資訊，請參閱[拉取式編製索引](#pull-based-indexing)。
 
+
+## 驗證
+
+`authentication` 物件支援下列選項。
+
+選項 | 必要 | 類型 | 說明
+:--- | :--- | :--- | :---
+`username` | 否 | 字串 | HTTP 基本驗證所使用的使用者名稱。
+`password` | 否 | 字串 | HTTP 基本驗證所使用的密碼。
+`client_certificate` | 視情況而定 | 字串 | 用於 TLS 用戶端憑證驗證的用戶端憑證，採用 PEM 格式。請指定 PEM 檔案的路徑，或以 `-----BEGIN` 開頭的 PEM 內容。若已設定 `client_key`，則為必要。
+`client_key` | 視情況而定 | 字串 | 用戶端憑證的未加密私密金鑰，採用 PEM 格式。請指定 PEM 檔案的路徑，或以 `-----BEGIN` 開頭的 PEM 內容。若已設定 `client_certificate`，則為必要。
+
+下列範例設定用戶端憑證驗證：
+
+```yaml
+pipeline:
+  ...
+  sink:
+    - opensearch:
+        hosts: ["https://localhost:9200"]
+        cert: path/to/root-ca.pem
+        index: my-index
+        authentication:
+          client_certificate: path/to/client.pem
+          client_key: path/to/client-key.pem
+```
+{% include copy.html %}
 
 ## 查詢查閱
 
@@ -103,16 +138,16 @@ pipeline:
 1. **條件式查詢**：在為文件編製索引之前，根據條件查詢文件。
 2. **錯誤觸發查詢**：當發生可能導致部分成功的批次作業錯誤（例如通訊端逾時或 500 內部伺服器錯誤）時，查詢文件。
 
-### 查詢查閱選項
+### 查詢查找選項
 
-`query_lookup` 物件支援以下選項。
+`query_lookup` 物件支援下列選項。
 
 選項 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`query_when` | 否 | 字串 | 一個 [Data Prepper 運算式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/)，用於決定哪些文件在編製索引之前符合查詢條件。例如，`getMetadata("potential_duplicate") == true` 只會查詢該中繼資料欄位設為 `true` 的文件。
-`query_term` | 是 | 字串 | 文件的唯一欄位，用於在 OpenSearch 中查詢現有文件。此欄位通常是 ID 欄位。
-`query_on_bulk_errors` | 否 | 布林值 | 設為 `true` 時，遇到可復原之批次作業錯誤（例如通訊端逾時或 500 錯誤）的文件會改為進行查詢，而不是立即重試。當初次編製索引請求可能已部分成功時，這有助於防止重複。預設值為 `false`。
-`query_duration` | 否 | 持續時間 | 在為指定文件編製索引之前，對其進行查詢的時間長度。請使用 ISO 8601 持續時間格式，例如 `PT5M` 代表 5 分鐘。預設值為 `PT5M`。
+`query_when` | 是 | 字串 | 一個 [Data Prepper 運算式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/)，用於決定哪些文件在編製索引前符合查詢資格。例如，`getMetadata("potential_duplicate") == true` 只會查詢該中繼資料欄位設為 `true` 的文件。
+`query_term` | 是 | 字串 | 文件的唯一欄位，用於在 OpenSearch 中查詢現有文件。這通常是 ID 欄位。
+`query_on_bulk_errors` | 否 | 布林值 | 設為 `true` 時，遇到可復原大量操作錯誤（例如通訊端逾時或 500 錯誤）的文件將會被查詢，而不是立即重試。當初始編製索引請求可能已部分成功時，這有助於避免產生重複文件。預設值為 `false`。
+`query_duration` | 否 | 持續時間 | 在將指定文件編製索引之前查詢該文件的時間長度。請使用 ISO 8601 持續時間格式，例如 `PT5M` 代表 5 分鐘。預設值為 `PT3M`。
 `async_limit` | 否 | 整數 | 在封鎖處理器工作執行緒之前，可同時查詢的文件數量上限。預設值為 `5000`。
 
 ### 查詢查閱範例
@@ -151,12 +186,53 @@ pipeline:
 
 選項 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`region` | 否 | 字串 | 用於認證資訊的 AWS 區域。預設使用[標準 SDK 行為來決定區域](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/region-selection.html)。
-`sts_role_arn` | 否 | 字串 | 對 Amazon SQS 和 Amazon S3 發出請求時要擔任的 AWS Security Token Service (AWS STS) 角色。預設為 `null`，將使用[標準 SDK 認證資訊行為](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/credentials.html)。
-`sts_header_overrides` | 否 | 對應表 | 接收器外掛程式在擔任 IAM 角色時套用的標頭覆寫對應表。
-`sts_external_id` | 否 | 字串 | 要附加至 AWS STS 之 AssumeRole 請求的外部 ID。
-`serverless` | 否 | 布林值 | 決定 OpenSearch 後端是否為 Amazon OpenSearch Serverless。當 `opensearch` 接收器的目的地是 Amazon OpenSearch Serverless 集合時，請將此值設為 `true`。預設值為 `false`。
-`serverless_options` | 否 | 物件 | 當 `opensearch` 接收器的後端設為 Amazon OpenSearch Serverless 時可用的網路組態選項。如需詳細資訊，請參閱 [Serverless 選項](#serverless-options)。
+`region` | 否 | 字串 | 用於認證資訊的 AWS 區域。預設為[以標準 SDK 行為判斷區域](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/region-selection.html)。
+`sts_role_arn` | 否 | 字串 | 對 Amazon SQS 與 Amazon S3 發出請求時要擔任的 AWS Security Token Service（AWS STS）角色。預設為 `null`，這會使用[認證資訊的標準 SDK 行為](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/credentials.html)。
+`sts_header_overrides` | 否 | Map | IAM 角色為接收器（sink）外掛程式擔任時所使用的標頭覆寫對應表。
+`sts_external_id` | 否 | 字串 | 要附加到 AWS STS 之 AssumeRole 請求的外部 ID。
+`serverless` | 否 | 布林值 | 決定 OpenSearch 後端是否為 Amazon OpenSearch Serverless。當 `opensearch` 接收器的目的地是 Amazon OpenSearch Serverless 集合時，請將此值設為 `true`。預設為 `false`。
+`serverless_options` | 否 | 物件 | 當 `opensearch` 接收器的後端設為 Amazon OpenSearch Serverless 時，可用的網路組態選項。如需詳細資訊，請參閱 [Serverless 選項](#serverless-options)。
+`resource_name` | 否 | 字串 | 設定 `semantic_enrichment` 時，接收器在其中建立索引的 Amazon OpenSearch Service 網域名稱或 Amazon OpenSearch Serverless 集合 ID。若未設定，接收器會從 `hosts` 中的第一個主機推導出網域名稱或集合 ID。
+`semantic_enrichment` | 否 | 物件 | 接收器建立索引時要啟用語意擴充的欄位。如需詳細資訊，請參閱[語意擴充](#semantic-enrichment)。
+
+### 語意擴充
+
+設定 `aws.semantic_enrichment` 後，接收器 (sink) 會先建立 `index` 中指定的索引，再將文件寫入該索引。接收器會使用 Amazon OpenSearch Service 或 Amazon OpenSearch Serverless `CreateIndex` API 建立索引，並將列出的每個欄位對應為已啟用語意擴充的 `text` 欄位。如果索引已存在，接收器不會修改該索引。語意擴充僅適用於 Amazon OpenSearch Service 網域及 Amazon OpenSearch Serverless 集合。
+
+`semantic_enrichment` 物件支援下列選項。
+
+選項 | 必要 | 類型 | 說明
+:--- | :--- | :--- | :---
+`fields` | 是 | 清單 | 要啟用語意擴充的欄位。
+
+`fields` 清單中的每個物件支援下列選項。
+
+選項 | 必要 | 類型 | 說明
+:--- | :--- | :--- | :---
+`name` | 是 | 字串 | 欄位的名稱。
+`language` | 是 | 字串 | 欄位內容的語言。有效值為 `english` 和 `multilingual`。
+
+下列範例會建立一個索引，其中 `title` 和 `description` 欄位已啟用語意擴充：
+
+```yaml
+pipeline:
+  ...
+  sink:
+    - opensearch:
+        hosts: ["https://search-my-domain-abc123.us-east-1.es.amazonaws.com"]
+        index: my-index
+        aws:
+          region: us-east-1
+          sts_role_arn: arn:aws:iam::123456789012:role/PipelineRole
+          resource_name: my-domain
+          semantic_enrichment:
+            fields:
+              - name: title
+                language: english
+              - name: description
+                language: multilingual
+```
+{% include copy.html %}
 
 <!-- vale off -->
 ## actions
@@ -169,6 +245,99 @@ pipeline:
 `type` | 是 | 字串 | 當 `when` 條件評估為 true 時要使用的批次動作類型。必須是 `create`、`index`、`update`、`upsert` 或 `delete` 其中之一。
 `when` | 否 | 字串 | 一個 [Data Prepper 運算式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/)，用於有條件地評估是否要使用 `type` 中設定的批次動作將事件傳送至 OpenSearch。若為空，則在事件傳送至 OpenSearch 時會自動選擇批次動作。
 
+
+## 指令碼
+
+`script` 物件會設定一個 [Painless]({{site.url}}{{site.baseurl}}/scripting/painless/) 指令碼，OpenSearch 會針對每個更新作業執行此指令碼。指令碼會以 `params.doc` 參數接收事件。當 `action` 為 `update` 時，指令碼會在現有文件上執行。當 `action` 為 `upsert` 時，接收器 (sink) 會傳送指令碼式 upsert，因此即使文件不存在，指令碼也會執行。在此情況下，事件會作為初始文件使用。
+
+`script` 物件支援下列選項。
+
+選項 | 必要 | 類型 | 說明
+:--- | :--- | :--- | :---
+`source` | 是 | 字串 | Painless 指令碼。以 `//` 開頭的行會在指令碼傳送至 OpenSearch 之前移除。
+`params` | 否 | Map | 要傳遞給指令碼的參數，指令碼可透過 `params.<parameter_name>` 存取這些參數。字串值可以包含格式運算式，例如 `${/my_field}`，這些運算式會針對每個事件進行評估。請勿將參數命名為 `doc`，因為它會取代 `params.doc` 中的事件。
+
+下列範例會將 `inc` 參數的值加到現有文件的 `counter` 欄位，並記錄最新事件的 `source` 值：
+
+```yaml
+pipeline:
+  ...
+  sink:
+    - opensearch:
+        hosts: ["https://localhost:9200"]
+        index: my-index
+        document_id: "${/id}"
+        action: upsert
+        script:
+          source: |
+            if (ctx._source.counter == null) { ctx._source.counter = params.doc.counter; }
+            else { ctx._source.counter += params.inc; }
+            ctx._source.last_source = params.source_name;
+          params:
+            inc: 5
+            source_name: "${/source}"
+```
+{% include copy.html %}
+
+## 拉取式編製索引
+
+這是實驗性功能，不建議在生產環境中使用。
+{: .warning}
+
+設定 `pull_indexing` 後，接收器 (sink) 會將文件寫入串流平台（例如 Apache Kafka），再由 OpenSearch 索引透過[拉取式匯入 (pull-based ingestion)]({{site.url}}{{site.baseurl}}/api-reference/document-apis/pull-based-ingestion/) 匯入這些文件。接收器啟動時，會讀取索引的分片數量和 `ingestion_source.param.topic` 設定，並在主題 (topic) 不存在時建立該主題。主題中每個分片各對應一個分割區 (partition)。接收器會根據 `routing` 或文件 ID，將每份文件寫入 OpenSearch 路由該文件時的目標分片所對應的分割區。
+
+### 先決條件
+
+在設定拉取式索引 (pull-based indexing) 之前，請完成下列步驟：
+
+1. 建立 `index` 中指定的索引，並將其設定為使用拉取式匯入 (pull-based ingestion)。接收器 (sink) 不會建立此索引。
+1. 在 `data-prepper-config.yaml` 中啟用實驗性功能：
+
+    ```yaml
+    experimental:
+      enable_all: true
+    ```
+    {% include copy.html %}
+
+### 組態
+
+拉取式索引 (pull-based indexing) 有下列需求：
+
+- `index` 選項必須包含靜態索引名稱。
+- `action` 選項以及 `actions` 中每個項目的 `type` 必須為 `index`、`create` 或 `delete`。
+- 必須設定 `document_id` 和 `document_version` 選項。接收器無法判定文件 ID 或版本的事件不會被寫入。
+
+`pull_indexing` 物件支援下列選項。
+
+選項 | 必要 | 類型 | 說明
+:--- | :--- | :--- | :---
+`engine` | 是 | 物件 | 接收器寫入文件的串流平台。唯一支援的引擎是 `kafka`。
+
+`kafka` 引擎支援下列選項。
+
+選項 | 必要 | 類型 | 說明
+:--- | :--- | :--- | :---
+`bootstrap_servers` | 是 | 清單 | Kafka 代理伺服器的主機與連接埠配對，例如 `["kafka-broker:9092"]`。
+
+下列範例會將文件寫入為 `my-pull-index` 索引設定的 Kafka 主題：
+
+```yaml
+pipeline:
+  ...
+  sink:
+    - opensearch:
+        hosts: ["https://localhost:9200"]
+        index: my-pull-index
+        document_id: "${/id}"
+        document_version: "${/version}"
+        document_version_type: external
+        action: index
+        pull_indexing:
+          engine:
+            kafka:
+              bootstrap_servers: ["kafka-broker:9092"]
+```
+{% include copy.html %}
 
 ## Serverless 選項
 

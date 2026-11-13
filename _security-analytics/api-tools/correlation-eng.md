@@ -229,6 +229,92 @@ POST /_plugins/_security_analytics/correlation/rules
 
 ---
 
+## 搜尋關聯規則
+
+使用查詢來搜尋關聯規則。請求本文必須包含搜尋查詢。如需查詢選項，請參閱 [Query DSL]({{site.url}}{{site.baseurl}}/query-dsl/)。
+
+### 端點
+
+```json
+POST /_plugins/_security_analytics/correlation/rules/_search
+```
+
+### 範例請求
+
+`correlate` 欄位對應為 `nested` 欄位，因此請使用 `nested` 查詢來搜尋規則中的記錄來源。下列請求會搜尋關聯 `network` 記錄的關聯規則：
+
+```json
+POST /_plugins/_security_analytics/correlation/rules/_search
+{
+  "query": {
+    "nested": {
+      "path": "correlate",
+      "query": {
+        "term": {
+          "correlate.category": "network"
+        }
+      }
+    }
+  }
+}
+```
+{% include copy-curl.html %}
+
+### 回應範例
+
+每個命中結果的 `_source` 都包含關聯規則定義：
+
+```json
+{
+  "took": 31,
+  "timed_out": false,
+  "_shards": {
+    "total": 1,
+    "successful": 1,
+    "skipped": 0,
+    "failed": 0
+  },
+  "hits": {
+    "total": {
+      "value": 1,
+      "relation": "eq"
+    },
+    "max_score": 0.31506687,
+    "hits": [
+      {
+        "_index": ".opensearch-sap-correlation-rules-config",
+        "_id": "ArQirKEBASjcpUUjnqb9",
+        "_version": 1,
+        "_seq_no": 1,
+        "_primary_term": 18,
+        "_score": 0.31506687,
+        "_source": {
+          "name": "network-windows",
+          "correlate": [
+            {
+              "index": "vpc_flow",
+              "category": "network",
+              "query": "dstaddr:4.5.6.7"
+            },
+            {
+              "index": "windows",
+              "category": "windows",
+              "query": "winlog.event_data.SubjectDomainName:NTAUTHORI*"
+            }
+          ],
+          "time_window": 300000,
+          "trigger": null
+        }
+      }
+    ]
+  }
+}
+```
+
+如需規則欄位的說明，請參閱[請求本文欄位](#request-body-fields)。
+
+---
+
 ## 列出特定時間範圍內的所有發現項目與關聯
 
 列出特定時間範圍內的所有發現項目及其關聯。

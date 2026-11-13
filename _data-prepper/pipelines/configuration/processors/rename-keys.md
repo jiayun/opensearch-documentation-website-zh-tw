@@ -17,10 +17,13 @@ nav_order: 310
 
 | 選項 | 必要 | 說明 |
 | :--- | :--- | :--- |
-| `entries` | 是 | 要重新命名的事件項目清單。 |
-| `from_key` | 是 | 要重新命名的項目之鍵。 |
+| `entries` | 視情況 | 要重新命名的事件項目清單。若未設定 `transform_key`，則為必要。不能與 `transform_key` 一起使用。 |
+| `transform_key` | 視情況 | 轉換事件中所有鍵的名稱，包括巢狀鍵。有效值為 `lowercase`、`uppercase`、`capitalize`（將第一個字元轉換為大寫）及 `none`。若未設定 `entries`，則為必要。不能與 `entries` 一起使用。預設值為 `none`，表示不轉換鍵。 |
+| `from_key` | 視情況 | 要重新命名之項目的鍵。必須指定 `from_key` 或 `from_key_regex` 其中之一。不能與 `from_key_regex` 一起使用。 |
+| `from_key_regex` | 視情況 | 用於比對要重新命名之項目最上層鍵的規則運算式。必須指定 `from_key` 或 `from_key_regex` 其中之一。不能與 `from_key` 一起使用。若有多個鍵相符且 `overwrite_if_to_key_exists` 為 `false`，則只會重新命名第一個相符的鍵。 |
 | `to_key` | 是 | 項目的新鍵。 |
-| `overwrite_if_to_key_exists` | 否 | 設為 `true` 時，若事件中已存在 `key`，則會覆寫現有值。預設值為 `false`。 |
+| `overwrite_if_to_key_exists` | 否 | 設定為 `true` 時，若事件中已存在 `key`，則會覆寫現有值。預設值為 `false`。 |
+| `rename_when` | 否 | [條件運算式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/)，例如 `/type == "app"`，用於決定是否將此項目套用至事件。根據預設，項目會套用至所有事件。 |
 
 ## 使用方式
 

@@ -26,9 +26,9 @@ nav_order: 60
 
 ## 追蹤分析管線
 
-為了在 Data Prepper 中監視追蹤分析，我們提供三條管線：`entry-pipeline`、`raw-trace-pipeline` 與 `service-map-pipeline`。下圖概述這些管線如何協同運作以監視追蹤分析。
+追蹤分析組態由三個管線組成：`entry-pipeline` 負責接收追蹤資料，`raw-trace-pipeline` 和 `service-map-pipeline` 則負責處理這些資料。下圖說明這些管線如何協同運作。
 
-![追蹤分析管線概觀]({{site.url}}{{site.baseurl}}/images/data-prepper/trace-analytics/trace-analytics-pipeline.jpg)
+![追蹤分析管線概觀]({{site.url}}{{site.baseurl}}/images/data-prepper/trace-analytics/trace-analytics-pipeline.png)
 
 
 ### OpenTelemetry 追蹤來源
@@ -39,8 +39,8 @@ nav_order: 60
 
 追蹤分析功能有三個處理器：
 
-* `otel_traces` -- `otel_traces` 處理器會從 [`otel-trace-source`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/otel-trace-source/) 接收一組 [span](https://github.com/opensearch-project/data-prepper/blob/fa65e9efb3f8d6a404a1ab1875f21ce85e5c5a6d/data-prepper-api/src/main/java/org/opensearch/dataprepper/model/trace/Span.java) 記錄，並執行具狀態的處理、擷取，以及完成追蹤群組相關欄位。
-* `otel_trace_group` -- `otel_trace_group` 處理器會查詢 OpenSearch 後端，以補齊這組 [span](https://github.com/opensearch-project/data-prepper/blob/298e7931aa3b26130048ac3bde260e066857df54/data-prepper-api/src/main/java/org/opensearch/dataprepper/model/trace/Span.java) 記錄中缺少的追蹤群組相關欄位。
+* `otel_traces` -- `otel_traces` 處理器會從 [`otel-trace-source`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/otel-trace-source/) 接收一組[追蹤區段（span）](https://github.com/opensearch-project/data-prepper/blob/fa65e9efb3f8d6a404a1ab1875f21ce85e5c5a6d/data-prepper-api/src/main/java/org/opensearch/dataprepper/model/trace/Span.java)記錄，並執行具狀態的處理、擷取，以及完成追蹤群組相關欄位。
+* `otel_trace_group` -- `otel_trace_group` 處理器會查詢 OpenSearch 後端，以補齊這組[追蹤區段](https://github.com/opensearch-project/data-prepper/blob/298e7931aa3b26130048ac3bde260e066857df54/data-prepper-api/src/main/java/org/opensearch/dataprepper/model/trace/Span.java)記錄中缺少的追蹤群組相關欄位。
 * `service_map` -- `service_map` 處理器會執行追蹤資料所需的預先處理，並建立中繼資料以顯示 `service-map` 儀表板。
 
 
@@ -85,7 +85,7 @@ Data Prepper 處理的追蹤請求總數，等於 `entry-pipeline` 與 `raw-trac
 
 #### 本機磁碟
 
-Data Prepper 使用本機磁碟來儲存服務對應處理所需的詮釋資料，因此我們建議只儲存下列關鍵欄位：`traceId`、`spanId`、`parentSpanId`、`spanKind`、`spanName` 和 `serviceName`。`service-map` 外掛程式只會儲存兩個檔案，每個檔案各儲存 `window_duration` 秒的資料。舉例來說，以 `3000 spans/second` 的輸送量進行測試時，磁碟總使用量為 `4 MB`。
+Data Prepper 使用本機磁碟來儲存服務地圖處理所需的中繼資料，因此我們建議只儲存下列關鍵欄位：`traceId`、`spanId`、`parentSpanId`、`spanKind`、`spanName` 和 `serviceName`。`service-map` 外掛程式只會儲存兩個檔案，每個檔案各儲存 `window_duration` 秒的資料。舉例來說，以 `3000 spans/second` 的輸送量進行測試時，磁碟總使用量為 `4 MB`。
 
 Data Prepper 也會使用本機磁碟來寫入記錄檔。在最新版的 Data Prepper 中，您可以將記錄檔重新導向至偏好的路徑。
 
@@ -105,7 +105,7 @@ Data Prepper 也會使用本機磁碟來寫入記錄檔。在最新版的 Data P
  * `workers`：8
  * `Heap`：10 GB
  
-此設定在 CPU 使用率 `20`% 時，可處理每秒 `2100` 個 span 的輸送量。
+此設定在 CPU 使用率 `20`% 時，可處理每秒 `2100` 個追蹤區段的輸送量。
 
 ## 管線組態
 
@@ -113,7 +113,7 @@ Data Prepper 也會使用本機磁碟來寫入記錄檔。在最新版的 Data P
 
 ### 範例：追蹤分析管線
 
-下列範例示範如何建置支援 [OpenSearch Dashboards Observability 外掛程式]({{site.url}}{{site.baseurl}}/observability-plugin/trace/ta-dashboards/) 的管線。此管線會從 OpenTelemetry Collector 取得資料，並使用另外兩條管線作為接收器。這兩條不同的管線各有不同用途，並寫入不同的 OpenSearch 索引。第一條管線會準備 OpenSearch 的追蹤資料，並將 span 文件擴充及匯入至 OpenSearch 中的 span 索引。第二條管線會將追蹤彙總為服務地圖，並將服務地圖文件寫入 OpenSearch 中的服務地圖索引。
+下列範例示範如何建置支援 [OpenSearch Dashboards Observability 外掛程式]({{site.url}}{{site.baseurl}}/observability-plugin/trace/ta-dashboards/) 的管線。此管線會從 OpenTelemetry Collector 取得資料，並使用另外兩條管線作為接收器。這兩條不同的管線各有不同用途，並寫入不同的 OpenSearch 索引。第一條管線會準備 OpenSearch 的追蹤資料，並將追蹤區段文件擴充及匯入至 OpenSearch 中的追蹤區段索引。第二條管線會將追蹤彙總為服務地圖，並將服務地圖文件寫入 OpenSearch 中的服務地圖索引。
 
 從 Data Prepper 2.0 版開始，Data Prepper 不再支援 `otel_traces_prepper` 處理器。`otel_traces` 處理器會取代 `otel_traces_prepper` 和 `otel_trace_raw` 處理器，並支援 Data Prepper 近期部分資料模型的變更。以下是 YAML 檔組態範例：
 
@@ -316,7 +316,7 @@ service-map-pipeline:
 ```
 {% include copy.html %}
 
-您需要修改前述 OpenSearch 叢集的組態，使其符合您的環境。請注意，其中有兩個 `opensearch` 接收器（sink）需要修改。
+您需要依您的 OpenSearch 叢集修改前述組態，使其符合您的環境。請注意，其中有兩個 `opensearch` 接收器（sink）需要修改。
 {: .note}
 
 您必須進行以下變更：
@@ -530,7 +530,7 @@ service:
 
 使用 `docker-compose up` 命令啟動所有容器。
 
-執行下列命令以啟動 `telemetrygen`，它會在 30 秒內產生合成的 OpenTelemetry 追蹤（約每秒 50 個 span），並透過明文 gRPC 傳送至 `otel-collector:4317`：
+執行下列命令以啟動 `telemetrygen`，它會在 30 秒內產生合成的 OpenTelemetry 追蹤（約每秒 50 個追蹤區段），並透過明文 gRPC 傳送至 `otel-collector:4317`：
 
 ```bash
 docker run --rm --network anton_opensearch-net \
@@ -589,15 +589,15 @@ docker run --rm --network anton_opensearch-net \
 
 [OpenSearch Dashboards Observability 外掛程式]({{site.url}}{{site.baseurl}}/observability-plugin/trace/ta-dashboards/)文件提供關於設定 OpenSearch 以在 OpenSearch Dashboards 中檢視追蹤分析的更多資訊。
 
-如需如何為追蹤分析調校與擴充 Data Prepper 的詳細資訊，請參閱[追蹤調校](#trace-tuning)。
+如需如何為追蹤分析調校與擴展 Data Prepper 的詳細資訊，請參閱[追蹤調校](#trace-tuning)。
 
 ## 遷移至 Data Prepper 2.0
 
-從 Data Prepper 1.4 版開始，追蹤處理採用 Data Prepper 的事件模型。這讓管線作者可以設定其他處理器來修改 span 或追蹤。為了提供遷移途徑，Data Prepper 1.4 版引進了下列變更：
+從 Data Prepper 1.4 版開始，追蹤處理採用 Data Prepper 的事件模型。這讓管線作者可以設定其他處理器來修改追蹤區段或追蹤。為了提供遷移途徑，Data Prepper 1.4 版引進了下列變更：
 
 * `otel_trace_source` 有一個選用的 `record_type` 參數，可設為 `event`。設定後，它會輸出事件物件。
-* `otel_traces` 取代 `otel_traces_prepper`，用於以事件為基礎的 span。
-* `otel_trace_group` 取代 `otel_trace_group_prepper`，用於以事件為基礎的 span。
+* `otel_traces` 取代 `otel_traces_prepper`，用於以事件為基礎的追蹤區段。
+* `otel_trace_group` 取代 `otel_trace_group_prepper`，用於以事件為基礎的追蹤區段。
 
 在 Data Prepper 2.0 版中，`otel_trace_source` 只會輸出事件。Data Prepper 2.0 版也完全移除 `otel_traces_prepper` 和 `otel_trace_group_prepper`。若要遷移至 Data Prepper 2.0 版，您可以使用事件模型來設定追蹤管線。
  

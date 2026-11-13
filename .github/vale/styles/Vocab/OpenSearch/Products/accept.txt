@@ -27,6 +27,7 @@ Apache Hive
 Apache Kafka
 Apache Spark
 Application Default Credentials
+Azure
 arXiv
 Aryn
 Auditbeat
@@ -69,6 +70,7 @@ Dockerfile
 DoS
 Ehcache
 Elasticsearch
+Entra
 Eszett
 Faiss
 Filebeat
@@ -210,6 +212,7 @@ Titan
 Titan Multimodal Embeddings
 Titan Text Embeddings
 TorchScript
+Traceloop
 Traffic Capture Proxy
 Traffic Replayer
 Tribuo

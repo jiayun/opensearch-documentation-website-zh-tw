@@ -39,13 +39,19 @@ config:
 
 ## challenge 設定
 
-在大多數情況下，將 `challenge` 設定為 `true` 對基本驗證而言是適當的。此設定定義了當 HTTP 標頭中的 `Authorization` 欄位未指定時，Security 外掛程式的行為。預設情況下，此設定為 `true`。
+在大多數情況下，若使用基本驗證，適合將 `challenge` 設為 `true`。此設定定義當 HTTP 標頭中未指定 `Authorization` 欄位時，Security 外掛程式的行為。此設定預設為 `true`。
 
-當 `challenge` 設定為 `true` 時，Security 外掛程式會將狀態為 `UNAUTHORIZED` (401) 的回應傳回給用戶端。如果用戶端是透過瀏覽器存取叢集，這會觸發驗證對話方塊，並提示使用者輸入使用者名稱與密碼。當 HTTP 基本驗證是唯一使用的後端時，這是常見的組態。
+當 `challenge` 設為 `true` 時，Security 外掛程式會將狀態為 `UNAUTHORIZED`（401）的回應傳回用戶端。若用戶端透過瀏覽器存取叢集，這會觸發驗證對話方塊，並提示使用者輸入使用者名稱和密碼。當 HTTP 基本驗證是唯一使用的後端時，這是常見的組態。
 
-當 `challenge` 設定為 `false`，且請求中未指定 `Authorization` 標頭時，Security 外掛程式不會將 `WWW-Authenticate` 回應傳回給用戶端，驗證便會失敗。此組態常用於您設定的驗證網域中包含多個會發出質詢的 `http_authenticator` 設定的情況。例如，當您打算將基本驗證與 SAML 一起使用時，可能就是這種情況。關於此組態的範例與更完整的說明，請參閱 SAML 文件中的[執行多個驗證網域]({{site.url}}{{site.baseurl}}/security/authentication-backends/saml/#running-multiple-authentication-domains)。
+當 `challenge` 設為 `false`，且請求中未指定 `Authorization` 標頭時，Security 外掛程式不會將 `WWW-Authenticate` 回應傳回用戶端，且驗證會失敗。當您所設定的驗證網域中包含多個會發出質詢（challenge）的 `http_authenticator` 設定時，通常會使用此組態。例如，當您計畫同時使用基本驗證與 SAML 時，可能就是這種情況。如需此組態的範例與更完整的說明，請參閱 SAML 文件中的[執行多個驗證網域]({{site.url}}{{site.baseurl}}/security/authentication-backends/saml/#running-multiple-authentication-domains)。
 
-當您定義多個 HTTP 驗證器時，請務必將不發出質詢的驗證器排在前面---例如 `proxy` 與 `clientcert`---並將會發出質詢的 HTTP 驗證器排在最後。例如，在將不發出質詢的 HTTP 基本驗證後端與會發出質詢的 SAML 後端配對的組態中，您可以在 HTTP 基本 `authc` 網域中指定 `order: 0`，並在 SAML 網域中指定 `order: 1`。
+一個請求只能由一個驗證網域發出質詢，因為用戶端無法同時回應兩種不同的驗證方法，例如 Kerberos 和 HTTP Basic。
+
+對於不含認證資訊的請求，Security 外掛程式會依 `order` 遞增順序評估驗證網域，並在第一個將 HTTP 驗證器設定為 `challenge: true` 的網域停止。該網域會發出質詢，例如 401 回應或重新導向至身分識別提供者（IdP）。Security 外掛程式不會使用任何後續網域對同一請求發出質詢。
+
+若多個網域將 `challenge` 設為 ` true`，Security 外掛程式既不會拒絕該組態，也不會記錄警告。由於 `challenge` 預設為 `true`，請在每個不應發出質詢的 HTTP 驗證器上明確設定 `challenge: false`。
+
+定義多個 HTTP 驗證器時，請務必將不發出質詢的驗證器（例如 `proxy` 和 `clientcert`）排在前面，並將發出質詢的 HTTP 驗證器排在最後。例如，在不發出質詢的 HTTP 基本驗證後端搭配會發出質詢的 SAML 後端的組態中，您可以在 HTTP 基本驗證 `authc` 網域中指定 `order: 0`，並在 SAML 網域中指定 `order: 1`。
 {: .note }
 
 

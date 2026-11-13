@@ -41,7 +41,7 @@ experimental:
 
 下列管線範例指定了 `iceberg` 來源。它使用搭配 Amazon S3 儲存空間的 REST 目錄，從 Iceberg 資料表讀取增量變更。`catalog` 定義在最上層，讓所有資料表共用相同的目錄組態。
 
-在接收端組態中，`action` 設為 `${getMetadata("bulk_action")}`，讓 `INSERT` 和 `UPDATE` 操作更新或插入文件，而 `DELETE` 操作則移除文件。`document_id` 設為 `${getMetadata("document_id")}`，使用 `|` 分隔符號串接 `identifier_columns` 值，讓每個 Iceberg 資料列對應到唯一的 OpenSearch 文件：
+在接收器（sink）組態中，`action` 設為 `${getMetadata("bulk_action")}`，讓 `INSERT` 和 `UPDATE` 操作更新或插入文件，而 `DELETE` 操作則移除文件。`document_id` 設為 `${getMetadata("document_id")}`，使用 `|` 分隔符號串接 `identifier_columns` 值，讓每個 Iceberg 資料列對應到唯一的 OpenSearch 文件：
 
 ```yaml
 version: "2"
@@ -129,26 +129,28 @@ iceberg:
 ### shuffle
 <!-- vale on -->
 
-處理包含 `DELETE` 操作的快照（寫入時複製資料表中的 `UPDATE` 或 `DELETE`）時，來源會使用分散式重分配，確保跨多個節點的結果正確。重分配會將含有相同 `identifier_columns` 值的所有記錄傳送至同一個節點，以便正確處理相符的 `INSERT` 和 `DELETE` 配對。
+處理包含 `DELETE` 操作（Copy-on-Write 資料表中的 `UPDATE` 或 `DELETE`）的快照時，來源會使用分散式 shuffle，以確保在多個節點間取得正確的結果。shuffle 會將所有包含相同 `identifier_columns` 值的記錄路由至同一個節點，以便正確解析相符的 `INSERT` 與 `DELETE` 配對。
 
-當快照包含 `DELETE` 操作時，重分配會自動啟動。僅包含 `INSERT` 的快照不會使用重分配。
+當快照包含 `DELETE` 操作時，shuffle 會自動啟用。若快照僅包含 `INSERT`，則不會使用 shuffle。
 
 下表列出 `shuffle` 組態選項。
 
 選項 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`partitions` | 否 | 整數 | 雜湊分割區的數量。必須為 1--10,000。預設為 `64`。
-`target_partition_size` | 否 | 字串 | 合併後的重分配讀取工作的目標大小。較小的相鄰分割區會合併，以減少工作數量。預設為 `64mb`。
-`storage_path` | 否 | 字串 | 存放中間重分配檔案的本機目錄。設定 `data-prepper.dir` 時，預設為 `${data-prepper.dir}/data/shuffle`，否則為 `${java.io.tmpdir}/data-prepper-shuffle`。
-`port` | 否 | 整數 | 用於節點間重分配資料傳輸的 HTTP 伺服器連接埠。預設為 `4995`。
-`ssl` | 否 | 布林值 | 當值為 `true` 時，為重分配 HTTP 伺服器啟用傳輸層安全性（TLS）。預設為 `true`。
-`ssl_certificate_file` | 視條件而定 | 字串 | PEM 格式的 TLS 憑證檔案路徑。支援本機檔案路徑與 Amazon S3 URI（例如 `s3://my-bucket/certs/cert.pem`）。當 `ssl` 為 `true` 且 `use_acm_certificate_for_ssl` 為 `false` 時，此選項為必要。
-`ssl_key_file` | 視條件而定 | 字串 | PEM 格式的 TLS 私密金鑰檔案路徑。支援本機檔案路徑與 Amazon S3 URI（例如 `s3://my-bucket/certs/key.pem`）。當 `ssl` 為 `true` 且 `use_acm_certificate_for_ssl` 為 `false` 時，此選項為必要。
-`use_acm_certificate_for_ssl` | 否 | 布林值 | 當值為 `true` 時，使用 AWS Certificate Manager（ACM）提供 TLS 憑證，取代 `ssl_certificate_file` 和 `ssl_key_file`。預設為 `false`。
-`acm_certificate_arn` | 視條件而定 | 字串 | ACM 憑證 ARN。當 `use_acm_certificate_for_ssl` 為 `true` 時，此選項為必要。
-`aws_region` | 視條件而定 | 字串 | 用於 ACM 或 S3 憑證存取的 AWS 區域。當 `use_acm_certificate_for_ssl` 為 `true`，或憑證檔案位於 Amazon S3 時，此選項為必要。
-`ssl_client_auth` | 否 | 布林值 | 當值為 `true` 時，啟用雙向 TLS（mTLS）以進行節點間驗證。所有節點都必須在重分配通訊期間提供有效的用戶端憑證。預設為 `false`。
-`ssl_insecure_disable_verification` | 否 | 布林值 | 當值為 `true` 時，停用節點間重分配通訊的 TLS 憑證驗證。預設為 `false`。
+`partitions` | 否 | 整數 | 雜湊分割區的數量。必須介於 1 到 10,000 之間。預設為 `64`。
+`target_partition_size` | 否 | 字串 | 合併後 shuffle 讀取任務的目標大小。相鄰的小型分割區會合併，以減少任務數量。預設為 `64mb`。
+`storage_path` | 否 | 字串 | 存放 shuffle 中繼檔案的本機目錄。若已設定 `data-prepper.dir`，預設為 `${data-prepper.dir}/data/shuffle`，否則為 `${java.io.tmpdir}/data-prepper-shuffle`。
+`port` | 否 | 整數 | 用於節點間 shuffle 資料傳輸的 HTTP 伺服器連接埠。預設為 `4995`。
+`ssl` | 否 | 布林值 | 設為 `true` 時，為 shuffle HTTP 伺服器啟用傳輸層安全性 (TLS)。預設為 `true`。
+`ssl_certificate_file` | 視情況 | 字串 | PEM 格式 TLS 憑證檔案的路徑。支援本機檔案路徑與 Amazon S3 URI（例如 `s3://my-bucket/certs/cert.pem`）。當 `ssl` 為 `true` 且 `use_acm_certificate_for_ssl` 為 `false` 時為必要。
+`ssl_key_file` | 視情況 | 字串 | PEM 格式 TLS 私密金鑰檔案的路徑。支援本機檔案路徑與 Amazon S3 URI（例如 `s3://my-bucket/certs/key.pem`）。當 `ssl` 為 `true` 且 `use_acm_certificate_for_ssl` 為 `false` 時為必要。
+`use_acm_certificate_for_ssl` | 否 | 布林值 | 設為 `true` 時，使用 AWS Certificate Manager (ACM) 取得 TLS 憑證，而非使用 `ssl_certificate_file` 與 `ssl_key_file`。預設為 `false`。
+`acm_certificate_arn` | 視情況 | 字串 | ACM 憑證 ARN。當 `use_acm_certificate_for_ssl` 為 `true` 時為必要。
+`acm_private_key_password` | 否 | 字串 | 用於解密從 ACM 匯出之私密金鑰的密碼。若未提供，Data Prepper 會產生隨機密碼。
+`acm_certificate_timeout_millis` | 否 | 整數 | Data Prepper 等待從 ACM 擷取憑證的最長時間（以毫秒為單位）。預設為 `120000`。
+`aws_region` | 視情況 | 字串 | 存取 ACM 或 S3 憑證所用的 AWS 區域。當 `use_acm_certificate_for_ssl` 為 `true`，或憑證檔案位於 Amazon S3 時為必要。
+`ssl_client_auth` | 否 | 布林值 | 設為 `true` 時，啟用雙向 TLS (mTLS) 以進行節點間驗證。所有節點在 shuffle 通訊期間都必須出示有效的用戶端憑證。預設為 `false`。
+`ssl_insecure_disable_verification` | 否 | 布林值 | 設為 `true` 時，停用節點間 shuffle 通訊的 TLS 憑證驗證。預設為 `false`。
 
 執行多個 Data Prepper 節點時，每個節點都必須能透過設定的 `port` 連線至其他節點。
 {: .note}
@@ -157,7 +159,7 @@ iceberg:
 
 下列中繼資料屬性會新增至 `iceberg` 來源處理的每個事件。您可以使用[運算式語法的 `getMetadata` 函式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/get-metadata/)存取這些屬性：
 
-- `bulk_action`：建議用於 OpenSearch 接收端的大量操作動作。對於 `INSERT` 和 `UPDATE` 操作，設為 `index`；對於 `DELETE` 操作，則設為 `delete`。
+- `bulk_action`：建議用於 OpenSearch 接收器的大量操作動作。對於 `INSERT` 和 `UPDATE` 操作，設為 `index`；對於 `DELETE` 操作，則設為 `delete`。
 - `document_id`：文件識別碼，使用 `|` 分隔符號串接 `identifier_columns` 值而成。僅在設定 `identifier_columns` 時設定。
 - `iceberg_operation`：CDC 操作類型。設為 `INSERT` 或 `DELETE`。當 Iceberg 中的資料列更新時，來源會收到一組具有相同 `identifier_columns` 值的 `DELETE` 和 `INSERT` 配對。來源會將此配對辨識為更新，並僅發出 `INSERT` 事件，因為依 `document_id` 更新或插入即可產生正確結果，無須另行刪除。
 - `iceberg_table_name`：來源 Iceberg 資料表的名稱。

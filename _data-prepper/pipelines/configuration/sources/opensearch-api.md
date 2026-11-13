@@ -28,24 +28,25 @@ POST /{path}/{index}/_bulk
 
 | 參數 | 類型 | 必要 | 預設 | 說明 |
 |-----------|------|----------|---------|-------------|
-| `port` | 整數 | 否 | `9200` | 來源接聽的連接埠。必須介於 0--65535。 |
+| `port` | 整數 | 否 | `9200` | 來源監聽的連接埠。必須介於 0--65535 之間。 |
 | `path` | 字串 | 否 | `/` | 端點的 URI 路徑。必須以 `/` 開頭。支援 `${pipelineName}` 預留位置。 |
-| `request_timeout` | 整數 | 否 | `10000` | 請求逾時，單位為毫秒。 |
-| `thread_count` | 整數 | 否 | `200` | 排程執行緒集區中的執行緒數目。 |
-| `max_connection_count` | 整數 | 否 | `500` | 開啟連線數上限。 |
-| `max_pending_requests` | 整數 | 否 | `1024` | 工作佇列中的工作數上限。 |
-| `health_check_service` | 布林值 | 否 | `false` | 在設定的連接埠上啟用 `/health` 端點。 |
+| `request_timeout` | 整數 | 否 | `10000` | 請求逾時時間，以毫秒為單位。 |
+| `thread_count` | 整數 | 否 | `200` | 排程執行緒集區中的執行緒數量。 |
+| `max_connection_count` | 整數 | 否 | `500` | 開啟連線的數量上限。 |
+| `max_pending_requests` | 整數 | 否 | `1024` | 工作佇列中的工作數量上限。 |
+| `max_request_length` | ByteCount | 否 | `10mb` | 單一 HTTP 請求的承載資料允許的位元組數上限，例如 `5mb`。超過此大小的請求會遭到拒絕，並傳回 `413` 狀態碼。 |
+| `health_check_service` | 布林值 | 否 | `false` | 在所設定的連接埠上啟用 `/health` 端點。 |
 | `unauthenticated_health_check` | 布林值 | 否 | `false` | 若為 `true`，健康狀態端點不需要驗證。 |
-| `compression` | 字串 | 否 | `none` | 套用至請求承載的壓縮。有效值為 `none` 與 `gzip`。 |
+| `compression` | 字串 | 否 | `none` | 套用至請求承載資料的壓縮方式。有效值為 `none` 和 `gzip`。 |
 | `authentication` | 物件 | 否 | 未驗證 | 驗證組態。請參閱[驗證](#authentication)。 |
 | `ssl` | 布林值 | 否 | `false` | 啟用 TLS/SSL。 |
-| `ssl_certificate_file` | 字串 | 視情況而定 | — | SSL 憑證檔案的路徑。若 `ssl` 為 `true` 且 `use_acm_certificate_for_ssl` 為 `false`，則為必要。支援 Amazon Simple Storage Service (Amazon S3) 路徑 (`s3://bucket/path`)。 |
-| `ssl_key_file` | 字串 | 視情況而定 | — | SSL 金鑰檔案的路徑（已解密）。若 `ssl` 為 `true` 且 `use_acm_certificate_for_ssl` 為 `false`，則為必要。支援 Amazon S3 路徑。 |
+| `ssl_certificate_file` | 字串 | 視情況而定 | — | SSL 憑證檔案的路徑。當 `ssl` 為 `true` 且 `use_acm_certificate_for_ssl` 為 `false` 時為必要。支援 Amazon Simple Storage Service (Amazon S3) 路徑（`s3://bucket/path`）。 |
+| `ssl_key_file` | 字串 | 視情況而定 | — | SSL 金鑰檔案（已解密）的路徑。當 `ssl` 為 `true` 且 `use_acm_certificate_for_ssl` 為 `false` 時為必要。支援 Amazon S3 路徑。 |
 | `use_acm_certificate_for_ssl` | 布林值 | 否 | `false` | 若為 `true`，則使用 AWS Certificate Manager (ACM) 取得 TLS 憑證。 |
-| `acm_certificate_arn` | 字串 | 視情況而定 | — | ACM 憑證的 Amazon Resource Name (ARN)。若 `use_acm_certificate_for_ssl` 為 `true`，則為必要。 |
+| `acm_certificate_arn` | 字串 | 視情況而定 | — | ACM 憑證的 Amazon Resource Name (ARN)。當 `use_acm_certificate_for_ssl` 為 `true` 時為必要。 |
 | `acm_private_key_password` | 字串 | 否 | 隨機 | 用於解密 ACM 私密金鑰的密碼。 |
-| `acm_certificate_timeout_millis` | 整數 | 否 | `120000` | 擷取 ACM 憑證的逾時，單位為毫秒。 |
-| `aws_region` | 字串 | 視情況而定 | — | 用於存取 ACM 或 Amazon S3 憑證的 AWS 區域。 |
+| `acm_certificate_timeout_millis` | 整數 | 否 | `120000` | 擷取 ACM 憑證的逾時時間，以毫秒為單位。 |
+| `aws_region` | 字串 | 視情況而定 | — | 存取 ACM 或 Amazon S3 憑證所使用的 AWS 區域。 |
 
 ## 驗證
 
@@ -119,9 +120,9 @@ source:
 |--------|-------------|
 | `200` | 請求資料已成功寫入緩衝區。 |
 | `400` | 請求資料格式錯誤或使用不支援的格式。 |
-| `408` | 請求寫入緩衝區時逾時。 |
-| `413` | 請求承載超過設定的緩衝區容量。 |
-| `429` | 來源已達容量上限；請求遭拒。 |
+| `408` | 請求在寫入緩衝區時逾時。 |
+| `413` | 請求承載超過已設定的緩衝區容量或 `max_request_length` 值。 |
+| `429` | 來源已達容量上限，請求遭到拒絕。 |
 
 ## 緩衝區相容性
 

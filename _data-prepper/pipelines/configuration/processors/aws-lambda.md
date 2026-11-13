@@ -19,43 +19,47 @@ nav_order: 40
 
 您可以使用下列組態選項來設定此處理器。
 
-欄位 | 類型 | 必要 | 說明
+欄位                | 類型    | 必要 | 說明                                                                 
 -------------------- | ------- | -------- | ---------------------------------------------------------------------------- 
-`function_name` | 字串 | 必要 | 要呼叫的 AWS Lambda 函式名稱。長度必須為 3--500 個字元。
-`aws.region` | 字串 | 必要 | Lambda 函式所在的 AWS 區域。
-`aws.sts_role_arn` | 字串 | 選用 | 呼叫 Lambda 函式前要擔任之角色的 Amazon 資源名稱（ARN）。長度必須為 20--2048 個字元。
+`function_name`      | 字串  | 必要 | 要叫用的 AWS Lambda 函式名稱。長度必須為 3--500 個字元。                                         
+`aws.region`         | 字串  | 必要 | Lambda 函式所在的 AWS 區域。                         
+`aws.sts_role_arn`   | 字串  | 選用 | 叫用 Lambda 函式前要擔任之角色的 Amazon Resource Name (ARN)。長度必須為 20--2048 個字元。               
 `aws.sts_external_id` | 字串 | 選用 | 用於 STS 角色擔任的外部 ID。長度必須為 2--1224 個字元。
 `aws.sts_header_overrides` | 對應表 | 選用 | STS 標頭覆寫。最多支援 5 個標頭。
-`client.max_retries` | 整數 | 選用 | 呼叫失敗時的最大重試次數。預設為 `3`。
+`client.max_retries` | 整數 | 選用 | 叫用失敗時的最大重試次數。預設為 `3`。             
 `client.api_call_timeout` | 持續時間 | 選用 | API 呼叫逾時。預設為 `60s`。
 `client.api_call_attempt_timeout` | 持續時間 | 選用 | 個別 API 呼叫嘗試的逾時。若未指定，則使用 AWS SDK 預設值。
 `client.connection_timeout` | 持續時間 | 選用 | SDK 連線逾時。預設為 `60s`。
-`client.read_timeout` | 持續時間 | 選用 | SDK 等待從已建立連線讀取資料的時間。若未指定，則使用 AWS SDK 預設值。
+`client.read_timeout` | 持續時間 | 選用 | SDK 等待從已建立的連線讀取資料的時間長度。若未指定，則使用 AWS SDK 預設值。
 `client.max_concurrency` | 整數 | 選用 | 用戶端上的最大並行執行緒數。預設為 `200`。
-`client.base_delay` | 持續時間 | 選用 | 指數退避的基本延遲。預設為 `100ms`。
+`client.base_delay`  | 持續時間 | 選用 | 指數退避的基本延遲時間。預設為 `100ms`。
 `client.max_backoff` | 持續時間 | 選用 | 指數退避的最大退避時間。預設為 `20s`。
-`client.retryable_status_codes` | 清單 | 選用 | Lambda 呼叫傳回時會觸發重試的 HTTP 狀態碼清單，例如 `[500, 502, 503, 504]`。預設為空清單（僅使用標準 AWS SDK 重試條件）。請用於可安全重試暫時性伺服器端錯誤的冪等函式。
-`batch` | 物件 | 選用 | Lambda 呼叫的批次設定。包含 `key_name`（預設值：`"events"`），以及含有 `event_count`（預設值：`100`）、`maximum_size`（預設值：`"5mb"`）和 `event_collect_timeout`（預設值：`10s`）的 `threshold` 物件。如需詳細資訊，請參閱[批次處理](#batch-processing)。
-`lambda_when` | 字串 | 選用 | 決定何時呼叫 Lambda 處理器的條件運算式。
-`response_codec` | 物件 | 選用 | 用於剖析 Lambda 回應的轉碼器組態。預設為 `json`。
-`tags_on_failure` | 清單 | 選用 | 當 Lambda 函式失敗或遇到例外狀況時，要新增至事件的標籤清單。
-`response_events_match` | 布林值 | 選用 | 指定 Data Prepper 如何解譯及處理 Lambda 函式回應。預設為 `false`。
-`response_mode` | 字串 | 選用 | 回應處理模式，可為 `replace` 或 `merge`。預設為 `replace`。
-`keys` | 清單 | 選用 | 要傳送至 Lambda 函式的索引鍵。
-`cache` | 物件 | 選用 | 快取組態。僅在 `response_mode` 為 `merge` 且已指定 `keys` 時有效。
-`cache.ttl` | 長整數 | 選用 | 快取存留時間。
-`cache.max_size` | 長整數 | 選用 | 快取大小上限。必須介於 1048576 與 10485760 之間。
-`circuit_breaker_retries` | 整數 | 選用 | 繼續執行前斷路器檢查的最大次數。預設為 `0`。
-`circuit_breaker_wait_interval` | 長整數 | 選用 | 斷路器檢查之間的間隔時間（以毫秒為單位）。預設為 `1000ms`。
+`client.retryable_status_codes` | 清單 | 選用 | Lambda 叫用傳回時會觸發重試的 HTTP 狀態碼清單，例如 `[500, 502, 503, 504]`。預設為空白清單，此時 Data Prepper 只會針對節流錯誤、Lambda 服務錯誤，以及網路或連線錯誤進行重試。適用於可安全重試暫時性伺服器端錯誤的等冪函式。
+`batch`              | 物件  | 選用 | Lambda 叫用的批次設定。包含 `key_name`（預設：`"events"`）以及 `threshold` 物件，該物件含有 `event_count`（預設：`100`）、`maximum_size`（預設：`"5mb"`）和 `event_collect_timeout`（預設：`10s`）。如需詳細資訊，請參閱[批次處理](#batch-processing)。                            
+`lambda_when`        | 字串  | 選用 | 決定何時叫用 Lambda 處理器的條件運算式。     
+`response_codec`     | 物件  | 選用 |  用於剖析 Lambda 回應的編解碼器組態。預設為 `json`。
+`tags_on_failure`    | 清單    | 選用 |  當 Lambda 函式失敗或發生例外狀況時，要新增至事件的標籤清單。
+`response_events_match` | 布林值 | 選用 | 指定 Data Prepper 如何解譯及處理 Lambda 函式的回應。預設為 `false`。
+`response_mode`      | 字串  | 選用 | 回應處理模式，可為 `replace` 或 `merge`。預設為 `replace`。
+`invocation_type`    | 字串  | 選用 | Lambda 叫用類型。有效值為 `request-response`、`event` 和 `streaming-response`。預設為 `request-response`。請參閱[使用方式](#usage)。
+`streaming`          | 物件  | 選用 | 回應串流組態。僅當 `invocation_type` 為 `streaming-response` 且 `streaming.enabled` 為 `true` 時，才會使用回應串流。指定 `streaming` 時，`batch.threshold.event_count` 必須為 `1`。請參閱[回應串流](#response-streaming)。
+`streaming.enabled`  | 布林值 | 選用 | 是否使用回應串流叫用 Lambda 函式。預設為 `false`。
+`streaming.response_handling` | 字串 | 選用 | 指定如何將串流回應轉換為事件。唯一的有效值為 `reconstruct-document`，會將串流回應中所有已剖析的區塊合併至原始事件。預設為 `reconstruct-document`。
+`keys`               | 清單    | 選用 | 要傳送至 Lambda 函式的索引鍵。
+`cache`              | 物件  | 選用 | 快取組態。僅在 `response_mode` 為 `merge` 且已指定 `keys` 時有效。
+`cache.ttl`          | 長整數    | 選用 | 快取存留時間 (TTL)。
+`cache.max_size`     | 長整數    | 選用 | 快取大小上限。必須介於 1048576 與 10485760 之間。
+`circuit_breaker_retries` | 整數 | 選用 | 繼續處理前執行斷路器檢查的最大次數。預設為 `0`。
+`circuit_breaker_wait_interval` | 長整數 | 選用 | 兩次斷路器檢查之間的間隔時間，以毫秒為單位。預設為 `1000ms`。
 
-以下是組態範例：
+以下為組態範例：
 
 ```yaml
-processors:
+processor:
   - aws_lambda:
       function_name: my-lambda-function
       response_events_match: false
-      response_mode: replace
+      response_mode: merge
       aws:
         region: us-east-1
         sts_role_arn: arn:aws:iam::123456789012:role/my-lambda-role
@@ -98,10 +102,36 @@ processors:
 
 ## 使用方式
 
-此處理器支援下列呼叫類型：
+此處理器支援下列叫用類型：
 
-- `request-response`：處理器會等待 Lambda 函式完成後再繼續執行。
+- `request-response`：處理器會等待 Lambda 函式完成後再繼續。
 - `event`：以非同步方式觸發函式，不等待回應。
+- `streaming-response`：處理器使用 Lambda 回應串流叫用函式，並等待完整的串流回應。必須將 `streaming.enabled` 設為 `true`。請參閱[回應串流](#response-streaming)。
+
+只有當 `invocation_type` 為 `request-response` 時，`cache` 設定才有效。
+
+### 回應串流
+
+若 Lambda 函式會分成多個區塊傳回大型回應，請使用回應串流。處理器會收集串流回應的所有區塊，使用 `response_codec` 剖析這些區塊，並將產生的資料合併至原始事件。由於每個回應都會合併至單一原始事件，因此 `batch.threshold.event_count` 必須設為 `1`。
+
+以下範例設定回應串流：
+
+```yaml
+processor:
+  - aws_lambda:
+      function_name: my-streaming-function
+      invocation_type: streaming-response
+      streaming:
+        enabled: true
+        response_handling: reconstruct-document
+      batch:
+        threshold:
+          event_count: 1
+      aws:
+        region: us-east-1
+        sts_role_arn: arn:aws:iam::123456789012:role/my-lambda-role
+```
+{% include copy.html %}
 
 ### 批次處理
 

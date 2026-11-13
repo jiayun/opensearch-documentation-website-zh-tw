@@ -121,9 +121,9 @@ curl -sS -X POST "http://localhost:2021/logs" \
 }
 ```
 
-### 分組值寫入根層級
+### 將分組值寫入根層級
 
-下列範例使用 `&&` 分隔鍵值對、使用 `==` 分隔鍵與值，藉此解析 `payload` 欄位。它會將括號內的分組保留為單一值、將解析結果寫入事件根層級而不覆寫現有欄位，並將任何未比對到的詞元記錄為 `null`：
+下列範例會剖析 `payload` 欄位，使用 `&&` 分隔各個鍵值對，並使用 `==` 分隔鍵與值。此範例會將以括號括住的群組保留為單一值，將剖析結果寫入事件根層級且不覆寫現有欄位，並將任何不相符的詞元記錄為 `null`：
 
 ```yaml
 kv-grouping-pipeline:
@@ -143,7 +143,7 @@ kv-grouping-pipeline:
 
         value_grouping: true
         remove_brackets: false
-        overwrite_if_destination_exists: false
+        destination_conflict_strategy: skip
         non_match_value: null
 
   sink:
@@ -355,29 +355,30 @@ curl -sS -X POST "http://localhost:2021/logs" \
 選項 | 說明 | 範例 
 :--- | :--- | :--- 
 `source` | 要剖析的訊息欄位。選用。預設值為 `message`。 | 若 `source` 為 `"message1"`，`{"message1": {"key1=value1"}, "message2": {"key2=value2"}}` 會剖析為 `{"message1": {"key1=value1"}, "message2": {"key2=value2"}, "parsed_message": {"key1": "value1"}}`。 
-`destination` | 剖析後來源的目標欄位。剖析後的來源會覆寫該鍵原有的資料。選用。若 `destination` 設為 `null`，剖析後的欄位將寫入事件的根層級。預設值為 `parsed_message`。 | 若 `destination` 為 `"parsed_data"`，`{"message": {"key1=value1"}}` 會剖析為 `{"message": {"key1=value1"}, "parsed_data": {"key1": "value1"}}`。 
-`field_delimiter_regex` | 指定分隔鍵值對之分隔符的規則運算式。特殊規則運算式字元（例如 `[` 與 `]`）必須以 `\\` 逸出。不可與 `field_split_characters` 同時定義。選用。若未定義此選項，則使用 `field_split_characters`。 | 若 `field_delimiter_regex` 為 `"&\\{2\\}"`，`{"key1=value1&&key2=value2"}` 會剖析為 `{"key1": "value1", "key2": "value2"}`。 
-`field_split_characters` | 指定分隔鍵值對之分隔符的字元字串。特殊規則運算式字元（例如 `[` 與 `]`）必須以 `\\` 逸出。不可與 `field_delimiter_regex` 同時定義。選用。預設值為 `&`。 | 若 `field_split_characters` 為 `"&&"`，`{"key1=value1&&key2=value2"}` 會剖析為 `{"key1": "value1", "key2": "value2"}`。 
-`key_value_delimiter_regex` | 指定分隔鍵值對內鍵與值之分隔符的規則運算式。特殊規則運算式字元（例如 `[` 與 `]`）必須以 `\\` 逸出。此選項不可與 `value_split_characters` 同時定義。選用。若未定義此選項，則使用 `value_split_characters`。 | 若 `key_value_delimiter_regex` 為 `"=\\{2\\}"`，`{"key1==value1"}` 會剖析為 `{"key1": "value1"}`。 
-`value_split_characters` | 指定分隔鍵值對內鍵與值之分隔符的字元字串。特殊規則運算式字元（例如 `[` 與 `]`）必須以 `\\` 逸出。不可與 `key_value_delimiter_regex` 同時定義。選用。預設值為 `=`。 | 若 `value_split_characters` 為 `"=="`，`{"key1==value1"}` 會剖析為 `{"key1": "value1"}`。 
+`destination` | 剖析後來源的目的地欄位。若該欄位已存在，除非 `destination_conflict_strategy` 另有指定，否則剖析後的來源會覆寫該鍵原有的資料。選用。若 `destination` 設為 `null`，剖析後的欄位會寫入事件的根層級。預設值為 `parsed_message`。 | 若 `destination` 為 `"parsed_data"`，`{"message": {"key1=value1"}}` 會剖析為 `{"message": {"key1=value1"}, "parsed_data": {"key1": "value1"}}`。 
+`field_delimiter_regex` | 指定鍵值對之間分隔符號的規則運算式。特殊規則運算式字元（例如 `[` 和 `]`）必須以 `\\` 跳脫。不可與 `field_split_characters` 同時定義。選用。若未定義此選項，則會使用 `field_split_characters`。 | 若 `field_delimiter_regex` 為 `"&\\{2\\}"`，`{"key1=value1&&key2=value2"}` 會剖析為 `{"key1": "value1", "key2": "value2"}`。 
+`field_split_characters` | 指定鍵值對之間分隔符號的字元字串。特殊規則運算式字元（例如 `[` 和 `]`）必須以 `\\` 跳脫。不可與 `field_delimiter_regex` 同時定義。選用。預設值為 `&`。 | 若 `field_split_characters` 為 `"&&"`，`{"key1=value1&&key2=value2"}` 會剖析為 `{"key1": "value1", "key2": "value2"}`。 
+`key_value_delimiter_regex` | 指定鍵值對中分隔鍵與值之分隔符號的規則運算式。特殊規則運算式字元（例如 `[` 和 `]`）必須以 `\\` 跳脫。此選項不可與 `value_split_characters` 同時定義。選用。若未定義此選項，則會使用 `value_split_characters`。  | 若 `key_value_delimiter_regex` 為 `"=\\{2\\}"`，`{"key1==value1"}` 會剖析為 `{"key1": "value1"}`。 
+`value_split_characters` | 指定鍵值對中分隔鍵與值之分隔符號的字元字串。特殊規則運算式字元（例如 `[` 和 `]`）必須以 `\\` 跳脫。不可與 `key_value_delimiter_regex` 同時定義。選用。預設值為 `=`。 | 若 `value_split_characters` 為 `"=="`，`{"key1==value1"}` 會剖析為 `{"key1": "value1"}`。 
 `non_match_value` | 當鍵值對無法成功分割時，該鍵值對會放入 `key` 欄位，而指定的值會放入 `value` 欄位。選用。預設值為 `null`。 | `key1value1&key2=value2` 會剖析為 `{"key1value1": null, "key2": "value2"}`。 |
-`prefix` | 附加在所有鍵前面的字首。選用。預設值為空字串。 | 若 `prefix` 為 `"custom"`，`{"key1=value1"}` 會剖析為 `{"customkey1": "value1"}`。 
-`delete_key_regex` | 指定要從鍵中刪除之字元的規則運算式。特殊規則運算式字元（例如 `[` 與 `]`）必須以 `\\` 逸出。不可為空字串。選用。無預設值。 | 若 `delete_key_regex` 為 `"\s"`，`{"key1 =value1"}` 會剖析為 `{"key1": "value1"}`。 
-`delete_value_regex` | 指定要從值中刪除之字元的規則運算式。特殊規則運算式字元（例如 `[` 與 `]`）必須以 `\\` 逸出。不可為空字串。選用。無預設值。 | 若 `delete_value_regex` 為 `"\s"`，`{"key1=value1 "}` 會剖析為 `{"key1": "value1"}`。 
-`include_keys` | 指定剖析時應加入哪些鍵的陣列。預設會加入所有鍵。 | 若 `include_keys` 為 `["key2"]`，`key1=value1&key2=value2` 會剖析為 `{"key2": "value2"}`。 
-`exclude_keys` | 指定哪些剖析後的鍵不應加入事件的陣列。預設不排除任何鍵。 | 若 `exclude_keys` 為 `["key2"]`，`key1=value1&key2=value2` 會剖析為 `{"key1": "value1"}`。 
-`default_values` | 指定預設鍵及其值的對應，當被剖析的來源欄位中不存在這些鍵時，會將其加入事件。若預設鍵已存在於訊息中，則不會變更其值。`include_keys` 篩選器會在 `default_values` 之前套用於訊息。 | 若 `default_values` 為 `{"defaultkey": "defaultvalue"}`，`key1=value1` 會剖析為 `{"key1": "value1", "defaultkey": "defaultvalue"}`。 <br /> 若 `default_values` 為 `{"key1": "abc"}`，`key1=value1` 會剖析為 `{"key1": "value1"}`。 <br /> 若 `include_keys` 為 `["key1"]` 且 `default_values` 為 `{"key2": "value2"}`，`key1=value1&key2=abc` 會剖析為 `{"key1": "value1", "key2": "value2"}`。 
-`transform_key` | 指定將鍵轉為小寫、大寫或首字母大寫。 | 若 `transform_key` 為 `lowercase`，`{"Key1=value1"}` 會剖析為 `{"key1": "value1"}`。 <br /> 若 `transform_key` 為 `uppercase`，`{"key1=value1"}` 會剖析為 `{"KEY1": "value1"}`。 <br /> 若 `transform_key` 為 `capitalize`，`{"key1=value1"}` 會剖析為 `{"Key1": "value1"}`。 
-`whitespace` | 指定對設定的值分隔序列周圍不必要空白字元的接受方式為寬鬆或嚴格。預設為 `lenient`。 | 若 `whitespace` 為 `"lenient"`，`{"key1  =  value1"}` 會剖析為 `{"key1  ": "  value1"}`。若 `whitespace` 為 `"strict"`，`{"key1  =  value1"}` 會剖析為 `{"key1": "value1"}`。 
-`skip_duplicate_values` | 用於移除重複鍵值對的布林值選項。設為 `true` 時，只會保留一組唯一的鍵值對。預設為 `false`。 | 若 `skip_duplicate_values` 為 `false`，`{"key1=value1&key1=value1"}` 會剖析為 `{"key1": ["value1", "value1"]}`。若 `skip_duplicate_values` 為 `true`，`{"key1=value1&key1=value1"}` 會剖析為 `{"key1": "value1"}`。 
-`remove_brackets` | 指定是否將方括號、角括號與圓括號視為應從值中移除的值「包裝符」。預設為 `false`。 | 若 `remove_brackets` 為 `true`，`{"key1=(value1)"}` 會剖析為 `{"key1": value1}`。若 `remove_brackets` 為 `false`，`{"key1=(value1)"}` 會剖析為 `{"key1": "(value1)"}`。 
-`recursive` | 指定是否從值中遞迴取得額外的鍵值對。額外的鍵值對會儲存為根鍵的子鍵。預設為 `false`。遞迴剖析的層級必須依此順序以不同的括號定義：`[]`、`()` 與 `<>`。其他指定的組態只會套用於最外層的鍵。 <br />當 `recursive` 為 `true` 時： <br /> `remove_brackets` 不可同時為 `true`；<br />`skip_duplicate_values` 一律為 `true`； <br />`whitespace` 一律為 `"strict"`。 | 若 `recursive` 為 true，`{"item1=[item1-subitem1=item1-subitem1-value&item1-subitem2=(item1-subitem2-subitem2A=item1-subitem2-subitem2A-value&item1-subitem2-subitem2B=item1-subitem2-subitem2B-value)]&item2=item2-value"}` 會剖析為 `{"item1": {"item1-subitem1": "item1-subitem1-value", "item1-subitem2" {"item1-subitem2-subitem2A": "item1-subitem2-subitem2A-value", "item1-subitem2-subitem2B": "item1-subitem2-subitem2B-value"}}}`。 
-`overwrite_if_destination_exists` | 指定將剖析後的欄位寫入事件時若發生鍵衝突，是否覆寫現有欄位。預設為 `true`。 | 若 `overwrite_if_destination_exists` 為 `true` 且 destination 為 `null`，`{"key1": "old_value", "message": "key1=new_value"}` 會剖析為 `{"key1": "new_value", "message": "key1=new_value"}`。 
-`tags_on_failure` | 當 `kv` 作業在處理器內造成執行期例外時，該作業會安全停止而不會使處理器當機，並以提供的標籤標記該事件。 | 若 `tags_on_failure` 設為 `["keyvalueprocessor_failure"]`，發生執行期例外時 `{"tags": ["keyvalueprocessor_failure"]}` 會加入事件的中繼資料。 
-`value_grouping` | 指定是否使用預先定義的值分組分隔符進行分組：`{...}`、`[...]`、`<...>`、`(...)`、`"..."`、`'...'`、`http://... (space)` 與 `https:// (space)`。若啟用此旗標，分隔符之間的內容會被視為單一實體，不會剖析為鍵值對。預設為 `false`。若 `value_grouping` 為 `true`，則 `{"key1=[a=b,c=d]&key2=value2"}` 會剖析為 `{"key1": "[a=b,c=d]", "key2": "value2"}`。 
-`drop_keys_with_no_value` | 指定鍵的值為 null 時是否捨棄該鍵。預設為 `false`。若 `drop_keys_with_no_value` 設為 `true`，則 `{"key1=value1&key2"}` 會剖析為 `{"key1": "value1"}`。 
-`strict_grouping` | 指定使用 `value_grouping` 或 `string_literal_character` 選項時是否啟用嚴格分組。預設為 `false`。 | 啟用時，結尾字元不匹配的分組會產生錯誤。錯誤記錄後該事件會被忽略。 
-`string_literal_character` | 可設為單引號（`'`）或雙引號（`"`）。預設為 `null`。 | 使用此選項時，包含在指定引號字元內的任何文字都會被忽略，並排除於鍵值剖析之外。例如，`text1 "key1=value1" text2 key2=value2` 會剖析為 `{"key2": "value2"}`。 
-`key_value_when` | 允許您指定[條件運算式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/)，例如 `/some-key == "test"`，系統會評估該運算式以判斷是否應將處理器套用於事件。 
+`prefix` | 要加在所有鍵前面的前綴。選用。預設值為空字串。 | 若 `prefix` 為 `"custom"`，`{"key1=value1"}` 會剖析為 `{"customkey1": "value1"}`。 
+`delete_key_regex` | 指定要從鍵中刪除之字元的規則運算式。特殊規則運算式字元（例如 `[` 和 `]`）必須以 `\\` 跳脫。不可為空字串。選用。無預設值。 | 若 `delete_key_regex` 為 `"\s"`，`{"key1 =value1"}` 會剖析為 `{"key1": "value1"}`。 
+`delete_value_regex` | 指定要從值中刪除之字元的規則運算式。特殊規則運算式字元（例如 `[` 和 `]`）必須以 `\\` 跳脫。不可為空字串。選用。無預設值。 | 若 `delete_value_regex` 為 `"\s"`，`{"key1=value1 "}` 會剖析為 `{"key1": "value1"}`。 
+`include_keys` | 指定應加入以進行剖析之鍵的陣列。預設會加入所有鍵。 | 若 `include_keys` 為 `["key2"]`，`key1=value1&key2=value2` 會剖析為 `{"key2": "value2"}`。 
+`exclude_keys` | 指定不應加入事件之已剖析鍵的陣列。預設不會排除任何鍵。 | 若 `exclude_keys` 為 `["key2"]`，`key1=value1&key2=value2` 會剖析為 `{"key1": "value1"}`。 
+`default_values` | 指定預設鍵及其值的對應表；當要剖析的來源欄位中不存在這些鍵時，會將其加入事件。若預設鍵已存在於訊息中，則不會變更其值。`include_keys` 篩選條件會在 `default_values` 之前套用至訊息。 | 若 `default_values` 為 `{"defaultkey": "defaultvalue"}`，`key1=value1` 會剖析為 `{"key1": "value1", "defaultkey": "defaultvalue"}`。<br /> 若 `default_values` 為 `{"key1": "abc"}`，`key1=value1` 會剖析為 `{"key1": "value1"}`。<br /> 若 `include_keys` 為 `["key1"]` 且 `default_values` 為 `{"key2": "value2"}`，`key1=value1&key2=abc` 會剖析為 `{"key1": "value1", "key2": "value2"}`。 
+`transform_key` | 何時將鍵轉換為小寫、大寫或首字母大寫。 | 若 `transform_key` 為 `lowercase`，`{"Key1=value1"}` 會剖析為 `{"key1": "value1"}`。<br /> 若 `transform_key` 為 `uppercase`，`{"key1=value1"}` 會剖析為 `{"KEY1": "value1"}`。<br /> 若 `transform_key` 為 `capitalize`，`{"key1=value1"}` 會剖析為 `{"Key1": "value1"}`。 
+`normalize_keys` | 指定是否要將已剖析鍵中不適用於事件鍵的無效字元取代為底線（`_`）。預設為 `false`。 | 若 `normalize_keys` 為 `true`，`user:name=alice&order#id=5` 會剖析為 `{"user_name": "alice", "order_id": "5"}`。
+`whitespace` | 指定對於所設定的值分割序列周圍不必要的空白，要採取寬鬆或嚴格的接受方式。預設為 `lenient`。 | 若 `whitespace` 為 `"lenient"`，`{"key1  =  value1"}` 會剖析為 `{"key1  ": "  value1"}`。若 `whitespace` 為 `"strict"`，`{"key1  =  value1"}` 會剖析為 `{"key1": "value1"}`。 
+`skip_duplicate_values` | 用於移除重複鍵值對的布林值選項。設為 `true` 時，只會保留一個唯一的鍵值對。預設為 `false`。 | 若 `skip_duplicate_values` 為 `false`，`{"key1=value1&key1=value1"}` 會剖析為 `{"key1": ["value1", "value1"]}`。若 `skip_duplicate_values` 為 `true`，`{"key1=value1&key1=value1"}` 會剖析為 `{"key1": "value1"}`。 
+`remove_brackets` | 指定是否將方括號、角括號和圓括號視為應從值中移除的值「包裝符號」。預設為 `false`。 | 若 `remove_brackets` 為 `true`，`{"key1=(value1)"}` 會剖析為 `{"key1": value1}`。若 `remove_brackets` 為 `false`，`{"key1=(value1)"}` 會剖析為 `{"key1": "(value1)"}`。 
+`recursive` | 指定是否以遞迴方式從值中取得其他鍵值對。額外的鍵值對會儲存為根鍵的子鍵。預設為 `false`。每一層遞迴剖析都必須以不同的括號定義，依序為：`[]`、`()` 和 `<>`。指定的任何其他組態只會套用至最外層的鍵。<br />當 `recursive` 為 `true` 時：<br /> `remove_brackets` 不能同時為 `true`；<br />`skip_duplicate_values` 一律為 `true`；<br />`whitespace` 一律為 `"strict"`。 | 若 `recursive` 為 true，`{"item1=[item1-subitem1=item1-subitem1-value&item1-subitem2=(item1-subitem2-subitem2A=item1-subitem2-subitem2A-value&item1-subitem2-subitem2B=item1-subitem2-subitem2B-value)]&item2=item2-value"}` 會剖析為 `{"item1": {"item1-subitem1": "item1-subitem1-value", "item1-subitem2" {"item1-subitem2-subitem2A": "item1-subitem2-subitem2A-value", "item1-subitem2-subitem2B": "item1-subitem2-subitem2B-value"}}}`。 
+`destination_conflict_strategy` | 指定當事件中已存在 `destination` 欄位時，要如何寫入剖析後的欄位。有效值如下：<br />- `skip`：保持現有的 `destination` 欄位不變。<br />- `overwrite`：以剖析後的欄位取代現有的 `destination` 欄位。<br />- `merge_preserve_existing_keys`：將剖析後的欄位加入現有的 `destination` 物件。若某個鍵同時存在於兩者中，則保留現有的值。<br />- `merge_overwrite_existing_keys`：將剖析後的欄位加入現有的 `destination` 物件。若某個鍵同時存在於兩者中，則以剖析後的值取代現有的值。<br />若現有的 `destination` 欄位不是物件，`merge_preserve_existing_keys` 會保持其不變，而 `merge_overwrite_existing_keys` 會將其取代。若 `destination` 為 `null`，每個剖析後的欄位都會寫入事件的根層級：`skip` 和 `merge_preserve_existing_keys` 會保留現有欄位的值，而 `overwrite` 和 `merge_overwrite_existing_keys` 會取代這些值。預設為 `overwrite`。 | 若 `destination_conflict_strategy` 為 `merge_preserve_existing_keys` 且 `destination` 為 `"parsed"`，`{"parsed": {"key1": "old_value"}, "message": "key1=new_value&key2=value2"}` 會剖析為 `{"parsed": {"key1": "old_value", "key2": "value2"}, "message": "key1=new_value&key2=value2"}`。<br /> 若 `destination_conflict_strategy` 為 `overwrite` 且 `destination` 為 `null`，`{"key1": "old_value", "message": "key1=new_value"}` 會剖析為 `{"key1": "new_value", "message": "key1=new_value"}`。 
+`tags_on_failure` | 當 `kv` 作業在處理器內造成執行階段例外狀況時，該作業會安全地停止而不會導致處理器當機，且事件會加上所提供的標籤。 | 若 `tags_on_failure` 設為 `["keyvalueprocessor_failure"]`，則發生執行階段例外狀況時，`{"tags": ["keyvalueprocessor_failure"]}` 會加入事件的中繼資料。 
+`value_grouping` | 指定是否使用預先定義的值分組分隔符號將值分組：`{...}`、`[...]`、`<...>`、`(...)`、`"..."`、`'...'`、`http://... (space)` 和 `https:// (space)`。若啟用此旗標，分隔符號之間的內容會視為單一實體，不會剖析其中的鍵值對。預設為 `false`。若 `value_grouping` 為 `true`，則 `{"key1=[a=b,c=d]&key2=value2"}` 會剖析為 `{"key1": "[a=b,c=d]", "key2": "value2"}`。 
+`drop_keys_with_no_value` | 指定是否要捨棄值為 null 的鍵。預設為 `false`。若 `drop_keys_with_no_value` 設為 `true`，則 `{"key1=value1&key2"}` 會剖析為 `{"key1": "value1"}`。 
+`strict_grouping` | 指定在使用 `value_grouping` 或 `string_literal_character` 選項時，是否應啟用嚴格分組。預設為 `false`。 | 啟用時，結束字元不相符的群組會產生錯誤。記錄錯誤後，該事件會被忽略。 
+`string_literal_character` | 可設為單引號（`'`）或雙引號（`"`）。預設為 `null`。 | 使用此選項時，指定引號字元內的任何文字都會被忽略，並排除在鍵值剖析之外。例如，`text1 "key1=value1" text2 key2=value2` 會剖析為 `{"key2": "value2"}`。 
+`key_value_when` | 可讓您指定[條件運算式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/)（例如 `/some-key == "test"`），系統會評估此運算式，以判斷是否應將處理器套用至事件。 
 
 

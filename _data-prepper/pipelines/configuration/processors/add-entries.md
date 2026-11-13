@@ -18,14 +18,19 @@ nav_order: 10
 | 選項 | 必要 | 說明 |
 | :--- | :--- | :--- |
 | `entries` | 是 | 要新增至事件的項目清單。 |
-| `key` | 否 | 要新增之項目的鍵。鍵的範例包括 `my_key`、`myKey` 和 `object/sub_Key`。鍵也可以是格式運算式，例如使用 `${/key1}`，將欄位 `key1` 的值作為鍵。 |
-| `metadata_key` | 否 | 新中繼資料屬性的鍵。引數必須是字串常值鍵，不能是 JSON Pointer。必須提供一個字串鍵或 `metadata_key`。 |
-| `value` | 否 | 要新增之項目的值，可使用下列任一資料類型：字串、布林值、數字、null、巢狀物件和陣列。 |
-| `format` | 否 | 作為新項目值的格式字串，例如 `${key1}-${key2}`，其中 `key1` 和 `key2` 是事件中既有的鍵。如果未指定 `value` 或 `value_expression`，則此選項為必要。 |
-| `value_expression` | 否 | 作為新項目值的運算式字串。例如，`/key` 是事件中既有的鍵，其類型為數字、字串或布林值。運算式也可以包含傳回數字／字串／整數的函式。例如，當鍵為字串時，`length(/key)` 會傳回事件中該鍵的長度。如需鍵的詳細資訊，請參閱[運算式語法]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/)。如需函式的詳細資訊，請參閱[函式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/functions/)。 |
-| `add_when` | 否 | 用於判斷是否對事件執行處理器的[條件運算式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/)，例如 `/some-key == "test"'`。 |
+| `key` | 否 | 要新增之新項目的鍵。鍵的範例包括 `my_key`、`myKey` 和 `object/sub_Key`。鍵也可以是格式運算式，例如 `${/key1}` 會使用欄位 `key1` 的值作為鍵。 |
+| `metadata_key` | 否 | 新中繼資料屬性的鍵。引數必須是常值字串鍵，而不是 JSON Pointer。必須提供一個字串鍵或 `metadata_key`。 |
+| `value` | 否 | 要新增之新項目的值，可使用下列任一資料類型：字串、布林值、數字、null、巢狀物件和陣列。 |
+| `format` | 否 | 用作新項目值的格式字串，例如 `${key1}-${key2}`，其中 `key1` 和 `key2` 是事件中現有的鍵。若 `value` 和 `value_expression` 皆未指定，則為必要。 |
+| `value_expression` | 否 | 用作新項目值的運算式字串。例如，`/key` 是事件中現有的鍵，其類型為數字、字串或布林值。運算式也可以包含傳回數字／字串／整數的函式。例如，當鍵為字串時，`length(/key)` 會傳回事件中該鍵的長度。如需有關鍵的詳細資訊，請參閱[運算式語法]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/)。如需有關函式的詳細資訊，請參閱[函式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/functions/)。 |
+| `add_when` | 否 | [條件運算式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/)，例如 `/some-key == "test"'`，系統會評估此運算式，以判斷是否要對事件執行處理器。 |
 | `overwrite_if_key_exists` | 否 | 設為 `true` 時，若事件中已存在 `key`，則會覆寫現有值。預設值為 `false`。 |
-| `append_if_key_exists` | 否 | 設為 `true` 時，若事件中已存在 `key`，則會將新值附加至現有值。若現有值不是陣列，則會建立陣列。預設值為 `false`。 |
+| `append_if_key_exists` | 否 | 設為 `true` 時，若事件中已存在 `key`，則會附加至現有值。若現有值不是陣列，則會建立陣列。預設為 `false`。 |
+| `iterate_on` | 否 | 事件中物件清單的鍵。指定此選項時，處理器會將項目新增至清單中的每個物件。不可與 `metadata_key` 一起使用。 |
+| `add_to_element_when` | 否 | 決定是否將項目新增至 `iterate_on` 清單中物件的[條件運算式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/)。根據預設，運算式會針對根事件評估一次，然後將項目新增至清單中的所有物件，或全部都不新增。若要針對清單中的每個物件評估運算式，請將 `evaluate_when_on_element` 設為 `true`。僅在指定 `iterate_on` 時適用。 |
+| `evaluate_when_on_element` | 否 | 設為 `true` 時，會針對 `iterate_on` 清單中的每個物件評估 `add_to_element_when` 運算式，且僅將項目新增至運算式評估結果為 `true` 的物件。僅在同時指定 `iterate_on` 和 `add_to_element_when` 時適用。預設為 `false`。 |
+| `disable_root_keys` | 否 | 設為 `false` 時，`value_expression` 和 `format` 會針對根事件解析，讓您可以在 `iterate_on` 清單的每個物件中使用根層級欄位作為值。設為 `true` 時，則會針對清單中的每個物件解析。僅在指定 `iterate_on` 時適用。預設為 `true`。 |
+| `flatten_key` | 否 | 設為 `true` 時，`key` 會被視為 `iterate_on` 清單中每個物件內的常值鍵名稱，因此像 `a/b` 這樣的鍵會建立名為 `a/b` 的欄位。設為 `false` 時，`key` 會被視為 JSON pointer，因此 `a/b` 會在 `a` 物件內建立巢狀的 `b` 欄位。僅在指定 `iterate_on` 時適用。預設為 `true`。 |
 
 
 ## 使用方式
@@ -222,6 +227,40 @@ nav_order: 10
 
 ```json
 {"message": ["hello", "world"]}
+```
+
+### 範例：將項目新增至清單中的物件
+
+下列範例說明如何設定處理器，將項目新增至 `items` 清單中的每個物件。第一個項目只會新增至 `type` 為 `a` 的物件，第二個項目則會將根層級的 `env` 欄位複製到每個物件中：
+
+```yaml
+...
+  processor:
+    - add_entries:
+        entries:
+          - key: "tagged"
+            value: true
+            iterate_on: "items"
+            add_to_element_when: '/type == "a"'
+            evaluate_when_on_element: true
+          - key: "env"
+            value_expression: "/env"
+            iterate_on: "items"
+            disable_root_keys: false
+...
+```
+{% include copy.html %}
+
+當輸入事件包含下列資料時：
+
+```json
+{"env": "prod", "items": [{"type": "a"}, {"type": "b"}]}
+```
+
+處理後的事件將包含下列資料：
+
+```json
+{"env": "prod", "items": [{"type": "a", "tagged": true, "env": "prod"}, {"type": "b", "env": "prod"}]}
 ```
 
 ## 範例

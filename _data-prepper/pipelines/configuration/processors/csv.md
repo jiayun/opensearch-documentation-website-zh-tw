@@ -17,13 +17,16 @@ nav_order: 70
 
 選項 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`source` | 否 | 字串 | 事件中將被解析的欄位。預設值為 `message`。
-`quote_character` | 否 | 字串 | 用於單一資料欄的文字限定符號字元。預設為 `"`。
-`delimiter` | 否 | 字串 | 分隔各欄的字元。預設為 `,`。
-`delete_header` | 否 | 布林值 | 若指定，事件解析後會刪除事件標頭 (`column_names_source_key`)。若沒有事件標頭，則不採取任何動作。預設為 `true`。
-`column_names_source_key` | 否 | 字串 | 事件中指定 CSV 欄名稱的欄位，這些名稱會自動偵測。若需要額外的欄名稱，會依其索引自動產生欄名稱。若同時定義了 `column_names`，`column_names_source_key` 中的標頭也可用來產生事件欄位。若此欄位中指定的欄太少，其餘欄名稱會自動產生。若此欄位中指定的欄名稱太多，CSV 處理器會省略多餘的欄名稱。
-`column_names` | 否 | 清單 | 使用者為 CSV 欄指定的名稱。若 CSV 記錄中沒有資料欄，且未定義 `column_names_source_key`，預設為 `[column1, column2, ..., columnN]`。若定義了 `column_names_source_key`，`column_names_source_key` 中的標頭會產生事件欄位。若此欄位中指定的欄太少，其餘欄名稱會自動產生。若此欄位中指定的欄名稱太多，CSV 處理器會省略多餘的欄名稱。
-`delete_source` | 否 | 布林值 | 若為 `true`，會在 CSV 解析後刪除設定的 `source` 欄位 (預設為 `message`)。由於處理是以批次方式進行，若不會使用 `source` 欄位，此組態選項可改善記憶體壓力。預設為 `false`。
+`source` | 否 | 字串 | 事件中要剖析的欄位。預設值為 `message`。
+`quote_character` | 否 | 字串 | 用作單一資料欄文字限定符號的字元。預設為 `"`。
+`delimiter` | 否 | 字串 | 分隔各資料欄的字元。預設為 `,`。
+`delete_header` | 否 | 布林值 | 若有指定，會在剖析事件後刪除事件標頭（`column_names_source_key`）。若沒有事件標頭，則不會執行任何動作。預設為 `true`。
+`column_names_source_key` | 否 | 字串 | 事件中指定 CSV 資料欄名稱的欄位，系統會自動偵測這些名稱。若需要額外的資料欄名稱，系統會依據其索引自動產生。若同時定義了 `column_names`，`column_names_source_key` 中的標頭也可用於產生事件欄位。若此欄位中指定的資料欄過少，其餘的資料欄名稱會自動產生。若此欄位中指定的資料欄名稱過多，CSV 處理器會略過多餘的資料欄名稱。
+`column_names` | 否 | 清單 | 使用者為 CSV 資料欄指定的名稱。若 CSV 記錄中沒有任何資料欄，且未定義 `column_names_source_key`，則預設為 `[column1, column2, ..., columnN]`。若已定義 `column_names_source_key`，則由 `column_names_source_key` 中的標頭產生事件欄位。若此欄位中指定的資料欄過少，其餘的資料欄名稱會自動產生。若此欄位中指定的資料欄名稱過多，CSV 處理器會略過多餘的資料欄名稱。
+`delete_source` | 否 | 布林值 | 若為 `true`，會在 CSV 剖析後刪除所設定的 `source` 欄位（預設為 `message`）。若因處理以批次進行而不會再使用 `source` 欄位，此組態選項可減輕記憶體壓力。預設為 `false`。
+`normalize_keys` | 否 | 布林值 | 若為 `true`，會將資料欄名稱中在事件鍵內無效的字元取代為底線（`_`）。例如，資料欄名稱 `user:name` 會變成 `user_name`。預設為 `false`。
+`multiline` | 否 | 布林值 | 若為 `true`，`source` 欄位會被視為多行 CSV 資料，其中第一行包含資料欄名稱，之後每一行各包含一列資料。處理器會為每一列資料建立新事件，其中包含原始事件的欄位及剖析後的資料欄，並捨棄原始事件。處理器未剖析的事件（例如 `source` 欄位只包含一行的事件）也會被捨棄。當 `multiline` 為 `true` 時，不會套用 `column_names`、`column_names_source_key`、`delete_header` 和 `delete_source` 選項。預設為 `false`。
+`csv_when` | 否 | 字串 | [條件運算式]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/)，例如 `/some_key == "test"`。若有指定，`csv` 處理器只會在運算式評估結果為 `true` 的事件上執行。
 
 ## 使用方式
 

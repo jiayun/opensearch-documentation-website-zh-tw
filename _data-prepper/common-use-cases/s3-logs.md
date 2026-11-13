@@ -108,7 +108,7 @@ Data Prepper 支援使用 [`s3` 來源]({{site.url}}{{site.baseurl}}/data-preppe
 
 ## 管線設計
 
-建立一條從 S3 讀取記錄檔的管線，首先從 [`s3`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/s3/) 來源外掛程式開始。請參考下列範例。
+建立一個從 S3 讀取記錄檔的管線，首先使用 [`s3`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/s3/) 來源外掛程式。請參考以下範例。
 
 ```yaml
 s3-log-pipeline:
@@ -121,17 +121,17 @@ s3-log-pipeline:
        sqs:
          # Change this value to your SQS Queue URL
          queue_url: "arn:aws:sqs:<YOUR-REGION>:<123456789012>:<YOUR-SQS-QUEUE>"
-         visibility_timeout: "2m"
+         visibility_timeout: "PT2M"
 ```
 {% include copy-curl.html %}
 
-請根據您的使用案例設定下列選項：
+請依據您的使用案例設定下列選項：
 
-* `queue_url`：這是 SQS 佇列 URL，對您的管線而言永遠是唯一的。
-* `codec`：codec 決定如何剖析傳入的資料。
-* `visibility_timeout`：請將此值設定為足夠大，讓 Data Prepper 能夠處理 10 個 S3 物件。不過，如果此值設定得太大，處理失敗的訊息在 Data Prepper 重試之前，至少會等待指定的時間。
+* `queue_url`：這是 SQS 佇列 URL，且一律是您的管線所專屬的。
+* `codec`：編解碼器（codec）決定如何剖析傳入的資料。
+* `visibility_timeout`：請將此值設定得夠大，足以讓 Data Prepper 處理 10 個 S3 物件。不過，如果此值設定得過大，處理失敗的訊息至少要等待指定值的時間，Data Prepper 才會重試。
 
-每個選項的預設值適用於大多數使用案例。如需 S3 來源所有可用選項，請參閱 [`s3`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/s3/)。
+各選項的預設值適用於大多數的使用案例。如需 S3 來源所有可用選項的資訊，請參閱 [`s3`]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/sources/s3/)。
 
 ```yaml
 s3-log-pipeline:
@@ -144,7 +144,7 @@ s3-log-pipeline:
        sqs:
          # Change this value to your SQS Queue URL
          queue_url: "arn:aws:sqs:<YOUR-REGION>:<123456789012>:<YOUR-SQS-QUEUE>"
-         visibility_timeout: "2m"
+         visibility_timeout: "PT2M"
        aws:
          # Specify the correct region
          region: "<YOUR-REGION>"
@@ -169,7 +169,7 @@ s3-log-pipeline:
 
 建議每條 Data Prepper 管線各使用一個 SQS 佇列。此外，您也可以讓同一叢集中的多個節點從同一個 SQS 佇列讀取資料，這不需要額外的 Data Prepper 組態。
 
-如果您有多條管線，則必須為每條管線建立多個 SQS 佇列，即使這些管線使用同一個 S3 儲存貯體也一樣。
+如果您有多條管線，即使這些管線使用同一個 S3 儲存貯體，也必須為每條管線各自建立一個 SQS 佇列。
 
 ## Amazon SNS 扇出模式
 
@@ -181,9 +181,9 @@ s3-log-pipeline:
 
 如果管線使用 S3 來源，您可以在將 S3 物件內容匯入管線之前，使用 SQL 運算式對其執行篩選與運算。
 
-`s3_select` 選項支援 [Parquet File Format](https://parquet.apache.org/docs/) 的物件。它也適用於以 gzip 或 BZIP2 壓縮的物件 (僅限 CSV 與 JSON 物件)，並支援使用 gzip 與 Snappy 為 Parquet File Format 進行資料行壓縮。
+`s3_select` 選項支援 [Parquet File Format](https://parquet.apache.org/docs/) 的物件。它也適用於以 gzip 或 BZIP2 壓縮的物件（僅限 CSV 與 JSON 物件），並支援使用 gzip 與 Snappy 為 Parquet File Format 進行資料行壓縮。
 
-如需使用 Amazon S3 Select 的完整資訊，請參閱 [Filtering and retrieving data using Amazon S3 Select](https://docs.aws.amazon.com/AmazonS3/latest/userguide/selecting-content-from-objects.html) 與 [SQL reference for Amazon S3 Select](https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-select-sql-reference.html)。
+如需使用 Amazon S3 Select 的完整資訊，請參閱[使用 Amazon S3 Select 篩選與擷取資料](https://docs.aws.amazon.com/AmazonS3/latest/userguide/selecting-content-from-objects.html)與 [Amazon S3 Select 的 SQL 參考](https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-select-sql-reference.html)。
 {: .note}
 
 下列範例管線會擷取以 Parquet File Format 編碼的 S3 物件中的所有資料：

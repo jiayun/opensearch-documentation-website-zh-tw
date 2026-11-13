@@ -16,44 +16,49 @@ nav_order: 85
 
 ## 組態
 
-您可以使用下列選項來設定 `otlp` 來源。
+您可以使用下列選項設定 `otlp` 來源。
 
 | 選項 | 類型 | 說明 |
 | :--- | :--- | :--- |
-| `port` | 整數 | `otlp` 來源監聽的連接埠。預設為 `21893`。 |
-| `logs_path` | 字串 | 用於傳送記錄檔未框架 HTTP 請求的路徑。必須以 `/` 開頭，且長度至少為 1。預設為 `/opentelemetry.proto.collector.logs.v1.LogsService/Export`。 |
-| `metrics_path` | 字串 | 用於傳送指標未框架 HTTP 請求的路徑。必須以 `/` 開頭，且長度至少為 1。預設為 `/opentelemetry.proto.collector.metrics.v1.MetricsService/Export`。 |
-| `traces_path` | 字串 | 用於傳送追蹤未框架 HTTP 請求的路徑。必須以 `/` 開頭，且長度至少為 1。預設為 `/opentelemetry.proto.collector.trace.v1.TraceService/Export`。 |
-| `request_timeout` | 持續時間 | 請求逾時時間。預設為 `10s`。 |
-| `retry_info` | 物件 | 設定重試行為。支援 `min_delay`（預設 `100ms`）與 `max_delay`（預設 `2s`）參數，以控制指數退避。請參閱[重試資訊](#retry-information)。|
-| `health_check_service` | 布林值 | 在 `grpc.health.v1.Health/Check` 下啟用 gRPC 健康檢查服務。當 `unframed_requests` 為 `true` 時，在 `/health` 啟用 HTTP 健康檢查。預設為 `false`。 |
-| `proto_reflection_service` | 布林值 | 為 Protobuf 服務啟用反射服務（請參閱 [ProtoReflectionService](https://grpc.github.io/grpc-java/javadoc/io/grpc/protobuf/services/ProtoReflectionService.html) 與 [gRPC 反射](https://github.com/grpc/grpc-java/blob/master/documentation/server-reflection-tutorial.md)）。預設為 `false`。 |
-| `unframed_requests` | 布林值 | 啟用未使用 gRPC 線路通訊協定框架的請求。預設為 `false`。 |
-| `thread_count` | 整數 | 排程執行緒集區中保留的執行緒數。預設為 `200`。 |
-| `max_connection_count` | 整數 | 允許開啟的連線數上限。預設為 `500`。 |
-| `max_request_length` | 字串 | 單一 gRPC 或 HTTP 請求承載中允許的位元組數上限。預設為 `10mb`。 |
+| `port` | 整數 | `otlp` 來源接聽的連接埠。預設為 `21893`。 |
+| `logs_path` | 字串 | 用於傳送記錄檔之非框架化 (unframed) HTTP 請求的路徑。必須以 `/` 開頭，且長度至少為 1。預設為 `/opentelemetry.proto.collector.logs.v1.LogsService/Export`。 |
+| `metrics_path` | 字串 | 用於傳送指標之非框架化 HTTP 請求的路徑。必須以 `/` 開頭，且長度至少為 1。預設為 `/opentelemetry.proto.collector.metrics.v1.MetricsService/Export`。 |
+| `traces_path` | 字串 | 用於傳送追蹤之非框架化 HTTP 請求的路徑。必須以 `/` 開頭，且長度至少為 1。預設為 `/opentelemetry.proto.collector.trace.v1.TraceService/Export`。 |
+| `request_timeout` | 期間 | 請求逾時的期間。預設為 `10s`。 |
+| `retry_info` | 物件 | 設定重試行為。支援 `min_delay`（預設為 `100ms`）和 `max_delay`（預設為 `2s`）參數，以控制指數退避。請參閱[重試資訊](#retry-information)。|
+| `health_check_service` | 布林值 | 在 `grpc.health.v1.Health/Check` 下啟用 gRPC 健康檢查服務。當 `unframed_requests` 為 `true` 時，會在 `/health` 啟用 HTTP 健康檢查。預設為 `false`。 |
+| `unauthenticated_health_check` | 布林值 | 決定 HTTP 健康檢查端點是否需要驗證。若未定義任何驗證，OpenSearch Data Prepper 會忽略此選項。預設為 `false`。 |
+| `proto_reflection_service` | 布林值 | 為 Protobuf 服務啟用反射服務（請參閱 [ProtoReflectionService](https://grpc.github.io/grpc-java/javadoc/io/grpc/protobuf/services/ProtoReflectionService.html) 和 [gRPC 反射](https://github.com/grpc/grpc-java/blob/master/documentation/server-reflection-tutorial.md)）。預設為 `false`。 |
+| `unframed_requests` | 布林值 | 啟用未使用 gRPC 傳輸協定框架化的請求。預設為 `false`。 |
+| `thread_count` | 整數 | 排程執行緒集區中保留的執行緒數量。預設為 `200`。 |
+| `max_connection_count` | 整數 | 允許的最大開啟連線數。預設為 `500`。 |
+| `max_connection_age` | 期間 | 用戶端連線可保持開啟的最長時間。當連線達到此存續時間時，來源會正常關閉該連線，用戶端必須開啟新的連線。當多個 Data Prepper 節點在以 DNS 為基礎的負載平衡後方執行時，請使用此設定：gRPC 用戶端只會在開啟連線時解析 DNS，因此定期關閉連線可讓用戶端連線至新加入的節點。必須介於 1 秒到 24 小時之間。根據預設，連線沒有最長存續時間。 |
+| `connection_drain_duration` | 期間 | 來源正常關閉連線時（例如連線達到 `max_connection_age` 之後），等待處理中請求完成的時間長度。必須介於 0 秒到 1 小時之間。 |
+| `max_request_length` | 字串 | 單一 gRPC 或 HTTP 請求的承載中允許的最大位元組數。預設為 `10mb`。 |
 | `compression` | 字串 | 套用至用戶端請求承載的壓縮類型。有效值為 `none`（不壓縮）或 `gzip`（套用 `gzip` 解壓縮）。預設為 `none`。 |
-| `output_format` | 字串 | 若未設定個別輸出格式選項，則指定所有訊號（記錄檔、指標與追蹤）的解碼輸出格式。有效值為 `otel`（OpenTelemetry 格式）與 `opensearch`（OpenSearch 格式）。預設為 `otel`。 |
-| `logs_output_format` | 字串 | 專門指定記錄檔的解碼輸出格式。對記錄檔而言，優先於 `output_format`。有效值為 `otel` 與 `opensearch`。預設為 `otel`。 |
-| `metrics_output_format` | 字串 | 專門指定指標的解碼輸出格式。對指標而言，優先於 `output_format`。有效值為 `otel` 與 `opensearch`。預設為 `otel`。 |
-| `traces_output_format` | 字串 | 專門指定追蹤的解碼輸出格式。對追蹤而言，優先於 `output_format`。有效值為 `otel` 與 `opensearch`。預設為 `otel`。 |
+| `authentication` | 物件 | 驗證組態。根據預設，來源會在不驗證的情況下執行。請參閱[驗證組態](#authentication-configuration)。 |
+| `output_format` | 字串 | 在未設定個別輸出格式選項時，指定所有訊號（記錄檔、指標和追蹤）的解碼輸出格式。有效值為 `otel`（OpenTelemetry 格式）和 `opensearch`（OpenSearch 格式）。預設為 `otel`。 |
+| `logs_output_format` | 字串 | 專門為記錄檔指定解碼輸出格式。對記錄檔而言，優先於 `output_format`。有效值為 `otel` 和 `opensearch`。預設為 `otel`。 |
+| `metrics_output_format` | 字串 | 專門為指標指定解碼輸出格式。對指標而言，優先於 `output_format`。有效值為 `otel` 和 `opensearch`。預設為 `otel`。 |
+| `traces_output_format` | 字串 | 專門為追蹤指定解碼輸出格式。對追蹤而言，優先於 `output_format`。有效值為 `otel` 和 `opensearch`。預設為 `otel`。 |
 
-若設定了個別輸出格式（例如 `logs_output_format`），對該訊號類型而言，其優先於通用的 `output_format`。若兩者皆未設定，預設為 `otel`。
+若設定了個別輸出格式（例如 `logs_output_format`），則對該訊號類型而言，其優先於通用的 `output_format`。若兩者皆未設定，預設為 `otel`。
 {: .note}
 
 ### SSL/TLS 組態
 
-您可以使用下列選項在 `otlp` 來源中設定 SSL/TLS。
+您可以使用下列選項，在 `otlp` 來源中設定 SSL/TLS。
 
 | 選項 | 類型 | 說明 |
 | :--- | :--- | :--- |
 | `ssl` | 布林值 | 啟用 SSL/TLS。預設為 `true`。 |
-| `ssl_certificate_file` | 字串 | SSL 憑證鏈檔案路徑或 Amazon Simple Storage Service (Amazon S3) 路徑（例如 `s3://<bucketName>/<path>`）。若 `ssl` 設為 `true` 則為必要。 |
-| `ssl_key_file` | 字串 | SSL 金鑰檔案路徑或 Amazon S3 路徑（例如 `s3://<bucketName>/<path>`）。若 `ssl` 設為 `true` 則為必要。 |
-| `use_acm_cert_for_ssl` | 布林值 | 使用 AWS Certificate Manager (ACM) 的憑證與私密金鑰啟用 SSL/TLS。預設為 `false`。 |
-| `acm_certificate_arn` | 字串 | ACM 憑證的 Amazon Resource Name (ARN)。ACM 憑證優先於 Amazon S3 或本機檔案系統憑證。若 `use_acm_cert_for_ssl` 設為 `true` 則為必要。 |
-| `acm_private_key_password` | 字串 | 用於解密私密金鑰的 ACM 私密金鑰密碼。若未提供，OpenSearch Data Prepper 會使用未加密的私密金鑰。 |
-| `aws_region` | 字串 | ACM 或 Amazon S3 使用的 AWS 區域。若 `use_acm_cert_for_ssl` 設為 `true`，或 `ssl_certificate_file` 與 `ssl_key_file` 為 Amazon S3 路徑，則為必要。 |
+| `ssl_certificate_file` | 字串 | SSL 憑證鏈檔案路徑或 Amazon Simple Storage Service (Amazon S3) 路徑（例如 `s3://<bucketName>/<path>`）。若 `ssl` 設為 `true`，則為必要。 |
+| `ssl_key_file` | 字串 | SSL 金鑰檔案路徑或 Amazon S3 路徑（例如 `s3://<bucketName>/<path>`）。若 `ssl` 設為 `true`，則為必要。 |
+| `use_acm_certificate_for_ssl` | 布林值 | 使用來自 AWS Certificate Manager (ACM) 的憑證與私密金鑰啟用 SSL/TLS。預設為 `false`。 |
+| `acm_certificate_arn` | 字串 | ACM 憑證的 Amazon Resource Name (ARN)。ACM 憑證的優先順序高於 Amazon S3 或本機檔案系統中的憑證。若 `use_acm_certificate_for_ssl` 設為 `true`，則為必要。 |
+| `acm_private_key_password` | 字串 | 用於解密私密金鑰的 ACM 私密金鑰密碼。若未提供，OpenSearch Data Prepper 會產生隨機密碼。 |
+| `acm_certificate_timeout` | 持續時間 | Data Prepper 等待從 ACM 擷取憑證的最長時間。必須介於 `5s` 與 `3600s` 之間。預設為 `120s`。 |
+| `aws_region` | 字串 | ACM 或 Amazon S3 使用的 AWS 區域。若 `use_acm_certificate_for_ssl` 設為 `true`，或 `ssl_certificate_file` 與 `ssl_key_file` 為 Amazon S3 路徑，則為必要。 |
 
 ### 驗證組態
 
@@ -116,7 +121,7 @@ pipeline:
 
 ### 路由遙測訊號
 
-`otlp` 來源的關鍵功能之一，是能依您的特定需求，將不同的遙測訊號（記錄檔、指標與追蹤）路由至不同的處理器或接收端。路由由使用 `getEventType()` 函式的中繼資料決定：
+`otlp` 來源的關鍵功能之一，是能依您的特定需求，將不同的遙測訊號（記錄檔、指標與追蹤）路由至不同的處理器或接收器。路由由使用 `getEventType()` 函式的中繼資料決定：
 
 ```yaml
 version: "2"
@@ -202,9 +207,9 @@ source:
 ```
 {% include copy.html %}
 
-### 使用 SSL/TLS 進行組態設定
+### 使用 SSL/TLS 進行設定
 
-若要使用本機憑證啟用 SSL/TLS，請指定以下設定：
+若要使用本機憑證啟用 SSL/TLS，請指定下列設定：
 
 ```yaml
 source:
@@ -215,13 +220,13 @@ source:
 ```
 {% include copy.html %}
 
-若要使用 ACM，請指定以下設定：
+若要使用 ACM，請指定下列設定：
 
 ```yaml
 source:
   otlp:
     ssl: true
-    use_acm_cert_for_ssl: true
+    use_acm_certificate_for_ssl: true
     acm_certificate_arn: "arn:aws:acm:us-east-1:123456789012:certificate/12345678-1234-1234-1234-123456789012"
     aws_region: "us-east-1"
 ```

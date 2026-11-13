@@ -51,11 +51,12 @@ my-pipeline:
 
 選項 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`entries` | 是 | [entry](#entry) 清單 | 標記為要擴充的項目清單。
-`geoip_when` | 否 | 字串 | 指定 `geoip` 處理器應在何種條件下執行比對。預設為無條件。
-`tags_on_no_valid_ip` | 否 | 字串 | 當來源欄位不是有效的 IP 位址時，要新增至事件中繼資料的標籤。這也包括 localhost IP 位址。
-`tags_on_ip_not_found` | 否 | 字串 | 當 `geoip` 處理器無法找到 IP 位址的位置時，要新增至事件中繼資料的標籤。
-`tags_on_engine_failure` | 否 | 字串 | 當 `geoip` 處理器因引擎故障而無法擴充事件時，要新增至事件中繼資料的標籤。
+`entries` | 是 | [entry](#entry) 清單 | 標記為要進行擴充的項目清單。
+`geoip_when` | 否 | 字串 | 指定 `geoip` 處理器在何種條件下應執行比對。預設為無條件。
+`lookup_private_addresses` | 否 | 布林值 | 設為 `true` 時，處理器也會在已設定的資料庫中查詢私人 IP 位址與迴路（loopback）IP 位址，例如 `10.0.0.0/8`、`172.16.0.0/12`、`192.168.0.0/16` 和 `127.0.0.0/8`。請將此設定搭配包含您內部 IP 範圍位置資訊的自訂資料庫使用。設為 `false` 時，處理器會將這些位址視為無效，並新增 `tags_on_no_valid_ip` 標籤。預設為 `false`。
+`tags_on_no_valid_ip` | 否 | 清單 | 來源欄位不是有效 IP 位址時，要新增至事件中繼資料的標籤。除非 `lookup_private_addresses` 為 `true`，否則私人 IP 位址與迴路 IP 位址也包含在內。
+`tags_on_ip_not_found` | 否 | 清單 | `geoip` 處理器找不到 IP 位址的位置時，要新增至事件中繼資料的標籤。
+`tags_on_engine_failure` | 否 | 清單 | `geoip` 處理器因引擎故障而無法擴充事件時，要新增至事件中繼資料的標籤。
 
 <!-- vale off -->
 ## entry

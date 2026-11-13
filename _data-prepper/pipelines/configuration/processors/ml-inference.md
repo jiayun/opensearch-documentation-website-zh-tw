@@ -22,16 +22,23 @@ nav_order: 210
 
 | 選項 | 必要 | 類型 | 說明 |
 | :--- | :--- | :--- | :--- |
-| `host`             | 是      | String | OpenSearch 主機的名稱。                                                                          |
-| `action_type`      | 是      | String | 要執行的動作類型。目前僅支援 `batch_predict`。預設為 `batch_predict`。 |
-| `model_id`         | 是      | String | 要叫用的 ML 模型 ID。                                             |
-| `output_path`      | 是      | String | 離線批次作業結果要寫入的 [Amazon Simple Storage Service (Amazon S3)](https://aws.amazon.com/s3/) 位置。                                      |
-| `aws.region`       | 是      | String | OpenSearch Service 所部署的 AWS 區域。                                                  |
-| `aws.sts_role_arn` | 否       | String | 要擔任的 AWS Identity and Access Management (IAM) 角色的 Amazon Resource Name (ARN)。                                  |
-| `service_name`     | 否       | String | 託管推論所用模型的 AI 服務名稱。預設為 `sagemaker` (Amazon SageMaker)。  |
-| `input_key`        | 否       | String | 寫入批次作業結果時，要作為 S3 物件鍵名稱的事件欄位名稱。這可讓您根據事件資料動態命名輸出檔案。                                                              |
-| `ml_when`          | 否       | String | 決定何時叫用 `ml_inference` 處理器的條件運算式。                     |
-| `tags_on_failure`  | 否       | List   | 當 `ml_inference` 處理器失敗或發生錯誤時，要新增至事件的標籤清單。             |
+| `host`             | 是      | 字串 | OpenSearch 主機的名稱。                                                                          |
+| `action_type`      | 是      | 字串 | 要執行的動作類型。目前僅支援 `batch_predict`。預設值為 `batch_predict`。 |
+| `model_id`         | 是      | 字串 | 要叫用的 ML 模型 ID。當 `service_name` 為 `bedrock` 時，您也可以將 `model_id` 設定為下列其中一個內建 Amazon Bedrock 模型 ID：`amazon.titan-embed-text-v2:0`、`amazon.titan-embed-image-v1` 或 `amazon.nova-2-multimodal-embeddings-v1:0`。若使用內建模型，處理器會直接在 Amazon Bedrock 中建立批次推論工作，而不會傳送請求至 OpenSearch 主機，且 `aws.job_sts_role_arn` 為必要項目。 |
+| `output_path`      | 是      | 字串 | 離線批次工作結果要寫入的 [Amazon Simple Storage Service (Amazon S3)](https://aws.amazon.com/s3/) 位置。                                      |
+| `aws.region`       | 是      | 字串 | OpenSearch Service 部署所在的 AWS 區域。                                                  |
+| `aws.sts_role_arn` | 否       | 字串 | 要擔任的 AWS Identity and Access Management (IAM) 角色的 Amazon Resource Name (ARN)。                                  |
+| `aws.sts_external_id` | 否    | 字串 | 擔任 IAM 角色時要使用的外部 ID。長度必須為 2--1224 個字元。 |
+| `aws.sts_header_overrides` | 否 | 對應表  | 擔任 IAM 角色時要使用的標頭覆寫對應表。最多 5 個標頭。 |
+| `aws.job_sts_role_arn` | 視情況 | 字串 | Amazon Bedrock 執行批次推論工作時所擔任之 IAM 角色的 ARN。當 `model_id` 為內建 Amazon Bedrock 模型 ID 時為必要項目。長度必須為 20--2048 個字元。 |
+| `service_name`     | 否       | 字串 | 託管推論所用模型的 AI 服務名稱。預設值為 `sagemaker` (Amazon SageMaker)。  |
+| `input_key`        | 否       | 字串 | 寫入批次工作結果時，要作為 S3 物件索引鍵名稱的事件欄位名稱。這可讓您根據事件資料動態命名輸出檔案。                                                              |
+| `ml_when`          | 否       | 字串 | 決定何時叫用 `ml_inference` 處理器的條件運算式。                     |
+| `tags_on_failure`  | 否       | 清單   | 當 `ml_inference` 處理器失敗或發生錯誤時，要新增至事件的標籤清單。             |
+| `max_batch_size`   | 否       | 整數 | 適用於 `service_name` 為 `sagemaker` 時。單一批次工作中要包含的事件數量上限。當收集的事件數量達到此值，或 1 分鐘內沒有新事件抵達時，處理器會建立批次工作。預設值為 `100`。 |
+| `retry_time_window` | 否      | 持續時間 | 批次工作請求遭到節流後，處理器保留事件以供重試的時間長度。無法在此時間範圍內處理的事件會被視為失敗。支援 ISO 8601 表示法字串（例如 `PT20.345S` 或 `PT15M`），以及以秒（`60s`）和毫秒（`1500ms`）表示的簡易表示法字串。預設值為 `PT10M`。 |
+| `retry_interval`   | 否       | 持續時間 | 適用於 `service_name` 為 `bedrock` 時。重試遭到節流的批次工作請求之間的等待時間。支援 ISO 8601 表示法字串（例如 `PT1M`），以及以秒（`60s`）和毫秒（`1500ms`）表示的簡易表示法字串。有效值為 3 秒至 5 分鐘。預設值為 `60s`。 |
+| `dlq`              | 否       | 物件 | 針對無法建立批次工作之事件的[死信佇列 (DLQ)]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/dlq/) 組態。若 DLQ 組態未指定 `region` 或 `sts_role_arn`，則會使用 `aws` 組態中的值。 |
 
 
 

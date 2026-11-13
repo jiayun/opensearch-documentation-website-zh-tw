@@ -89,7 +89,7 @@ config:
 
 ## 執行多個驗證網域
 
-我們建議至少新增一個其他驗證網域，例如 LDAP 或內部使用者資料庫，以支援不使用 SAML 的 OpenSearch API 存取。對於 OpenSearch Dashboards 及內部 OpenSearch Dashboards 伺服器使用者，您還必須新增另一個支援基本驗證的驗證網域。此驗證網域應放在鏈結中的第一個，且 `challenge` 旗標必須設為 `false`：
+建議您至少再新增一個其他驗證網域，例如 LDAP 或內部使用者資料庫，以支援不透過 SAML 存取 OpenSearch 的 API。對於 OpenSearch Dashboards 與內部 OpenSearch Dashboards 伺服器使用者，您也必須新增另一個支援基本驗證的驗證網域。此驗證網域應放在鏈結中的第一個位置，且 `challenge` 旗標必須設為 `false`：
 
 ```yml
 _meta:
@@ -121,6 +121,11 @@ config:
           type: noop
 ```
 
+基本驗證網域必須將 `challenge` 設為 `false`，且其 `order` 值必須設定得比 SAML 網域低，因為只有一個網域能對請求發出驗證挑戰。對於未附認證資訊的請求，Security 外掛程式會選取 `order` 中第一個具有 `challenge: true` 的網域，並傳送該網域的驗證挑戰。如果由基本驗證網域發出驗證挑戰，瀏覽器會顯示基本驗證對話方塊，而不會將使用者重新導向至 IdP。
+
+因此，為了讓 SAML 登入如預期運作，SAML 網域必須是第一個具有 `challenge: true` 的網域。由於 `challenge` 預設為 `true`，請在其他每個網域上明確設定 `challenge: false`，包括任何其他 SAML 網域。
+
+如需詳細資訊，請參閱 [challenge 設定]({{site.url}}{{site.baseurl}}/security/authentication-backends/basic-authc/#the-challenge-setting)。
 
 ## 身分提供者中繼資料
 
@@ -233,7 +238,7 @@ http_authenticator:
 
 ## 交換金鑰設定
 
-與其他通訊協定不同，SAML 並非設計用於在每次請求時交換使用者憑證。安全性外掛程式會以 SAML 回應換取一個儲存已驗證使用者屬性的輕量級 JWT。此權杖由您選擇的交換金鑰簽署。請注意，當您更換此金鑰時，所有以它簽署的權杖會立即失效。
+與其他通訊協定不同，SAML 並非設計用於在每次請求時交換使用者認證資訊。安全性外掛程式會以 SAML 回應換取一個儲存已驗證使用者屬性的輕量級 JWT。此權杖由您選擇的交換金鑰簽署。請注意，當您更換此金鑰時，所有以它簽署的權杖會立即失效。
 
 名稱 | 說明
 :--- | :---

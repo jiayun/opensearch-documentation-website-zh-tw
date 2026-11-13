@@ -7,7 +7,7 @@ grand_parent: Pipelines
 nav_order: 180
 ---
 
-# List to map 處理器
+# 清單轉對應處理器
 
 `list_to_map` 處理器會將事件中的物件清單轉換為目標鍵的對應，其中每個物件都包含 `key` 欄位。
 
@@ -17,14 +17,16 @@ nav_order: 180
 
 選項 | 必要 | 類型 | 說明
 :--- | :--- | :--- | :---
-`source` | 是 | 字串 | 含有 `key` 欄位、要轉換為所產生對應之鍵的物件清單。
-`target` | 否 | 字串 | 所產生對應的目標。未指定時，所產生的對應會放置在根節點中。
-`key` | 有條件 | 字串 | 要擷取為所產生對應中之鍵的欄位鍵。當 `use_source_key` 為 `false` 時必須指定。
-`use_source_key` | 否 | 布林值 | 當 `true` 時，所產生對應中的鍵會使用來源的原始鍵。預設為 `false`。
-`value_key` | 否 | 字串 | 指定時，來源清單所含物件中具有 `value_key` 的值會被擷取，並根據所產生的對應轉換為此選項指定的值。未指定時，來源清單所含的物件在對應時會保留其原始值。
-`extract_value` | 否 | 布林值 | 當 `true` 時，會擷取來源清單的物件值並加入所產生的對應。當 `false` 時，來源清單的物件值會依其在來源清單中的順序加入所產生的對應。預設為 `false`
-`flatten` | 否 | 布林值 | 當 `true` 時，所產生對應輸出中的值會根據 `flattened_element` 扁平化為單一項目。否則，對應至所產生對應中值的物件會以清單形式呈現。
-`flattened_element` | 有條件 | 字串 | 當 `flatten` 設為 `true` 時要保留的元素，可為 `first` 或 `last`。
+`source` | 是 | 字串 | 包含 `key` 欄位的物件清單，這些欄位將轉換為所產生對應中的鍵。
+`target` | 否 | 字串 | 所產生對應的目標。若未指定，產生的對應會放置在根節點中。
+`key` | 視條件而定 | 字串 | 要擷取為所產生對應中鍵的欄位鍵。若 `use_source_key` 為 `false`，則必須指定此選項。
+`use_source_key` | 否 | 布林值 | 若為 `true`，所產生對應中的鍵將使用來源中的原始鍵。預設為 `false`。
+`value_key` | 否 | 字串 | 若有指定，來源清單所含物件中指定為 `value_key` 的值會被擷取，並根據所產生的對應轉換為此選項所指定的值。若未指定，來源清單所含的物件在對應時會保留其原始值。
+`extract_value` | 否 | 布林值 | 若為 `true`，來源清單中的物件值會被擷取並新增至所產生的對應。若為 `false`，來源清單中的物件值會依其在來源清單中的原樣新增至所產生的對應。預設為 `false`
+`flatten` | 否 | 布林值 | 若為 `true`，所產生對應輸出中的值會依據 `flattened_element` 扁平化為單一項目。否則，對應至所產生對應中值的物件會以清單形式呈現。
+`flattened_element` | 視條件而定 | 字串 | 當 `flatten` 設定為 `true` 時要保留的元素，可為 `first` 或 `last`。預設為 `first`。
+`list_to_map_when` | 否 | 字串 | 用於判斷處理器是否對事件執行的[條件式運算式（`conditional expression`）]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/expression-syntax/)，例如 `/some-key == "test"`。根據預設，處理器會對所有事件執行。
+`tags_on_failure` | 否 | 清單 | 當處理器無法轉換清單時（例如 `source` 欄位不包含清單時），要新增至事件中繼資料的標記清單。
 
 ## 使用方式
 
