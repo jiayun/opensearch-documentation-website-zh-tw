@@ -11,7 +11,8 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # Ruby 3.4.5 is available on the runner used by the verified builds.
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
     outputs:
