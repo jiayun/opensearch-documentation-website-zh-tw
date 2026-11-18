@@ -8,6 +8,7 @@ has_toc: false
 nav_order: 30
 redirect_from:
   - /ml-commons-plugin/api/agent-apis/
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/agent-apis/index/
 ---
 
 # 代理程式 API

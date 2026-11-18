@@ -5,6 +5,7 @@ title: "索引請求快取"
 parent: Caching
 grand_parent: Improving search performance
 nav_order: 5
+canonical_url: https://docs.opensearch.org/latest/search-plugins/caching/request-cache/
 ---
 
 # 索引請求快取

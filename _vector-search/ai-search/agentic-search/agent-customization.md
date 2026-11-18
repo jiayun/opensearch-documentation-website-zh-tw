@@ -6,6 +6,7 @@ parent: Agentic search
 grand_parent: AI search
 nav_order: 10
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/vector-search/ai-search/agentic-search/agent-customization/
 ---
 
 # 設定代理式搜尋代理程式

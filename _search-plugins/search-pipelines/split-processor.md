@@ -6,6 +6,7 @@ nav_order: 140
 has_children: false
 parent: User-defined search processors
 grand_parent: Search pipelines
+canonical_url: https://docs.opensearch.org/latest/search-plugins/search-pipelines/split-processor/
 ---
 
 # 分割搜尋處理器

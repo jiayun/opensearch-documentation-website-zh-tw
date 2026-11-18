@@ -4,6 +4,7 @@ layout: default
 title: "探索 Dashboards 應用程式"
 parent: Getting started
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/dashboards/getting-started/explore-dashboards/
 ---
 
 # 探索 Dashboards 應用程式

@@ -8,6 +8,7 @@ great_grand_parent: AI search
 nav_order: 10
 redirect_from:
   - /automating-configurations/api/create-workflow/
+canonical_url: https://docs.opensearch.org/latest/vector-search/ai-search/workflows/api/create-workflow/
 ---
 
 # 建立或更新工作流程 API

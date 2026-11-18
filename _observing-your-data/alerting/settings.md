@@ -6,6 +6,7 @@ parent: Alerting
 nav_order: 70
 redirect_from:
   - /monitoring-plugins/alerting/settings/
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/alerting/settings/
 ---
 
 # 警示設定

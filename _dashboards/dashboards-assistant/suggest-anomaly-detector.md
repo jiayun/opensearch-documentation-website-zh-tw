@@ -5,6 +5,7 @@ title: "異常偵測器建議"
 parent: OpenSearch Assistant for OpenSearch Dashboards
 nav_order: 20
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/dashboards/dashboards-assistant/suggest-anomaly-detector/
 ---
 
 # 異常偵測器建議

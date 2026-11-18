@@ -4,6 +4,7 @@ layout: default
 title: "多重詞彙向量"
 parent: Document APIs
 nav_order: 80
+canonical_url: https://docs.opensearch.org/latest/api-reference/document-apis/mtermvectors/
 ---
 
 # 多重詞彙向量 API

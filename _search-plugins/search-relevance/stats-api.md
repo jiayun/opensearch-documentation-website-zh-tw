@@ -6,6 +6,7 @@ nav_order: 65
 parent: Compare Search Results
 grand_parent: Optimizing search quality
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/search-plugins/search-relevance/stats-api/
 ---
 
 # Search Relevance Stats API

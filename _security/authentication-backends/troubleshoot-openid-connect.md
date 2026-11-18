@@ -7,6 +7,7 @@ grand_parent: Authentication backends
 nav_order: 10
 redirect_from:
   - /troubleshoot/openid-connect/
+canonical_url: https://docs.opensearch.org/latest/security/authentication-backends/troubleshoot-openid-connect/
 ---
 
 # OpenID Connect 疑難排解

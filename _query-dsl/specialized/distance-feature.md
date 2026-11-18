@@ -5,6 +5,7 @@ title: "距離功能"
 parent: Specialized queries
 nav_order: 5
 has_math: true
+canonical_url: https://docs.opensearch.org/latest/query-dsl/specialized/distance-feature/
 ---
 
 # 距離功能查詢

@@ -4,6 +4,7 @@ layout: default
 title: "ML Commons 叢集設定"
 has_children: false
 nav_order: 120
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/cluster-settings/
 ---
 
 # ML 叢集設定

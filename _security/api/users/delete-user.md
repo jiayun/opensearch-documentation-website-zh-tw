@@ -5,6 +5,7 @@ title: "刪除使用者"
 parent: Internal user APIs
 grand_parent: Security APIs
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/security/api/users/delete-user/
 ---
 
 # 刪除使用者 API

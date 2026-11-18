@@ -5,6 +5,8 @@ title: hasTags()
 parent: Functions
 grand_parent: Pipelines
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/data-prepper/pipelines/has-tags/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/pipelines/has-tags/
 ---
 
 <!-- vale off -->

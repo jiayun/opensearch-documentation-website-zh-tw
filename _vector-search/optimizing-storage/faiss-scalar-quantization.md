@@ -9,6 +9,7 @@ has_children: false
 has_math: true
 redirect_from:
   - /vector-search/optimizing-storage/faiss-16-bit-quantization/
+canonical_url: https://docs.opensearch.org/latest/vector-search/optimizing-storage/faiss-scalar-quantization/
 ---
 
 # Faiss 純量量化

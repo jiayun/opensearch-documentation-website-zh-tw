@@ -5,6 +5,7 @@ title: "在 OpenSearch Dashboards 中設定 APM"
 nav_order: 20
 parent: Application performance monitoring
 grand_parent: Observability workspace apps
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/apm/configuring-apm/
 ---
 
 # 在 OpenSearch Dashboards 中設定 APM

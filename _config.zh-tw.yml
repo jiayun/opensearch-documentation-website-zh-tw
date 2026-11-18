@@ -1,6 +1,7 @@
 url: "https://jiayun.github.io"
 baseurl: "/opensearch-documentation-website-zh-tw/3.9"
 latesturl: "/opensearch-documentation-website-zh-tw/3.9"
+translation_archive: true
 
 # Overriding GA tracking
 ga_tracking: null

@@ -5,6 +5,7 @@ title: "修補允許清單"
 parent: Allow list APIs
 grand_parent: Security APIs
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/security/api/allowlist/patch-allowlist/
 ---
 
 # 修補允許清單 API

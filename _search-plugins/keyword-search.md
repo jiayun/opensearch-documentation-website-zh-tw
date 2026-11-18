@@ -4,6 +4,7 @@ layout: default
 title: "關鍵字搜尋"
 has_children: false
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/search-plugins/keyword-search/
 ---
 
 # 關鍵字搜尋

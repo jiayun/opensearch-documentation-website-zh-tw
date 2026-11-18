@@ -5,6 +5,8 @@ title: "存取遷移主控台"
 nav_order: 1
 parent: Migration Console
 permalink: /classic/migration-assistant/migration-console/accessing-the-migration-console/
+canonical_url: https://docs.opensearch.org/latest/classic/migration-assistant/migration-console/accessing-the-migration-console/
+redirect_to: https://docs.opensearch.org/latest/classic/migration-assistant/migration-console/accessing-the-migration-console/
 ---
 
 # 存取遷移主控台

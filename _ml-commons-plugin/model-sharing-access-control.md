@@ -5,6 +5,7 @@ title: "透過資源共用進行模型存取控制"
 parent: Integrating ML models
 has_children: false
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/model-sharing-access-control/
 ---
 
 # 透過資源共用進行模型存取控制

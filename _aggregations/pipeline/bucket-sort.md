@@ -4,6 +4,7 @@ layout: default
 title: "桶排序"
 parent: Pipeline aggregations
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/aggregations/pipeline/bucket-sort/
 ---
 
 # 桶排序彙總

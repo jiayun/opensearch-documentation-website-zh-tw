@@ -8,6 +8,7 @@ redirect_from:
 nav_order: 260
 has_children: false
 has_toc: false
+canonical_url: https://docs.opensearch.org/latest/mappings/mapping-parameters/store/
 ---
 
 # Store 對應參數

@@ -5,6 +5,7 @@ title: "亞美尼亞語"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/analyzers/language-analyzers/armenian/
 ---
 
 # 亞美尼亞語分析器

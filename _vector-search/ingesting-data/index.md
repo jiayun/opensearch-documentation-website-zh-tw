@@ -7,6 +7,7 @@ has_children: true
 has_toc: false
 redirect_from:
   - /vector-search/ingesting-data/
+canonical_url: https://docs.opensearch.org/latest/vector-search/ingesting-data/index/
 ---
 
 # 將資料匯入向量索引

@@ -4,6 +4,7 @@ layout: default
 title: "文字分段"
 parent: Ingest processors
 nav_order: 258
+canonical_url: https://docs.opensearch.org/latest/ingest-pipelines/processors/text-chunking/
 ---
 
 # 文字分段處理器

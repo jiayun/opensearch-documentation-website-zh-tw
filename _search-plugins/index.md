@@ -19,6 +19,7 @@ search_methods:
 - heading: AI 搜尋
   description: 超越向量嵌入的 AI 驅動搜尋功能。結合任何 AI 服務來豐富搜尋與匯入流程，支援完整的 AI 強化搜尋使用情境。
   link: /vector-search/ai-search/
+canonical_url: https://docs.opensearch.org/latest/search-plugins/
 ---
 
 # 搜尋

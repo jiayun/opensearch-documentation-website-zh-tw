@@ -8,6 +8,7 @@ nav_order: 20
 redirect_from:
   - /api-reference/msearch-template/
   - /api-reference/search-apis/msearch-template/
+canonical_url: https://docs.opensearch.org/latest/api-reference/search-apis/search-template/msearch-template/
 ---
 
 # 多重搜尋範本 API

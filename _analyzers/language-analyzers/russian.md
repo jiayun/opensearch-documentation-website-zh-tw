@@ -5,6 +5,7 @@ title: "俄文"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 280
+canonical_url: https://docs.opensearch.org/latest/analyzers/language-analyzers/russian/
 ---
 
 # 俄文分析器

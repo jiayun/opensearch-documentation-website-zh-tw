@@ -4,6 +4,7 @@ layout: default
 title: "詞幹還原覆寫"
 parent: Token filters
 nav_order: 400
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/stemmer-override/
 ---
 
 # 詞幹還原覆寫詞元篩選器

@@ -4,6 +4,7 @@ layout: default
 title: WAF
 parent: Supported log types
 nav_order: 95
+canonical_url: https://docs.opensearch.org/latest/security-analytics/log-types-reference/waf/
 ---
 
 # WAF 記錄檔類型

@@ -5,6 +5,8 @@ title: "提示與最佳做法"
 nav_order: 45
 parent: Synthetic data generation
 grand_parent: Additional features
+canonical_url: https://docs.opensearch.org/latest/benchmark/features/synthetic-data-generation/tips/
+redirect_to: https://docs.opensearch.org/latest/benchmark/features/synthetic-data-generation/tips/
 ---
 
 # 提示與最佳做法

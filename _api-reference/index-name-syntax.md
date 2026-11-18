@@ -3,6 +3,7 @@
 layout: default
 title: "索引名稱語法"
 nav_order: 155
+canonical_url: https://docs.opensearch.org/latest/api-reference/index-name-syntax/
 ---
 
 # 索引名稱語法

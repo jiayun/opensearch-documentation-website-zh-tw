@@ -4,6 +4,7 @@ layout: default
 title: "工作區存取控制清單"
 parent: Workspaces
 nav_order: 3
+canonical_url: https://docs.opensearch.org/latest/dashboards/workspace/workspace-acl/
 ---
 
 # 工作區存取控制清單

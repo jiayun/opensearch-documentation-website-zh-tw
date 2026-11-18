@@ -4,6 +4,7 @@ layout: default
 title: Classic
 parent: Token filters
 nav_order: 50
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/classic/
 ---
 
 # Classic 詞元篩選器

@@ -4,6 +4,7 @@ layout: default
 title: "多重比對"
 parent: Full-text queries
 nav_order: 50
+canonical_url: https://docs.opensearch.org/latest/query-dsl/full-text/multi-match/
 ---
 
 # 多重比對查詢

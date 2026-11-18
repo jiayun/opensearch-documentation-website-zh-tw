@@ -4,6 +4,7 @@ layout: default
 title: "可用性與復原設定"
 parent: Configuring OpenSearch
 nav_order: 100
+canonical_url: https://docs.opensearch.org/latest/install-and-configure/configuring-opensearch/availability-recovery/
 ---
 
 # 可用性與復原設定

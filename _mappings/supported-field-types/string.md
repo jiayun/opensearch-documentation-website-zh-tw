@@ -10,6 +10,7 @@ redirect_from:
   - /field-types/supported-field-types/string/
   - /opensearch/supported-field-types/string/
   - /field-types/string/
+canonical_url: https://docs.opensearch.org/latest/mappings/supported-field-types/string/
 ---
 
 # 字串欄位類型

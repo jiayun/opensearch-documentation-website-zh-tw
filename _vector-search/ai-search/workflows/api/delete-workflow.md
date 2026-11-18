@@ -8,6 +8,7 @@ great_grand_parent: AI search
 nav_order: 80
 redirect_from:
   - /automating-configurations/api/delete-workflow/
+canonical_url: https://docs.opensearch.org/latest/vector-search/ai-search/workflows/api/delete-workflow/
 ---
 
 # Delete Workflow API

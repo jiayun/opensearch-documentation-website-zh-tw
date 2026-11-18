@@ -7,6 +7,8 @@ has_children: true
 has_toc: false
 redirect_from: 
   - /clients/python/
+canonical_url: https://docs.opensearch.org/latest/clients/python-low-level/
+redirect_to: https://docs.opensearch.org/latest/clients/python-low-level/
 ---
 
 # Python 用戶端

@@ -5,6 +5,7 @@ title: "刪除模型"
 parent: Model APIs
 grand_parent: ML APIs
 nav_order: 47
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/model-apis/delete-model/
 ---
 
 # 刪除模型 API

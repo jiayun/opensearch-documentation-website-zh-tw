@@ -7,6 +7,7 @@ grand_parent: Index APIs
 nav_order: 10
 redirect_from:
   - /api-reference/index-apis/update-alias/
+canonical_url: https://docs.opensearch.org/latest/api-reference/alias/create-alias/
 ---
 
 # 建立或更新索引別名 API

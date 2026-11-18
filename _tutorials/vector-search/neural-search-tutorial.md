@@ -18,6 +18,7 @@ steps:
   link: /tutorials/vector-search/neural-search-tutorial/#step-3-ingest-data
 - heading: 搜尋資料
   link: /tutorials/vector-search/neural-search-tutorial/#step-4-search-the-data
+canonical_url: https://docs.opensearch.org/latest/tutorials/vector-search/neural-search-tutorial/
 ---
 
 # 語意搜尋與混合搜尋入門

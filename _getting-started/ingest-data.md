@@ -4,6 +4,7 @@ layout: default
 title: "匯入資料"
 nav_order: 40
 description: "開始將資料匯入 OpenSearch，包括大量將多份文件編製索引，並使用範例資料進行實驗。"
+canonical_url: https://docs.opensearch.org/latest/getting-started/ingest-data/
 ---
 
 # 將您的資料匯入 OpenSearch

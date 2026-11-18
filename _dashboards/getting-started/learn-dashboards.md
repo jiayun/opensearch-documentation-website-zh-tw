@@ -5,6 +5,7 @@ title: "了解主要應用程式"
 parent: Getting started
 nav_order: 25
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/dashboards/getting-started/learn-dashboards/
 ---
 
 # 了解主要應用程式

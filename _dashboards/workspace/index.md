@@ -6,6 +6,7 @@ parent: Workspaces
 nav_order: 0
 redirect_from:
   - /dashboards/workspace/
+canonical_url: https://docs.opensearch.org/latest/dashboards/workspace/index/
 ---
 
 # 工作區入門

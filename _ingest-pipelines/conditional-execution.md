@@ -4,6 +4,7 @@ layout: default
 title: "條件式執行"
 has_children: true
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/ingest-pipelines/conditional-execution/
 ---
 
 # 條件式執行

@@ -4,6 +4,7 @@ layout: default
 title: "對應 API"
 parent: Security Analytics APIs
 nav_order: 45
+canonical_url: https://docs.opensearch.org/latest/security-analytics/api-tools/mappings-api/
 ---
 
 # 對應 API

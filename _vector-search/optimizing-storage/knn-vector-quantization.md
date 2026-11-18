@@ -34,6 +34,7 @@ inside_cards:
 - heading: 二進位量化
   description: 為 Faiss 引擎使用內建的二進位量化
   link: /vector-search/optimizing-storage/binary-quantization/
+canonical_url: https://docs.opensearch.org/latest/vector-search/optimizing-storage/knn-vector-quantization/
 ---
 
 # 向量量化

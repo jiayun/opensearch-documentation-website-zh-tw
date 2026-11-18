@@ -5,6 +5,7 @@ title: "取得使用者"
 parent: Internal user APIs
 grand_parent: Security APIs
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/security/api/users/get-users/
 ---
 
 # 取得使用者 API

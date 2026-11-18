@@ -8,6 +8,7 @@ redirect_from:
 nav_order: 170
 has_children: false
 has_toc: false
+canonical_url: https://docs.opensearch.org/latest/mappings/mapping-parameters/index-prefixes/
 ---
 
 # 索引前綴對應參數

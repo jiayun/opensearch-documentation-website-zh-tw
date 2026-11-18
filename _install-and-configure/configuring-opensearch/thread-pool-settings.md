@@ -4,6 +4,7 @@ layout: default
 title: "執行緒集區設定"
 parent: Configuring OpenSearch
 nav_order: 110
+canonical_url: https://docs.opensearch.org/latest/install-and-configure/configuring-opensearch/thread-pool-settings/
 ---
 
 # 執行緒集區設定

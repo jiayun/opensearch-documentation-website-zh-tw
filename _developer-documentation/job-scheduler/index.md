@@ -9,6 +9,7 @@ redirect_from:
   - /monitoring-your-cluster/job-scheduler/
   - /monitoring-your-cluster/job-scheduler/index/
   - /developer-documentation/job-scheduler/
+canonical_url: https://docs.opensearch.org/latest/developer-documentation/job-scheduler/index/
 ---
 
 # Job Scheduler

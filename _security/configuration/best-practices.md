@@ -4,6 +4,7 @@ layout: default
 title: "最佳做法"
 parent: Configuration
 nav_order: 5
+canonical_url: https://docs.opensearch.org/latest/security/configuration/best-practices/
 ---
 
 # OpenSearch 安全性最佳做法

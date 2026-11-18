@@ -5,6 +5,7 @@ title: "印尼文"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 210
+canonical_url: https://docs.opensearch.org/latest/analyzers/language-analyzers/indonesian/
 ---
 
 # 印尼文分析器

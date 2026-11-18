@@ -6,6 +6,7 @@ nav_order: 70
 parent: Search Relevance Workbench
 grand_parent: Optimizing search quality
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/search-plugins/search-relevance/regularly-scheduled-experiments/
 ---
 
 # 監控搜尋品質

@@ -5,6 +5,7 @@ title: "Span within 查詢"
 parent: Span queries
 grand_parent: Query DSL
 nav_order: 90
+canonical_url: https://docs.opensearch.org/latest/query-dsl/span/span-within/
 ---
 
 # Span within 查詢

@@ -4,6 +4,7 @@ layout: default
 title: "刪除任務"
 parent: Tasks APIs
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/api-reference/tasks/delete-task/
 ---
 
 # Delete Task API

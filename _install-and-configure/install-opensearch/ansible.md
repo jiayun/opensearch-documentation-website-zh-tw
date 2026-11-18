@@ -6,6 +6,7 @@ parent: Installing OpenSearch
 nav_order: 35
 redirect_from:
   - /opensearch/install/ansible/
+canonical_url: https://docs.opensearch.org/latest/install-and-configure/install-opensearch/ansible/
 ---
 
 {% assign os_major = site.opensearch_major_minor_version | split: "." | first %}

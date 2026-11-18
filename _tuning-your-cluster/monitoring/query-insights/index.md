@@ -10,6 +10,7 @@ redirect_from:
   - /query-insights/
   - /observing-your-data/query-insights/
   - /tuning-your-cluster/monitoring/query-insights/
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/monitoring/query-insights/index/
 ---
 
 # 查詢洞察

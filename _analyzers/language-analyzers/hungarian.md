@@ -5,6 +5,7 @@ title: "匈牙利文"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 200
+canonical_url: https://docs.opensearch.org/latest/analyzers/language-analyzers/hungarian/
 ---
 
 # 匈牙利文分析器

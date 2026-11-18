@@ -7,6 +7,8 @@ grand_parent: Pipelines
 nav_order: 50
 redirect_from:
   - /data-prepper/pipelines/configuration/processors/convert_entry_type/
+canonical_url: https://docs.opensearch.org/latest/data-prepper/pipelines/configuration/processors/convert-entry-type/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/pipelines/configuration/processors/convert-entry-type/
 ---
 
 # 轉換類型處理器

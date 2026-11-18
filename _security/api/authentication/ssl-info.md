@@ -5,6 +5,7 @@ title: "SSL 資訊"
 parent: Authentication APIs
 grand_parent: Security APIs
 nav_order: 50
+canonical_url: https://docs.opensearch.org/latest/security/api/authentication/ssl-info/
 ---
 
 # SSL Info API

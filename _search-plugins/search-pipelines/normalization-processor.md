@@ -7,6 +7,7 @@ has_children: false
 has_math: true
 parent: User-defined search processors
 grand_parent: Search pipelines
+canonical_url: https://docs.opensearch.org/latest/search-plugins/search-pipelines/normalization-processor/
 ---
 
 # 正規化處理器

@@ -6,6 +6,7 @@ parent: Additional plugins
 grand_parent: Managing OpenSearch plugins
 nav_order: 20
 
+canonical_url: https://docs.opensearch.org/latest/install-and-configure/additional-plugins/ingest-attachment-plugin/
 ---
 
 # Ingest-attachment 外掛程式

@@ -8,6 +8,7 @@ parent: String field types
 grand_parent: Supported field types
 redirect_from:
   - /field-types/supported-field-types/match-only-text/
+canonical_url: https://docs.opensearch.org/latest/mappings/supported-field-types/match-only-text/
 ---
 
 # 僅比對文字欄位類型

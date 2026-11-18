@@ -5,6 +5,7 @@ title: "追蹤"
 nav_order: 30
 parent: Application performance monitoring
 grand_parent: Observability workspace apps
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/exploring-observability-data/discover-traces/
 ---
 
 # 在 Discover 中分析追蹤

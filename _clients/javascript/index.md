@@ -7,6 +7,8 @@ has_toc: false
 nav_order: 40
 redirect_from:
   - /clients/javascript/
+canonical_url: https://docs.opensearch.org/latest/clients/javascript/index/
+redirect_to: https://docs.opensearch.org/latest/clients/javascript/index/
 ---
 
 # JavaScript 用戶端

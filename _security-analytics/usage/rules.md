@@ -4,6 +4,7 @@ layout: default
 title: "使用偵測規則"
 parent: Using Security Analytics
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/security-analytics/usage/rules/
 ---
 
 # 使用偵測規則

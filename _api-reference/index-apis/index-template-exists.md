@@ -5,6 +5,7 @@ title: "索引範本是否存在"
 parent: Index templates
 grand_parent: Index APIs
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/api-reference/index-apis/index-template-exists/
 ---
 
 # 索引範本是否存在

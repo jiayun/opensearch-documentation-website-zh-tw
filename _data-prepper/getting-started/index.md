@@ -21,6 +21,8 @@ steps:
 - heading: 將記錄資料匯入 OpenSearch
   description: 建立管線，剖析原始 Apache 存取記錄、將其寫入 OpenSearch 索引，並讓您搜尋剖析後的欄位。
   link: /data-prepper/getting-started/ingesting-log-data/
+canonical_url: https://docs.opensearch.org/latest/data-prepper/getting-started/index/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/getting-started/
 ---
 
 # OpenSearch Data Prepper 入門

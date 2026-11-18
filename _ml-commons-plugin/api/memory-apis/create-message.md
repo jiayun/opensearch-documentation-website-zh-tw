@@ -5,6 +5,7 @@ title: "建立或更新訊息"
 parent: Memory APIs
 grand_parent: ML APIs
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/memory-apis/create-message/
 ---
 
 # 建立或更新訊息 API

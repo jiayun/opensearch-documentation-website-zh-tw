@@ -5,6 +5,7 @@ title: "刪除記憶"
 parent: Memory APIs
 grand_parent: ML APIs
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/memory-apis/delete-memory/
 ---
 
 # 刪除記憶 API

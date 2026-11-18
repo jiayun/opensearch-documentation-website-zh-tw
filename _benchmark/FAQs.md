@@ -3,6 +3,8 @@
 layout: default
 title: "常見問題"
 nav_order: 115
+canonical_url: https://docs.opensearch.org/latest/benchmark/FAQs/
+redirect_to: https://docs.opensearch.org/latest/benchmark/FAQs/
 ---
 
 # OpenSearch Benchmark 常見問題

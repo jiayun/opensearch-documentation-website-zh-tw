@@ -5,6 +5,7 @@ title: "建立以彙總為基礎的視覺化"
 parent: Creating visualizations in the Visualize application
 grand_parent: Building data visualizations
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/dashboards/visualize/visualize-app/aggregation-based-viz/
 ---
 
 # 建立以彙總為基礎的視覺化

@@ -4,6 +4,7 @@ layout: default
 title: "可變寬度直方圖"
 parent: Bucket aggregations
 nav_order: 210
+canonical_url: https://docs.opensearch.org/latest/aggregations/bucket/variable-width-histogram/
 ---
 
 # 可變寬度直方圖彙總

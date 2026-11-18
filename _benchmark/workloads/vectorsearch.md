@@ -4,6 +4,8 @@ layout: default
 title: "向量搜尋"
 parent: Workload types
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/benchmark/workloads/vectorsearch/
+redirect_to: https://docs.opensearch.org/latest/benchmark/workloads/vectorsearch/
 ---
 
 # 向量搜尋工作負載

@@ -6,6 +6,7 @@ parent: Bucket aggregations
 nav_order: 40
 redirect_from:
   - /query-dsl/aggregations/bucket/diversified-sampler/
+canonical_url: https://docs.opensearch.org/latest/aggregations/bucket/diversified-sampler/
 ---
 
 # 多樣化取樣器彙總

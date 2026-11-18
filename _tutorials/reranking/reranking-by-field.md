@@ -6,6 +6,7 @@ parent: Reranking search results
 nav_order: 120
 redirect_from:
   - /vector-search/tutorials/reranking/reranking-by-field/
+canonical_url: https://docs.opensearch.org/latest/tutorials/reranking/reranking-by-field/
 ---
 
 # 使用 Cohere Rerank 依欄位重新排名搜尋結果

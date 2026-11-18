@@ -5,6 +5,7 @@ title: "執行直接查詢"
 parent: Data source APIs
 nav_order: 10
 grand_parent: SQL and PPL API
+canonical_url: https://docs.opensearch.org/latest/sql-and-ppl/sql-and-ppl-api/data-source-apis/execute-direct-query/
 ---
 
 # 執行直接查詢 API

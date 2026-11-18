@@ -4,6 +4,7 @@ layout: default
 title: Truncate
 parent: Token filters
 nav_order: 440
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/truncate/
 ---
 
 # Truncate 詞元篩選器

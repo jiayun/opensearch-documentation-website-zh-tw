@@ -13,6 +13,7 @@ redirect_from:
   - /security/index/
   - /troubleshoot/
   - /troubleshoot/index/
+canonical_url: https://docs.opensearch.org/latest/security/
 ---
 
 # 關於 OpenSearch 的安全性

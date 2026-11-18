@@ -4,6 +4,7 @@ layout: default
 title: "ICU 轉換"
 parent: Token filters
 nav_order: 175
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/icu-transform/
 ---
 
 # ICU 轉換詞元篩選器

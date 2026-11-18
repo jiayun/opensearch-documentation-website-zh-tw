@@ -4,6 +4,7 @@ layout: default
 title: Limit
 parent: Token filters
 nav_order: 250
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/limit/
 ---
 
 # Limit 詞元篩選器

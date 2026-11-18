@@ -4,6 +4,7 @@ layout: default
 title: "取得已儲存指令碼"
 parent: Script APIs
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/api-reference/script-apis/get-stored-script/
 ---
 
 # 取得已儲存指令碼 API

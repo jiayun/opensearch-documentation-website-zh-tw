@@ -4,6 +4,7 @@ layout: default
 title: Keyword marker
 parent: Token filters
 nav_order: 200
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/keyword-marker/
 ---
 
 # Keyword marker 詞元篩選器

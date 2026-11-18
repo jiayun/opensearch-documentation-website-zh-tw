@@ -10,6 +10,7 @@ redirect_from:
   - /api-reference/security/configuration/
   - /api-reference/security/configuration/index/
   - /security/api/configuration/
+canonical_url: https://docs.opensearch.org/latest/security/api/configuration/index/
 ---
 
 # 安全性組態 API

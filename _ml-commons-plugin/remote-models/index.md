@@ -9,6 +9,7 @@ nav_order: 60
 redirect_from: 
   - /ml-commons-plugin/extensibility/index/
   - /ml-commons-plugin/remote-models/
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/remote-models/index/
 ---
 
 # 連線至外部託管的模型

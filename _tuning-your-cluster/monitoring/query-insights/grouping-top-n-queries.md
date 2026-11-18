@@ -7,6 +7,7 @@ grand_parent: Monitoring your cluster
 nav_order: 20
 redirect_from:
   - /observing-your-data/query-insights/grouping-top-n-queries/
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/monitoring/query-insights/grouping-top-n-queries/
 ---
 
 # 將前 N 筆查詢分組

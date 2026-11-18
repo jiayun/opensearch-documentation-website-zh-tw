@@ -4,6 +4,7 @@ layout: default
 title: "詞項集合"
 parent: Term-level queries
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/query-dsl/term/terms-set/
 ---
 
 # 詞項集合查詢

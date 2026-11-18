@@ -5,6 +5,7 @@ title: "搜尋模型群組"
 parent: Model group APIs
 grand_parent: ML APIs
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/model-group-apis/search-model-group/
 ---
 
 # 搜尋模型群組 API

@@ -8,6 +8,7 @@ redirect_from:
   - /opensearch/query-dsl/compound/bool/
   - /opensearch/query-dsl/bool/
   - /query-dsl/query-dsl/compound/bool/
+canonical_url: https://docs.opensearch.org/latest/query-dsl/compound/bool/
 ---
 
 # 布林查詢

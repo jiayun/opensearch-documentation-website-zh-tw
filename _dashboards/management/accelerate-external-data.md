@@ -4,6 +4,7 @@ layout: default
 title: "使用 OpenSearch 索引最佳化查詢效能"
 parent: Connecting data sources
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/dashboards/management/accelerate-external-data/
 ---
 
 # 使用 OpenSearch 索引最佳化查詢效能

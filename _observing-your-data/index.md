@@ -43,6 +43,7 @@ getting_started_cards:
 - heading: 開始使用指標分析
   description: 將 OpenSearch 連線至 Prometheus 資料來源，然後在 Metric analytics 中使用 PPL 查詢並視覺化指標。
   link: /observing-your-data/prometheusmetrics/
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/
 ---
 
 # 可觀測性

@@ -5,6 +5,7 @@ title: "叢集重新路由"
 nav_order: 47
 parent: Cluster APIs
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/api-reference/cluster-api/cluster-reroute/
 ---
 
 # 叢集重新路由 API

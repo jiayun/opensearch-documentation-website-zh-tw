@@ -6,6 +6,7 @@ nav_order: 15
 parent: Monitors
 grand_parent: Alerting
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/alerting/per-cluster-metrics-monitors/
 ---
 
 # 每個叢集指標監視器 (Per cluster metrics monitors)

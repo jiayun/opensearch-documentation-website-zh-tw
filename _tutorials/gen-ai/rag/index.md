@@ -55,6 +55,7 @@ conversational_search:
   - <b>平台：</b>OpenSearch
   - <b>模型：</b>Qwen3（或其他在本機託管的模型）
   - <b>部署：</b>Ollama 或其他與 OpenAI 相容的本機伺服器
+canonical_url: https://docs.opensearch.org/latest/tutorials/gen-ai/rag/index/
 ---
 
 # RAG 教學

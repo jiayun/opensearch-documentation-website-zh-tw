@@ -8,6 +8,7 @@ nav_order: 140
 redirect_from:
   - /vector-search/tutorials/rag/rag-deepseek-r1-sagemaker/
   - /tutorials/vector-search/rag/rag-deepseek-r1-sagemaker/
+canonical_url: https://docs.opensearch.org/latest/tutorials/gen-ai/rag/rag-deepseek-r1-sagemaker/
 ---
 
 # 在 Amazon SageMaker 中使用 DeepSeek-R1 實作 RAG

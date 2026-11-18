@@ -5,6 +5,7 @@ title: "服務"
 nav_order: 40
 parent: Application performance monitoring
 grand_parent: Observability workspace apps
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/apm/services/
 ---
 
 # 服務

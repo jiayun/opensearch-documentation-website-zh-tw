@@ -5,6 +5,8 @@ title: "Solr 回填指南"
 nav_order: 2
 parent: Solr migration
 permalink: /migration-assistant/solr-migration/solr-backfill-guide/
+canonical_url: https://docs.opensearch.org/latest/migration-assistant/solr-migration/solr-backfill-guide/
+redirect_to: https://docs.opensearch.org/latest/migration-assistant/solr-migration/solr-backfill-guide/
 ---
 
 # Solr 回填指南

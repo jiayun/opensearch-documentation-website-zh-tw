@@ -7,6 +7,7 @@ has_children: false
 redirect_from:
   - /dashboards/im-dashboards/
   - /dashboards/admin-ui-index/
+canonical_url: https://docs.opensearch.org/latest/dashboards/im-dashboards/index/
 ---
 
 # OpenSearch Dashboards 中的索引管理

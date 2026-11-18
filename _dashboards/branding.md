@@ -4,6 +4,7 @@ layout: default
 title: "自訂品牌"
 parent: Settings and administration
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/dashboards/branding/
 ---
 
 # 自訂品牌

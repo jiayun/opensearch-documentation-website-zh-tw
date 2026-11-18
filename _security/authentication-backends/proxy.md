@@ -6,6 +6,7 @@ parent: Authentication backends
 nav_order: 65
 redirect_from:
  - /security-plugin/configuration/proxy/
+canonical_url: https://docs.opensearch.org/latest/security/authentication-backends/proxy/
 ---
 
 # 以代理程式為基礎的驗證

@@ -8,6 +8,7 @@ has_children: true
 has_toc: false
 redirect_from:
   - /security/api/users/
+canonical_url: https://docs.opensearch.org/latest/security/api/users/index/
 ---
 
 # 內部使用者 API

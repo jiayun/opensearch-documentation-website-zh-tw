@@ -5,6 +5,7 @@ title: "更新模型"
 parent: Model APIs
 grand_parent: ML APIs
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/model-apis/update-model/
 ---
 
 # 更新模型 API

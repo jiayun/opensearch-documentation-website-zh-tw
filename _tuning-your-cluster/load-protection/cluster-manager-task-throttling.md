@@ -7,6 +7,7 @@ parent: Load protection
 has_children: false
 redirect_from:
   - /tuning-your-cluster/cluster-manager-task-throttling/
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/load-protection/cluster-manager-task-throttling/
 ---
 
 # 叢集管理員任務節流

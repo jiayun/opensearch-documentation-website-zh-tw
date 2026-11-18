@@ -7,6 +7,7 @@ parent: Optimizing vector storage
 has_children: false
 redirect_from:
   - /search-plugins/knn/disk-based-vector-search/
+canonical_url: https://docs.opensearch.org/latest/vector-search/optimizing-storage/disk-based-vector-search/
 ---
 
 # 磁碟式向量搜尋

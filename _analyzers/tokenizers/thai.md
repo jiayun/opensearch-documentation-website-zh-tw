@@ -4,6 +4,7 @@ layout: default
 title: "泰文"
 parent: Tokenizers
 nav_order: 140
+canonical_url: https://docs.opensearch.org/latest/analyzers/tokenizers/thai/
 ---
 
 # 泰文斷詞器

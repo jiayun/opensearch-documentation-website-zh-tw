@@ -4,6 +4,7 @@ layout: default
 title: "詞彙分隔符圖"
 parent: Token filters
 nav_order: 480
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/word-delimiter-graph/
 ---
 
 # 詞彙分隔符圖詞元篩選器

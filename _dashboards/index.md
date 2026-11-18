@@ -22,6 +22,7 @@ getting_started_cards:
 - heading: 瀏覽 OpenSearch Dashboards
   description: 了解首頁與左側導覽面板的版面配置
   link: /dashboards/navigating-ui/
+canonical_url: https://docs.opensearch.org/latest/dashboards/
 ---
 
 # OpenSearch Dashboards

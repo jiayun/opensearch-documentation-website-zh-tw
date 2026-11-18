@@ -7,6 +7,8 @@ parent: Command reference
 grand_parent: Reference
 redirect_from:
   - /benchmark/commands/generate-data/
+canonical_url: https://docs.opensearch.org/latest/benchmark/reference/commands/generate-data/
+redirect_to: https://docs.opensearch.org/latest/benchmark/reference/commands/generate-data/
 ---
 
 <!-- vale off -->

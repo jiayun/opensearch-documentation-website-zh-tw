@@ -5,6 +5,7 @@ title: "代理程式記憶保留"
 parent: Agentic memory
 grand_parent: Memory and context
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/agentic-memory-retention/
 ---
 
 # 代理程式記憶保留

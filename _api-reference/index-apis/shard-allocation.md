@@ -5,6 +5,7 @@ title: "分片配置"
 parent: Index blocks and allocation
 grand_parent: Index APIs
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/api-reference/index-apis/shard-allocation/
 ---
 
 # 分片配置篩選

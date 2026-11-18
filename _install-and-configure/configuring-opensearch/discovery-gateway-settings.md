@@ -4,6 +4,7 @@ layout: default
 title: "探索與閘道設定"
 parent: Configuring OpenSearch
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/install-and-configure/configuring-opensearch/discovery-gateway-settings/
 ---
 
 # 探索與閘道設定

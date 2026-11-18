@@ -5,6 +5,7 @@ title: "搜尋代理記憶"
 parent: Agentic memory APIs
 grand_parent: ML APIs
 nav_order: 54
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/agentic-memory-apis/search-memory/
 ---
 
 # 搜尋代理記憶 (agentic memory) API

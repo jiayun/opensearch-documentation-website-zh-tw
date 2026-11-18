@@ -4,6 +4,7 @@ layout: default
 title: Trim
 parent: Ingest processors
 nav_order: 300
+canonical_url: https://docs.opensearch.org/latest/ingest-pipelines/processors/trim/
 ---
 
 # Trim 處理器

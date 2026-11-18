@@ -11,6 +11,7 @@ redirect_from:
  - /upgrade-opensearch/
  - /rolling-upgrade/index/
  - /install-and-configure/upgrade-opensearch/rolling-upgrade/
+canonical_url: https://docs.opensearch.org/latest/migrate-or-upgrade/rolling-upgrade/
 ---
 
 # 滾動升級

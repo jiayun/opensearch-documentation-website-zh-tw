@@ -7,6 +7,7 @@ parent: Alerting
 has_children: true
 redirect_from:
   - /monitoring-plugins/alerting/monitors/
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/alerting/monitors/
 ---
 
 # 警示監視器

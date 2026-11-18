@@ -4,6 +4,8 @@ layout: default
 title: "管線延遲調校指南"
 parent: Managing OpenSearch Data Prepper
 nav_order: 45
+canonical_url: https://docs.opensearch.org/latest/data-prepper/managing-data-prepper/latency/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/managing-data-prepper/latency/
 ---
 
 # 管線延遲調校指南

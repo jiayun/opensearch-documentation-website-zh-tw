@@ -7,6 +7,7 @@ has_children: true
 has_toc: false
 redirect_from:
   - /security-analytics/usage/
+canonical_url: https://docs.opensearch.org/latest/security-analytics/usage/index/
 ---
 
 <!-- vale off -->

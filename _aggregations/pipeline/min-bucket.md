@@ -4,6 +4,7 @@ layout: default
 title: "最小值桶"
 parent: Pipeline aggregations
 nav_order: 110
+canonical_url: https://docs.opensearch.org/latest/aggregations/pipeline/min-bucket/
 ---
 
 # 最小值桶彙總

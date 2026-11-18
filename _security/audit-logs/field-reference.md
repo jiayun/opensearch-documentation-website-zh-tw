@@ -6,6 +6,7 @@ parent: Audit logs
 nav_order: 130
 redirect_from:
   - /security-plugin/audit-logs/field-reference/
+canonical_url: https://docs.opensearch.org/latest/security/audit-logs/field-reference/
 ---
 
 # 稽核記錄檔欄位參考

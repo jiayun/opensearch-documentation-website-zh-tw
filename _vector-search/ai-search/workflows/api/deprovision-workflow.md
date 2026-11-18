@@ -8,6 +8,7 @@ great_grand_parent: AI search
 nav_order: 70
 redirect_from:
   - /automating-configurations/api/deprovision-workflow/
+canonical_url: https://docs.opensearch.org/latest/vector-search/ai-search/workflows/api/deprovision-workflow/
 ---
 
 # Deprovision Workflow API

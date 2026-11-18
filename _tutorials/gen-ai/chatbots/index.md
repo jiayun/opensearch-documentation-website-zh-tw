@@ -28,6 +28,7 @@ chatbots:
   - <b>平台：</b> OpenSearch
   - <b>模型：</b> Anthropic Claude
   - <b>部署：</b> Amazon Bedrock
+canonical_url: https://docs.opensearch.org/latest/tutorials/gen-ai/chatbots/index/
 ---
 
 # 教學：建置聊天機器人

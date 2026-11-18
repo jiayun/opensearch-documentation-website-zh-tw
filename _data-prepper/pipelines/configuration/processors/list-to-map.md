@@ -5,6 +5,8 @@ title: "清單轉對應"
 parent: Processors
 grand_parent: Pipelines
 nav_order: 180
+canonical_url: https://docs.opensearch.org/latest/data-prepper/pipelines/configuration/processors/list-to-map/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/pipelines/configuration/processors/list-to-map/
 ---
 
 # 清單轉對應處理器

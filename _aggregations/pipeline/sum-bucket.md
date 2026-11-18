@@ -4,6 +4,7 @@ layout: default
 title: "總和桶"
 parent: Pipeline aggregations
 nav_order: 190
+canonical_url: https://docs.opensearch.org/latest/aggregations/pipeline/sum-bucket/
 ---
 
 # 總和桶彙總

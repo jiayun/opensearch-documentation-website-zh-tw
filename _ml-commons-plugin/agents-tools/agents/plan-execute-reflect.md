@@ -7,6 +7,7 @@ has_toc: false
 nav_order: 40
 parent: Agents
 grand_parent: Agents and tools
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/agents-tools/agents/plan-execute-reflect/
 ---
 
 # 規劃-執行-反思代理程式

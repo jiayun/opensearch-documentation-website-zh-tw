@@ -4,6 +4,7 @@ layout: default
 title: "脈絡管理"
 parent: Memory and context
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/context-management/
 ---
 
 # 脈絡管理

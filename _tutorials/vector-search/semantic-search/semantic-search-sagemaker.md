@@ -7,6 +7,7 @@ grand_parent: Vector search
 nav_order: 60
 redirect_from:
   - /vector-search/tutorials/semantic-search/semantic-search-sagemaker/
+canonical_url: https://docs.opensearch.org/latest/tutorials/vector-search/semantic-search/semantic-search-sagemaker/
 ---
 
 # 使用 Amazon SageMaker 中的模型進行語意搜尋 

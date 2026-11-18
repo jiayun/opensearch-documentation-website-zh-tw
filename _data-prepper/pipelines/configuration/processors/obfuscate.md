@@ -5,6 +5,8 @@ title: Obfuscate
 parent: Processors
 grand_parent: Pipelines
 nav_order: 240
+canonical_url: https://docs.opensearch.org/latest/data-prepper/pipelines/configuration/processors/obfuscate/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/pipelines/configuration/processors/obfuscate/
 ---
 
 # Obfuscate 處理器

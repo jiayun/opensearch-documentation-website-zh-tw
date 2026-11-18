@@ -4,6 +4,7 @@ layout: default
 title: "串接"
 parent: Ingest processors
 nav_order: 160
+canonical_url: https://docs.opensearch.org/latest/ingest-pipelines/processors/join/
 ---
 
 # Join 處理器

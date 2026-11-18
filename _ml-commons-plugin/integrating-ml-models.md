@@ -19,6 +19,7 @@ external_model:
 - heading: 外部託管的模型
   link: /ml-commons-plugin/remote-models/
   description: 了解如何為託管於第三方平台的模型建立連接器
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/integrating-ml-models/
 ---
 
 # 整合 ML 模型

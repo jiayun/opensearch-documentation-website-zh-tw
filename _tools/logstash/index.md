@@ -9,6 +9,7 @@ redirect_from:
   - /clients/logstash/
   - /clients/logstash/index/
   - /tools/logstash/
+canonical_url: https://docs.opensearch.org/latest/tools/logstash/index/
 ---
 
 # Logstash

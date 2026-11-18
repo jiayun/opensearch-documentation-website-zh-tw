@@ -5,6 +5,7 @@ title: "預測工具存取控制"
 parent: Forecasting
 nav_order: 50
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/forecast/forecaster-access-control/
 ---
 
 # 預測工具存取控制

@@ -5,6 +5,8 @@ title: "將用戶端流量重新導向至擷取 Proxy"
 nav_order: 30
 parent: Migration workflows
 permalink: /migration-assistant/migration-phases/reroute-source-to-proxy/
+canonical_url: https://docs.opensearch.org/latest/migration-assistant/migration-phases/reroute-source-to-proxy/
+redirect_to: https://docs.opensearch.org/latest/migration-assistant/migration-phases/reroute-source-to-proxy/
 ---
 
 # 將用戶端流量重新導向至擷取 Proxy

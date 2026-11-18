@@ -8,6 +8,7 @@ has_children: true
 has_toc: false
 redirect_from:
   - /security-plugin/configuration/openid-connect/
+canonical_url: https://docs.opensearch.org/latest/security/authentication-backends/openid-connect/
 ---
 
 # OpenID Connect 驗證

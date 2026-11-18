@@ -7,6 +7,8 @@ parent: Playbooks
 permalink: /migration-assistant/playbook-solr-8.11-to-opensearch-3/
 redirect_from:
   - /migration-assistant/playbook-solr-8-to-opensearch-3/
+canonical_url: https://docs.opensearch.org/latest/migration-assistant/playbook-solr-8.11-to-opensearch-3/
+redirect_to: https://docs.opensearch.org/latest/migration-assistant/playbook-solr-8.11-to-opensearch-3/
 ---
 
 # 操作指南：Apache Solr 8.x 或 9.x → OpenSearch 3.x

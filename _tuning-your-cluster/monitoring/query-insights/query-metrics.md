@@ -7,6 +7,7 @@ grand_parent: Monitoring your cluster
 nav_order: 50
 redirect_from:
   - /observing-your-data/query-insights/query-metrics/
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/monitoring/query-insights/query-metrics/
 ---
 
 # 查詢指標

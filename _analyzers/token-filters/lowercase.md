@@ -4,6 +4,7 @@ layout: default
 title: "小寫"
 parent: Token filters
 nav_order: 260
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/lowercase/
 ---
 
 # 小寫詞元篩選器

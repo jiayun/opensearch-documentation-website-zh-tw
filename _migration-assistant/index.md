@@ -30,6 +30,8 @@ items:
 - heading: 使用劇本 (playbook)
   description: 依照特定路徑的指南，處理常見的來源與目標組合。
   link: /migration-assistant/playbooks/
+canonical_url: https://docs.opensearch.org/latest/migration-assistant/
+redirect_to: https://docs.opensearch.org/latest/migration-assistant/
 ---
 
 # ![Migration Assistant icon]({{site.url}}{{site.baseurl}}/images/icons/MigrationUpgrade_Color_Icon.svg){: .heading-icon} OpenSearch 的 Migration Assistant

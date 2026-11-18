@@ -4,6 +4,7 @@ layout: default
 title: "代理程式與工具教學"
 parent: Agents and tools
 nav_order: 5
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/agents-tools/agents-tools-tutorial/
 ---
 
 # 代理程式與工具教學

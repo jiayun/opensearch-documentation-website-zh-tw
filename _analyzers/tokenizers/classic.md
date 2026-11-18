@@ -5,6 +5,7 @@ title: Classic
 parent: Tokenizers
 nav_order: 35
 
+canonical_url: https://docs.opensearch.org/latest/analyzers/tokenizers/classic/
 ---
 
 # Classic 斷詞器

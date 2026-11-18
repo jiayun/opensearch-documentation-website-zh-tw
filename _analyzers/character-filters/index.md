@@ -7,6 +7,7 @@ has_children: true
 has_toc: false
 redirect_from:
   - /analyzers/character-filters/
+canonical_url: https://docs.opensearch.org/latest/analyzers/character-filters/index/
 ---
 
 # 字元篩選器

@@ -8,6 +8,7 @@ great_grand_parent: AI search
 nav_order: 10
 redirect_from:
   - /automating-configurations/workflow-access-control/
+canonical_url: https://docs.opensearch.org/latest/vector-search/ai-search/workflows/workflow-access-control/
 ---
 
 # 工作流程存取控制

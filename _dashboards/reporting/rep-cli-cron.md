@@ -8,6 +8,7 @@ grand_parent: Reporting
 redirect_from:
   - /reporting/rep-cli-cron/
   - /dashboards/reporting-cli/rep-cli-cron/
+canonical_url: https://docs.opensearch.org/latest/dashboards/reporting/rep-cli-cron/
 ---
 
 # 使用 cron 公用程式排程報表

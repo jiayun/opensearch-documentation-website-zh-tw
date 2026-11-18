@@ -5,6 +5,7 @@ title: "統計函式"
 parent: Functions
 grand_parent: PPL
 nav_order: 12
+canonical_url: https://docs.opensearch.org/latest/sql-and-ppl/ppl/functions/statistical/
 ---
 
 # 統計函式

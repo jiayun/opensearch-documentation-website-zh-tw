@@ -23,6 +23,8 @@ tip_cards:
 - heading: 提示與最佳實務
   description: 了解實用指引與最佳實務，以最佳化您的合成資料產生工作流程。
   link: /benchmark/features/synthetic-data-generation/tips/
+canonical_url: https://docs.opensearch.org/latest/benchmark/features/synthetic-data-generation/index/
+redirect_to: https://docs.opensearch.org/latest/benchmark/features/synthetic-data-generation/index/
 ---
 
 # 合成資料產生

@@ -8,6 +8,7 @@ has_children: true
 nav_order: 50
 redirect_from:
   - /automating-configurations/workflow-security/
+canonical_url: https://docs.opensearch.org/latest/vector-search/ai-search/workflows/workflow-security/
 ---
 
 # 工作流程範本安全性

@@ -7,6 +7,7 @@ nav_order: 11
 redirect_from:
   - /search-plugins/sql/aggregations/
   - /search-plugins/sql/sql/aggregations/
+canonical_url: https://docs.opensearch.org/latest/sql-and-ppl/sql/aggregations/
 ---
 
 # SQL 彙總函式

@@ -4,6 +4,7 @@ layout: default
 title: "管理工作區"
 parent: Workspaces
 nav_order: 2
+canonical_url: https://docs.opensearch.org/latest/dashboards/workspace/manage-workspace/
 ---
 
 # 管理工作區

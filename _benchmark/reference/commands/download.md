@@ -7,6 +7,8 @@ parent: Command reference
 grand_parent: Reference
 redirect_from:
   - /benchmark/commands/download/
+canonical_url: https://docs.opensearch.org/latest/benchmark/reference/commands/download/
+redirect_to: https://docs.opensearch.org/latest/benchmark/reference/commands/download/
 ---
 
 <!-- vale off -->

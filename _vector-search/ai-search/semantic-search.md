@@ -8,6 +8,7 @@ has_children: false
 redirect_from:
   - /search-plugins/neural-text-search/
   - /search-plugins/semantic-search/
+canonical_url: https://docs.opensearch.org/latest/vector-search/ai-search/semantic-search/
 ---
 
 # 語意搜尋

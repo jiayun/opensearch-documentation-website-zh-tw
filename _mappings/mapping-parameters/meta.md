@@ -8,6 +8,7 @@ redirect_from:
 nav_order: 180
 has_children: false
 has_toc: false
+canonical_url: https://docs.opensearch.org/latest/mappings/mapping-parameters/meta/
 ---
 
 # Meta 對應參數

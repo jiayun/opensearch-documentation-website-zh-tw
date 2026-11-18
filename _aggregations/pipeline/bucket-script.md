@@ -4,6 +4,7 @@ layout: default
 title: Bucket script
 parent: Pipeline aggregations
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/aggregations/pipeline/bucket-script/
 ---
 
 # Bucket script 彙總

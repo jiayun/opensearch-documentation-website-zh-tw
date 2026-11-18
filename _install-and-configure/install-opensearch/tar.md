@@ -6,6 +6,7 @@ parent: Installing OpenSearch
 nav_order: 30
 redirect_from:
   - /opensearch/install/tar/
+canonical_url: https://docs.opensearch.org/latest/install-and-configure/install-opensearch/tar/
 ---
 
 # 從 tarball 安裝 OpenSearch

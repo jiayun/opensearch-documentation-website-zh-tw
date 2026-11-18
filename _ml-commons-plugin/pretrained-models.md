@@ -5,6 +5,7 @@ title: "預訓練模型"
 parent: Using ML models within OpenSearch
 grand_parent: Integrating ML models
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/pretrained-models/
 ---
 
 # OpenSearch 提供的預訓練模型

@@ -4,6 +4,8 @@ layout: default
 title: "設定 Log4j"
 parent: Managing OpenSearch Data Prepper
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/data-prepper/managing-data-prepper/configuring-log4j/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/managing-data-prepper/configuring-log4j/
 ---
 
 # 設定 Log4j

@@ -5,6 +5,7 @@ title: "範本是否存在（已棄用）"
 parent: Index templates
 grand_parent: Index APIs
 nav_order: 100
+canonical_url: https://docs.opensearch.org/latest/api-reference/index-apis/template-exists-legacy/
 ---
 
 # 範本是否存在

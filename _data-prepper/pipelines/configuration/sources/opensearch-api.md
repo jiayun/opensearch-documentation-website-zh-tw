@@ -5,6 +5,8 @@ title: OpenSearch API
 parent: Sources
 grand_parent: Pipelines
 nav_order: 55
+canonical_url: https://docs.opensearch.org/latest/data-prepper/pipelines/configuration/sources/opensearch-api/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/pipelines/configuration/sources/opensearch-api/
 ---
 
 # OpenSearch API 來源

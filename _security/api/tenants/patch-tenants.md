@@ -5,6 +5,7 @@ title: "修補租用戶"
 parent: Tenant APIs
 grand_parent: Security APIs
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/security/api/tenants/patch-tenants/
 ---
 
 # Patch Tenants API

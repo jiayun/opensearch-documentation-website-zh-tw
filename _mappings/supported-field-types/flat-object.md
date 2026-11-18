@@ -9,6 +9,7 @@ grand_parent: Supported field types
 redirect_from:
   - /field-types/supported-field-types/flat-object/
   - /field-types/flat-object/
+canonical_url: https://docs.opensearch.org/latest/mappings/supported-field-types/flat-object/
 ---
 
 # 扁平物件欄位類型

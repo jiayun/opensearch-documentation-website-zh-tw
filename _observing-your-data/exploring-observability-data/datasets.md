@@ -6,6 +6,7 @@ nav_order: 10
 parent: Observability workspace apps
 redirect_from:
   - /observability-plugin/datasets/
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/exploring-observability-data/datasets/
 ---
 
 # 資料集

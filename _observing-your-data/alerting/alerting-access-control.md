@@ -5,6 +5,7 @@ title: "警示資源存取控制"
 nav_order: 50
 parent: Alerting
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/alerting/alerting-access-control/
 ---
 
 # 警示資源存取控制

@@ -4,6 +4,7 @@ layout: default
 title: "指標分析"
 parent: Classic observability apps
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/prometheusmetrics/
 ---
 
 # 指標分析

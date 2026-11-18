@@ -4,6 +4,7 @@ layout: default
 title: "移動平均"
 parent: Pipeline aggregations
 nav_order: 120
+canonical_url: https://docs.opensearch.org/latest/aggregations/pipeline/moving-avg/
 ---
 
 # 移動平均彙總

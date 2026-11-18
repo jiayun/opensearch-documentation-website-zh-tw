@@ -20,6 +20,7 @@ gpu:
 - heading: GPU 加速
   link: /ml-commons-plugin/gpu-acceleration/
   description: 利用 ML 節點上的 GPU 加速來提升效能
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/using-ml-models/
 ---
 
 # 在 OpenSearch 中使用機器學習模型

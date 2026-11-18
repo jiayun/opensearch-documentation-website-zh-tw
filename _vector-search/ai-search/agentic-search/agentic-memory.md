@@ -6,6 +6,7 @@ parent: Agentic search
 grand_parent: AI search
 nav_order: 80
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/vector-search/ai-search/agentic-search/agentic-memory/
 ---
 
 # 使用代理程式記憶進行代理程式搜尋

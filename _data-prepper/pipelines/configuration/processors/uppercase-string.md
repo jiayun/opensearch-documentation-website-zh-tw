@@ -5,6 +5,8 @@ title: "大寫字串"
 parent: Processors
 grand_parent: Pipelines
 nav_order: 420
+canonical_url: https://docs.opensearch.org/latest/data-prepper/pipelines/configuration/processors/uppercase-string/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/pipelines/configuration/processors/uppercase-string/
 ---
 
 # 大寫字串處理器

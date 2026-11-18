@@ -6,6 +6,8 @@ nav_order: 5
 parent: Migrate metadata
 grand_parent: Migration phases
 permalink: /classic/migration-assistant/migration-phases/migrate-metadata/transform-dense-vector-knn-vector/
+canonical_url: https://docs.opensearch.org/latest/classic/migration-assistant/migration-phases/migrate-metadata/transform-dense-vector-knn-vector/
+redirect_to: https://docs.opensearch.org/latest/classic/migration-assistant/migration-phases/migrate-metadata/transform-dense-vector-knn-vector/
 ---
 
 # 將 dense_vector 欄位轉換為 knn_vector

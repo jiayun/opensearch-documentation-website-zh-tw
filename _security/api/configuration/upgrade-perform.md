@@ -7,6 +7,7 @@ grand_parent: Security APIs
 nav_order: 50
 redirect_from:
   - /api-reference/security/configuration/upgrade-perform/
+canonical_url: https://docs.opensearch.org/latest/security/api/configuration/upgrade-perform/
 ---
 
 # 執行安全性組態升級 API

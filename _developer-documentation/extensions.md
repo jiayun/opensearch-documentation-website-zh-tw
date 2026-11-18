@@ -3,6 +3,7 @@
 layout: default
 title: "擴充功能"
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/developer-documentation/extensions/
 ---
 
 # OpenSearch 擴充功能

@@ -9,6 +9,7 @@ redirect_from:
   - /vector-search/api/knn/
   - /vector-search/api/
   - /search-plugins/knn/api/
+canonical_url: https://docs.opensearch.org/latest/vector-search/api/index/
 ---
 
 # 向量搜尋 API

@@ -4,6 +4,7 @@ layout: default
 title: "節點使用情況"
 parent: Nodes APIs
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/api-reference/nodes-apis/nodes-usage/
 ---
 
 # Nodes Usage API

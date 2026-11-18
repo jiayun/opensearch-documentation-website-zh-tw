@@ -5,6 +5,7 @@ title: "執行代理程式"
 parent: Agent APIs
 grand_parent: ML APIs
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/agent-apis/execute-agent/
 ---
 
 # 執行代理程式 API

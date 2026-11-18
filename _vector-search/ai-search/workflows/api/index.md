@@ -11,6 +11,7 @@ redirect_from:
   - /automating-configurations/api/
   - /automating-configurations/api/index/
   - /vector-search/ai-search/workflows/api/
+canonical_url: https://docs.opensearch.org/latest/vector-search/ai-search/workflows/api/index/
 ---
 
 # 工作流程 API

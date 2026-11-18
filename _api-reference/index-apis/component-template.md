@@ -5,6 +5,7 @@ title: "元件範本 API"
 parent: Index templates
 grand_parent: Index APIs
 nav_order: 60
+canonical_url: https://docs.opensearch.org/latest/api-reference/index-apis/component-template/
 ---
 
 # 元件範本 API

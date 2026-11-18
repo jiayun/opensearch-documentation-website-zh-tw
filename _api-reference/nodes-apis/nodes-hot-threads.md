@@ -4,6 +4,7 @@ layout: default
 title: "節點熱門執行緒"
 parent: Nodes APIs
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/api-reference/nodes-apis/nodes-hot-threads/
 ---
 
 # Nodes Hot Threads API

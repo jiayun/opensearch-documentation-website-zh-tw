@@ -9,6 +9,7 @@ redirect_from:
   - /search-plugins/knn/
   - /search-plugins/knn/index/ 
   - /vector-search/vector-search-techniques/     
+canonical_url: https://docs.opensearch.org/latest/vector-search/vector-search-techniques/index/
 ---
 
 # 向量搜尋技術

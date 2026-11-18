@@ -4,6 +4,7 @@ layout: default
 title: "模式取代"
 parent: Character filters
 nav_order: 130
+canonical_url: https://docs.opensearch.org/latest/analyzers/character-filters/pattern-replace-character-filter/
 ---
 
 # 模式取代字元篩選器

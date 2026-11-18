@@ -8,6 +8,7 @@ has_children: false
 grand_parent: Availability and recovery
 redirect_from: 
   - /opensearch/snapshots/snapshot-management/
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/availability-and-recovery/snapshots/snapshot-management/
 ---
 
 # 快照管理

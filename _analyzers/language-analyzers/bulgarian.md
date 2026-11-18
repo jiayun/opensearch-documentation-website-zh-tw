@@ -5,6 +5,7 @@ title: "保加利亞語"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 60
+canonical_url: https://docs.opensearch.org/latest/analyzers/language-analyzers/bulgarian/
 ---
 
 # 保加利亞語分析器

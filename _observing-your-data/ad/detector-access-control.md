@@ -7,6 +7,7 @@ parent: Anomaly detection
 has_children: false
 redirect_from:
   - /monitoring-plugins/ad/detector-access-control/
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/ad/detector-access-control/
 ---
 
 # 異常偵測器存取控制

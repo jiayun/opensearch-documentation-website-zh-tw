@@ -4,6 +4,7 @@ layout: default
 title: "節點探索與種子主機"
 parent: Discovery and cluster formation
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/discovery-cluster-formation/discovery/
 ---
 
 # 節點探索與種子主機

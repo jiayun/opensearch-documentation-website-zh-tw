@@ -4,6 +4,8 @@ layout: default
 title: "將記錄資料匯入 OpenSearch"
 parent: Getting started
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/data-prepper/getting-started/ingesting-log-data/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/
 ---
 
 # 將記錄資料匯入 OpenSearch

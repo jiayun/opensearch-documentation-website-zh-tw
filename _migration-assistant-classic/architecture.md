@@ -4,6 +4,8 @@ layout: default
 title: "架構"
 nav_order: 15
 permalink: /classic/migration-assistant/architecture/
+canonical_url: https://docs.opensearch.org/latest/classic/migration-assistant/architecture/
+redirect_to: https://docs.opensearch.org/latest/classic/migration-assistant/architecture/
 ---
 
 # Migration Assistant (classic) 架構

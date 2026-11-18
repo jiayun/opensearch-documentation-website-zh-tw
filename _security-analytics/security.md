@@ -4,6 +4,7 @@ layout: default
 title: "Security Analytics 的 OpenSearch 安全性"
 nav_order: 2
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/security-analytics/security/
 ---
 
 <!-- vale off -->

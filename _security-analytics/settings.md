@@ -4,6 +4,7 @@ layout: default
 title: "安全性分析設定"
 nav_order: 100
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/security-analytics/settings/
 ---
 
 <!-- vale off -->

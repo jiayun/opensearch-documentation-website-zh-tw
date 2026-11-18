@@ -4,6 +4,7 @@ layout: default
 title: "合併欄位"
 parent: Full-text queries
 nav_order: 60
+canonical_url: https://docs.opensearch.org/latest/query-dsl/full-text/combined-fields/
 ---
 
 # 合併欄位查詢

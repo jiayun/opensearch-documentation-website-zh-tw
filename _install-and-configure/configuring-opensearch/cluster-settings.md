@@ -4,6 +4,7 @@ layout: default
 title: "叢集管理設定"
 parent: Configuring OpenSearch
 nav_order: 50
+canonical_url: https://docs.opensearch.org/latest/install-and-configure/configuring-opensearch/cluster-settings/
 ---
 
 # 叢集管理設定

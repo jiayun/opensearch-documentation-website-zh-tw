@@ -4,6 +4,7 @@ layout: default
 title: "移動函式"
 parent: Pipeline aggregations
 nav_order: 130
+canonical_url: https://docs.opensearch.org/latest/aggregations/pipeline/moving-function/
 ---
 
 # 移動函式彙總

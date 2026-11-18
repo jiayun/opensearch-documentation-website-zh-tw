@@ -4,6 +4,7 @@ layout: default
 title: "桶選取器"
 parent: Pipeline aggregations
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/aggregations/pipeline/bucket-selector/
 ---
 
 # 桶選取器彙總

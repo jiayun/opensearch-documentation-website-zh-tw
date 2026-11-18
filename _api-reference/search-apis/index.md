@@ -7,6 +7,7 @@ has_children: true
 has_toc: false
 redirect_from:
   - /api-reference/search-apis/
+canonical_url: https://docs.opensearch.org/latest/api-reference/search-apis/index/
 ---
 
 # 搜尋 API

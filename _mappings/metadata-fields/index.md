@@ -9,6 +9,7 @@ redirect_from:
   - /field-types/metadata-fields/
   - /field-types/metadata-fields/index/
   - /mappings/metadata-fields/
+canonical_url: https://docs.opensearch.org/latest/mappings/metadata-fields/index/
 ---
 
 # 中繼資料欄位

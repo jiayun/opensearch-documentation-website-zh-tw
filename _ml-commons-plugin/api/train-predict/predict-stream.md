@@ -5,6 +5,7 @@ title: "預測串流"
 parent: Model APIs
 grand_parent: ML APIs
 nav_order: 65
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/train-predict/predict-stream/
 ---
 
 # Predict Stream API

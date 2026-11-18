@@ -8,6 +8,7 @@ has_children: true
 has_math: true
 redirect_from:
   - /search-plugins/knn/knn-score-script/ 
+canonical_url: https://docs.opensearch.org/latest/vector-search/vector-search-techniques/knn-score-script/
 ---
 
 # 使用評分指令碼進行精確 k-NN 搜尋

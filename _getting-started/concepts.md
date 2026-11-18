@@ -4,6 +4,7 @@ layout: default
 title: "概念"
 nav_order: 70
 description: "OpenSearch 重要術語和概念的定義，包括文件、索引、叢集、節點和分片，協助您快速上手。"
+canonical_url: https://docs.opensearch.org/latest/getting-started/concepts/
 ---
 
 # OpenSearch 概念

@@ -6,6 +6,7 @@ nav_order: 40
 has_children: true
 redirect_from:
   - /dashboards/discover/
+canonical_url: https://docs.opensearch.org/latest/dashboards/discover/index/
 ---
 
 # 探索資料

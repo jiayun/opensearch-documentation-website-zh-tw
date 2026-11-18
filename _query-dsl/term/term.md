@@ -4,6 +4,7 @@ layout: default
 title: Term
 parent: Term-level queries
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/query-dsl/term/term/
 ---
 
 # Term 查詢

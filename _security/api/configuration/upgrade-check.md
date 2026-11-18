@@ -7,6 +7,7 @@ grand_parent: Security APIs
 nav_order: 40
 redirect_from:
   - /api-reference/security/configuration/upgrade-check/
+canonical_url: https://docs.opensearch.org/latest/security/api/configuration/upgrade-check/
 ---
 
 # 檢查安全性組態升級 API

@@ -5,6 +5,7 @@ title: "阿拉伯文"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/analyzers/language-analyzers/arabic/
 ---
 
 # 阿拉伯文分析器

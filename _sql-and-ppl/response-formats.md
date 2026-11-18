@@ -5,6 +5,7 @@ title: "回應格式"
 nav_order: 2
 redirect_from:
   - /search-plugins/sql/response-formats/
+canonical_url: https://docs.opensearch.org/latest/sql-and-ppl/response-formats/
 ---
 
 # SQL 和 PPL 查詢回應格式

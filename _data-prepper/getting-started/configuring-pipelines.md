@@ -4,6 +4,8 @@ layout: default
 title: "設定管線"
 parent: Getting started
 nav_order: 15
+canonical_url: https://docs.opensearch.org/latest/data-prepper/getting-started/configuring-pipelines/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/
 ---
 
 # 設定管線

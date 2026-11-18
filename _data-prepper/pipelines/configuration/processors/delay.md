@@ -5,6 +5,8 @@ title: "延遲"
 parent: Processors
 grand_parent: Pipelines
 nav_order: 100
+canonical_url: https://docs.opensearch.org/latest/data-prepper/pipelines/configuration/processors/delay/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/pipelines/configuration/processors/delay/
 ---
 
 # 延遲處理器

@@ -8,6 +8,7 @@ has_children: false
 redirect_from: 
    - /tuning-your-cluster/seperate-index-and-search-workloads/
    - /tuning-your-cluster/separate-index-and-search-workloads/
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/performance-tuning/separate-index-and-search-workloads/
 ---
 
 # 分離索引與搜尋工作負載

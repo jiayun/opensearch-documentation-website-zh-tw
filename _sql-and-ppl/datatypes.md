@@ -5,6 +5,7 @@ title: "資料類型"
 nav_order: 7
 redirect_from:
   - /search-plugins/sql/datatypes/
+canonical_url: https://docs.opensearch.org/latest/sql-and-ppl/datatypes/
 ---
 
 # SQL 與 PPL 資料類型

@@ -3,6 +3,7 @@
 layout: default
 title: "函式"
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/sql-and-ppl/functions/
 ---
 
 # SQL 與 PPL 通用函式

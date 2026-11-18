@@ -4,6 +4,8 @@ layout: default
 title: "安全性修補與更新"
 nav_order: 30
 permalink: /classic/migration-assistant/security-patching-and-updating/
+canonical_url: https://docs.opensearch.org/latest/classic/migration-assistant/security-patching-and-updating/
+redirect_to: https://docs.opensearch.org/latest/classic/migration-assistant/security-patching-and-updating/
 ---
 
 # 安全性修補與更新

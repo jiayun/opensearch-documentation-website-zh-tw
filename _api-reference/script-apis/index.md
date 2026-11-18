@@ -8,6 +8,7 @@ nav_order: 90
 redirect_from:
   - /opensearch/rest-api/script-apis/
   - /api-reference/script-apis/
+canonical_url: https://docs.opensearch.org/latest/api-reference/script-apis/index/
 ---
 
 # 指令碼 API

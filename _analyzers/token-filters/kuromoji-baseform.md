@@ -4,6 +4,7 @@ layout: default
 title: "Kuromoji 基本形"
 parent: Token filters
 nav_order: 230
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/kuromoji-baseform/
 ---
 
 # Kuromoji 基本形詞元篩選器

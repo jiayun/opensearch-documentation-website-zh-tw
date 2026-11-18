@@ -4,6 +4,7 @@ layout: default
 title: "指令碼與資源設定"
 parent: Configuring OpenSearch
 nav_order: 160
+canonical_url: https://docs.opensearch.org/latest/install-and-configure/configuring-opensearch/script-and-resource-settings/
 ---
 
 # 指令碼與資源設定

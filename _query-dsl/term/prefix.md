@@ -4,6 +4,7 @@ layout: default
 title: "前綴"
 parent: Term-level queries
 nav_order: 60
+canonical_url: https://docs.opensearch.org/latest/query-dsl/term/prefix/
 ---
 
 # 前綴查詢

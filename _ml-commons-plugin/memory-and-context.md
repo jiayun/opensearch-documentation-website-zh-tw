@@ -5,6 +5,7 @@ title: "記憶與脈絡"
 nav_order: 30
 has_children: true
 has_toc: false
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/memory-and-context/
 ---
 
 # 記憶與脈絡

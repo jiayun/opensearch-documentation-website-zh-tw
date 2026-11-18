@@ -20,7 +20,7 @@ The source inventory contains 1,886 pages. Translation and independent review ru
 | `translation/schemas/*.json` | yes | JSON Schemas for the model request/result formats |
 | `.translation-cache/` | no (ignored) | Validated chunk results, approved reviews, commit journal, run logs |
 
-Baseline commit: `8809a8aa43fb839bd4f258ea4d2534cb51ab6df3`. Pages are all
+Baseline commit: `9cb6dcdcf0a962671e397d17837901f9a89e3961`. Pages are all
 `output: true` collections in the baseline `_config.yml` (files with front
 matter) plus `index.md`, `search.md` and `404.md`. `translation/` (including
 the inventory and source store) is excluded from the Jekyll build by
@@ -171,6 +171,35 @@ The site uses `original_front_matter` to map English `parent` /
 If no quality-approved reviewer is available (quota, auth, unavailable, or
 only the translator's own family is left), the page is committed as
 `translated`. A later `run` reviews it without retranslating.
+
+## URL metadata-only upstream updates
+
+An upstream change limited to `canonical_url`, `redirect_from`, and `redirect_to`
+can reuse a previously reviewed translation only when the original English body,
+translated body, visible front matter, and all other source fields and comments
+remain unchanged. `translation_pipeline.metadata.migrate_url_metadata` copies
+the exact new upstream fields and preserves the translated body verbatim; it
+does not approve the result. Every page still needs a new independent review of
+the metadata delta, from a family distinct from its translation providers.
+
+The manifest records `translator.metadata_migration`, the original content
+approval under `reviewer.retained_content_review`, and the latest review with
+scope `URL metadata delta plus retained full content review`. The publish gate
+validates the retained approval, model independence, request hash, and unchanged
+body/visible-field fingerprints. A semantic change requires the ordinary full
+translation and independent review workflow. This continuation policy was
+explicitly selected by the user on 2026-11-18; it is not a fresh full-text review.
+
+With `translation_archive: true`, `_plugins/translation_archive.rb` keeps the
+zh-TW archive's own canonical URLs and content in Jekyll memory while preserving
+upstream front matter in the source and translation files. Only official
+`https://docs.opensearch.org/latest` redirects are suppressed; local aliases and
+other redirect destinations remain intact. Maintenance warnings link to the
+upstream latest documentation. Explicit links to that upstream document also
+stay external, so forwarding references such as version history do not loop
+back to the archive. Other document links continue to use local translations.
+English sites and pages outside the manifest
+are unaffected.
 
 ## Modification notice (Apache-2.0 section 4)
 

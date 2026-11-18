@@ -4,6 +4,7 @@ layout: default
 title: "OpenSearch 金鑰儲存庫"
 parent: Configuration
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/security/configuration/opensearch-keystore/
 ---
 
 # OpenSearch 金鑰儲存庫

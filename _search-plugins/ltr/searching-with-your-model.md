@@ -6,6 +6,7 @@ nav_order: 70
 parent: Learning to Rank
 grand_parent: Optimizing search quality
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/search-plugins/ltr/searching-with-your-model/
 ---
 
 # 使用 LTR 最佳化搜尋

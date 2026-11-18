@@ -7,6 +7,7 @@ grand_parent: Configuration
 nav_order: 10
 redirect_from:
   - /troubleshoot/security-admin/
+canonical_url: https://docs.opensearch.org/latest/security/configuration/troubleshoot-security-admin/
 ---
 
 # securityadmin.sh 疑難排解

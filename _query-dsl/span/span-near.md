@@ -5,6 +5,7 @@ title: "Span near 查詢"
 parent: Span queries
 grand_parent: Query DSL
 nav_order: 50
+canonical_url: https://docs.opensearch.org/latest/query-dsl/span/span-near/
 ---
 
 # Span near 查詢

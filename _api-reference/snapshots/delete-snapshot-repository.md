@@ -4,6 +4,7 @@ layout: default
 title: "刪除快照儲存庫"
 parent: Snapshot APIs
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/api-reference/snapshots/delete-snapshot-repository/
 ---
 
 # 刪除快照儲存庫 API

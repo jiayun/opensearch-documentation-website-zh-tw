@@ -8,6 +8,7 @@ grand_parent: Reporting
 redirect_from:
   - /reporting/rep-cli-env-var/
   - /dashboards/reporting-cli/rep-cli-env-var/
+canonical_url: https://docs.opensearch.org/latest/dashboards/reporting/rep-cli-env-var/
 ---
 
 # 搭配 Reporting CLI 使用環境變數

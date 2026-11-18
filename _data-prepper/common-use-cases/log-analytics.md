@@ -4,6 +4,8 @@ layout: default
 title: "記錄檔分析"
 parent: Common use cases
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/data-prepper/common-use-cases/log-analytics/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/common-use-cases/log-analytics/
 ---
 
 # 記錄檔分析

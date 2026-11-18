@@ -6,6 +6,7 @@ parent: Access control
 nav_order: 80
 redirect_from:
  - /security-plugin/access-control/default-action-groups/
+canonical_url: https://docs.opensearch.org/latest/security/access-control/default-action-groups/
 ---
 
 # 預設動作群組

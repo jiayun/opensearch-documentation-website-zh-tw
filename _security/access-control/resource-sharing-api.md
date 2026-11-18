@@ -5,6 +5,7 @@ title: "資源共用 API"
 parent: Resource sharing and access control
 grand_parent: Access control
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/security/access-control/resource-sharing-api/
 ---
 
 # 資源共用 API

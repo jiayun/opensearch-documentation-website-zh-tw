@@ -5,6 +5,7 @@ title: "重新編製索引資料"
 nav_order: 35
 redirect_from:
   - /im-plugin/reindex-data/index/
+canonical_url: https://docs.opensearch.org/latest/im-plugin/reindex-data/
 ---
 
 # 重新編製索引資料

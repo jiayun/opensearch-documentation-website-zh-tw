@@ -5,6 +5,7 @@ title: "愛爾蘭語"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 210
+canonical_url: https://docs.opensearch.org/latest/analyzers/language-analyzers/irish/
 ---
 
 # 愛爾蘭語分析器

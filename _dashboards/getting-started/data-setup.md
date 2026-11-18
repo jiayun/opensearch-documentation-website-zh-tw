@@ -4,6 +4,7 @@ layout: default
 title: "準備您的資料"
 parent: Getting started
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/dashboards/getting-started/data-setup/
 ---
 
 # 準備您的資料

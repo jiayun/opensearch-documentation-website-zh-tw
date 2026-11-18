@@ -6,6 +6,8 @@ nav_order: 32
 redirect_from:
   - /benchmark/user-guide/optimizing-benchmarks/distributed-load/
   - /benchmark/user-guide/distributed-load/
+canonical_url: https://docs.opensearch.org/latest/benchmark/distributed-load/
+redirect_to: https://docs.opensearch.org/latest/benchmark/distributed-load/
 ---
 
 # 執行分散式負載

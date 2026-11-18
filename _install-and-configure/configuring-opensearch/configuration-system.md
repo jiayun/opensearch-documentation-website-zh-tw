@@ -4,6 +4,7 @@ layout: default
 title: "組態與系統設定"
 parent: Configuring OpenSearch
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/install-and-configure/configuring-opensearch/configuration-system/
 ---
 
 # 組態與系統設定

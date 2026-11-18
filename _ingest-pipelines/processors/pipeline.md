@@ -4,6 +4,7 @@ layout: default
 title: "管線"
 parent: Ingest processors
 nav_order: 220
+canonical_url: https://docs.opensearch.org/latest/ingest-pipelines/processors/pipeline/
 ---
 
 # 管線處理器

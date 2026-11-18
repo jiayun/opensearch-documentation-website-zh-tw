@@ -5,6 +5,7 @@ title: "Span first 查詢"
 parent: Span queries
 grand_parent: Query DSL
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/query-dsl/span/span-first/
 ---
 
 # Span first 查詢

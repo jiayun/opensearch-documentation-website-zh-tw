@@ -4,6 +4,7 @@ layout: default
 title: "建立或更新預存指令碼"
 parent: Script APIs
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/api-reference/script-apis/create-stored-script/
 ---
 
 # 建立或更新預存指令碼 API

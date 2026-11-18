@@ -5,6 +5,7 @@ title: "查詢面板"
 parent: Creating visualizations using queries
 grand_parent: Building data visualizations
 nav_order: 91
+canonical_url: https://docs.opensearch.org/latest/dashboards/visualize/visualization-editor/query-panel/
 ---
 
 # 查詢面板

@@ -5,6 +5,7 @@ title: "更多相似內容"
 parent: Specialized queries
 nav_order: 45
 has_math: false
+canonical_url: https://docs.opensearch.org/latest/query-dsl/specialized/more-like-this/
 ---
 
 # 更多相似內容

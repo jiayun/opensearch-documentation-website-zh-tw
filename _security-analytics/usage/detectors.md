@@ -4,6 +4,7 @@ layout: default
 title: "使用偵測器"
 parent: Using Security Analytics
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/security-analytics/usage/detectors/
 ---
 
 # 使用偵測器

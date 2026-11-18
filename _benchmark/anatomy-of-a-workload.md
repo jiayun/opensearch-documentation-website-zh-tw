@@ -12,6 +12,8 @@ redirect_from:
   - /benchmark/workloads/
   - /benchmark/workloads/index/
   - /benchmark/user-guide/understanding-workloads/
+canonical_url: https://docs.opensearch.org/latest/benchmark/anatomy-of-a-workload/
+redirect_to: https://docs.opensearch.org/latest/benchmark/anatomy-of-a-workload/
 ---
 
 # 工作負載的結構

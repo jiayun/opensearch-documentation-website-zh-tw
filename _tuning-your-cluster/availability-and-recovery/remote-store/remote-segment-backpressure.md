@@ -5,6 +5,7 @@ title: "遠端分段背壓"
 nav_order: 10
 parent: Remote-backed storage
 grand_parent: Availability and recovery
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/availability-and-recovery/remote-store/remote-segment-backpressure/
 ---
 
 # 遠端分段背壓

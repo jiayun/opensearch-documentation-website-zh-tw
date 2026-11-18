@@ -10,6 +10,7 @@ redirect_from:
   - /field-types/supported-field-types/geo-point/
   - /opensearch/supported-field-types/geo-point/
   - /field-types/geo-point/
+canonical_url: https://docs.opensearch.org/latest/mappings/supported-field-types/geo-point/
 ---
 
 # 地理點欄位類型

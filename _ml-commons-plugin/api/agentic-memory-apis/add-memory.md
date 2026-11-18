@@ -5,6 +5,7 @@ title: "新增代理記憶"
 parent: Agentic memory APIs
 grand_parent: ML APIs
 nav_order: 45
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/agentic-memory-apis/add-memory/
 ---
 
 # 新增代理記憶（agentic memory）API

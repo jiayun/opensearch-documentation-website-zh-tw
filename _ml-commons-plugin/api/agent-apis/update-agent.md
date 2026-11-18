@@ -5,6 +5,7 @@ title: "更新代理程式"
 parent: Agent APIs
 grand_parent: ML APIs
 nav_order: 15
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/agent-apis/update-agent/
 ---
 
 # 更新代理程式 API

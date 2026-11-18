@@ -4,6 +4,8 @@ layout: default
 title: "監控"
 parent: Managing OpenSearch Data Prepper
 nav_order: 25
+canonical_url: https://docs.opensearch.org/latest/data-prepper/managing-data-prepper/monitoring/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/managing-data-prepper/monitoring/
 ---
  
 # 使用指標監控 OpenSearch Data Prepper

@@ -4,6 +4,7 @@ layout: default
 title: "平均桶"
 parent: Pipeline aggregations
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/aggregations/pipeline/avg-bucket/
 ---
 
 # 平均桶彙總

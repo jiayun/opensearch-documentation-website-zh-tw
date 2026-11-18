@@ -5,6 +5,8 @@ title: "命令參考"
 nav_order: 2
 parent: Migration Console
 permalink: /classic/migration-assistant/migration-console/migration-console-command-reference/
+canonical_url: https://docs.opensearch.org/latest/classic/migration-assistant/migration-console/migration-console-command-reference/
+redirect_to: https://docs.opensearch.org/latest/classic/migration-assistant/migration-console/migration-console-command-reference/
 ---
 
 # Migration Console 命令參考

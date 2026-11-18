@@ -36,6 +36,7 @@ tutorial_cards:
 - heading: LLM-as-a-Judge
   description: 使用 LLM 自動化搜尋相關性評估
   link: /tutorials/llm-as-a-judge-tutorial/
+canonical_url: https://docs.opensearch.org/latest/tutorials/
 ---
 
 # OpenSearch 教學

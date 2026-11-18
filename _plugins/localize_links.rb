@@ -1,3 +1,4 @@
+# Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations.
 require 'nokogiri'
 
 Jekyll::Hooks.register [:pages, :documents], :post_render do |doc|
@@ -23,6 +24,10 @@ Jekyll::Hooks.register [:pages, :documents], :post_render do |doc|
       %w[href src].each do |attr|
         val = el[attr]
         next unless val
+        # Maintenance warnings and upstream forwarding references must not loop
+        # back to the archived translation of the same document.
+        next if defined?(TranslationArchive) &&
+                TranslationArchive.preserve_upstream_link?(site, doc, el.name, attr, val)
         # Canonical/SEO stays absolute; in-site browsing works on preview servers too.
         if val.start_with?(site.config['url'].to_s + baseurl + '/') && !(el.name == 'link' && el['rel'].to_s.split.include?('canonical'))
           el[attr] = val.delete_prefix(site.config['url'].to_s)

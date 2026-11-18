@@ -7,6 +7,7 @@ has_children: false
 parent: Load protection
 redirect_from:
   - /tuning-your-cluster/availability-and-recovery/concurrency-limits/
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/load-protection/concurrency-limits/
 ---
 
 # 並行限制

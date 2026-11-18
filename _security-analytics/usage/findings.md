@@ -4,6 +4,7 @@ layout: default
 title: "使用尋找結果"
 parent: Using Security Analytics
 nav_order: 35
+canonical_url: https://docs.opensearch.org/latest/security-analytics/usage/findings/
 ---
 
 # 使用尋找結果

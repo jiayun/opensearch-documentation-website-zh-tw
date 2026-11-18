@@ -3,6 +3,7 @@
 layout: default
 title: "詞幹提取"
 nav_order: 140
+canonical_url: https://docs.opensearch.org/latest/analyzers/stemming/
 ---
 
 # 詞幹提取

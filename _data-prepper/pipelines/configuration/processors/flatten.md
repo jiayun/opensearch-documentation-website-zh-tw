@@ -5,6 +5,8 @@ title: "扁平化"
 parent: Processors
 grand_parent: Pipelines
 nav_order: 140
+canonical_url: https://docs.opensearch.org/latest/data-prepper/pipelines/configuration/processors/flatten/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/pipelines/configuration/processors/flatten/
 ---
 
 # 扁平化處理器

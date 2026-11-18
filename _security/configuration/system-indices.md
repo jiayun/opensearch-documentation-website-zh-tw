@@ -6,6 +6,7 @@ parent: Configuration
 nav_order: 60
 redirect_from:
  - /security-plugin/configuration/system-indices/
+canonical_url: https://docs.opensearch.org/latest/security/configuration/system-indices/
 ---
 
 # 系統索引

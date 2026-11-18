@@ -8,6 +8,7 @@ parent: Load protection
 redirect_from: 
   - /opensearch/search-backpressure/
   - /tuning-your-cluster/availability-and-recovery/search-backpressure/
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/load-protection/search-backpressure/
 ---
 
 # 搜尋背壓

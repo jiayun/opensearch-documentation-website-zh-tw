@@ -6,6 +6,7 @@ nav_order: 11
 redirect_from:
   - /opensearch/rest-api/ingest-apis/simulate-ingest/
   - /api-reference/ingest-apis/simulate-ingest/
+canonical_url: https://docs.opensearch.org/latest/ingest-pipelines/simulate-ingest/
 ---
 
 # Simulate Pipeline API

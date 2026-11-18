@@ -4,6 +4,8 @@ layout: default
 title: "遷移至 OpenSearch Serverless NextGen"
 nav_order: 55
 permalink: /migration-assistant/amazon-opensearch-serverless/
+canonical_url: https://docs.opensearch.org/latest/migration-assistant/amazon-opensearch-serverless/
+redirect_to: https://docs.opensearch.org/latest/migration-assistant/amazon-opensearch-serverless/
 ---
 
 # 遷移至 OpenSearch Serverless NextGen

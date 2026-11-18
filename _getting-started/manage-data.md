@@ -3,6 +3,7 @@
 layout: default
 title: "新增與管理您的資料"
 nav_order: 35
+canonical_url: https://docs.opensearch.org/latest/getting-started/manage-data/
 ---
 
 # 新增與管理您的資料

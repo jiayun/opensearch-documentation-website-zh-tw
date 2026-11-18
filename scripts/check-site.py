@@ -26,15 +26,23 @@ class Page:
     redirect: bool = False
     indexed: bool = False
     fragment: bool = False
+    unsupported_warning: bool = False
+    unsupported_text: str = ''
+    unsupported_links: list = field(default_factory=list)
 
 
 class Parser(HTMLParser):
     def __init__(self, page):
         super().__init__(convert_charrefs=True)
         self.page = page
+        self._in_unsupported_warning = False
 
     def handle_starttag(self, tag, attrs):
         data = dict(attrs)
+        if tag == 'p' and 'unsupported-version-warning' in data.get('class', '').split():
+            self.page.unsupported_warning = self._in_unsupported_warning = True
+        if tag == 'a' and self._in_unsupported_warning and data.get('href'):
+            self.page.unsupported_links.append(data['href'])
         if data.get('id'): self.page.ids.add(data['id'])
         if tag == 'a' and data.get('name'): self.page.ids.add(data['name'])
         if tag == 'html': self.page.lang = data.get('lang')
@@ -52,6 +60,22 @@ class Parser(HTMLParser):
             value = data.get('srcset', '')
             if value and not value.startswith('data:'):
                 self.page.links.extend(item.strip().split()[0] for item in value.split(',') if item.strip())
+
+    def handle_endtag(self, tag):
+        if tag == 'p': self._in_unsupported_warning = False
+
+    def handle_data(self, data):
+        if self._in_unsupported_warning: self.page.unsupported_text += data
+
+
+def upstream_latest_link(href):
+    try:
+        parsed = urlsplit(href)
+        return (parsed.scheme == 'https' and parsed.hostname == 'docs.opensearch.org'
+                and parsed.username is None and parsed.port in (None, 443)
+                and (parsed.path == '/latest' or parsed.path.startswith('/latest/')))
+    except ValueError:
+        return False
 
 
 def page_url(relative: str, base=BASE) -> str:
@@ -102,6 +126,11 @@ def check(site: Path, base=BASE, require_search=True, enforce_metadata=True):
                 fail(page, 'robots', 'search/404 page must be noindex')
         if page.url.endswith(('/search.html', '/404.html')) and page.indexed:
             fail(page, 'search-index', 'search/404 page has a content-index marker')
+        if enforce_metadata and page.unsupported_warning:
+            if '此版本已不再維護' not in page.unsupported_text:
+                fail(page, 'maintenance-warning', 'unsupported warning is not localized')
+            if not any(upstream_latest_link(link) for link in page.unsupported_links):
+                fail(page, 'maintenance-warning', 'latest-documentation link loops back to the archive')
         for href in page.links:
             if page.fragment and href.startswith('#svg-'): continue
             if 'googletagmanager.com' in href or 'google-analytics.com' in href:

@@ -3,6 +3,8 @@
 layout: default
 title: "Go 用戶端"
 nav_order: 50
+canonical_url: https://docs.opensearch.org/latest/clients/go/
+redirect_to: https://docs.opensearch.org/latest/clients/go/
 ---
 
 # Go 用戶端

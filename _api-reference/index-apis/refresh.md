@@ -5,6 +5,7 @@ title: "重新整理索引"
 parent: Index operations
 grand_parent: Index APIs
 nav_order: 60
+canonical_url: https://docs.opensearch.org/latest/api-reference/index-apis/refresh/
 ---
 
 # 重新整理索引 API

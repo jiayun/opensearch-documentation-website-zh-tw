@@ -5,6 +5,7 @@ title: "進階管理"
 parent: OpenSearch Kubernetes Operator
 grand_parent: Installing OpenSearch
 nav_order: 70
+canonical_url: https://docs.opensearch.org/latest/install-and-configure/install-opensearch/operator/operator-advanced/
 ---
 
 # 進階 OpenSearch Operator 管理

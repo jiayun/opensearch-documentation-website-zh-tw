@@ -5,6 +5,7 @@ title: "累計總和"
 parent: Pipeline aggregations
 has_children: false
 nav_order: 60
+canonical_url: https://docs.opensearch.org/latest/aggregations/pipeline/cumulative-sum/
 ---
 
 # 累計總和彙總

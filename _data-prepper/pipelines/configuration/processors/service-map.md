@@ -7,6 +7,8 @@ grand_parent: Pipelines
 nav_order: 330
 redirect_from:
   - /data-prepper/pipelines/configuration/processors/service-map-stateful/
+canonical_url: https://docs.opensearch.org/latest/data-prepper/pipelines/configuration/processors/service-map/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/pipelines/configuration/processors/service-map/
 ---
 
 # 服務地圖處理器

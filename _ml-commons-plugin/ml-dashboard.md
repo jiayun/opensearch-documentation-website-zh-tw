@@ -6,6 +6,7 @@ parent: Integrating ML models
 nav_order: 120
 redirect_from:
   - /ml-commons-plugin/ml-dashbaord/
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/ml-dashboard/
 ---
 
 # 在 OpenSearch Dashboards 中管理機器學習模型

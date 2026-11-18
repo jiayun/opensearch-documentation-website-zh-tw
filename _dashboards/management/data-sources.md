@@ -4,6 +4,7 @@ layout: default
 title: "連接資料來源"
 nav_order: 30
 has_children: true
+canonical_url: https://docs.opensearch.org/latest/dashboards/management/data-sources/
 ---
 
 # 資料來源

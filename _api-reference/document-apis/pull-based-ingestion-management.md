@@ -6,6 +6,8 @@ parent: Pull-based ingestion
 grand_parent: Document APIs
 has_children: false
 nav_order: 10
+redirect_from:
+  - /api-reference/index-apis/pull-based-ingestion-management/
 ---
 
 # 提取式資料匯入管理 API

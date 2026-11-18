@@ -6,6 +6,7 @@ nav_order: 50
 parent: Search Relevance Workbench
 grand_parent: Optimizing search quality
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/search-plugins/search-relevance/evaluate-search-quality/
 ---
 
 # 評估搜尋品質

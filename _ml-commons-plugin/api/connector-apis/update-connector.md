@@ -5,6 +5,7 @@ title: "更新連接器"
 parent: Connector APIs
 grand_parent: ML APIs
 nav_order: 27
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/connector-apis/update-connector/
 ---
 
 # 更新連接器 API

@@ -4,6 +4,7 @@ layout: default
 title: "外掛程式設定"
 parent: Configuring OpenSearch
 nav_order: 140
+canonical_url: https://docs.opensearch.org/latest/install-and-configure/configuring-opensearch/plugin-settings/
 ---
 
 # 外掛程式設定

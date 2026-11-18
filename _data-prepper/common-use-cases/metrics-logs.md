@@ -4,6 +4,8 @@ layout: default
 title: "從記錄檔衍生指標"
 parent: Common use cases
 nav_order: 15
+canonical_url: https://docs.opensearch.org/latest/data-prepper/common-use-cases/metrics-logs/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/common-use-cases/metrics-logs/
 ---
 
 # 從記錄檔衍生指標

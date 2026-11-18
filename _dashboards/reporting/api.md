@@ -6,6 +6,7 @@ nav_order: 30
 parent: Reporting
 redirect_from:
   - /reporting/api/
+canonical_url: https://docs.opensearch.org/latest/dashboards/reporting/api/
 ---
 
 # 報告 API

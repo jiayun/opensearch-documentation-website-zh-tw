@@ -6,6 +6,7 @@ nav_order: 120
 has_children: false
 parent: User-defined search processors
 grand_parent: Search pipelines
+canonical_url: https://docs.opensearch.org/latest/search-plugins/search-pipelines/script-processor/
 ---
 
 # 指令碼搜尋處理器

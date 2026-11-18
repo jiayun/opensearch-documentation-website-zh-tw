@@ -5,6 +5,7 @@ title: "快照管理"
 nav_order: 90
 redirect_from:
   - /dashboards/admin-ui-index/sm-dashboards/
+canonical_url: https://docs.opensearch.org/latest/dashboards/sm-dashboards/
 ---
 
 # OpenSearch Dashboards 中的快照管理

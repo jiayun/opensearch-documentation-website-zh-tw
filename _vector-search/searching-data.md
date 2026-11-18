@@ -3,6 +3,7 @@
 layout: default
 title: "搜尋資料"
 nav_order: 35
+canonical_url: https://docs.opensearch.org/latest/vector-search/searching-data/
 ---
 
 # 搜尋向量資料

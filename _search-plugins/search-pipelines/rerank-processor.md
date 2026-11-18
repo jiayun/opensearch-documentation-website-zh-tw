@@ -6,6 +6,7 @@ nav_order: 110
 has_children: false
 parent: User-defined search processors
 grand_parent: Search pipelines
+canonical_url: https://docs.opensearch.org/latest/search-plugins/search-pipelines/rerank-processor/
 ---
 
 # 重新排名處理器

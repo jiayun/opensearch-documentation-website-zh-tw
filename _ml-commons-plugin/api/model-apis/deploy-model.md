@@ -5,6 +5,7 @@ title: "部署模型"
 parent: Model APIs
 grand_parent: ML APIs
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/model-apis/deploy-model/
 ---
 
 # 部署模型 API

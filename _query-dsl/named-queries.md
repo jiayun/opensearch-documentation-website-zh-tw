@@ -3,6 +3,7 @@
 layout: default
 title: "具名查詢"
 nav_order: 77
+canonical_url: https://docs.opensearch.org/latest/query-dsl/named-queries/
 ---
 
 # 具名查詢

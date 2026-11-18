@@ -230,11 +230,11 @@ layout: table_wrappers
         {% endunless %}
         <div id="main-content" class="main-content content-container" role="main" lang="{{ page.translation_language | default: site.lang }}"{% unless page.url == "/404.html" %} data-pagefind-body data-pagefind-filter="section:{{ page.section-name | escape }}"{% endunless %}>
           {% include translation-preview.html %}
-          {% if page.section == "opensearch" %}
+          {% if page.section == "opensearch" and page.url != "/licenses/" %}
             {% if site.doc_version == "supported" %}
-              <p class="supported-version-warning">You're viewing version {{site.opensearch_major_minor_version}} of the OpenSearch documentation. For the latest version, see the <a href="{% if page.url contains '404' %}{{ site.url }}{{ site.latesturl }}/about/{% else %}{{ site.url }}{{ site.latesturl }}{{ page.url }}{% endif %}">current documentation</a>. For information about OpenSearch version maintenance, see <a href="https://opensearch.org/releases.html">Release Schedule and Maintenance Policy</a>.</p>
+              <p class="supported-version-warning" data-pagefind-ignore>您正在檢視 OpenSearch 文件的 {{site.opensearch_major_minor_version}} 版。如需最新版本，請參閱<a href="{{ page.upstream_canonical_url }}">目前的文件</a>。如需 OpenSearch 版本維護的相關資訊，請參閱<a href="https://opensearch.org/releases.html">發行時程與維護政策</a>。</p>
             {% elsif site.doc_version == "unsupported" %}
-              <p class="unsupported-version-warning">You're viewing version {{site.opensearch_major_minor_version}} of the OpenSearch documentation. This version is no longer maintained. For the latest version, see the <a href="{% if page.url contains '404' %}{{ site.url }}{{ site.latesturl }}/about/{% else %}{{ site.url }}{{ site.latesturl }}{{ page.url }}{% endif %}">current documentation</a>. For information about OpenSearch version maintenance, see <a href="https://opensearch.org/releases.html">Release Schedule and Maintenance Policy</a>.</p>
+              <p class="unsupported-version-warning" data-pagefind-ignore>您正在檢視 OpenSearch 文件的 {{site.opensearch_major_minor_version}} 版。此版本已不再維護。如需最新版本，請參閱<a href="{{ page.upstream_canonical_url }}">目前的文件</a>。如需 OpenSearch 版本維護的相關資訊，請參閱<a href="https://opensearch.org/releases.html">發行時程與維護政策</a>。</p>
             {% endif %}
           {% endif %}
           {% if page.section == "migration-assistant-classic" %}

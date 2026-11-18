@@ -6,6 +6,7 @@ parent: Data stream APIs
 nav_order: 30
 redirect_from:
   - /api-reference/index-apis/data-stream-stats/
+canonical_url: https://docs.opensearch.org/latest/api-reference/data-stream/data-stream-stats/
 ---
 
 # Data Stream Stats API

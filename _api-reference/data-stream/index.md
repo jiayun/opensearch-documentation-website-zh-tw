@@ -7,6 +7,7 @@ has_children: true
 has_toc: false
 redirect_from:
   - /api-reference/data-stream/
+canonical_url: https://docs.opensearch.org/latest/api-reference/data-stream/index/
 ---
 
 # 資料串流 API

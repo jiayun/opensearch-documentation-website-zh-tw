@@ -4,6 +4,7 @@ layout: default
 title: Geoshape
 parent: Geographic and xy queries
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/query-dsl/geo-and-xy/geoshape/
 ---
 
 # Geoshape 查詢

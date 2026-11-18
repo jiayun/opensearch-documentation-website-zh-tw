@@ -7,6 +7,7 @@ nav_order: 40
 layout: default
 redirect_from:
   - /observing-your-data/query-insights/query-insights-dashboard/
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/monitoring/query-insights/query-insights-dashboard/
 ---
 
 # 查詢深入解析儀表板

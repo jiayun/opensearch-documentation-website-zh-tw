@@ -6,6 +6,7 @@ parent: Bucket aggregations
 nav_order: 100
 redirect_from:
   - /query-dsl/aggregations/bucket/histogram/
+canonical_url: https://docs.opensearch.org/latest/aggregations/bucket/histogram/
 ---
 
 # 直方圖彙總

@@ -4,6 +4,7 @@ layout: default
 title: "設定"
 parent: Index rollups
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/im-plugin/index-rollups/settings/
 ---
 
 # 索引彙總設定

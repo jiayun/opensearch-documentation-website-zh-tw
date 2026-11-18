@@ -5,6 +5,8 @@ title: "從 Open Distro 遷移"
 nav_order: 30
 redirect_from:
   - /clients/data-prepper/migrate-open-distro/
+canonical_url: https://docs.opensearch.org/latest/data-prepper/migrate-open-distro/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/migrate-open-distro/
 ---
 
 # 從 Open Distro 遷移

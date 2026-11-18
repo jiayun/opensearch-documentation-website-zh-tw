@@ -7,6 +7,7 @@ nav_order: 70
 parent: Connectors
 grand_parent: Connecting to externally hosted models
 great_grand_parent: Integrating ML models
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/remote-models/dynamic-header-substitution/
 ---
 
 # 動態標頭替換

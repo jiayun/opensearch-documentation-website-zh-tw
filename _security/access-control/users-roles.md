@@ -6,6 +6,7 @@ parent: Access control
 nav_order: 70
 redirect_from:
  - /security-plugin/access-control/users-roles/
+canonical_url: https://docs.opensearch.org/latest/security/access-control/users-roles/
 ---
 
 # 定義使用者與角色

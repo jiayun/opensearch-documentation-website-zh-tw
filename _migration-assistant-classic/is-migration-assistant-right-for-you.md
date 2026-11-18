@@ -4,6 +4,8 @@ layout: default
 title: "Migration Assistant 適合您嗎？"
 nav_order: 10
 permalink: /classic/migration-assistant/is-migration-assistant-right-for-you/
+canonical_url: https://docs.opensearch.org/latest/classic/migration-assistant/is-migration-assistant-right-for-you/
+redirect_to: https://docs.opensearch.org/latest/classic/migration-assistant/is-migration-assistant-right-for-you/
 ---
 
 # Migration Assistant 適合您嗎

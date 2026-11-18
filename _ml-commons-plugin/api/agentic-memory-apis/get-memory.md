@@ -5,6 +5,7 @@ title: "取得代理記憶"
 parent: Agentic memory APIs
 grand_parent: ML APIs
 nav_order: 51
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/agentic-memory-apis/get-memory/
 ---
 
 # 取得代理記憶（agentic memory）API

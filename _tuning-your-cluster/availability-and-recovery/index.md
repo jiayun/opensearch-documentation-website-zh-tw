@@ -7,6 +7,7 @@ has_children: true
 has_toc: true
 redirect_from:
   - /tuning-your-cluster/availability-and-recovery/
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/availability-and-recovery/index/
 ---
 
 # 可用性與復原

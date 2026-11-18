@@ -5,6 +5,7 @@ title: "搜尋連接器"
 parent: Connector APIs
 grand_parent: ML APIs
 nav_order: 25
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/connector-apis/search-connector/
 ---
 
 # 搜尋連接器 API

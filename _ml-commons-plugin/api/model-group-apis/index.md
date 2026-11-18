@@ -8,6 +8,7 @@ has_toc: false
 nav_order: 20
 redirect_from:
   - /ml-commons-plugin/api/model-group-apis/
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/model-group-apis/index/
 ---
 
 # 模型群組 API

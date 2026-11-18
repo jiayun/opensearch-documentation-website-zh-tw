@@ -7,6 +7,7 @@ grand_parent: Monitoring your cluster
 nav_order: 30
 redirect_from:
   - /observing-your-data/query-insights/live-queries/
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/monitoring/query-insights/live-queries/
 ---
 
 # 即時查詢

@@ -5,6 +5,7 @@ title: "提交範本（已棄用）"
 parent: Index templates
 grand_parent: Index APIs
 nav_order: 70
+canonical_url: https://docs.opensearch.org/latest/api-reference/index-apis/post-template-legacy/
 ---
 
 # 提交範本

@@ -5,6 +5,7 @@ title: "建立或更新索引範本"
 parent: Index templates
 grand_parent: Index APIs
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/api-reference/index-apis/create-index-template/
 ---
 
 # 建立或更新索引範本 API

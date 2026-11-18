@@ -4,6 +4,7 @@ layout: default
 title: "對應"
 parent: Character filters
 nav_order: 120
+canonical_url: https://docs.opensearch.org/latest/analyzers/character-filters/mapping-character-filter/
 ---
 
 # 對應字元篩選器

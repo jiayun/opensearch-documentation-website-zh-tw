@@ -6,6 +6,7 @@ parent: Metadata fields
 nav_order: 30
 redirect_from:
   - /field-types/metadata-fields/ignored/
+canonical_url: https://docs.opensearch.org/latest/mappings/metadata-fields/ignored/
 ---
 
 # 已忽略的中繼資料欄位

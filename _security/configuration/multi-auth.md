@@ -4,6 +4,7 @@ layout: default
 title: "設定登入選項"
 parent: Configuration
 nav_order: 45
+canonical_url: https://docs.opensearch.org/latest/security/configuration/multi-auth/
 ---
 
 # 為多種驗證選項設定 Dashboards 登入

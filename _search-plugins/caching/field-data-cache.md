@@ -5,6 +5,7 @@ title: "欄位資料快取"
 parent: Caching
 grand_parent: Improving search performance
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/search-plugins/caching/field-data-cache/
 ---
 
 # 欄位資料快取

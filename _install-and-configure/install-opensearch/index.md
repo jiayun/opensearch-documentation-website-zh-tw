@@ -10,6 +10,7 @@ redirect_from:
   - /opensearch/install/important-settings/
   - /opensearch/install/index/
   - /install-and-configure/install-opensearch/
+canonical_url: https://docs.opensearch.org/latest/install-and-configure/install-opensearch/index/
 ---
 
 # 安裝 OpenSearch

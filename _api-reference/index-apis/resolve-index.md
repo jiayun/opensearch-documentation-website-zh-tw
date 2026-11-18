@@ -5,6 +5,7 @@ title: "解析索引"
 parent: Core index APIs
 grand_parent: Index APIs
 nav_order: 70
+canonical_url: https://docs.opensearch.org/latest/api-reference/index-apis/resolve-index/
 ---
 
 # Resolve Index API

@@ -4,6 +4,7 @@ layout: default
 title: "建立快照"
 parent: Snapshot APIs
 nav_order: 50
+canonical_url: https://docs.opensearch.org/latest/api-reference/snapshots/create-snapshot/
 ---
 
 # Create Snapshot API

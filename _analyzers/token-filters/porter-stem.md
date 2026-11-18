@@ -4,6 +4,7 @@ layout: default
 title: "Porter 詞幹"
 parent: Token filters
 nav_order: 340
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/porter-stem/
 ---
 
 # Porter 詞幹詞元篩選器

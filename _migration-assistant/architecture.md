@@ -6,6 +6,8 @@ nav_order: 15
 permalink: /migration-assistant/architecture/
 redirect_from:
   - /migration-assistant/overview/architecture/
+canonical_url: https://docs.opensearch.org/latest/migration-assistant/architecture/
+redirect_to: https://docs.opensearch.org/latest/migration-assistant/architecture/
 ---
 
 # Migration Assistant 架構

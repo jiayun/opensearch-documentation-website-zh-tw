@@ -7,6 +7,7 @@ has_children: true
 has_toc: false
 redirect_from:
   - /dashboards/dashboards-assistant/
+canonical_url: https://docs.opensearch.org/latest/dashboards/dashboards-assistant/index/
 ---
 
 請注意，機器學習模型具有機率性，且某些模型的表現可能優於其他模型，因此 OpenSearch Assistant 偶爾可能會產生不正確的資訊。我們建議您依據使用案例適當評估輸出的正確性，包括檢閱輸出內容，或將其與其他驗證因素結合使用。

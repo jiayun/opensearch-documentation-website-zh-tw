@@ -4,6 +4,7 @@ layout: default
 title: HTML strip
 parent: Character filters
 nav_order: 100
+canonical_url: https://docs.opensearch.org/latest/analyzers/character-filters/html-character-filter/
 ---
 
 # HTML strip 字元篩選器

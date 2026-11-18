@@ -5,6 +5,7 @@ title: "取得索引對應"
 parent: Index settings and mappings
 grand_parent: Index APIs
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/api-reference/index-apis/get-mapping/
 ---
 
 # 取得索引對應 API

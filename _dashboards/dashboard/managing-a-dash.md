@@ -5,6 +5,7 @@ title: "管理儀表板"
 parent: Creating dashboards
 nav_order: 40
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/dashboards/dashboard/managing-a-dash/
 ---
 
 # 管理儀表板

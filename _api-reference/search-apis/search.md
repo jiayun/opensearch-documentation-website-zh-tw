@@ -7,6 +7,7 @@ nav_order: 10
 redirect_from:
   - /opensearch/rest-api/search/
   - /api-reference/search/
+canonical_url: https://docs.opensearch.org/latest/api-reference/search-apis/search/
 ---
 
 # 搜尋 API

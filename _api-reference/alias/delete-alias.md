@@ -5,6 +5,7 @@ title: "刪除別名"
 parent: Alias APIs
 grand_parent: Index APIs
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/api-reference/alias/delete-alias/
 ---
 
 # Delete Index Alias API

@@ -5,6 +5,7 @@ title: "巴西葡萄牙語"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 50
+canonical_url: https://docs.opensearch.org/latest/analyzers/language-analyzers/brazilian/
 ---
 
 # 巴西葡萄牙語分析器

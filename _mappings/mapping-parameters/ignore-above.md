@@ -8,6 +8,7 @@ redirect_from:
 nav_order: 120
 has_children: false
 has_toc: false
+canonical_url: https://docs.opensearch.org/latest/mappings/mapping-parameters/ignore-above/
 ---
 
 # Ignore above 對應參數

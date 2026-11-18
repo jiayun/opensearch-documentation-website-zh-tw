@@ -4,6 +4,7 @@ layout: default
 title: "授權基本概念"
 parent: Access control
 nav_order: 74
+canonical_url: https://docs.opensearch.org/latest/security/access-control/authorization-basics/
 ---
 
 # 授權基本概念

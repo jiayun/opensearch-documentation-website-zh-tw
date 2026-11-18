@@ -7,6 +7,7 @@ grand_parent: Monitoring your cluster
 nav_order: 70
 redirect_from:
   - /observing-your-data/query-insights/health/
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/monitoring/query-insights/health/
 ---
 
 # Query Insights 外掛程式健康狀態

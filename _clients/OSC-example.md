@@ -5,6 +5,8 @@ title: "高階 .NET 用戶端的更多進階功能"
 nav_order: 12
 has_children: false
 parent: .NET clients
+canonical_url: https://docs.opensearch.org/latest/clients/OSC-example/
+redirect_to: https://docs.opensearch.org/latest/clients/OSC-example/
 ---
 
 # 高階 .NET 用戶端 (OpenSearch.Client) 的更多進階功能

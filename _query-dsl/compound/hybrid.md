@@ -4,6 +4,7 @@ layout: default
 title: "混合"
 parent: Compound queries
 nav_order: 70
+canonical_url: https://docs.opensearch.org/latest/query-dsl/compound/hybrid/
 ---
 
 # 混合查詢

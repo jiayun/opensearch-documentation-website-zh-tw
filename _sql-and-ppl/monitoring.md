@@ -5,6 +5,7 @@ title: "監控"
 nav_order: 95
 redirect_from:
   - /search-plugins/sql/monitoring/
+canonical_url: https://docs.opensearch.org/latest/sql-and-ppl/monitoring/
 ---
 
 # SQL 與 PPL 監控

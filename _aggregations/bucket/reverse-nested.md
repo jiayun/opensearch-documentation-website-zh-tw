@@ -6,6 +6,7 @@ parent: Bucket aggregations
 nav_order: 160
 redirect_from:
   - /query-dsl/aggregations/bucket/reverse-nested/
+canonical_url: https://docs.opensearch.org/latest/aggregations/bucket/reverse-nested/
 ---
 
 # 反向巢狀彙總

@@ -4,6 +4,7 @@ layout: default
 title: "執行行內指令碼"
 parent: Script APIs
 nav_order: 7
+canonical_url: https://docs.opensearch.org/latest/api-reference/script-apis/exec-script/
 ---
 
 # 執行內嵌指令碼 API

@@ -5,6 +5,7 @@ title: "取得連接器"
 parent: Connector APIs
 grand_parent: ML APIs
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/connector-apis/get-connector/
 ---
 
 # Get Connector API

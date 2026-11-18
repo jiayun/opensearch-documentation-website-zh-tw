@@ -4,6 +4,7 @@ layout: default
 title: "安全性外掛程式健康狀態"
 parent: Security APIs
 nav_order: 170
+canonical_url: https://docs.opensearch.org/latest/security/api/health/
 ---
 
 # 安全性外掛程式健康狀態 API

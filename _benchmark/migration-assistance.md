@@ -3,6 +3,8 @@
 layout: default
 title: "遷移協助"
 nav_order: 110
+canonical_url: https://docs.opensearch.org/latest/benchmark/migration-assistance/
+redirect_to: https://docs.opensearch.org/latest/benchmark/migration-assistance/
 ---
 
 # 從 1.X 遷移至 2.X

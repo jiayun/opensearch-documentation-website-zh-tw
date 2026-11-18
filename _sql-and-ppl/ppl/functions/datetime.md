@@ -5,6 +5,7 @@ title: "日期與時間函式"
 parent: Functions
 grand_parent: PPL
 nav_order: 6
+canonical_url: https://docs.opensearch.org/latest/sql-and-ppl/ppl/functions/datetime/
 ---
 
 # 日期與時間函式  

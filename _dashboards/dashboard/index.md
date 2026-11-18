@@ -6,6 +6,7 @@ nav_order: 70
 has_children: true
 redirect_from:
   - /dashboards/dashboard/
+canonical_url: https://docs.opensearch.org/latest/dashboards/dashboard/index/
 ---
 
 # 建立儀表板

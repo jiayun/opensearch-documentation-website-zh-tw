@@ -8,6 +8,7 @@ has_toc: false
 redirect_from:
   - /opensearch/configuration/
   - /install-and-configure/configuring-opensearch/
+canonical_url: https://docs.opensearch.org/latest/install-and-configure/configuring-opensearch/index/
 ---
 
 # 設定 OpenSearch

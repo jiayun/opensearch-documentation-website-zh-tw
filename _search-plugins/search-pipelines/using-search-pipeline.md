@@ -5,6 +5,7 @@ title: "使用搜尋管線"
 nav_order: 20
 has_children: false
 parent: Search pipelines
+canonical_url: https://docs.opensearch.org/latest/search-plugins/search-pipelines/using-search-pipeline/
 ---
 
 # 使用搜尋管線

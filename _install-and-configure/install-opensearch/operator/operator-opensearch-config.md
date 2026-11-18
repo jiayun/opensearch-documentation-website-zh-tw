@@ -5,6 +5,7 @@ title: "OpenSearch 叢集組態"
 parent: OpenSearch Kubernetes Operator
 grand_parent: Installing OpenSearch
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/install-and-configure/install-opensearch/operator/operator-opensearch-config/
 ---
 
 # OpenSearch 叢集組態

@@ -8,6 +8,7 @@ nav_order: 5
 redirect_from:
   - /ml-commons-plugin/tutorials/generate-embeddings/
   - /vector-search/tutorials/vector-operations/generate-embeddings/
+canonical_url: https://docs.opensearch.org/latest/tutorials/vector-search/vector-operations/generate-embeddings/
 ---
 
 # 從物件陣列產生嵌入

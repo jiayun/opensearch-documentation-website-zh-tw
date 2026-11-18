@@ -4,6 +4,7 @@ layout: default
 title: "同義詞"
 parent: Token filters
 nav_order: 415
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/synonym/
 ---
 
 # 同義詞詞元篩選器

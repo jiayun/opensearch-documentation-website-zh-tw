@@ -3,6 +3,7 @@
 layout: default
 title: "相容的作業系統"
 nav_order: 120
+canonical_url: https://docs.opensearch.org/latest/install-and-configure/os-comp/
 ---
 
 # 相容的作業系統

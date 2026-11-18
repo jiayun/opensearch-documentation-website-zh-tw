@@ -17,6 +17,7 @@ redirect_from:
   - /upgrade-to/docker-upgrade-to/
   - /upgrade-to/dashboards-upgrade-to/
 nav_exclude: true
+canonical_url: https://docs.opensearch.org/latest/migrate-or-upgrade/
 ---
 
 # 遷移或升級 OpenSearch

@@ -5,6 +5,7 @@ title: "瑞典文"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 310
+canonical_url: https://docs.opensearch.org/latest/analyzers/language-analyzers/swedish/
 ---
 
 # 瑞典文分析器

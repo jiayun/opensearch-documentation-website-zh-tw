@@ -6,6 +6,7 @@ parent: Data stream APIs
 nav_order: 40
 redirect_from:
   - /api-reference/index-apis/modify-data-stream/
+canonical_url: https://docs.opensearch.org/latest/api-reference/data-stream/modify-data-stream/
 ---
 
 # Modify Data Stream API

@@ -7,6 +7,8 @@ parent: Extensions
 grand_parent: Managing OpenSearch Data Prepper
 redirect_from:
   - /data-prepper/managing-data-prepper/extensions/geoip_service/
+canonical_url: https://docs.opensearch.org/latest/data-prepper/managing-data-prepper/extensions/geoip-service/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/managing-data-prepper/extensions/geoip-service/
 ---
 
 # GeoIP 服務擴充功能

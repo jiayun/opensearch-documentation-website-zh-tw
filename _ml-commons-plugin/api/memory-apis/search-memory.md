@@ -5,6 +5,7 @@ title: "搜尋記憶"
 parent: Memory APIs
 grand_parent: ML APIs
 nav_order: 25
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/memory-apis/search-memory/
 ---
 
 # 搜尋記憶 API

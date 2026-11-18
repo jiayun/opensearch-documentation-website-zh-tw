@@ -6,6 +6,8 @@ nav_order: 70
 redirect_from:
   - /benchmark/user-guide/optimizing-benchmarks/performance-testing-best-practices/
   - /benchmark/user-guide/optimizing-benchmarks/
+canonical_url: https://docs.opensearch.org/latest/benchmark/performance-testing-best-practices/
+redirect_to: https://docs.opensearch.org/latest/benchmark/performance-testing-best-practices/
 ---
 
 # 效能測試最佳實務

@@ -6,6 +6,7 @@ parent: Metric aggregations
 nav_order: 100
 redirect_from:
   - /query-dsl/aggregations/metric/scripted-metric/
+canonical_url: https://docs.opensearch.org/latest/aggregations/metric/scripted-metric/
 ---
 
 # 指令碼指標彙總

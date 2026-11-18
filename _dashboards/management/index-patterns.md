@@ -4,6 +4,7 @@ layout: default
 title: "索引模式"
 parent: Connecting data sources
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/dashboards/management/index-patterns/
 ---
 
 # 索引模式

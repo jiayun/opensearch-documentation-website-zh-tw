@@ -5,6 +5,7 @@ title: "孟加拉語"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/analyzers/language-analyzers/bengali/
 ---
 
 # 孟加拉語分析器

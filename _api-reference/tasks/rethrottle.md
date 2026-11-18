@@ -4,6 +4,7 @@ layout: default
 title: "重新節流任務"
 parent: Tasks APIs
 nav_order: 50
+canonical_url: https://docs.opensearch.org/latest/api-reference/tasks/rethrottle/
 ---
 
 # 重新節流任務 API

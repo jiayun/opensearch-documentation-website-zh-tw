@@ -4,6 +4,7 @@ layout: default
 title: "安裝 OpenSearch Dashboards"
 parent: Getting started
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/dashboards/getting-started/install/
 ---
 
 # 安裝 OpenSearch Dashboards

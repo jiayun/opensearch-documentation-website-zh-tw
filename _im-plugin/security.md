@@ -4,6 +4,7 @@ layout: default
 title: "索引管理安全性"
 nav_order: 90
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/im-plugin/security/
 ---
 
 # 索引管理安全性

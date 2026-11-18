@@ -7,6 +7,7 @@ nav_order: 160
 redirect_from:
   - /security/api/dashboards-info/get-dashboards-info/
   - /security/api/dashboards-info/post-dashboards-info/
+canonical_url: https://docs.opensearch.org/latest/security/api/dashboards-info/
 ---
 
 # Dashboards Info API

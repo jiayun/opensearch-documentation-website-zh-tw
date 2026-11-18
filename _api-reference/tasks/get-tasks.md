@@ -4,6 +4,7 @@ layout: default
 title: "取得任務"
 parent: Tasks APIs
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/api-reference/tasks/get-tasks/
 ---
 
 # Get Task API

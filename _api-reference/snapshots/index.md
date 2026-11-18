@@ -8,6 +8,7 @@ nav_order: 120
 redirect_from:
   - /opensearch/rest-api/snapshots/
   - /api-reference/snapshots/
+canonical_url: https://docs.opensearch.org/latest/api-reference/snapshots/index/
 ---
 
 # 快照 API

@@ -4,6 +4,7 @@ layout: default
 title: "神經稀疏 ANN 搜尋中的篩選"
 parent: Filtering data
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/vector-search/filter-search-knn/filtering-in-sparse-search/
 ---
 
 # 神經稀疏 ANN 搜尋中的篩選

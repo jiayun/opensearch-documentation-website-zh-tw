@@ -4,6 +4,7 @@ layout: default
 title: Edge n-gram
 parent: Token filters
 nav_order: 120
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/edge-ngram/
 ---
 # Edge n-gram 詞元篩選器
 `edge_ngram` 詞元篩選器與 `ngram` 詞元篩選器非常相似，兩者都會將特定字串分割成不同長度的子字串。不過，`edge_ngram` 詞元篩選器只會從詞元的開頭（邊緣）產生 n-gram（子字串）。在自動完成或前綴比對等情境中，當您希望在使用者輸入時比對字詞或片語的開頭，這個篩選器特別實用。

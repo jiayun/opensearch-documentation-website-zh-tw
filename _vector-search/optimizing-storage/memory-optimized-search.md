@@ -4,6 +4,7 @@ layout: default
 title: "記憶體最佳化搜尋"
 parent: Optimizing vector storage
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/vector-search/optimizing-storage/memory-optimized-search/
 ---
 
 # 記憶體最佳化搜尋

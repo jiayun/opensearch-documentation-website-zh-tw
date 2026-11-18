@@ -4,6 +4,8 @@ layout: default
 title: "輔助方法"
 parent: JavaScript client
 nav_order: 2
+canonical_url: https://docs.opensearch.org/latest/clients/javascript/helpers/
+redirect_to: https://docs.opensearch.org/latest/clients/javascript/helpers/
 ---
 
 # JavaScript 輔助方法

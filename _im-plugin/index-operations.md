@@ -6,6 +6,7 @@ nav_order: 5
 redirect_from:
   - /dashboards/im-dashboards/index-management/
   - /dashboards/admin-ui-index/index-management/
+canonical_url: https://docs.opensearch.org/latest/im-plugin/index-operations/
 ---
 
 # 索引操作

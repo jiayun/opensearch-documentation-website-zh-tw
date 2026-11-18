@@ -5,6 +5,7 @@ title: "最低應符合數量"
 nav_order: 80
 redirect_from:
 - /query-dsl/query-dsl/minimum-should-match/
+canonical_url: https://docs.opensearch.org/latest/query-dsl/minimum-should-match/
 ---
 
 # 最低應符合數量 

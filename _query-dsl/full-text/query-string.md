@@ -7,6 +7,7 @@ nav_order: 80
 redirect_from:
   - /opensearch/query-dsl/full-text/query-string/
   - /query-dsl/query-dsl/full-text/query-string/
+canonical_url: https://docs.opensearch.org/latest/query-dsl/full-text/query-string/
 ---
 
 # 查詢字串查詢

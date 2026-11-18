@@ -6,6 +6,7 @@ parent: Agentic search
 grand_parent: AI search
 nav_order: 90
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/vector-search/ai-search/agentic-search/neural-search/
 ---
 
 # 為語意搜尋設定代理程式

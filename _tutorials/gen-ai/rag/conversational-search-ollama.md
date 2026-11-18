@@ -5,6 +5,7 @@ title: "使用 Ollama 進行對話式搜尋"
 parent: RAG
 grand_parent: Generative AI
 nav_order: 180
+canonical_url: https://docs.opensearch.org/latest/tutorials/gen-ai/rag/conversational-search-ollama/
 ---
 
 # 使用 Ollama 進行對話式搜尋

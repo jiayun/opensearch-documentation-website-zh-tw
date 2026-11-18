@@ -5,6 +5,8 @@ title: "接收器"
 parent: Pipelines
 has_children: true
 nav_order: 25
+canonical_url: https://docs.opensearch.org/latest/data-prepper/pipelines/configuration/sinks/sinks/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/pipelines/configuration/sinks/sinks/
 ---
 
 # Data Prepper 接收器

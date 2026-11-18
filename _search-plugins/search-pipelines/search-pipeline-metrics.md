@@ -5,6 +5,7 @@ title: "搜尋管線指標"
 nav_order: 60
 has_children: false
 parent: Search pipelines
+canonical_url: https://docs.opensearch.org/latest/search-plugins/search-pipelines/search-pipeline-metrics/
 ---
 
 # 搜尋管線指標

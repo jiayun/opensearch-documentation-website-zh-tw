@@ -4,6 +4,7 @@ layout: default
 title: Drop
 parent: Ingest processors
 nav_order: 70
+canonical_url: https://docs.opensearch.org/latest/ingest-pipelines/processors/drop/
 ---
 
 本文件說明在 OpenSearch 資料匯入管線中使用 `drop` 處理器的方法。如果您的使用案例涉及大型或複雜的資料集，建議考慮使用在 OpenSearch 叢集外部執行的 [Data Prepper `drop_events` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/drop-events/)。

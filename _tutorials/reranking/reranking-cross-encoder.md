@@ -7,6 +7,7 @@ nav_order: 110
 redirect_from:
   - /ml-commons-plugin/tutorials/reranking-cross-encoder/
   - /vector-search/tutorials/reranking/reranking-cross-encoder/
+canonical_url: https://docs.opensearch.org/latest/tutorials/reranking/reranking-cross-encoder/
 ---
 
 # 在 Amazon SageMaker 中使用交叉編碼器重新排名搜尋結果

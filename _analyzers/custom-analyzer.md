@@ -4,6 +4,7 @@ layout: default
 title: "建立自訂分析器"
 nav_order: 40
 parent: Analyzers
+canonical_url: https://docs.opensearch.org/latest/analyzers/custom-analyzer/
 ---
 
 # 建立自訂分析器

@@ -6,6 +6,7 @@ parent: Installing OpenSearch
 nav_order: 5
 redirect_from: 
   - /opensearch/install/docker/
+canonical_url: https://docs.opensearch.org/latest/install-and-configure/install-opensearch/docker/
 ---
 
 # 使用 Docker 安裝 OpenSearch

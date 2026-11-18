@@ -8,6 +8,7 @@ has_children: true
 redirect_from:
   - /search-plugins/neural-sparse-search/
   - /search-plugins/sparse-search/
+canonical_url: https://docs.opensearch.org/latest/vector-search/ai-search/neural-sparse-search/
 ---
 
 # 神經稀疏搜尋

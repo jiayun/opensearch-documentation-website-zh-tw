@@ -6,6 +6,7 @@ nav_order: 100
 parent: Search Relevance Workbench
 grand_parent: Optimizing search quality
 has_toc: false
+canonical_url: https://docs.opensearch.org/latest/search-plugins/search-relevance/relevance-agent/
 ---
 
 # 相關性代理程式

@@ -8,6 +8,7 @@ has_toc: false
 redirect_from:
   - /ml-commons-plugin/api/
   - /ml-commons-plugin/api/train-predict/
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/index/
 ---
 
 # ML API

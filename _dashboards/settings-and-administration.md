@@ -5,6 +5,7 @@ title: "設定與管理"
 nav_order: 140
 has_children: true
 has_toc: false
+canonical_url: https://docs.opensearch.org/latest/dashboards/settings-and-administration/
 ---
 
 # 設定與管理

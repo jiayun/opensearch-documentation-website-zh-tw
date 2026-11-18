@@ -4,6 +4,8 @@ layout: default
 title: "工作負載參數"
 parent: Anatomy of a workload
 nav_order: 60
+canonical_url: https://docs.opensearch.org/latest/benchmark/reference/workloads/parameters/
+redirect_to: https://docs.opensearch.org/latest/benchmark/reference/workloads/parameters/
 ---
 
 # 工作負載參數

@@ -5,6 +5,7 @@ title: "索引調校"
 nav_order: 80
 has_children: true
 has_toc: false
+canonical_url: https://docs.opensearch.org/latest/im-plugin/index-tuning/
 ---
 
 # 索引調校

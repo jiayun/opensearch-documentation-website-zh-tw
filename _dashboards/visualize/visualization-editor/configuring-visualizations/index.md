@@ -9,6 +9,7 @@ has_children: true
 has_toc: false
 redirect_from:
   - /dashboards/visualize/visualization-editor/configuring-visualizations/
+canonical_url: https://docs.opensearch.org/latest/dashboards/visualize/visualization-editor/configuring-visualizations/index/
 ---
 
 # 在視覺化編輯器中設定視覺化

@@ -6,6 +6,7 @@ parent: Mapping parameters
 nav_order: 50
 has_children: false
 has_toc: false
+canonical_url: https://docs.opensearch.org/latest/mappings/mapping-parameters/field-data/
 ---
 
 # 欄位資料對應參數

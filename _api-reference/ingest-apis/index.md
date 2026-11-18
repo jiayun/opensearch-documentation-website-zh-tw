@@ -7,6 +7,7 @@ nav_order: 70
 redirect_from:
   - /opensearch/rest-api/ingest-apis/index/
   - /api-reference/ingest-apis/
+canonical_url: https://docs.opensearch.org/latest/api-reference/ingest-apis/index/
 ---
 
 # 資料匯入 API

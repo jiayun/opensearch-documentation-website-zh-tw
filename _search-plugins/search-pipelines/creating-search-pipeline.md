@@ -5,6 +5,7 @@ title: "建立搜尋管線"
 nav_order: 10
 has_children: false
 parent: Search pipelines
+canonical_url: https://docs.opensearch.org/latest/search-plugins/search-pipelines/creating-search-pipeline/
 ---
 
 # 建立搜尋管線

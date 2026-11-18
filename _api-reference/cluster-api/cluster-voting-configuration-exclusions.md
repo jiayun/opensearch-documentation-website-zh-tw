@@ -4,6 +4,7 @@ layout: default
 title: "投票組態排除項目"
 parent: Cluster APIs
 nav_order: 75
+canonical_url: https://docs.opensearch.org/latest/api-reference/cluster-api/cluster-voting-configuration-exclusions/
 ---
 
 # 投票組態排除項目 API

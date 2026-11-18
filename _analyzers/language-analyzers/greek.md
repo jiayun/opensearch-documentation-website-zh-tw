@@ -5,6 +5,7 @@ title: "希臘文"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 180
+canonical_url: https://docs.opensearch.org/latest/analyzers/language-analyzers/greek/
 ---
 
 # 希臘文分析器

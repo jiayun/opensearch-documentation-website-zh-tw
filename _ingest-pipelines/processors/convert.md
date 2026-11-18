@@ -6,6 +6,7 @@ parent: Ingest processors
 nav_order: 30
 redirect_from:
    - /api-reference/ingest-apis/processors/convert/
+canonical_url: https://docs.opensearch.org/latest/ingest-pipelines/processors/convert/
 ---
 
 本文件說明如何在 OpenSearch 資料匯入管線中使用 `convert` 處理器。若您的使用情境涉及大型或複雜的資料集，建議改用 [Data Prepper `convert_entry_type` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/convert-entry-type/)，其於 OpenSearch 叢集外執行。

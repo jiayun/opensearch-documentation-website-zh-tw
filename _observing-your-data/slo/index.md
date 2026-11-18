@@ -8,6 +8,7 @@ nav_order: 60
 has_children: false
 redirect_from:
   - /observing-your-data/slo/
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/slo/index/
 ---
 
 # 服務等級目標

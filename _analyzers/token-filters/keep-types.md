@@ -4,6 +4,7 @@ layout: default
 title: "保留類型"
 parent: Token filters
 nav_order: 180
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/keep-types/
 ---
 
 # 保留類型詞元篩選器

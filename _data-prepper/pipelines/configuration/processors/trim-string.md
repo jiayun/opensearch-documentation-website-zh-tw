@@ -5,6 +5,8 @@ title: "修剪字串"
 parent: Processors
 grand_parent: Pipelines
 nav_order: 400
+canonical_url: https://docs.opensearch.org/latest/data-prepper/pipelines/configuration/processors/trim-string/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/pipelines/configuration/processors/trim-string/
 ---
 
 # 修剪字串處理器

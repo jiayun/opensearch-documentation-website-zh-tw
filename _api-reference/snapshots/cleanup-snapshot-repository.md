@@ -4,6 +4,7 @@ layout: default
 title: "清理快照儲存庫"
 parent: Snapshot APIs
 nav_order: 45
+canonical_url: https://docs.opensearch.org/latest/api-reference/snapshots/cleanup-snapshot-repository/
 ---
 
 # 清理快照儲存庫 API

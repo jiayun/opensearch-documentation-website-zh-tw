@@ -4,6 +4,7 @@ layout: default
 title: "巢狀"
 parent: Joining queries
 nav_order: 5
+canonical_url: https://docs.opensearch.org/latest/query-dsl/joining/nested/
 ---
 
 # 巢狀查詢

@@ -7,6 +7,7 @@ parent: Performance tuning
 has_children: false
 redirect_from:
   - /tuning-your-cluster/performance/
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/performance-tuning/indexing-speed/
 ---
 
 # 為編製索引速度調校您的叢集

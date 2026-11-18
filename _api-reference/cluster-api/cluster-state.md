@@ -4,6 +4,7 @@ layout: default
 title: "叢集狀態"
 nav_order: 55
 parent: Cluster APIs
+canonical_url: https://docs.opensearch.org/latest/api-reference/cluster-api/cluster-state/
 ---
 
 # 叢集狀態 API

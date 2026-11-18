@@ -6,6 +6,7 @@ parent: User Behavior Insights
 grand_parent: Optimizing search quality
 has_children: false
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/search-plugins/ubi/ubi-javascript-collector/
 ---
 
 # 如何使用 UBI JavaScript 收集器

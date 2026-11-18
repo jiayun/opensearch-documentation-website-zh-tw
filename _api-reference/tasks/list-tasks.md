@@ -4,6 +4,7 @@ layout: default
 title: "列出工作"
 parent: Tasks APIs
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/api-reference/tasks/list-tasks/
 ---
 
 # 列出工作 API

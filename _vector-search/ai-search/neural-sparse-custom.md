@@ -6,6 +6,7 @@ parent: Neural sparse search
 grand_parent: AI search
 nav_order: 20
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/vector-search/ai-search/neural-sparse-custom/
 ---
 
 # 使用自訂組態進行神經稀疏搜尋

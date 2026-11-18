@@ -4,6 +4,7 @@ layout: default
 title: "CJK 寬度"
 parent: Token filters
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/cjk-width/
 ---
 
 # CJK 寬度詞元篩選器

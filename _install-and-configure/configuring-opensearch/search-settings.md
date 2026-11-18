@@ -4,6 +4,7 @@ layout: default
 title: "搜尋設定"
 parent: Configuring OpenSearch
 nav_order: 80
+canonical_url: https://docs.opensearch.org/latest/install-and-configure/configuring-opensearch/search-settings/
 ---
 
 # 搜尋設定

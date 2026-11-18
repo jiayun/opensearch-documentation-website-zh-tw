@@ -5,6 +5,7 @@ title: "常用 API"
 nav_order: 170
 redirect_from:
   - /opensearch/popular-api/
+canonical_url: https://docs.opensearch.org/latest/api-reference/popular-api/
 ---
 
 # 常用 API

@@ -5,6 +5,8 @@ title: "使用自訂邏輯產生資料"
 nav_order: 35
 parent: Synthetic data generation
 grand_parent: Additional features
+canonical_url: https://docs.opensearch.org/latest/benchmark/features/synthetic-data-generation/custom-logic-sdg/
+redirect_to: https://docs.opensearch.org/latest/benchmark/features/synthetic-data-generation/custom-logic-sdg/
 ---
 
 # 使用自訂邏輯產生資料

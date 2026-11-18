@@ -8,6 +8,7 @@ redirect_from:
 nav_order: 40
 has_children: false
 has_toc: false
+canonical_url: https://docs.opensearch.org/latest/mappings/mapping-parameters/enabled/
 ---
 
 # 啟用對應參數

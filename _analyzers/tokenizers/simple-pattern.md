@@ -4,6 +4,7 @@ layout: default
 title: "簡單模式"
 parent: Tokenizers
 nav_order: 110
+canonical_url: https://docs.opensearch.org/latest/analyzers/tokenizers/simple-pattern/
 ---
 
 # 簡單模式斷詞器

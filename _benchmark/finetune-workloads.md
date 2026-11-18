@@ -7,6 +7,8 @@ nav_order: 10
 redirect_from:
   - /benchmark/user-guide/finetine-workloads/
   - /benchmark/user-guide/working-with-workloads/finetune-workloads/
+canonical_url: https://docs.opensearch.org/latest/benchmark/finetune-workloads/
+redirect_to: https://docs.opensearch.org/latest/benchmark/finetune-workloads/
 ---
 
 # 微調自訂工作負載

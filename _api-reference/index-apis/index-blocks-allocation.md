@@ -6,6 +6,7 @@ parent: Index APIs
 nav_order: 70
 has_children: true
 has_toc: false
+canonical_url: https://docs.opensearch.org/latest/api-reference/index-apis/index-blocks-allocation/
 ---
 
 # 索引封鎖與配置

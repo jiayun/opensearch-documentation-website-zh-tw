@@ -4,6 +4,7 @@ layout: default
 title: "取得指令碼語言"
 parent: Script APIs
 nav_order: 60
+canonical_url: https://docs.opensearch.org/latest/api-reference/script-apis/get-script-language/
 ---
 
 # 取得指令碼語言 API

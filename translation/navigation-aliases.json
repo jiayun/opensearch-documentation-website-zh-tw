@@ -11,7 +11,7 @@
    "reason": "Upstream renamed the parent; agentic-context-processor.md and agentic-query-translator-processor.md still use the old title.",
    "target": "_search-plugins/search-pipelines/search-processors.md",
    "target_original_title": "User-defined search processors",
-   "target_source_sha256": "393187db0af48a8dfe7284fdfe40c13845a91d6dda3d82be20f2d7fd5c90256e"
+   "target_source_sha256": "d6e54243adc60a46ae8fbc484817b0cf9075295dc0cd6c809b7462d2d122bd24"
   },
   {
    "ancestry": [
@@ -24,8 +24,8 @@
    "reason": "Upstream renamed the parent; stats-api.md still uses the old title.",
    "target": "_search-plugins/search-relevance/compare-search-results.md",
    "target_original_title": "Comparing single queries",
-   "target_source_sha256": "88a9c4beccddeb4869d9abc16204799b54ba10967f312d59f451e2dd18e3fb20"
+   "target_source_sha256": "df2375a154a0c257c7cc241aa6384aa9411fb6f4fb6b914064a53262af51529e"
   }
  ],
- "baseline_commit": "8809a8aa43fb839bd4f258ea4d2534cb51ab6df3"
+ "baseline_commit": "9cb6dcdcf0a962671e397d17837901f9a89e3961"
 }

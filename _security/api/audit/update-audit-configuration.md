@@ -5,6 +5,7 @@ title: "更新稽核組態"
 parent: Audit log APIs
 grand_parent: Security APIs
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/security/api/audit/update-audit-configuration/
 ---
 
 # 更新稽核組態 API

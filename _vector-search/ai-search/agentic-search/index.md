@@ -8,6 +8,7 @@ has_children: true
 has_toc: false
 redirect_from:
   - /vector-search/ai-search/agentic-search/
+canonical_url: https://docs.opensearch.org/latest/vector-search/ai-search/agentic-search/index/
 ---
 
 # 代理程式搜尋

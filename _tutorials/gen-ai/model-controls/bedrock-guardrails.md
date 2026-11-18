@@ -8,6 +8,7 @@ nav_order: 170
 redirect_from:
   - /ml-commons-plugin/tutorials/bedrock-guardrails/
   - /vector-search/tutorials/model-controls/bedrock-guardrails/
+canonical_url: https://docs.opensearch.org/latest/tutorials/gen-ai/model-controls/bedrock-guardrails/
 ---
 
 # Amazon Bedrock 模型護欄 

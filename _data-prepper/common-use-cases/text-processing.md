@@ -4,6 +4,8 @@ layout: default
 title: "文字處理"
 parent: Common use cases
 nav_order: 55
+canonical_url: https://docs.opensearch.org/latest/data-prepper/common-use-cases/text-processing/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/common-use-cases/text-processing/
 ---
 
 # 文字處理

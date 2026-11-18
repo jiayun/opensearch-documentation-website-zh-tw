@@ -7,6 +7,7 @@ nav_order: 1
 has_children: true
 redirect_from:
   - /sql-and-ppl/ppl/functions/
+canonical_url: https://docs.opensearch.org/latest/sql-and-ppl/ppl/functions/index/
 ---
 
 # PPL 函式

@@ -3,6 +3,7 @@
 layout: default
 title: "分面搜尋"
 nav_order: 60
+canonical_url: https://docs.opensearch.org/latest/tutorials/faceted-search/
 ---
 
 # 在 OpenSearch 中實作分面搜尋

@@ -5,6 +5,7 @@ title: "取得稽核組態"
 parent: Audit log APIs
 grand_parent: Security APIs
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/security/api/audit/get-audit-configuration/
 ---
 
 # 取得稽核組態 API

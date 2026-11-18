@@ -4,6 +4,7 @@ layout: default
 title: "代理式"
 parent: AI and vector search queries
 nav_order: 2
+canonical_url: https://docs.opensearch.org/latest/query-dsl/specialized/agentic/
 ---
 
 # 代理式查詢

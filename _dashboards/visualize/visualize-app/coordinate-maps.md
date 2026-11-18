@@ -8,6 +8,7 @@ great_grand_parent: Building data visualizations
 nav_order: 55
 redirect_from:
   - /dashboards/visualize/coordinate-maps/
+canonical_url: https://docs.opensearch.org/latest/dashboards/visualize/visualize-app/coordinate-maps/
 ---
 
 # 座標地圖

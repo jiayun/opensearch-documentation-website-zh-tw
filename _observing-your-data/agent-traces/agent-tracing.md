@@ -5,6 +5,7 @@ title: "檢視代理程式追蹤"
 parent: Agent monitoring
 grand_parent: Observability workspace apps
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/agent-traces/agent-tracing/
 ---
 
 # 檢視代理程式追蹤

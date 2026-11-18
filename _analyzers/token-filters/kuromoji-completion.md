@@ -4,6 +4,7 @@ layout: default
 title: "Kuromoji 自動完成"
 parent: Token filters
 nav_order: 231
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/kuromoji-completion/
 ---
 
 # Kuromoji 自動完成詞元篩選器

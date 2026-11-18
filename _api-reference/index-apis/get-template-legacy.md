@@ -5,6 +5,7 @@ title: "取得範本 (已淘汰)"
 parent: Index templates
 grand_parent: Index APIs
 nav_order: 90
+canonical_url: https://docs.opensearch.org/latest/api-reference/index-apis/get-template-legacy/
 ---
 
 # 取得範本

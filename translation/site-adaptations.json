@@ -1,0 +1,58 @@
+{
+ "archive_routes": {
+  "plugin": "_plugins/translation_archive.rb",
+  "plugin_sha256": "364b69a5c2111fc402f3058ef316a89a3e0fd7f4ad1cd918197f94ba39bd0035",
+  "review": {
+   "approved": true,
+   "at": "2026-11-18T03:29:04+00:00",
+   "family": "agy",
+   "file_sha256": {
+    "_config.zh-tw.yml": "4e21421d4f99d2d99c7235de5018625595b3f0ac32691760c5fbf1ee85e11d3e",
+    "_layouts/default.html": "727769eec5cd10634cd65bc769349c756c22abcd00e997baffa35cb9ecee146a",
+    "_plugins/localize_links.rb": "4792e367a621d7738b45023b51bbe1699e089e3f11c79678e9be862b0196f1e9",
+    "_plugins/translation_archive.rb": "364b69a5c2111fc402f3058ef316a89a3e0fd7f4ad1cd918197f94ba39bd0035",
+    "scripts/check-site.py": "e0444b052a7a18404804c5b933b53c791807be82426421fa657b91f2f5814757",
+    "scripts/tests/archive_fixture.rb": "7e1ec18a7a0556239b68108f1521e2a0ffc481eed30ff5ae126419cb7a5704a8",
+    "scripts/tests/test_site.py": "a90fd0ec13fa74f3ccdeab42a2a45a8a11e5c3a6abdd74da052517b2ca732666",
+    "scripts/tests/test_translation_archive.py": "688ac0c31797eab5fd1d6bc2c627370e05e5f55879e492bf491f1a8b85184a02",
+    "scripts/tests/test_translation_metadata.py": "0e064dcf976b1818b973aaec285b682f223167d3882eaf66feef0cfc31cfc8ca",
+    "scripts/translation_pipeline/checks.py": "3addbfa4d1a3a7fb1cc5204e0ef378e2635f55d054fe62e3626d20a3ecc28ae4",
+    "scripts/translation_pipeline/frontmatter.py": "c6ee580c9502015a4a95ffcecb287adbb98f986eb9c4d4e4613b7b3464eee894",
+    "scripts/translation_pipeline/metadata.py": "283e8e7a59e1f59d17c61443e58f3c4c8e4326dba2c6de15d8371c167e6e0b05"
+   },
+   "issues": [],
+   "model": "gemini-4-argon-high",
+   "provider": "agy"
+  }
+ },
+ "baseline_commit": "9cb6dcdcf0a962671e397d17837901f9a89e3961",
+ "maintenance_warning": {
+  "layout_sha256": "727769eec5cd10634cd65bc769349c756c22abcd00e997baffa35cb9ecee146a",
+  "reviewer": {
+   "approved": true,
+   "at": "2026-11-18T01:54:45+00:00",
+   "family": "agy",
+   "issues": [],
+   "model": "gemini-4-argon-high",
+   "prompt_version": "b4fedb3349fa56d6",
+   "provider": "agy",
+   "target_sha256": "7f359bcb5e3bfbe7dbbcac7d770281109188514124dce03e4bb4e9ac200c71b6"
+  },
+  "source_sha256": "a1904d747419839531985e0adf8ab3f52f7299a35c6902220ad817977f760190",
+  "target_sha256": "7f359bcb5e3bfbe7dbbcac7d770281109188514124dce03e4bb4e9ac200c71b6",
+  "translator": {
+   "at": "2026-11-18T01:54:30+00:00",
+   "prompt_version": "b4fedb3349fa56d6",
+   "providers": [
+    {
+     "chunks": [
+      0
+     ],
+     "family": "claude",
+     "model": "claude-opus-5-5",
+     "provider": "claude"
+    }
+   ]
+  }
+ }
+}

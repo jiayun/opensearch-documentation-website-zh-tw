@@ -4,6 +4,7 @@ layout: default
 title: "資源存取管理"
 parent: Dashboards management
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/dashboards/management/resource-sharing/
 ---
 
 # 資源存取管理

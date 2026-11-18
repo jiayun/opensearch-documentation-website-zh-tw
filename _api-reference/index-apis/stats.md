@@ -5,6 +5,7 @@ title: "索引統計"
 parent: Index operations
 grand_parent: Index APIs
 nav_order: 120
+canonical_url: https://docs.opensearch.org/latest/api-reference/index-apis/stats/
 ---
 
 # Index Stats API 

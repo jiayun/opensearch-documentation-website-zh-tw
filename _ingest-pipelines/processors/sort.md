@@ -4,6 +4,7 @@ layout: default
 title: "排序"
 parent: Ingest processors
 nav_order: 250
+canonical_url: https://docs.opensearch.org/latest/ingest-pipelines/processors/sort/
 ---
 
 # 排序資料匯入處理器

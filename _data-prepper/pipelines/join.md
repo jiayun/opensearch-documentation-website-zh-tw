@@ -5,6 +5,8 @@ title: join()
 parent: Functions
 grand_parent: Pipelines
 nav_order: 25
+canonical_url: https://docs.opensearch.org/latest/data-prepper/pipelines/join/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/pipelines/join/
 ---
 
 <!-- vale off -->

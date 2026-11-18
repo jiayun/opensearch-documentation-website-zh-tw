@@ -5,6 +5,7 @@ title: "設定遙測資料匯入"
 nav_order: 10
 parent: Application performance monitoring
 grand_parent: Observability workspace apps
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/apm/configuring-telemetry-ingestion/
 ---
 
 # 設定遙測資料匯入

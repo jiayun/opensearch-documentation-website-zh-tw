@@ -10,6 +10,7 @@ redirect_from:
   - /dashboards/visualize/region-maps/
   - /dashboards/visualize/geojson-regionmaps/
   - /dashboards/geojson-regionmaps/
+canonical_url: https://docs.opensearch.org/latest/dashboards/visualize/visualize-app/region-maps/
 ---
 
 # 區域地圖

@@ -7,6 +7,7 @@ parent: Workload management
 redirect_from:
   - /tuning-your-cluster/availability-and-recovery/workload-management/create-workload-group-rules-api/
   - /tuning-your-cluster/availability-and-recovery/workload-management/workload-group-rules/
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/workload-management/workload-group-rules/
 ---
 
 # 工作負載群組規則

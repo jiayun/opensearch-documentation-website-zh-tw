@@ -5,6 +5,8 @@ title: "Amazon OpenSearch Service → Amazon OpenSearch Serverless NextGen"
 nav_order: 2
 parent: Playbooks
 permalink: /migration-assistant/playbook-amazon-opensearch-service-to-serverless/
+canonical_url: https://docs.opensearch.org/latest/migration-assistant/playbook-amazon-opensearch-service-to-serverless/
+redirect_to: https://docs.opensearch.org/latest/migration-assistant/playbook-amazon-opensearch-service-to-serverless/
 ---
 
 # 操作手冊：從 Amazon OpenSearch Service 遷移至 Amazon OpenSearch Serverless NextGen（向量搜尋）

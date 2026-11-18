@@ -3,6 +3,7 @@
 layout: default
 title: "詞元圖"
 nav_order: 150
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-graph/
 ---
 
 # 詞元圖

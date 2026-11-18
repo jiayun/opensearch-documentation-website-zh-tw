@@ -7,6 +7,7 @@ has_children: true
 has_toc: false
 redirect_from:
     - /analyzers/supported-analyzers/
+canonical_url: https://docs.opensearch.org/latest/analyzers/supported-analyzers/index/
 ---
 
 # 分析器

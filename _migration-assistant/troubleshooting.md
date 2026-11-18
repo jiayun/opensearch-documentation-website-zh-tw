@@ -4,6 +4,8 @@ layout: default
 title: "疑難排解"
 nav_order: 70
 permalink: /migration-assistant/troubleshooting/
+canonical_url: https://docs.opensearch.org/latest/migration-assistant/troubleshooting/
+redirect_to: https://docs.opensearch.org/latest/migration-assistant/troubleshooting/
 ---
 
 # Migration Assistant 疑難排解

@@ -8,6 +8,7 @@ nav_order: 10
 redirect_from:
   - /ml-commons-plugin/tutorials/semantic-search-byte-vectors/
   - /vector-search/tutorials/vector-operations/semantic-search-byte-vectors/
+canonical_url: https://docs.opensearch.org/latest/tutorials/vector-search/vector-operations/semantic-search-byte-vectors/
 ---
 
 # 使用位元組量化向量的語意搜尋

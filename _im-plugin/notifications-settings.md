@@ -7,6 +7,7 @@ redirect_from:
   - /im-plugin/notifications/
   - /dashboards/im-dashboards/notifications/
   - /dashboards/admin-ui-index/notifications/
+canonical_url: https://docs.opensearch.org/latest/im-plugin/notifications-settings/
 ---
 
 # 長時間執行作業通知

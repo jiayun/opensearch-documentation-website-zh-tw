@@ -6,6 +6,8 @@ parent: Anatomy of a workload
 nav_order: 20
 redirect_from:
   - /benchmark/workloads/corpora/
+canonical_url: https://docs.opensearch.org/latest/benchmark/reference/workloads/corpora/
+redirect_to: https://docs.opensearch.org/latest/benchmark/reference/workloads/corpora/
 ---
 
 <!-- vale off -->

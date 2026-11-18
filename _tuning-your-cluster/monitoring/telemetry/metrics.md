@@ -8,6 +8,7 @@ nav_order: 10
 redirect_from:
   - /monitoring-your-cluster/metrics/
   - /monitoring-your-cluster/metrics/getting-started/
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/monitoring/telemetry/metrics/
 ---
 
 # 指標

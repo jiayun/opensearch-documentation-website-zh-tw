@@ -4,6 +4,7 @@ layout: default
 title: Reverse
 parent: Token filters
 nav_order: 360
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/reverse/
 ---
 
 # Reverse 詞元篩選器

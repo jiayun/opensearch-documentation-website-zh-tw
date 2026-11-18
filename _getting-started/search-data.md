@@ -4,6 +4,7 @@ layout: default
 title: "搜尋您的資料"
 nav_order: 50
 description: "了解 OpenSearch 中可用的查詢語言，並開始使用查詢字串查詢和查詢領域特定語言 (DSL) 搜尋資料。"
+canonical_url: https://docs.opensearch.org/latest/getting-started/search-data/
 ---
 
 # 搜尋您的資料

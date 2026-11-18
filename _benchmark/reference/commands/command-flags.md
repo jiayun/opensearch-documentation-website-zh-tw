@@ -7,6 +7,8 @@ parent: Command reference
 redirect_from:
   - /benchmark/commands/command-flags/
 grand_parent: Reference
+canonical_url: https://docs.opensearch.org/latest/benchmark/reference/commands/command-flags/
+redirect_to: https://docs.opensearch.org/latest/benchmark/reference/commands/command-flags/
 ---
 
 # 命令旗標

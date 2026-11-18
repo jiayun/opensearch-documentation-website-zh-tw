@@ -7,6 +7,7 @@ grand_parent: Index APIs
 nav_order: 30
 redirect_from:
   - /opensearch/rest-api/index-apis/get-index/
+canonical_url: https://docs.opensearch.org/latest/api-reference/index-apis/get-index/
 ---
 
 # 取得索引 API

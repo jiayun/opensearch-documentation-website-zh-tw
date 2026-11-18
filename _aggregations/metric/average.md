@@ -6,6 +6,7 @@ parent: Metric aggregations
 nav_order: 10
 redirect_from:
   - /query-dsl/aggregations/metric/average/
+canonical_url: https://docs.opensearch.org/latest/aggregations/metric/average/
 ---
 
 # 平均值彙總

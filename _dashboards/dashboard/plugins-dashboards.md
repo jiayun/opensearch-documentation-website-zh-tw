@@ -4,6 +4,7 @@ layout: default
 title: "將外掛程式整合至儀表板"
 parent: Observability
 nav_order: 5
+canonical_url: https://docs.opensearch.org/latest/dashboards/dashboard/plugins-dashboards/
 ---
 
 # 將外掛程式整合至儀表板

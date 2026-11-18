@@ -5,6 +5,7 @@ title: "讀取資源"
 parent: Data source APIs
 nav_order: 20
 grand_parent: SQL and PPL API
+canonical_url: https://docs.opensearch.org/latest/sql-and-ppl/sql-and-ppl-api/data-source-apis/read-resources/
 ---
 
 # Read Resources API

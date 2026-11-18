@@ -4,6 +4,7 @@ layout: default
 title: "取消任務"
 parent: Tasks APIs
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/api-reference/tasks/cancel-tasks/
 ---
 
 # Cancel Tasks API

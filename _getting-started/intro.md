@@ -6,6 +6,7 @@ nav_order: 2
 description: "OpenSearch 及其運作方式的簡介，包括文件、索引、叢集、節點、分片等核心概念，以及搜尋結果的排序方式。"
 redirect_from: 
  - /intro/
+canonical_url: https://docs.opensearch.org/latest/getting-started/intro/
 ---
 
 # OpenSearch 簡介

@@ -4,6 +4,7 @@ layout: default
 title: "指令碼分數"
 parent: Specialized queries
 nav_order: 60
+canonical_url: https://docs.opensearch.org/latest/query-dsl/specialized/script-score/
 ---
 
 # 指令碼分數查詢

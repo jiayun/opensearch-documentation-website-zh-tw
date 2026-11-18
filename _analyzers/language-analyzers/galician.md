@@ -5,6 +5,7 @@ title: "加利西亞語"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 160
+canonical_url: https://docs.opensearch.org/latest/analyzers/language-analyzers/galician/
 ---
 
 # 加利西亞語分析器

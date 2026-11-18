@@ -5,6 +5,7 @@ title: "改善搜尋效能"
 nav_order: 220
 has_children: true
 has_toc: false
+canonical_url: https://docs.opensearch.org/latest/search-plugins/improving-search-performance/
 ---
 
 # 改善搜尋效能

@@ -4,6 +4,7 @@ layout: default
 title: "API 速率限制"
 parent: Configuration
 nav_order: 50
+canonical_url: https://docs.opensearch.org/latest/security/configuration/api-rate-limiting/
 ---
 
 

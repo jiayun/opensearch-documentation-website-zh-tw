@@ -4,6 +4,7 @@ layout: default
 title: "取得快照"
 parent: Snapshot APIs
 nav_order: 60
+canonical_url: https://docs.opensearch.org/latest/api-reference/snapshots/get-snapshot/
 ---
 
 # Get Snapshot API

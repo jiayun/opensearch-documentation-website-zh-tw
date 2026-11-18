@@ -5,6 +5,8 @@ title: "概念"
 nav_order: 3
 parent: User guide
 has_toc: false
+canonical_url: https://docs.opensearch.org/latest/benchmark/user-guide/concepts/
+redirect_to: https://docs.opensearch.org/latest/benchmark/user-guide/concepts/
 ---
 
 # OpenSearch Benchmark 概念

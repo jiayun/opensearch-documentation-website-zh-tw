@@ -4,6 +4,8 @@ layout: default
 title: "Python ML 用戶端"
 parent: Python client
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/clients/opensearch-py-ml/
+redirect_to: https://docs.opensearch.org/latest/clients/opensearch-py-ml/
 ---
 
 # Python 機器學習用戶端

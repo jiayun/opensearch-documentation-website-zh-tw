@@ -5,6 +5,8 @@ title: getMetadata()
 parent: Functions
 grand_parent: Pipelines
 nav_order: 15
+canonical_url: https://docs.opensearch.org/latest/data-prepper/pipelines/get-metadata/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/pipelines/get-metadata/
 ---
 
 <!-- vale off -->

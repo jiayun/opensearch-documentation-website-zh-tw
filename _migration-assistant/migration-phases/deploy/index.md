@@ -11,6 +11,8 @@ redirect_from:
   - /migration-assistant/deploying-migration-assistant/
   - /migration-assistant/getting-started-with-data-migration/
   - /deploying-migration-assistant/
+canonical_url: https://docs.opensearch.org/latest/migration-assistant/migration-phases/deploy/
+redirect_to: https://docs.opensearch.org/latest/migration-assistant/migration-phases/deploy/
 ---
 
 # 選擇您的部署方式

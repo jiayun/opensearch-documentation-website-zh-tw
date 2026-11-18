@@ -4,6 +4,7 @@ layout: default
 title: "網路壓縮"
 parent: Settings and administration
 nav_order: 50
+canonical_url: https://docs.opensearch.org/latest/dashboards/compression/
 ---
 
 # 網路壓縮

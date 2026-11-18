@@ -8,6 +8,7 @@ has_children: true
 has_toc: false
 redirect_from:
   - /security/api/audit/
+canonical_url: https://docs.opensearch.org/latest/security/api/audit/index/
 ---
 
 # 稽核記錄 API

@@ -4,6 +4,7 @@ layout: default
 title: "簡易查詢字串"
 parent: Full-text queries
 nav_order: 70
+canonical_url: https://docs.opensearch.org/latest/query-dsl/full-text/simple-query-string/
 ---
 
 # Simple query string 查詢

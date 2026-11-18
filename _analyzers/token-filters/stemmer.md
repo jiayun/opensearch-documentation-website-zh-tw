@@ -4,6 +4,7 @@ layout: default
 title: Stemmer
 parent: Token filters
 nav_order: 390
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/stemmer/
 ---
 
 # Stemmer 詞元篩選器

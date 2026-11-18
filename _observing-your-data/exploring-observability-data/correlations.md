@@ -6,6 +6,7 @@ nav_order: 40
 parent: Observability workspace apps
 redirect_from:
   - /observability-plugin/correlations/
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/exploring-observability-data/correlations/
 ---
 
 # 相互關聯

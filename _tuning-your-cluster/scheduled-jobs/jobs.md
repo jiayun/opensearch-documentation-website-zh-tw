@@ -7,6 +7,7 @@ nav_order: 10
 redirect_from:
     - /monitoring-plugins/job-scheduler/api/
     - /monitoring-your-cluster/job-scheduler/jobs/
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/scheduled-jobs/jobs/
 ---
 
 # Job Scheduler Jobs API

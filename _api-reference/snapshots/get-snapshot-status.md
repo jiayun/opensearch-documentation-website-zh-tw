@@ -4,6 +4,7 @@ layout: default
 title: "取得快照狀態"
 parent: Snapshot APIs
 nav_order: 80
+canonical_url: https://docs.opensearch.org/latest/api-reference/snapshots/get-snapshot-status/
 ---
 
 # 取得快照狀態 API

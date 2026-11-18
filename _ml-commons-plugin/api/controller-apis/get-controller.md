@@ -5,6 +5,7 @@ title: "取得控制器"
 parent: Controller APIs
 grand_parent: ML APIs
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/controller-apis/get-controller/
 ---
 
 # 取得控制器 API

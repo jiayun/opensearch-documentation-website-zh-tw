@@ -4,6 +4,7 @@ layout: default
 title: "大量複寫 API"
 nav_order: 55
 parent: Cross-cluster replication
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/replication-plugin/bulk-api/
 ---
 
 # 大量複寫 API

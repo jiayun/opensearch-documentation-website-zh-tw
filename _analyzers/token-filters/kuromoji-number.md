@@ -4,6 +4,7 @@ layout: default
 title: "Kuromoji 數字"
 parent: Token filters
 nav_order: 232
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/kuromoji-number/
 ---
 
 # Kuromoji 數字詞元篩選器

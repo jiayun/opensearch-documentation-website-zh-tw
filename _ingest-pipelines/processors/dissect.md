@@ -4,6 +4,7 @@ layout: default
 title: Dissect
 parent: Ingest processors
 nav_order: 60
+canonical_url: https://docs.opensearch.org/latest/ingest-pipelines/processors/dissect/
 ---
 
 本文件說明如何在 OpenSearch 資料匯入管線中使用 `dissect` 處理器。若您的使用情境涉及大型或複雜的資料集，建議改用 [Data Prepper `dissect` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/dissect/)，該處理器在 OpenSearch 叢集之外執行。

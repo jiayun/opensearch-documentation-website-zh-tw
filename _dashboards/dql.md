@@ -5,6 +5,7 @@ title: "Dashboards 查詢語言（DQL）"
 nav_order: 50
 redirect_from:
   - /dashboards/discover/dql/
+canonical_url: https://docs.opensearch.org/latest/dashboards/dql/
 ---
 
 <!-- vale off -->

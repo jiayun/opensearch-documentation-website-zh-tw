@@ -6,6 +6,7 @@ parent: Access control
 nav_order: 90
 redirect_from:
 - /security-plugin/access-control/document-level-security/
+canonical_url: https://docs.opensearch.org/latest/security/access-control/document-level-security/
 ---
 
 # 文件層級安全性

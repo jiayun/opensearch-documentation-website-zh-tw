@@ -4,6 +4,7 @@ layout: default
 title: "執行已儲存指令碼"
 parent: Script APIs
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/api-reference/script-apis/exec-stored-script/
 ---
 
 # 執行已儲存指令碼 API

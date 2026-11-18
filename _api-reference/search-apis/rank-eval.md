@@ -6,6 +6,7 @@ parent: Search APIs
 nav_order: 60
 redirect_from:
   - /api-reference/rank-eval/
+canonical_url: https://docs.opensearch.org/latest/api-reference/search-apis/rank-eval/
 ---
 
 # Ranking Evaluation API

@@ -4,6 +4,7 @@ layout: default
 title: "刪除資料串流"
 parent: Data stream APIs
 nav_order: 50
+canonical_url: https://docs.opensearch.org/latest/api-reference/data-stream/delete-data-stream/
 ---
 
 # 刪除資料串流 API

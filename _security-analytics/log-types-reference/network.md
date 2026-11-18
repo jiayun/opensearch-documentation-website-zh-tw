@@ -4,6 +4,7 @@ layout: default
 title: "網路"
 parent: Supported log types
 nav_order: 70
+canonical_url: https://docs.opensearch.org/latest/security-analytics/log-types-reference/network/
 ---
 
 # 網路記錄檔類型

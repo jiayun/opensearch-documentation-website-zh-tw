@@ -4,6 +4,7 @@ layout: default
 title: "投票組態管理"
 parent: Discovery and cluster formation
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/discovery-cluster-formation/voting-configuration/
 ---
 
 # 投票組態管理

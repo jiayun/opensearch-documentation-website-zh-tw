@@ -5,6 +5,7 @@ title: "混合搜尋代理記憶"
 parent: Agentic memory APIs
 grand_parent: ML APIs
 nav_order: 70
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/agentic-memory-apis/hybrid-search-memory/
 ---
 
 # 混合搜尋代理記憶 API

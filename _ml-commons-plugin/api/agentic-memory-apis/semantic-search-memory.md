@@ -5,6 +5,7 @@ title: "語意搜尋代理記憶"
 parent: Agentic memory APIs
 grand_parent: ML APIs
 nav_order: 60
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/agentic-memory-apis/semantic-search-memory/
 ---
 
 # 語意搜尋代理記憶 API

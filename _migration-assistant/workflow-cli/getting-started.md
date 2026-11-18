@@ -5,6 +5,8 @@ title: "使用 Workflow CLI"
 nav_order: 1
 parent: Workflow CLI
 permalink: /migration-assistant/workflow-cli/getting-started/
+canonical_url: https://docs.opensearch.org/latest/migration-assistant/workflow-cli/getting-started/
+redirect_to: https://docs.opensearch.org/latest/migration-assistant/workflow-cli/getting-started/
 ---
 
 # 使用 Workflow CLI

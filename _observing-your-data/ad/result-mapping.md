@@ -6,6 +6,7 @@ parent: Anomaly detection
 nav_order: 30
 redirect_from: 
   - /monitoring-plugins/ad/result-mapping/
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/ad/result-mapping/
 ---
 
 # 異常結果對應

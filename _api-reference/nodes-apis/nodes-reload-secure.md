@@ -4,6 +4,7 @@ layout: default
 title: "節點重新載入安全設定"
 parent: Nodes APIs
 nav_order: 50
+canonical_url: https://docs.opensearch.org/latest/api-reference/nodes-apis/nodes-reload-secure/
 ---
 
 # 節點重新載入安全設定 API

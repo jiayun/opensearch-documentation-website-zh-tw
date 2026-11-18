@@ -5,6 +5,7 @@ title: "刪除角色"
 parent: Role APIs
 grand_parent: Security APIs
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/security/api/roles/delete-role/
 ---
 
 # 刪除角色 API

@@ -8,6 +8,7 @@ redirect_from:
   - /sql-and-ppl/sql/delete/
   - /search-plugins/sql/delete/
   - /search-plugins/sql/sql/delete/
+canonical_url: https://docs.opensearch.org/latest/sql-and-ppl/limitation/
 ---
 
 # SQL 與 PPL 限制

@@ -5,6 +5,8 @@ title: OTLP
 parent: Sinks
 grand_parent: Pipelines
 nav_order: 52
+canonical_url: https://docs.opensearch.org/latest/data-prepper/pipelines/configuration/sinks/otlp/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/
 ---
 
 # OTLP 接收端

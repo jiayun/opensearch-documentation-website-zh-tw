@@ -4,6 +4,7 @@ layout: default
 title: "懸空索引"
 parent: Index APIs
 nav_order: 90
+canonical_url: https://docs.opensearch.org/latest/api-reference/index-apis/dangling-index/
 ---
 
 # 懸空索引 API

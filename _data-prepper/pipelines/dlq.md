@@ -4,6 +4,8 @@ layout: default
 title: "死信佇列"
 parent: Pipelines
 nav_order: 15
+canonical_url: https://docs.opensearch.org/latest/data-prepper/pipelines/dlq/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/pipelines/dlq/
 ---
 
 # 死信佇列

@@ -4,6 +4,7 @@ layout: default
 title: "複合監視器 API"
 parent: Alerting
 nav_order: 65
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/alerting/composite-monitors-api/
 ---
 
 # 複合監視器 API

@@ -5,6 +5,7 @@ title: "遷移至以遠端儲存空間為後端的儲存架構"
 nav_order: 5
 parent: Remote-backed storage
 grand_parent: Availability and recovery
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/availability-and-recovery/remote-store/migrating-to-remote/
 ---
 
 # 遷移至遠端後端儲存空間

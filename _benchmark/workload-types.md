@@ -5,6 +5,8 @@ title: "工作負載類型"
 nav_order: 20
 has_children: true
 has_toc: false
+canonical_url: https://docs.opensearch.org/latest/benchmark/workload-types/
+redirect_to: https://docs.opensearch.org/latest/benchmark/workload-types/
 ---
 
 # 工作負載類型

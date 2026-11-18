@@ -8,6 +8,7 @@ has_children: false
 redirect_from:
   - /search-plugins/neural-multimodal-search/
   - /search-plugins/multimodal-search/
+canonical_url: https://docs.opensearch.org/latest/vector-search/ai-search/multimodal-search/
 ---
 
 # 多模態搜尋

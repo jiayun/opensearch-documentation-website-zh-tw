@@ -4,6 +4,7 @@ layout: default
 title: "Simple 分析器"
 parent: Analyzers
 nav_order: 100
+canonical_url: https://docs.opensearch.org/latest/analyzers/supported-analyzers/simple/
 ---
 
 # Simple 分析器

@@ -8,6 +8,7 @@ great_grand_parent: AI search
 nav_order: 50
 redirect_from:
   - /automating-configurations/api/get-workflow-steps/
+canonical_url: https://docs.opensearch.org/latest/vector-search/ai-search/workflows/api/get-workflow-steps/
 ---
 
 # Get Workflow Steps API

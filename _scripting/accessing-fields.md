@@ -3,6 +3,7 @@
 layout: default
 title: "在指令碼中存取文件欄位"
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/scripting/accessing-fields/
 ---
 
 # 在指令碼中存取文件欄位

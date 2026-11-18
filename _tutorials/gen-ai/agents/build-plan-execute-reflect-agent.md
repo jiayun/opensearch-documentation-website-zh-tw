@@ -5,6 +5,7 @@ title: "建立規劃-執行-反思代理程式"
 parent: Agentic AI
 grand_parent: Generative AI
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/tutorials/gen-ai/agents/build-plan-execute-reflect-agent/
 ---
 
 # 建立規劃-執行-反思代理程式

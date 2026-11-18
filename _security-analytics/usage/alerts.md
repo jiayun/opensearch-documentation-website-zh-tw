@@ -4,6 +4,7 @@ layout: default
 title: "使用警示"
 parent: Using Security Analytics
 nav_order: 46
+canonical_url: https://docs.opensearch.org/latest/security-analytics/usage/alerts/
 ---
 
 # 使用警示

@@ -5,6 +5,7 @@ title: "建立或更新使用者"
 parent: Internal user APIs
 grand_parent: Security APIs
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/security/api/users/create-user/
 ---
 
 # 建立或更新使用者 API

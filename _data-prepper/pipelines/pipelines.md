@@ -9,6 +9,8 @@ redirect_from:
   - /clients/data-prepper/pipelines/
   - /data-prepper/pipelines/configuration/processors/routes/
   - /data-prepper/pipelines/pipelines-configuration-options/
+canonical_url: https://docs.opensearch.org/latest/data-prepper/pipelines/pipelines/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/pipelines/pipelines/
 ---
 
 # Data Prepper 管線

@@ -3,6 +3,7 @@
 layout: default
 title: "正規化器"
 nav_order: 110
+canonical_url: https://docs.opensearch.org/latest/analyzers/normalizers/
 ---
 
 # 正規化器

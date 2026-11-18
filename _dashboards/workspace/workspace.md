@@ -4,6 +4,7 @@ layout: default
 title: "工作區"
 nav_order: 120
 has_children: true
+canonical_url: https://docs.opensearch.org/latest/dashboards/workspace/workspace/
 ---
 
 # 工作區

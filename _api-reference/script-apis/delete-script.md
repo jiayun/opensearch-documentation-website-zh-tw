@@ -4,6 +4,7 @@ layout: default
 title: "刪除預存指令碼"
 parent: Script APIs
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/api-reference/script-apis/delete-script/
 ---
 
 # 刪除預存指令碼 API

@@ -7,6 +7,7 @@ nav_order: 71
 redirect_from:
   - /search-plugins/sql/jdbc/
   - /search-plugins/sql/sql/jdbc/
+canonical_url: https://docs.opensearch.org/latest/sql-and-ppl/sql/jdbc/
 ---
 
 # JDBC 驅動程式

@@ -8,6 +8,7 @@ has_children: true
 has_toc: false
 redirect_from:
   - /security/api/allowlist/
+canonical_url: https://docs.opensearch.org/latest/security/api/allowlist/index/
 ---
 
 # 允許清單 API

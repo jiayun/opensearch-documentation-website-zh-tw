@@ -74,5 +74,21 @@ class TestSite(unittest.TestCase):
         self.write_page('alias.html', '', canonical=checker.ORIGIN + checker.BASE + '/api/', extra='<meta http-equiv="refresh" content="0; url=/api/">')
         self.assertEqual([], checker.check(self.site))
 
+    def test_unsupported_warning_must_link_to_current_upstream_docs(self):
+        self.write_page('index.html', '<p class="unsupported-version-warning">此版本已不再維護。'
+                        '<a href="' + checker.BASE + '/api/">目前的文件</a></p>')
+        self.assertTrue(any('loops back' in f[2] for f in checker.check(self.site)))
+
+    def test_translated_unsupported_warning_with_upstream_link_is_valid(self):
+        self.write_page('index.html', '<p class="unsupported-version-warning">此版本已不再維護。'
+                        '<a href="https://docs.opensearch.org/latest/about/">目前的文件</a></p>')
+        self.assertEqual([], checker.check(self.site))
+
+    def test_english_unsupported_warning_is_rejected_only_for_the_locale_build(self):
+        self.write_page('index.html', '<p class="unsupported-version-warning">This version is no longer maintained.'
+                        '<a href="https://docs.opensearch.org/latest/about/">Current documentation</a></p>')
+        self.assertTrue(any('not localized' in f[2] for f in checker.check(self.site)))
+        self.assertEqual([], checker.check(self.site, enforce_metadata=False))
+
 
 if __name__ == '__main__': unittest.main()

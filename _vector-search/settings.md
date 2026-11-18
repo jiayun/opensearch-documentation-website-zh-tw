@@ -5,6 +5,7 @@ title: "設定"
 nav_order: 90
 redirect_from:
   - /search-plugins/knn/settings/
+canonical_url: https://docs.opensearch.org/latest/vector-search/settings/
 ---
 
 # 向量搜尋設定

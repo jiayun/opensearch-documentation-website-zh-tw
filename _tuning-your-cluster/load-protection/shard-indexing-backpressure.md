@@ -8,6 +8,7 @@ parent: Load protection
 redirect_from: 
   - /opensearch/shard-indexing-backpressure/
   - /tuning-your-cluster/availability-and-recovery/shard-indexing-backpressure/
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/load-protection/shard-indexing-backpressure/
 ---
 
 # 分片索引編製背壓

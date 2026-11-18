@@ -3,6 +3,7 @@
 layout: default
 title: "僅附加索引"
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/im-plugin/append-only-index/
 ---
 
 # 僅附加索引

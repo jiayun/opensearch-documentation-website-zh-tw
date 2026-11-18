@@ -5,6 +5,7 @@ title: "使用者定義的搜尋處理器"
 nav_order: 40
 has_children: true
 parent: Search pipelines
+canonical_url: https://docs.opensearch.org/latest/search-plugins/search-pipelines/search-processors/
 ---
 
 # 使用者定義的搜尋處理器

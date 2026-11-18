@@ -5,6 +5,7 @@ title: "神經稀疏 ANN 搜尋效能調校"
 parent: Performance tuning
 nav_order: 30
 has_math: true
+canonical_url: https://docs.opensearch.org/latest/vector-search/performance-tuning-sparse/
 ---
 
 # 神經稀疏 ANN 搜尋效能調校

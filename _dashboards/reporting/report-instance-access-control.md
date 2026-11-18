@@ -6,6 +6,7 @@ nav_order: 50
 parent: Reporting
 redirect_from:
   - /reporting/report-instance-access-control/
+canonical_url: https://docs.opensearch.org/latest/dashboards/reporting/report-instance-access-control/
 ---
 
 # 報告執行個體存取控制

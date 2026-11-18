@@ -5,6 +5,7 @@ title: "OpenSearch 安全性入門"
 nav_order: 1
 redirect_from:
   - /getting-started/security/
+canonical_url: https://docs.opensearch.org/latest/security/getting-started/
 ---
 
 # OpenSearch 安全性入門

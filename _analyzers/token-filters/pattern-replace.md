@@ -4,6 +4,7 @@ layout: default
 title: "模式取代"
 parent: Token filters
 nav_order: 320
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/pattern-replace/
 ---
 
 # 模式取代詞元篩選器

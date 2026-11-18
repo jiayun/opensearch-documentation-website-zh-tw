@@ -6,6 +6,7 @@ parent: Bucket aggregations
 nav_order: 17
 redirect_from:
   - /query-dsl/aggregations/bucket/composite/
+canonical_url: https://docs.opensearch.org/latest/aggregations/bucket/composite/
 ---
 
 # 複合彙總

@@ -4,6 +4,7 @@ layout: default
 title: "設定示範組態"
 parent: Configuration
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/security/configuration/demo-configuration/
 ---
 
 # 設定安全性示範組態

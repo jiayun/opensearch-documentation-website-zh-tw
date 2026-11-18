@@ -14,6 +14,7 @@ storage_cards:
 - heading: 以磁碟為基礎的向量搜尋
   description: 使用量化來降低向量工作負載的營運成本
   link: /vector-search/optimizing-storage/disk-based-vector-search/
+canonical_url: https://docs.opensearch.org/latest/vector-search/optimizing-storage/index/
 ---
 
 # 最佳化向量儲存空間

@@ -4,6 +4,7 @@ layout: default
 title: "布林前綴比對"
 parent: Full-text queries
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/query-dsl/full-text/match-bool-prefix/
 ---
 
 # 布林前綴比對查詢

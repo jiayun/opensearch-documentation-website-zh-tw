@@ -3,6 +3,7 @@
 layout: default
 title: "全部相符查詢"
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/query-dsl/match-all/
 ---
 
 # 全部相符查詢

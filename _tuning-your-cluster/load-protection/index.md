@@ -7,6 +7,7 @@ has_children: true
 has_toc: true
 redirect_from:
   - /tuning-your-cluster/load-protection/
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/load-protection/index/
 ---
 
 # 負載保護

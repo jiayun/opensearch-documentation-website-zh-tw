@@ -5,6 +5,7 @@ title: "運算式"
 parent: Functions
 grand_parent: PPL
 nav_order: 7
+canonical_url: https://docs.opensearch.org/latest/sql-and-ppl/ppl/functions/expressions/
 ---
 
 # PPL 中的運算式

@@ -7,6 +7,7 @@ has_children: true
 has_toc: false
 redirect_from:
   - /ml-commons-plugin/mcp/
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/mcp/index/
 ---
 
 # MCP 伺服器與用戶端

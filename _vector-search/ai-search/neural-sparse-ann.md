@@ -6,6 +6,7 @@ parent: Neural sparse search
 grand_parent: AI search
 nav_order: 60
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/vector-search/ai-search/neural-sparse-ann/
 ---
 
 # 神經稀疏 ANN 搜尋

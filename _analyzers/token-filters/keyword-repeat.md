@@ -4,6 +4,7 @@ layout: default
 title: "關鍵字重複"
 parent: Token filters
 nav_order: 210
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/keyword-repeat/
 ---
 
 # 關鍵字重複詞元篩選器

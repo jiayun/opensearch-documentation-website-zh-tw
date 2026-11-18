@@ -4,6 +4,7 @@ layout: default
 title: "使用語意醒目提示"
 parent: Vector search
 nav_order: 60
+canonical_url: https://docs.opensearch.org/latest/tutorials/vector-search/semantic-highlighting-tutorial/
 ---
 
 # 使用語意醒目提示

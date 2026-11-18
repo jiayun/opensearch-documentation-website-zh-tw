@@ -6,6 +6,7 @@ nav_order: 5
 parent: Monitors
 grand_parent: Alerting
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/alerting/per-query-bucket-monitors/
 ---
 
 # 依查詢與依桶監視器

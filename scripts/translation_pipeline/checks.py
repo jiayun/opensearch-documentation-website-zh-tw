@@ -10,6 +10,7 @@ import re
 from . import config
 from .frontmatter import (FrontMatterError, has_modification_notice, split_document, structural_problems,
                           translatable_fields)
+from .metadata import metadata_continuation_problems
 from .protect import (STRAY_BRACKET_RE, PlaceholderError, Protector, fenced_blocks,
                       protected_inventory)
 from .segment import heading_levels
@@ -129,6 +130,7 @@ def provenance_problems(entry: dict, require_review: bool) -> list[str]:
         families = {p.get("family") for p in providers}
         if reviewer.get("family") in families:
             problems.append("reviewer is not distinct from the translator")
+        problems.extend(metadata_continuation_problems(entry))
     return problems
 
 
@@ -216,4 +218,7 @@ def run_check(root: Path, rules: TermRules, publish: bool = True,
             report.problems.append(f"{page}: {problem}")
         for problem in compare_translation(baseline.decode("utf-8"), current.decode("utf-8"), rules):
             report.problems.append(f"{page}: {problem}")
+        if status == 'reviewed':
+            for problem in metadata_continuation_problems(entry, baseline.decode('utf-8'), current.decode('utf-8')):
+                report.problems.append(f"{page}: {problem}")
     return report

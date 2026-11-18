@@ -8,6 +8,7 @@ has_toc: false
 nav_order: 60
 redirect_from:
   - /ml-commons-plugin/api/controller-apis/
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/controller-apis/index/
 ---
 
 # 控制器 API

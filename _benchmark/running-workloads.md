@@ -7,6 +7,8 @@ redirect_from:
   - /benchmark/user-guide/running-workloads/
   - /benchmark/user-guide/working-with-workloads/running-workloads/
   - /benchmark/user-guide/working-with-workloads/
+canonical_url: https://docs.opensearch.org/latest/benchmark/running-workloads/
+redirect_to: https://docs.opensearch.org/latest/benchmark/running-workloads/
 ---
 
 # 執行工作負載

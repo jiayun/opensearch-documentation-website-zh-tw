@@ -5,6 +5,7 @@ title: "印地語"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 190
+canonical_url: https://docs.opensearch.org/latest/analyzers/language-analyzers/hindi/
 ---
 
 # 印地語分析器

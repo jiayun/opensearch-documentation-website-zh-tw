@@ -4,6 +4,7 @@ layout: default
 title: "移除重複項目"
 parent: Token filters
 nav_order: 350
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/remove-duplicates/
 ---
 
 # 移除重複項目詞元篩選器

@@ -5,6 +5,7 @@ title: "連線至外部 MCP 伺服器"
 parent: Using MCP tools
 grand_parent: Agents and tools
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/agents-tools/mcp/mcp-connector/
 ---
 
 # 連線至外部 MCP 伺服器 

@@ -4,6 +4,7 @@ layout: default
 title: "偵測器 API"
 parent: Security Analytics APIs
 nav_order: 35
+canonical_url: https://docs.opensearch.org/latest/security-analytics/api-tools/detector-api/
 ---
 
 # 偵測器 API

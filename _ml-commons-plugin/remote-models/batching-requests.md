@@ -6,6 +6,7 @@ has_children: false
 nav_order: 85
 parent: Connecting to externally hosted models
 grand_parent: Integrating ML models
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/remote-models/batching-requests/
 ---
 
 # 將請求批次傳送至外部託管的模型

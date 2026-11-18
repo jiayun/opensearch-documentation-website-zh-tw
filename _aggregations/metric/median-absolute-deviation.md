@@ -6,6 +6,7 @@ parent: Metric aggregations
 nav_order: 65
 redirect_from:
   - /query-dsl/aggregations/metric/median-absolute-deviation/
+canonical_url: https://docs.opensearch.org/latest/aggregations/metric/median-absolute-deviation/
 ---
 
 # 中位數絕對偏差彙總

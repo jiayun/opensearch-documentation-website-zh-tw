@@ -8,6 +8,7 @@ has_children: true
 has_toc: false
 redirect_from:
   - /security-plugin/configuration/tls/
+canonical_url: https://docs.opensearch.org/latest/security/configuration/tls/
 ---
 
 # 設定 TLS 憑證

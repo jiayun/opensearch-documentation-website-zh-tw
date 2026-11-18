@@ -4,6 +4,7 @@ layout: default
 title: "遠端索引建置"
 nav_order: 72
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/vector-search/remote-index-build/
 ---
 
 # 使用 GPU 遠端建置向量索引

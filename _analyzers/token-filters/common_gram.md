@@ -4,6 +4,7 @@ layout: default
 title: Common grams
 parent: Token filters
 nav_order: 60
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/common_gram/
 ---
 <!-- vale off -->
 # Common grams 詞元篩選器

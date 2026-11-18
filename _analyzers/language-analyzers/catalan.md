@@ -5,6 +5,7 @@ title: "加泰隆尼亞語"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 70
+canonical_url: https://docs.opensearch.org/latest/analyzers/language-analyzers/catalan/
 ---
 
 # 加泰隆尼亞語分析器

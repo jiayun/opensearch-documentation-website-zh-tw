@@ -4,6 +4,7 @@ layout: default
 title: "取得快照儲存庫"
 parent: Snapshot APIs
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/api-reference/snapshots/get-snapshot-repository/
 ---
 
 # Get Snapshot Repository API

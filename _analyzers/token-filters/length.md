@@ -4,6 +4,7 @@ layout: default
 title: "長度"
 parent: Token filters
 nav_order: 240
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/length/
 ---
 
 # 長度詞元篩選器

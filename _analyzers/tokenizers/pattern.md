@@ -4,6 +4,7 @@ layout: default
 title: Pattern
 parent: Tokenizers
 nav_order: 100
+canonical_url: https://docs.opensearch.org/latest/analyzers/tokenizers/pattern/
 ---
 
 # Pattern 斷詞器

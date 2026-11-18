@@ -4,6 +4,7 @@ layout: default
 title: "管理密碼"
 parent: Configuration
 nav_order: 12
+canonical_url: https://docs.opensearch.org/latest/security/configuration/passwords/
 ---
 
 # 管理密碼

@@ -9,6 +9,7 @@ redirect_from:
   - /dashboards/reporting/
   - /reporting/
   - /reporting/index/
+canonical_url: https://docs.opensearch.org/latest/dashboards/reporting/index/
 ---
 
 # 報告

@@ -44,6 +44,7 @@ workflow_items:
 - heading: 組合儀表板
   description: 將多個視覺化組合到單一頁面中，以進行監控與分析。
   link: /dashboards/dashboard/
+canonical_url: https://docs.opensearch.org/latest/dashboards/getting-started/index/
 ---
 
 # OpenSearch Dashboards 入門

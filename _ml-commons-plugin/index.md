@@ -69,6 +69,7 @@ algorithms:
 - heading: 支援的演算法
   link: /ml-commons-plugin/algorithms/
   description: 了解原生支援的分群、模式偵測與統計分析演算法
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/
 ---
 
 # AI 與機器學習

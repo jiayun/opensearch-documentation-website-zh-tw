@@ -5,6 +5,7 @@ title: "文字轉視覺化"
 parent: OpenSearch Assistant for OpenSearch Dashboards
 nav_order: 40
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/dashboards/dashboards-assistant/text-to-visualization/
 ---
 
 # 文字轉視覺化

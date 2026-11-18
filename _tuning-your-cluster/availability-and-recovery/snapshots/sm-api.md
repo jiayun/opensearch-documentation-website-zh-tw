@@ -8,6 +8,7 @@ has_children: false
 grand_parent: Availability and recovery
 redirect_from: 
   - /opensearch/snapshots/sm-api/
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/availability-and-recovery/snapshots/sm-api/
 ---
 
 # 快照管理 API

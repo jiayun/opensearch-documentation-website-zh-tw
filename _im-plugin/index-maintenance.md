@@ -8,6 +8,7 @@ redirect_from:
   - /dashboards/im-dashboards/rollover/
   - /dashboards/admin-ui-index/forcemerge/
   - /dashboards/admin-ui-index/rollover/
+canonical_url: https://docs.opensearch.org/latest/im-plugin/index-maintenance/
 ---
 
 # 索引維護

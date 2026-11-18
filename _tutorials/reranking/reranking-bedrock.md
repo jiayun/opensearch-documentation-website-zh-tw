@@ -7,6 +7,7 @@ nav_order: 100
 redirect_from:
   - /ml-commons-plugin/tutorials/reranking-bedrock/
   - /vector-search/tutorials/reranking/reranking-bedrock/
+canonical_url: https://docs.opensearch.org/latest/tutorials/reranking/reranking-bedrock/
 ---
 
 # 使用 Amazon Bedrock 模型重新排名搜尋結果

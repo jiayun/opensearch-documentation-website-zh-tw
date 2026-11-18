@@ -5,6 +5,8 @@ title: "將流量重新導向至目標"
 nav_order: 8
 parent: Migration phases
 permalink: /classic/migration-assistant/migration-phases/reroute-traffic-from-capture-proxy-to-target/
+canonical_url: https://docs.opensearch.org/latest/classic/migration-assistant/migration-phases/reroute-traffic-from-capture-proxy-to-target/
+redirect_to: https://docs.opensearch.org/latest/classic/migration-assistant/migration-phases/reroute-traffic-from-capture-proxy-to-target/
 ---
 
 # 從來源叢集切換流量

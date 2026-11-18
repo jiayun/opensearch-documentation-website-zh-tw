@@ -9,6 +9,7 @@ redirect_from:
   - /ml-commons-plugin/tutorials/conversational-search-cohere/
   - /vector-search/tutorials/conversational-search/conversational-search-cohere/
   - /tutorials/vector-search/rag/conversational-search/conversational-search-cohere/
+canonical_url: https://docs.opensearch.org/latest/tutorials/gen-ai/rag/conversational-search-cohere/
 ---
 
 # 使用 Cohere Command 的對話式搜尋

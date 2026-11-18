@@ -7,6 +7,7 @@ nav_order: 5
 redirect_from: 
   - /dashboards/install/docker/
   - /opensearch/install/docker-security/
+canonical_url: https://docs.opensearch.org/latest/install-and-configure/install-dashboards/docker/
 ---
 
 # 使用 Docker 安裝 OpenSearch Dashboards

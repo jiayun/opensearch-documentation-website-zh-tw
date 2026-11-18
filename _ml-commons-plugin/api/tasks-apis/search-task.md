@@ -5,6 +5,7 @@ title: "搜尋 ML 任務"
 parent: ML Tasks APIs
 grand_parent: ML APIs
 nav_order: 15
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/tasks-apis/search-task/
 ---
 
 # 搜尋 ML 任務 API

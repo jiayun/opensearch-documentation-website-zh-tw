@@ -6,6 +6,7 @@ parent: Ingest processors
 nav_order: 210
 redirect_from:
    - /api-reference/ingest-apis/processors/lowercase/
+canonical_url: https://docs.opensearch.org/latest/ingest-pipelines/processors/lowercase/
 ---
 
 本文件說明如何在 OpenSearch 資料匯入管線中使用 `lowercase` 處理器。如果您的使用情境涉及大型或複雜的資料集，建議考慮使用在 OpenSearch 叢集外部執行的 [Data Prepper `lowercase_string` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/lowercase-string/)。

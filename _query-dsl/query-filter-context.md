@@ -6,6 +6,7 @@ nav_order: 5
 redirect_from:
   - /opensearch/query-dsl/query-filter-context/
   - /query-dsl/query-dsl/query-filter-context/
+canonical_url: https://docs.opensearch.org/latest/query-dsl/query-filter-context/
 ---
 
 # 查詢與篩選上下文

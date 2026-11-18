@@ -8,6 +8,7 @@ nav_order: 10
 has_children: false
 redirect_from:
   - /search-plugins/neural-sparse-with-pipelines/
+canonical_url: https://docs.opensearch.org/latest/vector-search/ai-search/neural-sparse-with-pipelines/
 ---
 
 # 自動產生稀疏向量嵌入

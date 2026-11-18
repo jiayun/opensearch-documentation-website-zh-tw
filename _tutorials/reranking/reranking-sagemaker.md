@@ -6,6 +6,7 @@ parent: Reranking search results
 nav_order: 115
 redirect_from:
   - /vector-search/tutorials/reranking/reranking-sagemaker/
+canonical_url: https://docs.opensearch.org/latest/tutorials/reranking/reranking-sagemaker/
 ---
 
 # 使用 Amazon SageMaker 中的重新排名模型對搜尋結果重新排名

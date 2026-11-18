@@ -5,6 +5,7 @@ title: "更新記憶容器"
 parent: Agentic memory APIs
 grand_parent: ML APIs
 nav_order: 15
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/agentic-memory-apis/update-memory-container/
 ---
 
 # 更新記憶容器 API

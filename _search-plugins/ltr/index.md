@@ -8,6 +8,7 @@ has_children: true
 has_toc: false
 redirect_from:
   - /search-plugins/ltr/
+canonical_url: https://docs.opensearch.org/latest/search-plugins/ltr/index/
 ---
 
 <!-- vale off -->

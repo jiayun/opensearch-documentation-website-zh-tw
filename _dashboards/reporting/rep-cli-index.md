@@ -8,6 +8,7 @@ has_children: true
 redirect_from:
   - /reporting/rep-cli-index/
   - /dashboards/reporting-cli/rep-cli-index/
+canonical_url: https://docs.opensearch.org/latest/dashboards/reporting/rep-cli-index/
 ---
 
 # 使用 CLI 產生報告

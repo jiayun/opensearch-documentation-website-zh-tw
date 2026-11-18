@@ -5,6 +5,7 @@ title: "取得別名"
 parent: Alias APIs
 grand_parent: Index APIs
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/api-reference/alias/get-alias/
 ---
 
 # 取得索引別名 API

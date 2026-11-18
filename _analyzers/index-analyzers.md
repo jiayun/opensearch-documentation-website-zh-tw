@@ -4,6 +4,7 @@ layout: default
 title: "索引分析器"
 nav_order: 20
 parent: Analyzers
+canonical_url: https://docs.opensearch.org/latest/analyzers/index-analyzers/
 ---
 
 # 索引分析器

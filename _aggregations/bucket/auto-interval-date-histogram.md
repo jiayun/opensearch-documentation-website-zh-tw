@@ -4,6 +4,7 @@ layout: default
 title: "自動間隔日期直方圖"
 parent: Bucket aggregations
 nav_order: 12
+canonical_url: https://docs.opensearch.org/latest/aggregations/bucket/auto-interval-date-histogram/
 ---
 
 # 自動間隔日期直方圖彙總

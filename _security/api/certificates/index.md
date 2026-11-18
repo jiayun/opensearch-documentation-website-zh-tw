@@ -8,6 +8,7 @@ has_children: true
 has_toc: false
 redirect_from:
   - /security/api/certificates/
+canonical_url: https://docs.opensearch.org/latest/security/api/certificates/index/
 ---
 
 # 憑證 API

@@ -8,6 +8,8 @@ nav_exclude: true
 permalink: /
 seo:
   type: "WebSite" # override the site-wide TechArticle default
+canonical_url: https://docs.opensearch.org/latest/
+redirect_to: https://docs.opensearch.org/latest/
 ---
 
 {% include banner.html %}

@@ -6,6 +6,7 @@ nav_order: 40
 parent: Reporting
 redirect_from:
   - /reporting/report-definition-access-control/
+canonical_url: https://docs.opensearch.org/latest/dashboards/reporting/report-definition-access-control/
 ---
 
 # 報表定義存取控制

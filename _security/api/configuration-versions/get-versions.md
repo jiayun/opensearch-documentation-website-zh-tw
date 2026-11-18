@@ -5,6 +5,7 @@ title: "取得組態版本"
 parent: Security configuration version APIs
 grand_parent: Security APIs
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/security/api/configuration-versions/get-versions/
 ---
 
 # 取得安全性組態版本 API

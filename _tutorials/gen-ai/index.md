@@ -23,6 +23,7 @@ cards:
 - heading: 模型防護機制
   description: 為您的模型新增安全界線，以確保回應受到控制
   link: /tutorials/gen-ai/model-controls/
+canonical_url: https://docs.opensearch.org/latest/tutorials/gen-ai/index/
 ---
 
 # 生成式 AI 教學

@@ -6,6 +6,7 @@ parent: Bucket aggregations
 nav_order: 90
 redirect_from:
   - /query-dsl/aggregations/bucket/global/
+canonical_url: https://docs.opensearch.org/latest/aggregations/bucket/global/
 ---
 
 # Global 彙總

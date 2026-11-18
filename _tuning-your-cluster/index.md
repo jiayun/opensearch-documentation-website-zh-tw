@@ -38,6 +38,7 @@ data_protection:
 - heading: 跨叢集複寫
   description: 將索引從領導叢集複寫到一或多個追隨叢集。
   link: /tuning-your-cluster/replication-plugin/index/
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/
 ---
 
 # 管理您的叢集

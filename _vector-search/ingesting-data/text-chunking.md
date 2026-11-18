@@ -6,6 +6,7 @@ parent: Ingesting data
 nav_order: 80
 redirect_from:
   - /search-plugins/text-chunking/
+canonical_url: https://docs.opensearch.org/latest/vector-search/ingesting-data/text-chunking/
 ---
 
 # 文字分段

@@ -8,6 +8,7 @@ nav_order: 30
 redirect_from:
   - /opensearch/api-reference/cluster-api/
   - /api-reference/cluster-api/
+canonical_url: https://docs.opensearch.org/latest/api-reference/cluster-api/index/
 ---
 
 # 叢集 API

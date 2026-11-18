@@ -5,6 +5,8 @@ title: "產生向量"
 nav_order: 40
 parent: Synthetic data generation
 grand_parent: Additional features
+canonical_url: https://docs.opensearch.org/latest/benchmark/features/synthetic-data-generation/generating-vectors/
+redirect_to: https://docs.opensearch.org/latest/benchmark/features/synthetic-data-generation/generating-vectors/
 ---
 
 # 產生向量

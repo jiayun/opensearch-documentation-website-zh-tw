@@ -5,6 +5,7 @@ title: "警示洞察"
 parent: OpenSearch Assistant for OpenSearch Dashboards
 nav_order: 10
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/dashboards/dashboards-assistant/alert-insight/
 ---
 
 # 警示洞察

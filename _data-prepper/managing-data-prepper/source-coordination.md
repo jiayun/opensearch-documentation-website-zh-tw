@@ -4,6 +4,8 @@ layout: default
 title: "來源協調"
 nav_order: 35
 parent: Managing OpenSearch Data Prepper
+canonical_url: https://docs.opensearch.org/latest/data-prepper/managing-data-prepper/source-coordination/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/managing-data-prepper/source-coordination/
 ---
 
 # 來源協調

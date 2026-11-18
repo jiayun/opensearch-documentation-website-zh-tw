@@ -6,6 +6,7 @@ parent: Tuning indexes
 nav_order: 50
 redirect_from:
   - /opensearch/index-context/
+canonical_url: https://docs.opensearch.org/latest/im-plugin/index-context/
 ---
 
 # 索引情境

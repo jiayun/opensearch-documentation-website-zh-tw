@@ -9,6 +9,7 @@ has_children: false
 redirect_from: 
   - /opensearch/stats-api/
   - /tuning-your-cluster/availability-and-recovery/stats-api/
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/load-protection/stats-api/
 ---
 
 # 分片索引編製背壓 Stats API

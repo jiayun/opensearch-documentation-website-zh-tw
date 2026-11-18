@@ -5,6 +5,7 @@ title: "建立工作階段"
 parent: Agentic memory APIs
 grand_parent: ML APIs
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/agentic-memory-apis/create-session/
 ---
 
 # 建立工作階段 API

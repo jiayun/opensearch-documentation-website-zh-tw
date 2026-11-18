@@ -5,6 +5,7 @@ title: "列出連接器 MCP 工具"
 parent: MCP client APIs
 grand_parent: ML APIs
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/mcp-client-apis/list-connector-mcp-tools/
 ---
 
 # List Connector MCP Tools API

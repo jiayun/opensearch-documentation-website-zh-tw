@@ -5,6 +5,7 @@ title: "通知存取控制"
 nav_order: 30
 parent: Notifications
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/notifications/notification-access-control/
 ---
 
 # 通知存取控制

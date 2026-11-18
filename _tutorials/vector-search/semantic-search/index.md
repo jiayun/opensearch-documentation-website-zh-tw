@@ -76,6 +76,7 @@ semantic_search:
   - <b>平台：</b> OpenSearch、Amazon OpenSearch Service
   - <b>模型：</b> Amazon Titan Multimodal Embeddings
   - <b>部署：</b> Amazon Bedrock
+canonical_url: https://docs.opensearch.org/latest/tutorials/vector-search/semantic-search/index/
 ---
 
 # 語意搜尋教學

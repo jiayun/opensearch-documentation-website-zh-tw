@@ -7,6 +7,7 @@ grand_parent: Supported field types
 redirect_from:
   - /field-types/supported-field-types/knn-memory-optimized/
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/mappings/supported-field-types/knn-memory-optimized/
 ---
 
 # 記憶體最佳化向量

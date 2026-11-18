@@ -5,6 +5,7 @@ title: "德文"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 170
+canonical_url: https://docs.opensearch.org/latest/analyzers/language-analyzers/german/
 ---
 
 # 德文分析器

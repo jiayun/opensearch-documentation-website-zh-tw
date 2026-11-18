@@ -4,6 +4,7 @@ layout: default
 title: "與 OpenSearch 通訊"
 nav_order: 30
 description: "了解如何使用 REST API 與 OpenSearch 通訊，以新增文件、執行查詢及變更叢集設定。"
+canonical_url: https://docs.opensearch.org/latest/getting-started/communicate/
 ---
 
 # 與 OpenSearch 通訊

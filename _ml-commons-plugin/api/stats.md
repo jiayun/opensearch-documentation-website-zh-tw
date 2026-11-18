@@ -4,6 +4,7 @@ layout: default
 title: "統計資料"
 parent: ML APIs
 nav_order: 120
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/stats/
 ---
 
 # ML Stats API

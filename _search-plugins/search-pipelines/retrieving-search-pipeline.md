@@ -5,6 +5,7 @@ title: "擷取搜尋管線"
 nav_order: 25
 has_children: false
 parent: Search pipelines
+canonical_url: https://docs.opensearch.org/latest/search-plugins/search-pipelines/retrieving-search-pipeline/
 ---
 
 # 擷取搜尋管線

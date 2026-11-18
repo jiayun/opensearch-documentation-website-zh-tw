@@ -5,6 +5,8 @@ title: "擴充工作負載的資料語料庫"
 nav_order: 55
 redirect_from:
   - /benchmark/user-guide/optimizing-benchmarks/expand-data-corpus/
+canonical_url: https://docs.opensearch.org/latest/benchmark/expand-data-corpus/
+redirect_to: https://docs.opensearch.org/latest/benchmark/expand-data-corpus/
 ---
 
 # 擴充工作負載的資料語料庫

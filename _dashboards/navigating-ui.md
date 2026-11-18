@@ -4,6 +4,7 @@ layout: default
 title: "瀏覽 OpenSearch Dashboards"
 nav_order: 20
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/dashboards/navigating-ui/
 ---
 
 # 瀏覽 OpenSearch Dashboards

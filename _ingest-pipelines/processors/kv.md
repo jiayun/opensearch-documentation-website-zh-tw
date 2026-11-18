@@ -4,6 +4,7 @@ layout: default
 title: KV
 parent: Ingest processors
 nav_order: 200
+canonical_url: https://docs.opensearch.org/latest/ingest-pipelines/processors/kv/
 ---
 
 本文件說明如何在 OpenSearch 資料匯入管線中使用 `kv` 處理器。若您的使用情境涉及大型或複雜的資料集，建議改用 [Data Prepper `key_value` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/key-value/)，該處理器在 OpenSearch 叢集之外執行。

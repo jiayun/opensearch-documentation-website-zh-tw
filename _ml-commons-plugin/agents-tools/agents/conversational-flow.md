@@ -7,6 +7,7 @@ has_toc: false
 nav_order: 20
 parent: Agents
 grand_parent: Agents and tools
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/agents-tools/agents/conversational-flow/
 ---
 
 # 對話流程代理程式

@@ -4,6 +4,7 @@ layout: default
 title: "Pattern 分析器"
 parent: Analyzers
 nav_order: 90
+canonical_url: https://docs.opensearch.org/latest/analyzers/supported-analyzers/pattern/
 ---
 
 # Pattern 分析器

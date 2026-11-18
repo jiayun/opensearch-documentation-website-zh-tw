@@ -8,6 +8,7 @@ parent: Specialized search field types
 grand_parent: Supported field types
 redirect_from:
   - /field-types/supported-field-types/semantic/
+canonical_url: https://docs.opensearch.org/latest/mappings/supported-field-types/semantic/
 ---
 
 # Semantic 欄位類型

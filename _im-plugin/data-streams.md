@@ -7,6 +7,7 @@ redirect_from:
   - /opensearch/data-streams/
   - /dashboards/im-dashboards/datastream/
   - /dashboards/admin-ui-index/datastream/
+canonical_url: https://docs.opensearch.org/latest/im-plugin/data-streams/
 ---
 
 # 資料串流

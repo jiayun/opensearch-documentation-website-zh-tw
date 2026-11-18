@@ -6,6 +6,7 @@ nav_order: 11
 description: "OpenSearch 透過 MATCH 函式及其他對應至 OpenSearch 全文查詢的 SQL 函式，在 SQL 中支援全文搜尋。"
 redirect_from:
   - /search-plugins/sql/full-text/
+canonical_url: https://docs.opensearch.org/latest/sql-and-ppl/full-text/
 ---
 
 # 全文搜尋

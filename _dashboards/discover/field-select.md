@@ -5,6 +5,7 @@ title: "欄位選取工具"
 parent: Exploring data with Discover
 grand_parent: Exploring data
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/dashboards/discover/field-select/
 ---
 
 # 使用欄位選取工具

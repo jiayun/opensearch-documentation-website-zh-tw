@@ -4,6 +4,7 @@ layout: default
 title: "強制恢復"
 nav_order: 25
 parent: Cross-cluster replication
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/replication-plugin/force-resume/
 ---
 
 # 強制恢復複寫

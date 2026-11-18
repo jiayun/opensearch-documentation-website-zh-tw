@@ -5,6 +5,7 @@ title: "使用可觀測性應用程式進行跨叢集搜尋"
 nav_order: 180
 redirect_from:
   - /observing-your-data/cross-cluster-replication/
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/cross-cluster-search/
 ---
 
 # 使用可觀測性應用程式進行跨叢集搜尋

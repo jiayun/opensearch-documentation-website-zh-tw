@@ -5,6 +5,7 @@ title: "可觀測性簡易結構描述"
 nav_order: 170
 redirect_from:
 - /observing-your-data/ssfo/
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/ss4o/
 ---
 
 # 可觀測性簡易結構描述

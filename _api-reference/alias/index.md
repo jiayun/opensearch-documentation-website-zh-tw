@@ -10,6 +10,7 @@ redirect_from:
   - /opensearch/rest-api/alias/
   - /api-reference/alias-api/
   - /api-reference/alias/
+canonical_url: https://docs.opensearch.org/latest/api-reference/alias/index/
 ---
 
 # 別名 API

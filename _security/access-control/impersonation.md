@@ -6,6 +6,7 @@ parent: Access control
 nav_order: 105
 redirect_from:
  - /security-plugin/access-control/impersonation/
+canonical_url: https://docs.opensearch.org/latest/security/access-control/impersonation/
 ---
 
 # 使用者身分模擬

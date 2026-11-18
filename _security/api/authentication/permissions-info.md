@@ -5,6 +5,7 @@ title: "權限資訊"
 parent: Authentication APIs
 grand_parent: Security APIs
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/security/api/authentication/permissions-info/
 ---
 
 # Permissions Info API

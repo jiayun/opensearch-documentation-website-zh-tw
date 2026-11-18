@@ -4,6 +4,7 @@ layout: default
 title: Parent
 parent: Bucket aggregations
 nav_order: 145
+canonical_url: https://docs.opensearch.org/latest/aggregations/bucket/parent/
 ---
 
 # Parent 彙總

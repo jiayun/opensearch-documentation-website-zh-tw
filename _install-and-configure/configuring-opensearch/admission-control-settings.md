@@ -4,6 +4,7 @@ layout: default
 title: "准入控制設定"
 parent: Configuring OpenSearch
 nav_order: 130
+canonical_url: https://docs.opensearch.org/latest/install-and-configure/configuring-opensearch/admission-control-settings/
 ---
 
 # 准入控制設定

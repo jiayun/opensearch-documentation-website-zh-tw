@@ -3,6 +3,8 @@
 layout: default
 title: "詞彙表"
 nav_order: 100
+canonical_url: https://docs.opensearch.org/latest/benchmark/glossary/
+redirect_to: https://docs.opensearch.org/latest/benchmark/glossary/
 ---
 
 # OpenSearch Benchmark 詞彙表

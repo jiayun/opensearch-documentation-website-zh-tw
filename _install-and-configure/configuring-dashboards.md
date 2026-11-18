@@ -3,6 +3,7 @@
 layout: default
 title: "設定 OpenSearch Dashboards"
 nav_order: 15
+canonical_url: https://docs.opensearch.org/latest/install-and-configure/configuring-dashboards/
 ---
 
 # 設定 OpenSearch Dashboards

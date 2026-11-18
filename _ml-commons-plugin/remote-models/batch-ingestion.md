@@ -10,6 +10,7 @@ grand_parent: Integrating ML models
 redirect_from:
   - /ml-commons-plugin/remote-models/async-batch-ingestion/
   - /ml-commons-plugin/api/async-batch-ingest/
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/remote-models/batch-ingestion/
 ---
 
 # 使用外部託管的 ML 模型進行批次匯入

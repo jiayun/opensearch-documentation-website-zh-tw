@@ -5,6 +5,7 @@ title: "建立或更新辨別名稱"
 parent: Distinguished name APIs
 grand_parent: Security APIs
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/security/api/distinguished-names/update-distinguished-name/
 ---
 
 # 建立或更新辨別名稱 API

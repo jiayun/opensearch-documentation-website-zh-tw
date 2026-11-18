@@ -4,6 +4,7 @@ layout: default
 title: "索引排序"
 parent: Tuning indexes
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/im-plugin/index-sorting/
 ---
 
 

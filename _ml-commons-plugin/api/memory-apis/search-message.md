@@ -5,6 +5,7 @@ title: "搜尋訊息"
 parent: Memory APIs
 grand_parent: ML APIs
 nav_order: 60
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/memory-apis/search-message/
 ---
 
 # Search Message API

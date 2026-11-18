@@ -7,6 +7,7 @@ grand_parent: Building data visualizations
 nav_order: 200
 redirect_from:
   - /dashboards/visualize/viz-tool-ref/
+canonical_url: https://docs.opensearch.org/latest/dashboards/visualize/visualize-app/configuring-viz/
 ---
 
 # 設定視覺化

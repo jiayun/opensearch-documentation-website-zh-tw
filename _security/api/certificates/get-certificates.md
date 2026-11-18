@@ -5,6 +5,7 @@ title: "取得憑證"
 parent: Certificate APIs
 grand_parent: Security APIs
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/security/api/certificates/get-certificates/
 ---
 
 # 取得憑證 API

@@ -5,6 +5,7 @@ title: "刪除辨別名稱"
 parent: Distinguished name APIs
 grand_parent: Security APIs
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/security/api/distinguished-names/delete-distinguished-name/
 ---
 
 # 刪除辨別名稱 API

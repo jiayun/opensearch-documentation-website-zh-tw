@@ -4,6 +4,7 @@ layout: default
 title: "電話號碼分析器"
 parent: Analyzers
 nav_order: 140
+canonical_url: https://docs.opensearch.org/latest/analyzers/supported-analyzers/phone-analyzers/
 ---
 
 # 電話號碼分析器

@@ -5,6 +5,7 @@ title: "葡萄牙文"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 260
+canonical_url: https://docs.opensearch.org/latest/analyzers/language-analyzers/portuguese/
 ---
 
 # 葡萄牙文分析器

@@ -4,6 +4,7 @@ layout: default
 title: "URL 解碼"
 parent: Ingest processors
 nav_order: 320
+canonical_url: https://docs.opensearch.org/latest/ingest-pipelines/processors/urldecode/
 ---
 
 # URL 解碼處理器

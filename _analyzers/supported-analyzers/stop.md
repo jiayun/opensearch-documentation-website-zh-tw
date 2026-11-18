@@ -4,6 +4,7 @@ layout: default
 title: "Stop 分析器"
 parent: Analyzers
 nav_order: 110
+canonical_url: https://docs.opensearch.org/latest/analyzers/supported-analyzers/stop/
 ---
 
 # Stop 分析器

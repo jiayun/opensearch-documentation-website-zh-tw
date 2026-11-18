@@ -5,6 +5,7 @@ title: "已儲存物件"
 parent: Dashboards management
 has_children: true
 nav_order: 12
+canonical_url: https://docs.opensearch.org/latest/dashboards/management/saved-objects/
 ---
 
 # 已儲存物件

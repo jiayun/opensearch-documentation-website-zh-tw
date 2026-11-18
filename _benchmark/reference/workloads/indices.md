@@ -6,6 +6,8 @@ parent: Anatomy of a workload
 nav_order: 10
 redirect_from:
   - /benchmark/workloads/indices/
+canonical_url: https://docs.opensearch.org/latest/benchmark/reference/workloads/indices/
+redirect_to: https://docs.opensearch.org/latest/benchmark/reference/workloads/indices/
 ---
 
 <!-- vale off -->

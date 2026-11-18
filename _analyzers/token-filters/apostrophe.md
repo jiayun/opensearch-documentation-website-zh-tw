@@ -4,6 +4,7 @@ layout: default
 title: Apostrophe
 parent: Token filters
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/apostrophe/
 ---
 
 # Apostrophe 詞元篩選器

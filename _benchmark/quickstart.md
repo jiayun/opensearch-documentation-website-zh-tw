@@ -3,6 +3,8 @@
 layout: default
 title: "快速入門"
 nav_order: 5
+canonical_url: https://docs.opensearch.org/latest/benchmark/quickstart/
+redirect_to: https://docs.opensearch.org/latest/benchmark/quickstart/
 ---
 
 # OpenSearch Benchmark 快速入門

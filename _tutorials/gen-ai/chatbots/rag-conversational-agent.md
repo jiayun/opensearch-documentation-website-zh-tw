@@ -10,6 +10,7 @@ has_toc: false
 redirect_from:
   - /ml-commons-plugin/tutorials/rag-conversational-agent/
   - /vector-search/tutorials/chatbots/rag-conversational-agent/
+canonical_url: https://docs.opensearch.org/latest/tutorials/gen-ai/chatbots/rag-conversational-agent/
 ---
 
 # 使用對話式流程代理程式的 RAG 聊天機器人

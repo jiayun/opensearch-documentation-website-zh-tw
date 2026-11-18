@@ -4,6 +4,8 @@ layout: default
 title: "核心 API"
 parent: Managing OpenSearch Data Prepper
 nav_order: 15
+canonical_url: https://docs.opensearch.org/latest/data-prepper/managing-data-prepper/core-apis/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/managing-data-prepper/core-apis/
 ---
 
 # 核心 API

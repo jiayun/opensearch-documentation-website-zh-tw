@@ -6,6 +6,7 @@ nav_order: 20
 parent: Observability workspace apps
 redirect_from:
   - /observability-plugin/discover-logs/
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/exploring-observability-data/discover-logs/
 ---
 
 # 在 Discover 中分析記錄檔

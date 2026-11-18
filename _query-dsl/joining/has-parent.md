@@ -4,6 +4,7 @@ layout: default
 title: "Has parent 查詢"
 parent: Joining queries
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/query-dsl/joining/has-parent/
 ---
 
 # Has parent 查詢

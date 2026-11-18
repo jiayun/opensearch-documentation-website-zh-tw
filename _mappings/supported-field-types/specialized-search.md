@@ -8,6 +8,7 @@ has_toc: false
 parent: Supported field types
 redirect_from:
   - /field-types/supported-field-types/specialized-search/
+canonical_url: https://docs.opensearch.org/latest/mappings/supported-field-types/specialized-search/
 ---
 
 # 特殊搜尋欄位類型

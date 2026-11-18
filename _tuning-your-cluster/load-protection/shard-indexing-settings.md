@@ -8,6 +8,7 @@ grand_parent: Load protection
 redirect_from: 
   - /opensearch/shard-indexing-settings/
   - /tuning-your-cluster/availability-and-recovery/shard-indexing-settings/
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/load-protection/shard-indexing-settings/
 ---
 
 # 分片索引回壓設定

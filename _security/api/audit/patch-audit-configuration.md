@@ -5,6 +5,7 @@ title: "修補稽核組態"
 parent: Audit log APIs
 grand_parent: Security APIs
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/security/api/audit/patch-audit-configuration/
 ---
 
 # 修補稽核組態 API

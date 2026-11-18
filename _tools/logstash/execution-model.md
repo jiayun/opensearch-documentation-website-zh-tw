@@ -6,6 +6,7 @@ parent: Logstash
 nav_order: 210
 redirect_from:
  - /clients/logstash/execution-model/
+canonical_url: https://docs.opensearch.org/latest/tools/logstash/execution-model/
 ---
 
 # Logstash 執行模型

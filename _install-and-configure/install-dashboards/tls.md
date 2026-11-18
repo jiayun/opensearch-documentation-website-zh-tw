@@ -6,6 +6,7 @@ parent: Installing OpenSearch Dashboards
 nav_order: 50
 redirect_from:
   - /dashboards/install/tls/
+canonical_url: https://docs.opensearch.org/latest/install-and-configure/install-dashboards/tls/
 ---
 
 # 為 OpenSearch Dashboards 設定 TLS

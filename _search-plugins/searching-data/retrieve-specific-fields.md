@@ -4,6 +4,7 @@ layout: default
 parent: Customizing search results
 title: "擷取特定欄位"
 nav_order: 50
+canonical_url: https://docs.opensearch.org/latest/search-plugins/searching-data/retrieve-specific-fields/
 ---
 
 # 擷取特定欄位

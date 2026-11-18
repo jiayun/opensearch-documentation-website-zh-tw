@@ -4,6 +4,7 @@ layout: default
 title: Stop
 parent: Token filters
 nav_order: 410
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/stop/
 ---
 
 # Stop 詞元篩選器

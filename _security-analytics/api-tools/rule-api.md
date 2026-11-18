@@ -4,6 +4,7 @@ layout: default
 title: "規則 API"
 parent: Security Analytics APIs
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/security-analytics/api-tools/rule-api/
 ---
 
 # 規則 API

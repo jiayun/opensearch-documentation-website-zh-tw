@@ -5,6 +5,7 @@ title: "列出 MCP 工具"
 parent: MCP server APIs
 grand_parent: ML APIs
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/mcp-server-apis/list-mcp-tools/
 ---
 
 # 列出 MCP 工具 API

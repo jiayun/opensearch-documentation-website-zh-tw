@@ -4,6 +4,7 @@ layout: default
 title: "將 Prometheus 連接至 OpenSearch"
 parent: Connecting data sources
 nav_order: 60
+canonical_url: https://docs.opensearch.org/latest/dashboards/management/connect-prometheus/
 ---
 
 # 將 Prometheus 連線至 OpenSearch

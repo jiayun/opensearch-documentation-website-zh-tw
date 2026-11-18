@@ -6,6 +6,7 @@ nav_order: 75
 parent: Segment replication
 has_children: false
 grand_parent: Availability and recovery
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/availability-and-recovery/segment-replication/backpressure/
 ---
 
 # 分段複寫背壓

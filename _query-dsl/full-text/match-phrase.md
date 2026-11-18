@@ -4,6 +4,7 @@ layout: default
 title: "詞組比對"
 parent: Full-text queries
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/query-dsl/full-text/match-phrase/
 ---
 
 # 詞組比對查詢

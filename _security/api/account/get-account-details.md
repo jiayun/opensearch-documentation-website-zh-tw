@@ -5,6 +5,7 @@ title: "取得帳戶詳細資訊"
 parent: Account APIs
 grand_parent: Security APIs
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/security/api/account/get-account-details/
 ---
 
 # 取得帳戶詳細資訊 API

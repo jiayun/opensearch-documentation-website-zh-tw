@@ -4,6 +4,7 @@ layout: default
 title: "範圍"
 parent: Term-level queries
 nav_order: 50
+canonical_url: https://docs.opensearch.org/latest/query-dsl/term/range/
 ---
 
 # 範圍查詢

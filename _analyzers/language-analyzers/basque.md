@@ -5,6 +5,7 @@ title: "巴斯克語"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/analyzers/language-analyzers/basque/
 ---
 
 # 巴斯克語分析器

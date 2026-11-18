@@ -4,6 +4,7 @@ layout: default
 title: gsub
 parent: Ingest processors
 nav_order: 125
+canonical_url: https://docs.opensearch.org/latest/ingest-pipelines/processors/gsub/
 ---
 
 <!-- vale off -->

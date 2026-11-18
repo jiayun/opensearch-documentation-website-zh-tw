@@ -4,6 +4,7 @@ layout: default
 title: "向量搜尋基礎"
 parent: Getting started
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/vector-search/getting-started/vector-search-basics/
 ---
 
 # 向量搜尋基礎

@@ -8,6 +8,7 @@ has_children: true
 has_toc: false
 redirect_from:
   - /security-plugin/configuration/security-admin/
+canonical_url: https://docs.opensearch.org/latest/security/configuration/security-admin/
 ---
 
 # 套用組態檔案的變更

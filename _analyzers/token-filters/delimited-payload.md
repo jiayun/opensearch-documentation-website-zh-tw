@@ -4,6 +4,7 @@ layout: default
 title: "分隔酬載"
 parent: Token filters
 nav_order: 90
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/delimited-payload/
 ---
 
 # 分隔酬載詞元篩選器

@@ -8,6 +8,7 @@ has_toc: false
 redirect_from: 
   - /query-dsl/analyzers/refresh-analyzer/
   - /im-plugin/refresh-analyzer/index/
+canonical_url: https://docs.opensearch.org/latest/im-plugin/refresh-analyzer/
 ---
 
 # 重新整理搜尋分析器

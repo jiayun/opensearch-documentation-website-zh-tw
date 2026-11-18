@@ -4,6 +4,7 @@ layout: default
 title: "叢集引導"
 parent: Discovery and cluster formation
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/discovery-cluster-formation/bootstrapping/
 ---
 
 # 叢集引導

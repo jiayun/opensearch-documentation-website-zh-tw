@@ -8,6 +8,7 @@ has_children: true
 has_toc: false
 redirect_from:
   - /security/api/action-groups/
+canonical_url: https://docs.opensearch.org/latest/security/api/action-groups/index/
 ---
 
 # 動作群組 API

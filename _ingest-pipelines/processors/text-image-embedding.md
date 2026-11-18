@@ -6,6 +6,7 @@ parent: Ingest processors
 nav_order: 270
 redirect_from:
    - /api-reference/ingest-apis/processors/text-image-embedding/
+canonical_url: https://docs.opensearch.org/latest/ingest-pipelines/processors/text-image-embedding/
 ---
 
 <!-- vale off -->

@@ -7,6 +7,7 @@ parent: Improving search performance
 has_children: true
 redirect_from:
   - /search-plugins/async/
+canonical_url: https://docs.opensearch.org/latest/search-plugins/async/index/
 ---
 
 # 非同步搜尋

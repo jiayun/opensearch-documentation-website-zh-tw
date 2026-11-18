@@ -5,6 +5,7 @@ title: "Neural sparse ANN 說明"
 parent: Neural sparse
 grand_parent: AI and vector search queries
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/query-dsl/specialized/neural-sparse/neural-sparse-explain/
 ---
 
 # Neural sparse ANN 查詢說明

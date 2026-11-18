@@ -5,6 +5,7 @@ title: "取得脈絡管理"
 parent: Context management APIs
 grand_parent: ML APIs
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/context-management-apis/get-context-management/
 ---
 
 # 取得脈絡管理 API

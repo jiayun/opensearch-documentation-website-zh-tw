@@ -5,6 +5,7 @@ title: "搜尋代理程式"
 parent: Agent APIs
 grand_parent: ML APIs
 nav_order: 35
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/agent-apis/search-agent/
 ---
 
 # Search Agent API

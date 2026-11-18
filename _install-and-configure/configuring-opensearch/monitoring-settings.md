@@ -4,6 +4,7 @@ layout: default
 title: "監控設定"
 parent: Configuring OpenSearch
 nav_order: 90
+canonical_url: https://docs.opensearch.org/latest/install-and-configure/configuring-opensearch/monitoring-settings/
 ---
 
 # 監控設定

@@ -4,6 +4,8 @@ layout: default
 title: "運算式語法"
 parent: Pipelines
 nav_order: 5
+canonical_url: https://docs.opensearch.org/latest/data-prepper/pipelines/expression-syntax/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/pipelines/expression-syntax/
 ---
 
 # 運算式語法  

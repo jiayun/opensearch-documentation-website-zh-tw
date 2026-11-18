@@ -8,6 +8,7 @@ redirect_from:
 nav_order: 160
 has_children: false
 has_toc: false
+canonical_url: https://docs.opensearch.org/latest/mappings/mapping-parameters/index-phrases/
 ---
 
 # 索引片語對應參數

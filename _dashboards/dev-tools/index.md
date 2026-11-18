@@ -13,6 +13,7 @@ redirect_from:
   - /dashboards/visualize/run-queries/
   - /dashboards/discover/run-queries/
   - /dashboards/dev-tools/
+canonical_url: https://docs.opensearch.org/latest/dashboards/dev-tools/index/
 ---
 
 # 使用 Dev Tools

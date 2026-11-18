@@ -6,6 +6,7 @@ nav_order: 30
 parent: Workload management
 redirect_from:
   - /tuning-your-cluster/availability-and-recovery/workload-management/workload-group-settings/
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/workload-management/workload-group-settings/
 ---
 
 # 工作負載群組設定

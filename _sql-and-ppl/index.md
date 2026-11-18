@@ -10,6 +10,7 @@ permalink: /sql-and-ppl/
 redirect_from:
   - /search-plugins/sql/
   - /search-plugins/sql/index/
+canonical_url: https://docs.opensearch.org/latest/sql-and-ppl/
 ---
 
 # SQL 與 PPL

@@ -4,6 +4,7 @@ layout: default
 title: "探索 Visualize 應用程式"
 parent: Getting started
 nav_order: 35
+canonical_url: https://docs.opensearch.org/latest/dashboards/getting-started/explore-visualize/
 ---
 
 # 探索 Visualize 應用程式

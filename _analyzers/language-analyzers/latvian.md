@@ -5,6 +5,7 @@ title: "拉脫維亞語"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 230
+canonical_url: https://docs.opensearch.org/latest/analyzers/language-analyzers/latvian/
 ---
 
 # 拉脫維亞語分析器

@@ -6,6 +6,7 @@ nav_order: 10
 parent: Reporting
 redirect_from:
   - /reporting/report-dashboard-index/
+canonical_url: https://docs.opensearch.org/latest/dashboards/reporting/report-dashboard-index/
 ---
 
 # 使用 OpenSearch Dashboards 產生報告

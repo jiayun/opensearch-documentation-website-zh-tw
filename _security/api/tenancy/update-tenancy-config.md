@@ -5,6 +5,7 @@ title: "建立或更新多租用戶組態"
 parent: Multi-tenancy configuration APIs
 grand_parent: Security APIs
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/security/api/tenancy/update-tenancy-config/
 ---
 
 # 建立或更新多租用戶組態 API

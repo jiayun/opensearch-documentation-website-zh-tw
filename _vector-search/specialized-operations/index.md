@@ -17,6 +17,7 @@ cards:
 - heading: 使用 MMR 重新排序的向量搜尋
   description: 使用最大邊際相關性 (MMR) 自動依據相關性與多樣性重新排序，以改善向量搜尋結果
   link: /vector-search/specialized-operations/vector-search-mmr/
+canonical_url: https://docs.opensearch.org/latest/vector-search/specialized-operations/index/
 ---
 
 # 特殊向量搜尋

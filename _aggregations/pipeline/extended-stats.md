@@ -4,6 +4,7 @@ layout: default
 title: "延伸統計桶"
 parent: Pipeline aggregations
 nav_order: 80
+canonical_url: https://docs.opensearch.org/latest/aggregations/pipeline/extended-stats/
 ---
 
 # 延伸統計桶彙總

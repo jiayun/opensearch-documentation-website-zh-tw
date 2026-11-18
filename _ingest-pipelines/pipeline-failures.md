@@ -5,6 +5,7 @@ title: "處理管線失敗"
 nav_order: 30
 redirect_from:
   - /api-reference/ingest-apis/pipeline-failures/
+canonical_url: https://docs.opensearch.org/latest/ingest-pipelines/pipeline-failures/
 ---
 
 # 處理管線失敗

@@ -3,6 +3,7 @@
 layout: default
 title: "正規表示式語法"
 nav_order: 95
+canonical_url: https://docs.opensearch.org/latest/query-dsl/regex-syntax/
 ---
 
 # 正規表示式語法

@@ -5,6 +5,7 @@ title: "預測入門"
 nav_order: 5
 parent: Forecasting
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/forecast/getting-started/
 ---
 
 # 預測入門

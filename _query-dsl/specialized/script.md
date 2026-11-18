@@ -4,6 +4,7 @@ layout: default
 title: "指令碼查詢"
 parent: Specialized queries
 nav_order: 58
+canonical_url: https://docs.opensearch.org/latest/query-dsl/specialized/script/
 ---
 
 # 指令碼查詢

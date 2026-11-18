@@ -6,6 +6,7 @@ parent: Metric aggregations
 nav_order: 140
 redirect_from:
   - /query-dsl/aggregations/metric/value-count/
+canonical_url: https://docs.opensearch.org/latest/aggregations/metric/value-count/
 ---
 
 # 數值計數彙總

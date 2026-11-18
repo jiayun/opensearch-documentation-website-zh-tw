@@ -4,6 +4,7 @@ layout: default
 title: "分隔詞頻"
 parent: Token filters
 nav_order: 100
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/delimited-term-frequency/
 ---
 
 # 分隔詞頻詞元篩選器

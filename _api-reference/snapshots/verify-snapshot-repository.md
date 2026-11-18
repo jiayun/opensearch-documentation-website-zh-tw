@@ -4,6 +4,7 @@ layout: default
 title: "驗證快照儲存庫"
 parent: Snapshot APIs
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/api-reference/snapshots/verify-snapshot-repository/
 ---
 
 # 驗證快照儲存庫 API

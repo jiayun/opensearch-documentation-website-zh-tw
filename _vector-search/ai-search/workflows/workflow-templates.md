@@ -7,6 +7,7 @@ grand_parent: AI search
 nav_order: 20
 redirect_from:
   - /automating-configurations/workflow-templates/
+canonical_url: https://docs.opensearch.org/latest/vector-search/ai-search/workflows/workflow-templates/
 ---
 
 # 工作流程範本

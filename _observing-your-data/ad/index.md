@@ -8,6 +8,7 @@ redirect_from:
   - /monitoring-plugins/ad/
   - /monitoring-plugins/ad/index/
   - /observing-your-data/ad/
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/ad/index/
 ---
 
 # 異常偵測

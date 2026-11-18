@@ -4,6 +4,7 @@ layout: default
 title: "日期索引名稱"
 parent: Ingest processors
 nav_order: 55
+canonical_url: https://docs.opensearch.org/latest/ingest-pipelines/processors/date-index-name/
 ---
 
 # 日期索引名稱處理器

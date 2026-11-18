@@ -5,6 +5,7 @@ title: "移除 MCP 工具"
 parent: MCP server APIs
 grand_parent: ML APIs
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/mcp-server-apis/remove-mcp-tools/
 ---
 
 # 移除 MCP 工具 API

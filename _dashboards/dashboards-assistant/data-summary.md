@@ -5,6 +5,7 @@ title: "資料摘要"
 parent: OpenSearch Assistant for OpenSearch Dashboards
 nav_order: 30
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/dashboards/dashboards-assistant/data-summary/
 ---
 
 # 資料摘要

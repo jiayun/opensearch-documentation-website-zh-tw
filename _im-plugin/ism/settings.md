@@ -4,6 +4,7 @@ layout: default
 title: "設定"
 parent: Index State Management
 nav_order: 50
+canonical_url: https://docs.opensearch.org/latest/im-plugin/ism/settings/
 ---
 
 # ISM 設定

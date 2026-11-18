@@ -4,6 +4,7 @@ layout: default
 title: "指標"
 nav_order: 30
 parent: Observability workspace apps
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/exploring-observability-data/discover-metrics/
 ---
 
 # 在 Discover 中分析指標

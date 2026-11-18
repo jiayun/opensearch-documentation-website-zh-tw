@@ -4,6 +4,7 @@ layout: default
 title: "相似度"
 parent: Tuning indexes
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/im-plugin/similarity/
 ---
 
 # 相似度

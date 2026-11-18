@@ -7,6 +7,8 @@ parent: Reference
 redirect_from:
   - /benchmark/user-guide/understanding-results/telemetry/
   - /benchmark/user-guide/telemetry/
+canonical_url: https://docs.opensearch.org/latest/benchmark/reference/telemetry/
+redirect_to: https://docs.opensearch.org/latest/benchmark/reference/telemetry/
 ---
 
 # 遙測裝置

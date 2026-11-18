@@ -8,6 +8,7 @@ has_toc: false
 description: "設定可觀測性工作區，以便在 Discover 中探索記錄檔、追蹤和指標，並使用應用程式效能監控、服務層級目標與代理程式監控。"
 redirect_from:
   - /observing-your-data/exploring-observability-data/
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/exploring-observability-data/index/
 ---
 
 # 可觀測性工作區應用程式

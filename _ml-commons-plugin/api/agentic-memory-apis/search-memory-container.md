@@ -5,6 +5,7 @@ title: "搜尋記憶容器"
 parent: Agentic memory APIs
 grand_parent: ML APIs
 nav_order: 25
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/agentic-memory-apis/search-memory-container/
 ---
 
 # 搜尋記憶容器 API

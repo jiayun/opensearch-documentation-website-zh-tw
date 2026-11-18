@@ -6,6 +6,7 @@ parent: Configuration
 nav_order: 15
 redirect_from: 
   - /security-plugin/configuration/yaml/
+canonical_url: https://docs.opensearch.org/latest/security/configuration/yaml/
 ---
 
 # 修改安全性 YAML 檔案

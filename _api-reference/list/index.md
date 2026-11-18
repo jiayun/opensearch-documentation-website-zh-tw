@@ -6,6 +6,7 @@ nav_order: 20
 has_children: true
 redirect_from:
   - /api-reference/list/
+canonical_url: https://docs.opensearch.org/latest/api-reference/list/index/
 ---
 
 # List API

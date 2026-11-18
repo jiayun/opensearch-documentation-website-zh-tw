@@ -4,6 +4,7 @@ layout: default
 title: "搜尋效能調校"
 nav_order: 20
 parent: Performance tuning
+canonical_url: https://docs.opensearch.org/latest/vector-search/performance-tuning-search/
 ---
 
 # 向量搜尋查詢效能調校

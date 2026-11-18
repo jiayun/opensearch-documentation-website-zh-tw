@@ -5,6 +5,7 @@ title: "刪除連接器"
 parent: Connector APIs
 grand_parent: ML APIs
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/connector-apis/delete-connector/
 ---
 
 # 刪除連接器 API

@@ -4,6 +4,7 @@ layout: default
 title: "百分位數桶"
 parent: Pipeline aggregations
 nav_order: 160
+canonical_url: https://docs.opensearch.org/latest/aggregations/pipeline/percentiles-bucket/
 ---
 
 # 百分位數桶彙總

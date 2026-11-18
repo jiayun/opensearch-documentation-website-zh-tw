@@ -7,6 +7,7 @@ nav_order: 150
 redirect_from:
   - /security/api/cache/
   - /security/api/cache/flush-cache/
+canonical_url: https://docs.opensearch.org/latest/security/api/flush-cache/
 ---
 
 # Flush Cache API

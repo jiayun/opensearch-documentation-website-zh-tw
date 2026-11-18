@@ -4,6 +4,7 @@ layout: default
 title: "記錄類型 API"
 parent: Security Analytics APIs
 nav_order: 56
+canonical_url: https://docs.opensearch.org/latest/security-analytics/api-tools/log-type-api/
 ---
 
 # 記錄類型 API

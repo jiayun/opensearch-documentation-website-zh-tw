@@ -8,6 +8,7 @@ has_children: true
 has_toc: false
 redirect_from:
   - /security/api/tenancy/
+canonical_url: https://docs.opensearch.org/latest/security/api/tenancy/index/
 ---
 
 # 多租用戶組態 API

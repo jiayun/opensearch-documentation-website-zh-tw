@@ -7,6 +7,8 @@ nav_order: 20
 redirect_from:
   - /benchmark/user-guide/contributing-workloads/
   - /benchmark/user-guide/working-with-workloads/contributing-workloads/
+canonical_url: https://docs.opensearch.org/latest/benchmark/contributing-workloads/
+redirect_to: https://docs.opensearch.org/latest/benchmark/contributing-workloads/
 ---
 
 # 分享自訂工作負載

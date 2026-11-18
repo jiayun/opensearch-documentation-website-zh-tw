@@ -7,6 +7,7 @@ redirect_from:
   - /opensearch/index-templates/
   - /dashboards/im-dashboards/component-templates/
   - /dashboards/admin-ui-index/component-templates/
+canonical_url: https://docs.opensearch.org/latest/im-plugin/index-templates/
 ---
 
 # 索引範本

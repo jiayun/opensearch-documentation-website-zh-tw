@@ -4,6 +4,7 @@ layout: default
 title: Windows
 parent: Installing OpenSearch
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/install-and-configure/install-opensearch/windows/
 ---
 
 # 在 Windows 上安裝 OpenSearch

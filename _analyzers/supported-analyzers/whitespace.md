@@ -4,6 +4,7 @@ layout: default
 title: "空白字元分析器"
 parent: Analyzers
 nav_order: 120
+canonical_url: https://docs.opensearch.org/latest/analyzers/supported-analyzers/whitespace/
 ---
 
 # 空白字元分析器

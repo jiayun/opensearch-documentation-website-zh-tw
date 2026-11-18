@@ -3,6 +3,7 @@
 layout: default
 title: "LLM 框架整合"
 nav_order: 75
+canonical_url: https://docs.opensearch.org/latest/vector-search/llm-frameworks/
 ---
 
 # LLM 框架整合

@@ -4,6 +4,7 @@ layout: default
 title: "使用 OpenSearch MCP Server"
 parent: OpenSearch MCP Server
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/ai-agent-integrations/mcp-server/using/
 ---
 
 # 使用 OpenSearch MCP Server

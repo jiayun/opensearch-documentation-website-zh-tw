@@ -7,6 +7,7 @@ grand_parent: AI search
 has_children: false
 has_math: true
 nav_order: 5
+canonical_url: https://docs.opensearch.org/latest/vector-search/ai-search/hybrid-search/rrf/
 ---
 
 # 倒數排名融合

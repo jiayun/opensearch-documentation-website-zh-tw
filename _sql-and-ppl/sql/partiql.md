@@ -7,6 +7,7 @@ nav_order: 8
 redirect_from:
   - /search-plugins/sql/partiql/
   - /search-plugins/sql/sql/partiql/
+canonical_url: https://docs.opensearch.org/latest/sql-and-ppl/sql/partiql/
 ---
 
 # SQL JSON 支援

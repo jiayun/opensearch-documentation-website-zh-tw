@@ -5,6 +5,7 @@ title: "取得角色對應"
 parent: Role mapping APIs
 grand_parent: Security APIs
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/security/api/role-mappings/get-role-mappings/
 ---
 
 # 取得角色對應 API

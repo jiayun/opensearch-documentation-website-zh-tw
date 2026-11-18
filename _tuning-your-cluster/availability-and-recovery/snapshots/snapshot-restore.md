@@ -12,6 +12,7 @@ redirect_from:
   - /upgrade-to/snapshot-migrate/
   - /opensearch/snapshot-restore/
   - /availability-and-recovery/snapshots/snapshot-restore/
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/availability-and-recovery/snapshots/snapshot-restore/
 ---
 
 # 建立與還原快照

@@ -5,6 +5,7 @@ title: "執行代理程式串流"
 parent: Agent APIs
 grand_parent: ML APIs
 nav_order: 25
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/agent-apis/execute-stream-agent/
 ---
 
 # 執行代理程式串流 API

@@ -5,6 +5,7 @@ title: "設定"
 parent: Asynchronous search
 grand_parent: Improving search performance
 nav_order: 4
+canonical_url: https://docs.opensearch.org/latest/search-plugins/async/settings/
 ---
 
 # 非同步搜尋設定

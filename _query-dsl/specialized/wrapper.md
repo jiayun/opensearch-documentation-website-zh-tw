@@ -5,6 +5,7 @@ layout: default
 title: Wrapper
 parent: Specialized queries
 nav_order: 80
+canonical_url: https://docs.opensearch.org/latest/query-dsl/specialized/wrapper/
 ---
 
 # Wrapper 查詢

@@ -6,6 +6,7 @@ nav_order: 20
 redirect_from:
   - /vector-search/creating-a-vector-db/
   - /search-plugins/knn/knn-index/
+canonical_url: https://docs.opensearch.org/latest/vector-search/creating-vector-index/
 ---
 
 # 建立向量索引

@@ -21,6 +21,8 @@ items:
 - heading: 分階段執行遷移
   description: 執行遷移的逐步指南。
   link: /classic/migration-assistant/migration-phases/
+canonical_url: https://docs.opensearch.org/latest/classic/migration-assistant/
+redirect_to: https://docs.opensearch.org/latest/classic/migration-assistant/
 ---
 
 # ![Migration Assistant 圖示]({{site.url}}{{site.baseurl}}/images/icons/MigrationUpgrade_Color_Icon.svg){: .heading-icon} OpenSearch 的 Migration Assistant (Classic)

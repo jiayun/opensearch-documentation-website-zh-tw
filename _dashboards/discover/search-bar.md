@@ -7,6 +7,7 @@ grand_parent: Exploring data
 nav_order: 20
 redirect_from: 
   - /dashboards/#discover-and-dashboard-search-bar
+canonical_url: https://docs.opensearch.org/latest/dashboards/discover/search-bar/
 ---
 
 # 使用搜尋列

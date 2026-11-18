@@ -4,6 +4,7 @@ layout: default
 title: "投票與法定人數"
 parent: Discovery and cluster formation
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/discovery-cluster-formation/voting-quorums/
 ---
 
 # 投票與法定人數

@@ -12,6 +12,7 @@ redirect_from:
   - /dashboards/visualize/maps/
   - /dashboards/maps-plugin/
   - /dashboards/maps/
+canonical_url: https://docs.opensearch.org/latest/dashboards/visualize/visualize-app/maps/
 ---
 
 # Maps 應用程式

@@ -16,6 +16,7 @@ model_controls:
   - <b>平台：</b> OpenSearch
   - <b>模型：</b> Anthropic Claude
   - <b>部署：</b> Amazon Bedrock
+canonical_url: https://docs.opensearch.org/latest/tutorials/gen-ai/model-controls/index/
 ---
 
 # 模型防護機制教學

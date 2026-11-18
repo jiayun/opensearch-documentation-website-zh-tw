@@ -6,6 +6,7 @@ nav_order: 200
 has_children: false
 redirect_from:
   - /clients/grafana/
+canonical_url: https://docs.opensearch.org/latest/tools/grafana/
 ---
 
 # Grafana 支援

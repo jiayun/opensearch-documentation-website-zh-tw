@@ -8,6 +8,7 @@ great_grand_parent: Building data visualizations
 nav_order: 100
 redirect_from:
   - /dashboards/visualize/line-charts/
+canonical_url: https://docs.opensearch.org/latest/dashboards/visualize/visualize-app/line-charts/
 ---
 
 # 折線圖

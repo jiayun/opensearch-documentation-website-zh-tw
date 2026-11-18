@@ -5,6 +5,7 @@ title: "CSP 規則"
 parent: Settings and administration
 nav_order: 60
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/dashboards/csp/csp-dynamic-configuration/
 ---
 
 # CSP 規則

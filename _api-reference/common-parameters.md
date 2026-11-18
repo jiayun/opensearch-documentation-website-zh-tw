@@ -5,6 +5,7 @@ title: "常見 REST 參數"
 nav_order: 150
 redirect_from:
   - /opensearch/common-parameters/
+canonical_url: https://docs.opensearch.org/latest/api-reference/common-parameters/
 ---
 
 # 常見 REST 參數

@@ -11,6 +11,8 @@ more_cards:
 - heading: 合成資料產生
   description: 使用索引對應或自訂 Python 邏輯建立合成資料集，以進行全面的基準測試與測試。
   link: /benchmark/features/synthetic-data-generation/
+canonical_url: https://docs.opensearch.org/latest/benchmark/features/index/
+redirect_to: https://docs.opensearch.org/latest/benchmark/features/index/
 ---
 
 # 其他功能

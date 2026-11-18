@@ -7,6 +7,7 @@ has_children: true
 has_toc: false
 redirect_from:
   - /security-analytics/sec-analytics-config/
+canonical_url: https://docs.opensearch.org/latest/security-analytics/sec-analytics-config/index/
 ---
 
 # 設定 Security Analytics

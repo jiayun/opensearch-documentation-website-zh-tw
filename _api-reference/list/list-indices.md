@@ -5,6 +5,7 @@ title: "列出索引"
 parent: List APIs
 nav_order: 25
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/api-reference/list/list-indices/
 ---
 
 # List Indices API

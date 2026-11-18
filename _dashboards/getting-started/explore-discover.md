@@ -4,6 +4,7 @@ layout: default
 title: "探索 Discover 應用程式"
 parent: Getting started
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/dashboards/getting-started/explore-discover/
 ---
 
 # 探索 Discover 應用程式

@@ -4,6 +4,7 @@ layout: default
 title: "高效的 k-NN 篩選"
 parent: Filtering data
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/vector-search/filter-search-knn/efficient-knn-filtering/
 ---
 
 # 高效的 k-NN 篩選

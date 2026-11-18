@@ -6,6 +6,7 @@ parent: Audit logs
 nav_order: 135
 redirect_from:
   - /security-plugin/audit-logs/storage-types/
+canonical_url: https://docs.opensearch.org/latest/security/audit-logs/storage-types/
 ---
 
 # 稽核記錄儲存類型

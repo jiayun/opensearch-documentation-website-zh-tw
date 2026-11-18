@@ -4,6 +4,7 @@ layout: default
 title: "使用管線處理器的條件式"
 parent: Conditional execution
 nav_order: 60
+canonical_url: https://docs.opensearch.org/latest/ingest-pipelines/conditional-pipeline-processor/
 ---
 
 # 使用管線處理器的條件式

@@ -4,6 +4,7 @@ layout: default
 title: "路徑階層"
 parent: Tokenizers
 nav_order: 90
+canonical_url: https://docs.opensearch.org/latest/analyzers/tokenizers/path-hierarchy/
 ---
 
 # 路徑階層斷詞器

@@ -9,6 +9,7 @@ grand_parent: Connecting to externally hosted models
 great_grand_parent: Integrating ML models
 redirect_from: 
   - /ml-commons-plugin/extensibility/blueprints/
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/remote-models/blueprints/
 ---
 
 # 連接器藍圖

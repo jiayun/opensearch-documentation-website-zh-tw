@@ -4,6 +4,7 @@ layout: default
 title: "萬用字元"
 parent: Term-level queries
 nav_order: 90
+canonical_url: https://docs.opensearch.org/latest/query-dsl/term/wildcard/
 ---
 
 # 萬用字元查詢

@@ -8,6 +8,7 @@ redirect_from:
   - /about/quickstart/
   - /opensearch/install/quickstart/
   - /quickstart/
+canonical_url: https://docs.opensearch.org/latest/getting-started/quickstart/
 ---
 
 # 安裝快速入門

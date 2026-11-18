@@ -5,6 +5,9 @@ title: "提取式匯入"
 parent: Document APIs
 has_children: true
 nav_order: 90
+redirect_from:
+  - /im-plugin/pull-based-ingestion/
+  - /im-plugin/pull-based-ingestion/index/
 ---
 
 # 提取式匯入 API

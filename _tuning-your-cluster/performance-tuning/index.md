@@ -7,6 +7,7 @@ has_children: true
 has_toc: true
 redirect_from:
   - /tuning-your-cluster/performance-tuning/
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/performance-tuning/index/
 ---
 
 # 效能調校

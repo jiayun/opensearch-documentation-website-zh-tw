@@ -5,6 +5,7 @@ title: "訓練"
 parent: Model APIs
 grand_parent: ML APIs
 nav_order: 50
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/train-predict/train/
 ---
 
 # Train API

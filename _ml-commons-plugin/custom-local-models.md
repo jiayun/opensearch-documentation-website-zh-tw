@@ -5,6 +5,7 @@ title: "自訂模型"
 parent: Using ML models within OpenSearch
 grand_parent: Integrating ML models
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/custom-local-models/
 ---
 
 # 自訂本機模型

@@ -4,6 +4,7 @@ layout: default
 title: "移除 HTML 標籤"
 parent: Ingest processors
 nav_order: 140
+canonical_url: https://docs.opensearch.org/latest/ingest-pipelines/processors/html-strip/
 ---
 
 # HTML strip 處理器

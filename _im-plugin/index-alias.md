@@ -5,6 +5,7 @@ title: "索引別名"
 nav_order: 20
 redirect_from:
   - /opensearch/index-alias/
+canonical_url: https://docs.opensearch.org/latest/im-plugin/index-alias/
 ---
 
 # 索引別名

@@ -39,6 +39,7 @@ search_method_cards:
 - heading: 使用 RAG 的對話式搜尋
   description: 使用檢索增強生成 (RAG) 與對話記憶，以提供能感知情境的回應。
   link: /vector-search/ai-search/conversational-search/
+canonical_url: https://docs.opensearch.org/latest/vector-search/ai-search/index/
 ---
 
 # AI 搜尋

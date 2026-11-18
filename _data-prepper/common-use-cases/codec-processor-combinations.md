@@ -4,6 +4,8 @@ layout: default
 title: "編解碼器與處理器組合"
 parent: Common use cases
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/data-prepper/common-use-cases/codec-processor-combinations/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/common-use-cases/codec-processor-combinations/
 ---
 
 # 編解碼器與處理器組合

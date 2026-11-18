@@ -10,6 +10,7 @@ redirect_from:
   - /api-reference/security/authentication/
   - /api-reference/security/authentication/index/
   - /security/api/authentication/
+canonical_url: https://docs.opensearch.org/latest/security/api/authentication/index/
 ---
 
 # 驗證 API

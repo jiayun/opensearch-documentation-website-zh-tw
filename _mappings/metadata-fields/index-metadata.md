@@ -6,6 +6,7 @@ parent: Metadata fields
 nav_order: 40
 redirect_from:
   - /field-types/metadata-fields/index-metadata/
+canonical_url: https://docs.opensearch.org/latest/mappings/metadata-fields/index-metadata/
 ---
 
 # 索引中繼資料欄位

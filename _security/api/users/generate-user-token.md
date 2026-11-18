@@ -5,6 +5,7 @@ title: "產生使用者權杖"
 parent: Internal user APIs
 grand_parent: Security APIs
 nav_order: 50
+canonical_url: https://docs.opensearch.org/latest/security/api/users/generate-user-token/
 ---
 
 # 產生使用者權杖 API

@@ -4,6 +4,7 @@ layout: default
 title: "匿名驗證"
 parent: Access control
 nav_order: 130
+canonical_url: https://docs.opensearch.org/latest/security/access-control/anonymous-authentication/
 ---
 
 # 匿名驗證

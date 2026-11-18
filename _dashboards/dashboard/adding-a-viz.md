@@ -5,6 +5,7 @@ title: "將視覺化新增至儀表板"
 parent: Creating dashboards
 nav_order: 20
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/dashboards/dashboard/adding-a-viz/
 ---
 
 # 將視覺化新增至儀表板

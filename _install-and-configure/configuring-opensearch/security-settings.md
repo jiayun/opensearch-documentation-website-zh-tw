@@ -4,6 +4,7 @@ layout: default
 title: "安全性設定"
 parent: Configuring OpenSearch
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/install-and-configure/configuring-opensearch/security-settings/
 ---
 
 # 安全性設定

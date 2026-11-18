@@ -5,6 +5,7 @@ title: "產生 On-Behalf-Of 權杖"
 parent: Authentication APIs
 grand_parent: Security APIs
 nav_order: 70
+canonical_url: https://docs.opensearch.org/latest/security/api/authentication/generate-obo-token/
 ---
 
 # 產生 On-Behalf-Of 權杖 API

@@ -6,6 +6,7 @@ nav_order: 10
 has_toc: false
 permalink: /migrate-or-upgrade/snapshot-restore/
 redirect_from: 
+canonical_url: https://docs.opensearch.org/latest/migrate-or-upgrade/snapshot-restore/
 ---
 
 # 用於遷移的快照與還原

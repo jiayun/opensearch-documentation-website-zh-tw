@@ -4,6 +4,7 @@ layout: default
 title: "工作區 API"
 parent: Workspaces
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/dashboards/workspace/apis/
 ---
 
 # 工作區 API

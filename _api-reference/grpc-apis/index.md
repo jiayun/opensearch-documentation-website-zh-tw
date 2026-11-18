@@ -8,6 +8,7 @@ nav_order: 140
 description: "OpenSearch gRPC API 的參考資料，包含使用 protocol buffers 進行高效能通訊的 bulk 與 k-NN 搜尋操作。"
 redirect_from:
   - /api-reference/grpc-apis/
+canonical_url: https://docs.opensearch.org/latest/api-reference/grpc-apis/index/
 ---
 
 # gRPC API

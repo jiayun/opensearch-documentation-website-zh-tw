@@ -5,6 +5,7 @@ title: "字串函式"
 parent: Functions
 grand_parent: PPL
 nav_order: 13
+canonical_url: https://docs.opensearch.org/latest/sql-and-ppl/ppl/functions/string/
 ---
 
 # 字串函式

@@ -5,6 +5,8 @@ title: "OTel APM 服務地圖"
 parent: Processors
 grand_parent: Pipelines
 nav_order: 245
+canonical_url: https://docs.opensearch.org/latest/data-prepper/pipelines/configuration/processors/otel-apm-service-map/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/pipelines/configuration/processors/otel-apm-service-map/
 ---
 
 # OTel APM 服務地圖處理器

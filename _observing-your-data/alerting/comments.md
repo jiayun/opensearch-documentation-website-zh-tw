@@ -7,6 +7,7 @@ parent: Alerting
 has_children: false
 redirect_from:
   - /monitoring-plugins/alerting/comments/
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/alerting/comments/
 ---
 
 # 新增警示評論

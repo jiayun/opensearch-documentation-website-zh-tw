@@ -8,6 +8,7 @@ great_grand_parent: AI search
 nav_order: 30
 redirect_from:
   - /automating-configurations/api/provision-workflow/
+canonical_url: https://docs.opensearch.org/latest/vector-search/ai-search/workflows/api/provision-workflow/
 ---
 
 # 佈建工作流程 API

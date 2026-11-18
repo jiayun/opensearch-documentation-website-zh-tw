@@ -89,6 +89,7 @@ getting_started:
   link: /tutorials/
   image: /images/icons/Workflow-Icon.avif
   image_alt: 工作流程圖示
+canonical_url: https://docs.opensearch.org/latest/about/
 ---
 
 {%- comment -%}The `/docs/opensearch/` redirect is specifically to support the UI links in OpenSearch Dashboards 1.0.0.{%- endcomment -%}

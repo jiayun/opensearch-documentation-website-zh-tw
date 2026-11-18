@@ -8,6 +8,7 @@ has_children: true
 has_toc: false
 redirect_from:
    - /observing-your-data/apm/
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/apm/index/
 ---
 
 # 應用程式效能監控 (Application performance monitoring)

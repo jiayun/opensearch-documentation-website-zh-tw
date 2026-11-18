@@ -5,6 +5,7 @@ title: "刪除索引範本"
 parent: Index templates
 grand_parent: Index APIs
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/api-reference/index-apis/delete-index-template/
 ---
 
 # 刪除索引範本 API

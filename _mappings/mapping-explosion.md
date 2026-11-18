@@ -4,6 +4,7 @@ layout: default
 title: "對應爆炸"
 nav_order: 110
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/mappings/mapping-explosion/
 ---
 
 # 對應爆炸

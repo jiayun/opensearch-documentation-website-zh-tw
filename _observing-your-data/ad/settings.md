@@ -6,6 +6,7 @@ parent: Anomaly detection
 nav_order: 70
 redirect_from: 
   - /monitoring-plugins/ad/settings/
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/ad/settings/
 ---
 
 # 異常偵測設定

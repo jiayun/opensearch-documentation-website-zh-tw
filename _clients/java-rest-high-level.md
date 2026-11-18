@@ -3,6 +3,8 @@
 layout: default
 title: "Java 高階 REST 用戶端（已棄用）"
 nav_order: 190
+canonical_url: https://docs.opensearch.org/latest/clients/java-rest-high-level/
+redirect_to: https://docs.opensearch.org/latest/clients/java-rest-high-level/
 ---
 
 # Java 高階 REST 用戶端

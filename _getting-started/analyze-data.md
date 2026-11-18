@@ -3,6 +3,7 @@
 layout: default
 title: "分析您的資料"
 nav_order: 60
+canonical_url: https://docs.opensearch.org/latest/getting-started/analyze-data/
 ---
 
 # 分析您的資料

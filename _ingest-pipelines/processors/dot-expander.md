@@ -4,6 +4,7 @@ layout: default
 title: "點號展開器"
 parent: Ingest processors
 nav_order: 65
+canonical_url: https://docs.opensearch.org/latest/ingest-pipelines/processors/dot-expander/
 ---
 
 # 點號展開器

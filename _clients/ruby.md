@@ -4,6 +4,8 @@ layout: default
 title: "Ruby 用戶端"
 nav_order: 60
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/clients/ruby/
+redirect_to: https://docs.opensearch.org/latest/clients/ruby/
 ---
 
 # Ruby 用戶端

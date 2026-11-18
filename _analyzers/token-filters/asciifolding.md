@@ -4,6 +4,7 @@ layout: default
 title: "ASCII 摺疊"
 parent: Token filters
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/asciifolding/
 ---
 
 # ASCII 摺疊詞元篩選器

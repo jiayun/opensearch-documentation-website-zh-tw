@@ -7,6 +7,7 @@ grand_parent: Optimizing vector storage
 nav_order: 15
 has_children: false
 has_math: true
+canonical_url: https://docs.opensearch.org/latest/vector-search/optimizing-storage/exact-search-scalar-quantization/
 ---
 
 # 使用純量量化的精確搜尋

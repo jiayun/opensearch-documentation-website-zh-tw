@@ -9,6 +9,7 @@ has_children: false
 has_math: true
 redirect_from:
   - /search-plugins/knn/painless-functions/ 
+canonical_url: https://docs.opensearch.org/latest/vector-search/vector-search-techniques/painless-functions/
 ---
 
 # Painless 指令碼擴充功能

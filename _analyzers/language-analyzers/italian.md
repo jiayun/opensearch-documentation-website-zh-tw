@@ -5,6 +5,7 @@ title: "義大利文"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 220
+canonical_url: https://docs.opensearch.org/latest/analyzers/language-analyzers/italian/
 ---
 
 # 義大利文分析器

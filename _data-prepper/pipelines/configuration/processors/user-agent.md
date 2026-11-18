@@ -5,6 +5,8 @@ title: "使用者代理程式"
 parent: Processors
 grand_parent: Pipelines
 nav_order: 430
+canonical_url: https://docs.opensearch.org/latest/data-prepper/pipelines/configuration/processors/user-agent/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/pipelines/configuration/processors/user-agent/
 ---
 
 # 使用者代理程式處理器

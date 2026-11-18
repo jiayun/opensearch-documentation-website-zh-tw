@@ -4,6 +4,7 @@ layout: default
 title: "建立工作區"
 parent: Workspaces
 nav_order: 1
+canonical_url: https://docs.opensearch.org/latest/dashboards/workspace/create-workspace/
 ---
 
 # 建立工作區

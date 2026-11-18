@@ -5,6 +5,7 @@ title: "排清"
 parent: Index operations
 grand_parent: Index APIs
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/api-reference/index-apis/flush/
 ---
 
 # Flush API

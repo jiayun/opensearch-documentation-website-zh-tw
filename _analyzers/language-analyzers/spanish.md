@@ -5,6 +5,7 @@ title: "西班牙文"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 300
+canonical_url: https://docs.opensearch.org/latest/analyzers/language-analyzers/spanish/
 ---
 
 # 西班牙文分析器

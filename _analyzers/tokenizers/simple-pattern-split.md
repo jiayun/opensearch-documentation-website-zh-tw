@@ -4,6 +4,7 @@ layout: default
 title: "簡單模式分割"
 parent: Tokenizers
 nav_order: 120
+canonical_url: https://docs.opensearch.org/latest/analyzers/tokenizers/simple-pattern-split/
 ---
 
 # 簡單模式分割斷詞器

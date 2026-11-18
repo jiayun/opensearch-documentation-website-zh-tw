@@ -4,6 +4,7 @@ layout: default
 title: "Painless 語言參考"
 parent: Painless scripting language
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/scripting/painless-language/
 ---
 
 # Painless 語言參考

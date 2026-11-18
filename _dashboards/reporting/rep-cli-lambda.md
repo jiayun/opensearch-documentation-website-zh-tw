@@ -8,6 +8,7 @@ grand_parent: Reporting
 redirect_from:
   - /reporting/rep-cli-lambda/
   - /dashboards/reporting-cli/rep-cli-lambda/
+canonical_url: https://docs.opensearch.org/latest/dashboards/reporting/rep-cli-lambda/
 ---
 
 <!-- vale off -->

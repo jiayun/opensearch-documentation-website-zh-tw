@@ -4,6 +4,7 @@ layout: default
 title: "實驗性功能旗標"
 parent: Configuring OpenSearch
 nav_order: 180
+canonical_url: https://docs.opensearch.org/latest/install-and-configure/configuring-opensearch/experimental/
 ---
 
 # 實驗性功能旗標

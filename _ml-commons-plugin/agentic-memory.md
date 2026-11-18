@@ -6,6 +6,7 @@ parent: Memory and context
 has_children: true
 has_toc: false
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/agentic-memory/
 ---
 
 # 代理記憶

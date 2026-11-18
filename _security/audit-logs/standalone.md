@@ -4,6 +4,7 @@ layout: default
 title: "獨立稽核記錄"
 parent: Audit logs
 nav_order: 133
+canonical_url: https://docs.opensearch.org/latest/security/audit-logs/standalone/
 ---
 
 # 獨立稽核記錄

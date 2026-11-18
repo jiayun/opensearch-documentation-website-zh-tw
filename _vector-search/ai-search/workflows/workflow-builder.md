@@ -12,6 +12,7 @@ redirect_from:
   - /tutorials/ai-search-flows/building-flows/
   - /tutorials/gen-ai/ai-search-flows/building-flows/
   - /vector-search/ai-search/workflow-builder/
+canonical_url: https://docs.opensearch.org/latest/vector-search/ai-search/workflows/workflow-builder/
 ---
 
 # 在 OpenSearch Dashboards 中建立 AI 搜尋工作流程

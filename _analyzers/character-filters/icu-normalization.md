@@ -4,6 +4,7 @@ layout: default
 title: "ICU 正規化"
 parent: Character filters
 nav_order: 110
+canonical_url: https://docs.opensearch.org/latest/analyzers/character-filters/icu-normalization/
 ---
 
 # ICU 正規化字元篩選器

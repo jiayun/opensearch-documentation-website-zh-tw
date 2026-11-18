@@ -5,6 +5,7 @@ title: "波蘭文"
 nav_order: 255
 parent: Language analyzers
 grand_parent: Analyzers
+canonical_url: https://docs.opensearch.org/latest/analyzers/language-analyzers/polish/
 ---
 
 # 波蘭文分析器

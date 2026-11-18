@@ -6,6 +6,7 @@ parent: Bucket aggregations
 nav_order: 70
 redirect_from:
   - /query-dsl/aggregations/bucket/geo-distance/
+canonical_url: https://docs.opensearch.org/latest/aggregations/bucket/geo-distance/
 ---
 
 # 地理距離彙總

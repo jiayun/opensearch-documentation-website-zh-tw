@@ -4,6 +4,7 @@ layout: default
 title: "指令碼"
 parent: Ingest processors
 nav_order: 230
+canonical_url: https://docs.opensearch.org/latest/ingest-pipelines/processors/script/
 ---
 
 # Script 資料匯入處理器

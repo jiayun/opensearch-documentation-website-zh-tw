@@ -7,6 +7,7 @@ grand_parent: PPL
 nav_order: 1
 redirect_from:
   - /search-plugins/sql/ppl/syntax/
+canonical_url: https://docs.opensearch.org/latest/sql-and-ppl/ppl/commands/syntax/
 ---
 
 <!-- vale off -->

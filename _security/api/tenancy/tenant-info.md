@@ -5,6 +5,7 @@ title: "租用戶資訊"
 parent: Multi-tenancy configuration APIs
 grand_parent: Security APIs
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/security/api/tenancy/tenant-info/
 ---
 
 # 租用戶資訊 API

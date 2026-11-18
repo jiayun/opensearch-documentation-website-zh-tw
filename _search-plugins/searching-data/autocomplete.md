@@ -6,6 +6,7 @@ parent: Customizing search results
 nav_order: 80
 redirect_from:
   - /opensearch/search/autocomplete/
+canonical_url: https://docs.opensearch.org/latest/search-plugins/searching-data/autocomplete/
 ---
 
 # 自動完成

@@ -6,6 +6,7 @@ parent: Configuration
 nav_order: 30
 redirect_from:
   - /security-plugin/configuration/generate-certificates/
+canonical_url: https://docs.opensearch.org/latest/security/configuration/generate-certificates/
 ---
 
 # 產生自簽憑證

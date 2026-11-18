@@ -3,6 +3,7 @@
 layout: default
 title: "代理程式技能"
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/ai-agent-integrations/agent-skills/
 ---
 
 # 代理程式技能

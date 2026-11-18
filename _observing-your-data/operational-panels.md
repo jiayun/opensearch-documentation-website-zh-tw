@@ -6,6 +6,7 @@ parent: Classic observability apps
 nav_order: 50
 redirect_from:
   - /observability-plugin/operational-panels/
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/operational-panels/
 ---
 
 # 營運面板

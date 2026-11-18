@@ -3,6 +3,8 @@
 layout: default
 title: "PHP 用戶端"
 nav_order: 70
+canonical_url: https://docs.opensearch.org/latest/clients/php/
+redirect_to: https://docs.opensearch.org/latest/clients/php/
 ---
 
 # PHP 用戶端

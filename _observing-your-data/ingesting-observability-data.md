@@ -3,6 +3,7 @@
 layout: default
 title: "匯入可觀測性資料"
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/ingesting-observability-data/
 ---
 
 # 匯入可觀測性資料

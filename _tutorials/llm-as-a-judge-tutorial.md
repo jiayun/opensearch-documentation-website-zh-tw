@@ -4,6 +4,7 @@ layout: default
 title: LLM-as-a-Judge
 has_children: false
 nav_order: 70
+canonical_url: https://docs.opensearch.org/latest/tutorials/llm-as-a-judge-tutorial/
 ---
 
 # 使用 LLM-as-a-Judge 評估搜尋相關性

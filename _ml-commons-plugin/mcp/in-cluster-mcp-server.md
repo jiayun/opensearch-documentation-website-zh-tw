@@ -4,6 +4,7 @@ layout: default
 title: "叢集內 MCP 伺服器"
 parent: MCP servers and clients
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/mcp/in-cluster-mcp-server/
 ---
 
 # 使用叢集內 MCP 伺服器

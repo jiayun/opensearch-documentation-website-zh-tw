@@ -8,6 +8,7 @@ nav_order: 120
 redirect_from:
   - /vector-search/tutorials/rag/rag-deepseek-chat/
   - /tutorials/vector-search/rag/rag-deepseek-chat/
+canonical_url: https://docs.opensearch.org/latest/tutorials/gen-ai/rag/rag-deepseek-chat/
 ---
 
 # 使用 DeepSeek Chat API 的 RAG

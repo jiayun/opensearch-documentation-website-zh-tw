@@ -5,6 +5,7 @@ title: "建立或更新角色對應"
 parent: Role mapping APIs
 grand_parent: Security APIs
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/security/api/role-mappings/create-role-mapping/
 ---
 
 # 建立或更新角色對應 API

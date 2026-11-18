@@ -5,6 +5,7 @@ title: "英文"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 120
+canonical_url: https://docs.opensearch.org/latest/analyzers/language-analyzers/english/
 ---
 
 # 英文分析器

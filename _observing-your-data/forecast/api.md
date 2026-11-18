@@ -4,6 +4,7 @@ layout: default
 title: "預測 API"
 parent: Forecasting
 nav_order: 100
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/forecast/api/
 ---
 
 # 預測 API

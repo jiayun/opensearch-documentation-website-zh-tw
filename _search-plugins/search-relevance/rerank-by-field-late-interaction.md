@@ -6,6 +6,7 @@ parent: Reranking search results
 grand_parent: Optimizing search quality
 has_children: false
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/search-plugins/search-relevance/rerank-by-field-late-interaction/
 ---
 
 # 使用延遲互動模型依欄位重新排序

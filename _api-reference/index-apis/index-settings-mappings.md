@@ -6,6 +6,7 @@ parent: Index APIs
 nav_order: 40
 has_children: true
 has_toc: false
+canonical_url: https://docs.opensearch.org/latest/api-reference/index-apis/index-settings-mappings/
 ---
 
 # 索引設定與對應

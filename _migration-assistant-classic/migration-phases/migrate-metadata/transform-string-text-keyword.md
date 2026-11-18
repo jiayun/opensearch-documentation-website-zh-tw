@@ -6,6 +6,8 @@ nav_order: 4
 parent: Migrate metadata
 grand_parent: Migration phases
 permalink: /classic/migration-assistant/migration-phases/migrate-metadata/transform-string-text-keyword/
+canonical_url: https://docs.opensearch.org/latest/classic/migration-assistant/migration-phases/migrate-metadata/transform-string-text-keyword/
+redirect_to: https://docs.opensearch.org/latest/classic/migration-assistant/migration-phases/migrate-metadata/transform-string-text-keyword/
 ---
 
 # 將 string 欄位轉換為 text/keyword

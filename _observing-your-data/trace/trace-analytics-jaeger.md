@@ -7,6 +7,7 @@ grand_parent: Classic observability apps
 nav_order: 55
 redirect_from:
   - /observability-plugin/trace/trace-analytics-jaeger/
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/trace/trace-analytics-jaeger/
 ---
 
 # 分析 Jaeger 追蹤資料

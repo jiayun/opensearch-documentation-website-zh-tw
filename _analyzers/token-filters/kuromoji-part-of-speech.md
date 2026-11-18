@@ -4,6 +4,7 @@ layout: default
 title: "Kuromoji 詞性"
 parent: Token filters
 nav_order: 233
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/kuromoji-part-of-speech/
 ---
 
 # Kuromoji 詞性詞元篩選器

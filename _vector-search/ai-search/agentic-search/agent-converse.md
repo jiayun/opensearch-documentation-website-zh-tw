@@ -6,6 +6,7 @@ parent: Agentic search
 grand_parent: AI search
 nav_order: 70
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/vector-search/ai-search/agentic-search/agent-converse/
 ---
 
 # 將對話式代理程式用於代理程式搜尋

@@ -9,6 +9,7 @@ has_toc: false
 redirect_from:
   - /security/api/configuration-versions/
   - /security/configuration/versioning/
+canonical_url: https://docs.opensearch.org/latest/security/api/configuration-versions/index/
 ---
 
 # 安全性組態版本 API

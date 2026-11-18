@@ -4,6 +4,7 @@ layout: default
 title: "建立關聯規則"
 parent: Setting up Security Analytics
 nav_order: 17
+canonical_url: https://docs.opensearch.org/latest/security-analytics/sec-analytics-config/correlation-config/
 ---
 
 # 建立關聯規則

@@ -4,6 +4,7 @@ layout: default
 title: "統計桶"
 parent: Pipeline aggregations
 nav_order: 190
+canonical_url: https://docs.opensearch.org/latest/aggregations/pipeline/stats-bucket/
 ---
 
 # 統計桶彙總

@@ -4,6 +4,7 @@ layout: default
 title: "取得指令碼執行環境"
 parent: Script APIs
 nav_order: 70
+canonical_url: https://docs.opensearch.org/latest/api-reference/script-apis/get-script-contexts/
 ---
 
 # Get Script Contexts API

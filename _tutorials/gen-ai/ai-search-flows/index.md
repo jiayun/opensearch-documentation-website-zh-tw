@@ -13,6 +13,7 @@ flows:
 - heading: 建立與自訂 AI 搜尋工作流程
   link: /vector-search/ai-search/workflows/workflow-builder/
   description: 瞭解如何在 OpenSearch Dashboards 中建置 AI 搜尋流程
+canonical_url: https://docs.opensearch.org/latest/tutorials/gen-ai/ai-search-flows/index/
 ---
 
 # AI 搜尋工作流程教學

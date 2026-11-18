@@ -5,6 +5,8 @@ title: "建立快照"
 parent: Migration phases
 nav_order: 4
 permalink: /classic/migration-assistant/migration-phases/create-snapshot/
+canonical_url: https://docs.opensearch.org/latest/classic/migration-assistant/migration-phases/create-snapshot/
+redirect_to: https://docs.opensearch.org/latest/classic/migration-assistant/migration-phases/create-snapshot/
 ---
 
 # 建立快照

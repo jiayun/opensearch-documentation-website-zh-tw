@@ -4,6 +4,7 @@ layout: default
 title: "日文停用詞"
 parent: Token filters
 nav_order: 178
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/ja-stop/
 ---
 
 # 日文停用詞詞元篩選器

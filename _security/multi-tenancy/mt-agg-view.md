@@ -4,6 +4,7 @@ layout: default
 title: "已儲存物件的多租用戶彙總檢視"
 parent: OpenSearch Dashboards multi-tenancy
 nav_order: 150
+canonical_url: https://docs.opensearch.org/latest/security/multi-tenancy/mt-agg-view/
 ---
 
 # OpenSearch Dashboards 已儲存物件的多租用戶彙總檢視

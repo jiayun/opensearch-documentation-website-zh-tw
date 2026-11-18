@@ -4,6 +4,7 @@ layout: default
 parent: Improving search performance
 title: "搜尋分片路由"
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/search-plugins/searching-data/search-shard-routing/
 ---
 
 # 搜尋分片路由

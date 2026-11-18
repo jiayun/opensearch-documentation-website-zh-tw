@@ -5,6 +5,7 @@ title: "動作"
 nav_order: 50
 grand_parent: Alerting
 parent: Monitors
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/alerting/actions/
 ---
 
 # 警示動作

@@ -4,6 +4,7 @@ layout: default
 title: "Security Analytics 資源存取控制"
 nav_order: 3
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/security-analytics/resource-access-control/
 ---
 
 # Security Analytics 資源存取控制

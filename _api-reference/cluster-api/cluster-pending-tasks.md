@@ -5,6 +5,7 @@ title: "叢集擱置中任務"
 nav_order: 46
 parent: Cluster APIs
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/api-reference/cluster-api/cluster-pending-tasks/
 ---
 
 # Cluster Pending Tasks API

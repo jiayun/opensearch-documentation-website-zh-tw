@@ -4,6 +4,8 @@ layout: default
 title: "異常偵測"
 parent: Common use cases
 nav_order: 5
+canonical_url: https://docs.opensearch.org/latest/data-prepper/common-use-cases/anomaly-detection/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/common-use-cases/anomaly-detection/
 ---
 
 # 使用 Data Prepper 進行異常偵測

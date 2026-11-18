@@ -4,6 +4,7 @@ layout: default
 title: "指紋"
 parent: Ingest processors
 nav_order: 105
+canonical_url: https://docs.opensearch.org/latest/ingest-pipelines/processors/fingerprint/
 ---
 
 # 指紋處理器

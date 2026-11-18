@@ -10,6 +10,7 @@ redirect_from:
   - /aggregations/geohexgrid/
   - /query-dsl/aggregations/geohexgrid/
   - /query-dsl/aggregations/bucket/geohex-grid/
+canonical_url: https://docs.opensearch.org/latest/aggregations/bucket/geohex-grid/
 ---
 
 # Geohex 網格彙總

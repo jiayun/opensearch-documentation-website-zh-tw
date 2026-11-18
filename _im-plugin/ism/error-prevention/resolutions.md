@@ -5,6 +5,7 @@ title: "ISM 錯誤預防解決方案"
 parent: ISM error prevention
 grand_parent: Index State Management
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/im-plugin/ism/error-prevention/resolutions/
 ---
 
 # ISM 錯誤預防解決方案

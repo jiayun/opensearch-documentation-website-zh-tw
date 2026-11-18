@@ -4,6 +4,7 @@ layout: default
 title: "關聯引擎 API"
 parent: Security Analytics APIs
 nav_order: 55
+canonical_url: https://docs.opensearch.org/latest/security-analytics/api-tools/correlation-eng/
 ---
 
 # 關聯引擎 API

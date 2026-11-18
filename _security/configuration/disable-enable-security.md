@@ -8,6 +8,7 @@ has_toc: true
 redirect_from:
  - /security-plugin/configuration/disable/
  - /security/configuration/disable/
+canonical_url: https://docs.opensearch.org/latest/security/configuration/disable-enable-security/
 ---
 
 # 停用與啟用 Security 外掛程式

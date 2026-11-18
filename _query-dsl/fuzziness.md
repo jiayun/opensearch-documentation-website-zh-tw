@@ -3,6 +3,7 @@
 layout: default
 title: "模糊比對 (Fuzziness)"
 nav_order: 82
+canonical_url: https://docs.opensearch.org/latest/query-dsl/fuzziness/
 ---
 
 # 模糊比對 (Fuzziness)

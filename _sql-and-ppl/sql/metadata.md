@@ -7,6 +7,7 @@ nav_order: 9
 redirect_from:
   - /search-plugins/sql/metadata/
   - /search-plugins/sql/sql/metadata/
+canonical_url: https://docs.opensearch.org/latest/sql-and-ppl/sql/metadata/
 ---
 
 # SQL 中繼資料查詢

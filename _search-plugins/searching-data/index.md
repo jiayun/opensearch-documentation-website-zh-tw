@@ -9,6 +9,7 @@ redirect_from:
   - /opensearch/ux/
   - /search-plugins/searching-data/
   - /search-plugins/search-options/
+canonical_url: https://docs.opensearch.org/latest/search-plugins/searching-data/index/
 ---
 
 # 自訂搜尋結果

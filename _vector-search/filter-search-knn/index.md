@@ -7,6 +7,7 @@ has_children: true
 redirect_from:
   - /search-plugins/knn/filter-search-knn/ 
   - /vector-search/filter-search-knn/
+canonical_url: https://docs.opensearch.org/latest/vector-search/filter-search-knn/index/
 ---
 
 # 篩選向量搜尋結果

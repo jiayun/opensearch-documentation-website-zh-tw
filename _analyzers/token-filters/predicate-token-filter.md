@@ -4,6 +4,7 @@ layout: default
 title: "述詞詞元篩選器"
 parent: Token filters
 nav_order: 340
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/predicate-token-filter/
 ---
 
 # 述詞詞元篩選器

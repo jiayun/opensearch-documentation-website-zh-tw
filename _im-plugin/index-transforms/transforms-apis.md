@@ -5,6 +5,7 @@ title: "轉換相關 API"
 nav_order: 10
 parent: Index transforms
 has_toc: true
+canonical_url: https://docs.opensearch.org/latest/im-plugin/index-transforms/transforms-apis/
 ---
 
 # 轉換相關 API

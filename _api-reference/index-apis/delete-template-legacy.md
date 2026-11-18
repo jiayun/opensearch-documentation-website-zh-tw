@@ -6,6 +6,7 @@ title: "刪除範本（已淘汰）"
 parent: Index templates
 grand_parent: Index APIs
 nav_order: 110
+canonical_url: https://docs.opensearch.org/latest/api-reference/index-apis/delete-template-legacy/
 ---
 
 # 刪除範本

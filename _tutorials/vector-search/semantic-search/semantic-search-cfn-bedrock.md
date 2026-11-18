@@ -7,6 +7,7 @@ grand_parent: Vector search
 nav_order: 75
 redirect_from:
   - /vector-search/tutorials/semantic-search/semantic-search-cfn-bedrock/
+canonical_url: https://docs.opensearch.org/latest/tutorials/vector-search/semantic-search/semantic-search-cfn-bedrock/
 ---
 
 # 使用 AWS CloudFormation 與 Amazon Bedrock 進行語意搜尋

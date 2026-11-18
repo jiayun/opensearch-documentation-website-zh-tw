@@ -6,6 +6,7 @@ parent: Hybrid search
 grand_parent: AI search
 has_children: false
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/vector-search/ai-search/hybrid-search/post-filtering/
 ---
 
 # 使用後置篩選的混合搜尋

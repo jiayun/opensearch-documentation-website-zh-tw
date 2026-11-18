@@ -4,6 +4,7 @@ layout: default
 title: "並行分段搜尋"
 parent: Improving search performance
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/search-plugins/concurrent-segment-search/
 ---
 
 # 並行分段搜尋

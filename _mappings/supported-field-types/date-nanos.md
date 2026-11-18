@@ -7,6 +7,7 @@ redirect_from:
 parent: Date field types
 grand_parent: Supported field types
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/mappings/supported-field-types/date-nanos/
 ---
 
 # 奈秒日期欄位類型

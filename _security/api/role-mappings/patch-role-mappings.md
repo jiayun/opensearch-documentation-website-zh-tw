@@ -5,6 +5,7 @@ title: "局部更新角色對應"
 parent: Role mapping APIs
 grand_parent: Security APIs
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/security/api/role-mappings/patch-role-mappings/
 ---
 
 # Patch Role Mappings API

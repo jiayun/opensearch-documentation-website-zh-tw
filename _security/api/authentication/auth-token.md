@@ -5,6 +5,7 @@ title: "授權權杖"
 parent: Authentication APIs
 grand_parent: Security APIs
 nav_order: 60
+canonical_url: https://docs.opensearch.org/latest/security/api/authentication/auth-token/
 ---
 
 # Authorization Token API

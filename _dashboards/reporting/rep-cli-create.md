@@ -8,6 +8,7 @@ grand_parent: Reporting
 redirect_from:
   - /reporting/rep-cli-create/
   - /dashboards/reporting-cli/rep-cli-create/
+canonical_url: https://docs.opensearch.org/latest/dashboards/reporting/rep-cli-create/
 ---
 
 # 建立與請求視覺化報告

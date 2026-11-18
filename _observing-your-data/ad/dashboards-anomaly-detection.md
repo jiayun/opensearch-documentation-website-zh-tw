@@ -4,6 +4,7 @@ layout: default
 title: "異常偵測視覺化與儀表板"
 parent: Anomaly detection
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/ad/dashboards-anomaly-detection/
 ---
 
 # 異常偵測儀表板與視覺化

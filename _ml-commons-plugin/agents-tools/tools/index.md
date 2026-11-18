@@ -10,6 +10,7 @@ redirect_from:
   - /ml-commons-plugin/agents-tools/tools/
   - /ml-commons-plugin/agents-tools/tools/cat-index-tool/
   - /ml-commons-plugin/agents-tools/tools/dynamic-tool/
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/agents-tools/tools/index/
 ---
 
 # 工具

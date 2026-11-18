@@ -3,6 +3,7 @@
 layout: default
 title: "語言識別"
 nav_order: 65
+canonical_url: https://docs.opensearch.org/latest/tutorials/language-identification/
 ---
 
 # 為多語言搜尋識別文件語言

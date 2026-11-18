@@ -10,6 +10,8 @@ permalink: /migration-assistant/migration-phases/
 redirect_from:
   - /migration-assistant/overview/migration-phases/
   - /migration-phases/
+canonical_url: https://docs.opensearch.org/latest/migration-assistant/migration-phases/
+redirect_to: https://docs.opensearch.org/latest/migration-assistant/migration-phases/
 ---
 
 # 遷移工作流程

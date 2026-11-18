@@ -6,6 +6,7 @@ nav_order: 60
 parent: Learning to Rank
 grand_parent: Optimizing search quality
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/search-plugins/ltr/training-models/
 ---
 
 # 上傳已訓練的模型

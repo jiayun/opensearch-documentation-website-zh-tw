@@ -6,6 +6,7 @@ nav_order: 20
 parent: Learning to Rank
 grand_parent: Optimizing search quality
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/search-plugins/ltr/fits-in/
 ---
 
 # 外掛程式的範圍

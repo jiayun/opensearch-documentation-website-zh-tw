@@ -5,6 +5,8 @@ title: "選擇工作負載"
 nav_order: 15
 redirect_from:
   - /benchmark/user-guide/understanding-workloads/choosing-a-workload/
+canonical_url: https://docs.opensearch.org/latest/benchmark/choosing-a-workload/
+redirect_to: https://docs.opensearch.org/latest/benchmark/choosing-a-workload/
 ---
 
 # 選擇工作負載

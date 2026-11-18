@@ -9,6 +9,7 @@ redirect_from:
   - /automating-configurations/
   - /automating-configurations/index/
   - /vector-search/ai-search/workflows/
+canonical_url: https://docs.opensearch.org/latest/vector-search/ai-search/workflows/index/
 ---
 
 # AI 搜尋工作流程

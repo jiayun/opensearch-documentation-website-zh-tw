@@ -5,6 +5,7 @@ title: "支援的單位"
 nav_order: 160
 redirect_from:
   - /opensearch/units/
+canonical_url: https://docs.opensearch.org/latest/api-reference/units/
 ---
 
 # 支援的單位

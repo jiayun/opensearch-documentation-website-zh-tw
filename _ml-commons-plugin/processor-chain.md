@@ -4,6 +4,7 @@ layout: default
 title: "處理器鏈"
 has_children: false
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/processor-chain/
 ---
 
 # 處理器鏈

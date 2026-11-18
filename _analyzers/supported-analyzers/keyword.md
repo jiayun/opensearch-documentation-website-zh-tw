@@ -4,6 +4,7 @@ layout: default
 title: "Keyword 分析器"
 parent: Analyzers
 nav_order: 80
+canonical_url: https://docs.opensearch.org/latest/analyzers/supported-analyzers/keyword/
 ---
 
 # Keyword 分析器

@@ -7,6 +7,8 @@ nav_order: 5
 redirect_from:
  - /clients/data-prepper/data-prepper-reference/
  - /monitoring-plugins/trace/data-prepper-reference/
+canonical_url: https://docs.opensearch.org/latest/data-prepper/managing-data-prepper/configuring-data-prepper/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/managing-data-prepper/configuring-data-prepper/
 ---
 
 # 設定 OpenSearch Data Prepper

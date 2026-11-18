@@ -7,6 +7,7 @@ has_children: true
 has_toc: false
 redirect_from: 
   - /im-plugin/index-rollups/
+canonical_url: https://docs.opensearch.org/latest/im-plugin/index-rollups/index/
 ---
 
 # 索引彙整

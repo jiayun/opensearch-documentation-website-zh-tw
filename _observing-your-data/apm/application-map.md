@@ -5,6 +5,7 @@ title: "拓撲圖"
 nav_order: 50
 parent: Application performance monitoring
 grand_parent: Observability workspace apps
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/apm/application-map/
 ---
 
 # 拓撲圖

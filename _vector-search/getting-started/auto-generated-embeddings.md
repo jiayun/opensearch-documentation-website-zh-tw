@@ -4,6 +4,7 @@ layout: default
 title: "自動產生嵌入"
 parent: Getting started
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/vector-search/getting-started/auto-generated-embeddings/
 ---
 
 # 自動產生嵌入

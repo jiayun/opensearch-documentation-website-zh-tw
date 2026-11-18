@@ -5,6 +5,7 @@ title: "JSON 函式"
 parent: Functions
 grand_parent: PPL
 nav_order: 9
+canonical_url: https://docs.opensearch.org/latest/sql-and-ppl/ppl/functions/json/
 ---
 
 # JSON 函式

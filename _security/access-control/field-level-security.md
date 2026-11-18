@@ -6,6 +6,7 @@ parent: Access control
 nav_order: 95
 redirect_from:
  - /security-plugin/access-control/field-level-security/
+canonical_url: https://docs.opensearch.org/latest/security/access-control/field-level-security/
 ---
 
 # 欄位層級安全性

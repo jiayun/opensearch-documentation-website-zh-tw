@@ -4,6 +4,7 @@ layout: default
 title: "建立偵測器"
 parent: Setting up Security Analytics
 nav_order: 15
+canonical_url: https://docs.opensearch.org/latest/security-analytics/sec-analytics-config/detectors-config/
 ---
 
 # 建立偵測器

@@ -4,6 +4,7 @@ layout: default
 title: "DL 模型分析器"
 parent: Analyzers
 nav_order: 130
+canonical_url: https://docs.opensearch.org/latest/analyzers/supported-analyzers/dl-model-analyzers/
 ---
 
 # DL 模型分析器

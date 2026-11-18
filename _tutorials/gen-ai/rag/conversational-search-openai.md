@@ -8,6 +8,7 @@ nav_order: 170
 redirect_from:
   - /vector-search/tutorials/conversational-search/conversational-search-openai/
   - /tutorials/vector-search/rag/conversational-search/conversational-search-openai/
+canonical_url: https://docs.opensearch.org/latest/tutorials/gen-ai/rag/conversational-search-openai/
 ---
 
 # 使用 OpenAI 進行對話式搜尋

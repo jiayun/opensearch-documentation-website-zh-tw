@@ -4,6 +4,7 @@ layout: default
 title: "匯入設定"
 parent: Configuring OpenSearch
 nav_order: 150
+canonical_url: https://docs.opensearch.org/latest/install-and-configure/configuring-opensearch/ingest-settings/
 ---
 
 # 匯入設定

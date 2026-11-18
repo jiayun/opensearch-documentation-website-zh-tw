@@ -4,6 +4,7 @@ layout: default
 title: "快取設定"
 parent: Configuring OpenSearch
 nav_order: 70
+canonical_url: https://docs.opensearch.org/latest/install-and-configure/configuring-opensearch/cache-settings/
 ---
 
 # 快取設定

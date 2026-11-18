@@ -6,6 +6,7 @@ parent: Metric aggregations
 nav_order: 130
 redirect_from:
   - /query-dsl/aggregations/metric/top-hits/
+canonical_url: https://docs.opensearch.org/latest/aggregations/metric/top-hits/
 ---
 
 # 排名最高的命中結果彙總

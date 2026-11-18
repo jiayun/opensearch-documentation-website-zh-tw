@@ -4,6 +4,7 @@ layout: default
 title: "搜尋 (gRPC)"
 parent: gRPC APIs
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/api-reference/grpc-apis/search/
 ---
 
 # Search API (gRPC)

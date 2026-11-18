@@ -4,6 +4,7 @@ layout: default
 title: "應用程式分析"
 parent: Classic observability apps
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/app-analytics/
 ---
 
 # 應用程式分析

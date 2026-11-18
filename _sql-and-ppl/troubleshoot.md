@@ -5,6 +5,7 @@ title: "疑難排解"
 nav_order: 88
 redirect_from:
   - /search-plugins/sql/troubleshoot/
+canonical_url: https://docs.opensearch.org/latest/sql-and-ppl/troubleshoot/
 ---
 
 # SQL 與 PPL 疑難排解

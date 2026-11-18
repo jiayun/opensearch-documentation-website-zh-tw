@@ -5,6 +5,7 @@ title: "取得索引範本"
 parent: Index templates
 grand_parent: Index APIs
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/api-reference/index-apis/get-index-template/
 ---
 
 # Get Index Template API

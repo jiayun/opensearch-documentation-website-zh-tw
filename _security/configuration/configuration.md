@@ -6,6 +6,7 @@ parent: Configuration
 nav_order: 20
 redirect_from:
  - /security-plugin/configuration/configuration/
+canonical_url: https://docs.opensearch.org/latest/security/configuration/configuration/
 ---
 
 # 設定安全性後端

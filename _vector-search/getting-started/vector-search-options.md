@@ -40,6 +40,7 @@ auto_items:
 - heading: 搜尋文字
   description: 使用向量搜尋來搜尋您的文字。查詢文字會自動轉換為向量嵌入，並與文件嵌入進行比較。
   link: /vector-search/searching-data/#searching-auto-generated-embeddings
+canonical_url: https://docs.opensearch.org/latest/vector-search/getting-started/vector-search-options/
 ---
 
 # 準備向量

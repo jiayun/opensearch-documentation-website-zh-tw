@@ -5,6 +5,7 @@ title: "設定異常警示"
 nav_order: 20
 parent: Anomaly detection
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/ad/managing-anomalies/
 ---
 
 # 設定異常警示

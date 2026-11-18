@@ -4,6 +4,7 @@ layout: default
 title: "詞彙向量"
 parent: Document APIs
 nav_order: 70
+canonical_url: https://docs.opensearch.org/latest/api-reference/document-apis/termvector/
 ---
 
 # 詞彙向量 API

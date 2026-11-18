@@ -7,6 +7,7 @@ grand_parent: Vector search
 nav_order: 90
 redirect_from:
   - /vector-search/tutorials/semantic-search/long-document/
+canonical_url: https://docs.opensearch.org/latest/tutorials/vector-search/semantic-search/long-document/
 ---
 
 # 使用文字分段進行語意搜尋

@@ -3,6 +3,8 @@
 layout: default
 title: "高階 Python 用戶端（已棄用）"
 nav_order: 200
+canonical_url: https://docs.opensearch.org/latest/clients/python-high-level/
+redirect_to: https://docs.opensearch.org/latest/clients/python-high-level/
 ---
 
 # 高階 Python 用戶端

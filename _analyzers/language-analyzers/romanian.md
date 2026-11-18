@@ -5,6 +5,7 @@ title: "羅馬尼亞文"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 270
+canonical_url: https://docs.opensearch.org/latest/analyzers/language-analyzers/romanian/
 ---
 
 # 羅馬尼亞文分析器

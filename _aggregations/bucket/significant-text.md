@@ -6,6 +6,7 @@ parent: Bucket aggregations
 nav_order: 190
 redirect_from:
   - /query-dsl/aggregations/bucket/significant-text/
+canonical_url: https://docs.opensearch.org/latest/aggregations/bucket/significant-text/
 ---
 
 # 顯著文字彙總

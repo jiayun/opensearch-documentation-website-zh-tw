@@ -4,6 +4,7 @@ layout: default
 title: "區間"
 nav_order: 90
 parent: Full-text queries
+canonical_url: https://docs.opensearch.org/latest/query-dsl/full-text/intervals/
 ---
 
 # Intervals 查詢

@@ -5,6 +5,7 @@ title: "索引層級搜尋剪除"
 parent: Improving search performance
 nav_order: 35
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/search-plugins/index-level-search-pruning/
 ---
 
 # 索引層級搜尋剪除

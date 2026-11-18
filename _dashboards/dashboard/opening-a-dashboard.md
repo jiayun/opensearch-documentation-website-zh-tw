@@ -5,6 +5,7 @@ title: "開啟儀表板"
 parent: Creating dashboards
 nav_order: 10
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/dashboards/dashboard/opening-a-dashboard/
 ---
 
 # 開啟儀表板

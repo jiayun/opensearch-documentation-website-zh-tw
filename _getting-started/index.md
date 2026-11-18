@@ -30,6 +30,7 @@ next_steps:
 - heading: 分析您的資料
   description: 運用所學內容，探索並摘要較大資料集中的資料。
   link: /getting-started/analyze-data/
+canonical_url: https://docs.opensearch.org/latest/getting-started/
 ---
 
 # OpenSearch 入門

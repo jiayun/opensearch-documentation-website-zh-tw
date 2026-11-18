@@ -8,6 +8,7 @@ grand_parent: Reporting
 redirect_from:
   - /reporting/rep-cli-options/
   - /dashboards/reporting-cli/rep-cli-options/
+canonical_url: https://docs.opensearch.org/latest/dashboards/reporting/rep-cli-options/
 ---
 
 # Reporting CLI 選項

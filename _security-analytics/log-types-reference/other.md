@@ -4,6 +4,7 @@ layout: default
 title: "其他記錄檔類型對應"
 parent: Supported log types
 nav_order: 110
+canonical_url: https://docs.opensearch.org/latest/security-analytics/log-types-reference/other/
 ---
 
 # 其他記錄檔類型對應

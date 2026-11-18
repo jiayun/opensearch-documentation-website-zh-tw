@@ -8,6 +8,7 @@ great_grand_parent: AI search
 nav_order: 20
 redirect_from:
   - /vector-search/ai-search/building-agentic-search-flows/
+canonical_url: https://docs.opensearch.org/latest/vector-search/ai-search/workflows/building-agentic-search-flows/
 ---
 
 # 設定代理式搜尋

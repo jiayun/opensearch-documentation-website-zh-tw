@@ -3,6 +3,7 @@
 layout: default
 title: "Lucene 表達式語言"
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/scripting/expressions/
 ---
 
 # Lucene 表達式語言

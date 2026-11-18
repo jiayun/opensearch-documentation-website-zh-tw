@@ -6,6 +6,7 @@ parent: Metadata fields
 nav_order: 60
 redirect_from:
   - /field-types/metadata-fields/routing/
+canonical_url: https://docs.opensearch.org/latest/mappings/metadata-fields/routing/
 ---
 
 # 路由中繼資料欄位

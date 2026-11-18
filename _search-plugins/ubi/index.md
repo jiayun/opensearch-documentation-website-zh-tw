@@ -8,6 +8,7 @@ nav_order: 10
 description: "User Behavior Insights (UBI) 是一種用於擷取使用者搜尋行為的結構描述，包括使用者提交的查詢、顯示的結果，以及他們採取的動作。"
 redirect_from:
   - /search-plugins/ubi/
+canonical_url: https://docs.opensearch.org/latest/search-plugins/ubi/index/
 ---
 # User Behavior Insights
 

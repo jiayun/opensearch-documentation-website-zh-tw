@@ -4,6 +4,7 @@ layout: default
 title: "列出分片"
 parent: List APIs
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/api-reference/list/list-shards/
 ---
 
 # List Shards API

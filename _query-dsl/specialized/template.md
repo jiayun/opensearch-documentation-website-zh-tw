@@ -4,6 +4,7 @@ layout: default
 title: "範本"
 parent: AI and vector search queries
 nav_order: 70
+canonical_url: https://docs.opensearch.org/latest/query-dsl/specialized/template/
 ---
 
 # Template 查詢

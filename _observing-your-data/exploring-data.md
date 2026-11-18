@@ -3,6 +3,7 @@
 layout: default
 title: "探索可觀測性資料"
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/exploring-data/
 ---
 
 # 探索可觀測性資料

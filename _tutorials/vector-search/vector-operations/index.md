@@ -28,6 +28,7 @@ vector_operations:
   - <b>模型：</b> Cohere Embed Multilingual v3
   - <b>部署：</b> Amazon Bedrock
   link: /tutorials/vector-search/vector-operations/optimize-compression/
+canonical_url: https://docs.opensearch.org/latest/tutorials/vector-search/vector-operations/index/
 ---
 
 # 向量操作教學

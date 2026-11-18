@@ -4,6 +4,7 @@ layout: default
 title: "總覽頁面"
 parent: Using Security Analytics
 nav_order: 25
+canonical_url: https://docs.opensearch.org/latest/security-analytics/usage/overview/
 ---
 
 <!-- vale off -->

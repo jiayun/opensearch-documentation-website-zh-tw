@@ -4,6 +4,7 @@ layout: default
 title: "索引轉碼器"
 parent: Tuning indexes
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/im-plugin/index-codecs/
 ---
 
 # 索引轉碼器

@@ -10,6 +10,7 @@ has_toc: false
 redirect_from:
   - /ml-commons-plugin/tutorials/rag-chatbot/
   - /vector-search/tutorials/chatbots/rag-chatbot/
+canonical_url: https://docs.opensearch.org/latest/tutorials/gen-ai/chatbots/rag-chatbot/
 ---
 
 # RAG 聊天機器人

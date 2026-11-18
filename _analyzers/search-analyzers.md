@@ -4,6 +4,7 @@ layout: default
 title: "搜尋分析器"
 nav_order: 30
 parent: Analyzers
+canonical_url: https://docs.opensearch.org/latest/analyzers/search-analyzers/
 ---
 
 # 搜尋分析器

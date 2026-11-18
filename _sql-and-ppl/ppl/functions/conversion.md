@@ -5,6 +5,7 @@ title: "類型轉換函式"
 parent: Functions
 grand_parent: PPL
 nav_order: 4
+canonical_url: https://docs.opensearch.org/latest/sql-and-ppl/ppl/functions/conversion/
 ---
 
 # 類型轉換函式

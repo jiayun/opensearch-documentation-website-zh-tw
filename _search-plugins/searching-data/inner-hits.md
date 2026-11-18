@@ -5,6 +5,7 @@ title: "擷取內部命中結果"
 parent: Customizing search results
 has_children: false
 nav_order: 60
+canonical_url: https://docs.opensearch.org/latest/search-plugins/searching-data/inner-hits/
 ---
 
 # 擷取內部命中

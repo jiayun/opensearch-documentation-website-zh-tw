@@ -10,6 +10,7 @@ nav_order: 170
 redirect_from:
   - /ml-commons-plugin/tutorials/build-chatbot/
   - /vector-search/tutorials/chatbots/build-chatbot/
+canonical_url: https://docs.opensearch.org/latest/tutorials/gen-ai/chatbots/build-chatbot/
 ---
 
 # 建立您自己的聊天機器人

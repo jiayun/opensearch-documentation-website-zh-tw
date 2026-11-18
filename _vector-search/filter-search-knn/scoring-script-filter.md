@@ -4,6 +4,7 @@ layout: default
 title: "評分指令碼篩選器"
 parent: Filtering data
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/vector-search/filter-search-knn/scoring-script-filter/
 ---
 
 # 評分指令碼篩選器

@@ -7,6 +7,7 @@ parent: Workload management
 has_children: true
 redirect_from:
   - /tuning-your-cluster/availability-and-recovery/rule-based-autotagging/autotagging/
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/workload-management/rule-based-autotagging/autotagging/
 ---
 
 # 規則式自動標記

@@ -50,6 +50,7 @@ items:
 - heading: 搜尋資料
   description: 使用原始向量搜尋，或語意、混合、多模態、神經稀疏搜尋等 AI 驅動的方法。加入 RAG 以建置對話式搜尋。
   link: /vector-search/searching-data/
+canonical_url: https://docs.opensearch.org/latest/vector-search/
 ---
 
 # 向量搜尋

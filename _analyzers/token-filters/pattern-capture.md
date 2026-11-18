@@ -4,6 +4,7 @@ layout: default
 title: "模式擷取"
 parent: Token filters
 nav_order: 310
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/pattern-capture/
 ---
 
 # 模式擷取詞元篩選器

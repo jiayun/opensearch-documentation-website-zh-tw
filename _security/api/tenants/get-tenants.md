@@ -5,6 +5,7 @@ title: "取得租用戶"
 parent: Tenant APIs
 grand_parent: Security APIs
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/security/api/tenants/get-tenants/
 ---
 
 # 取得租用戶 API

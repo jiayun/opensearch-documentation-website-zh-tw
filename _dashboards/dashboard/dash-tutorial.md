@@ -5,6 +5,7 @@ title: "儀表板教學"
 parent: Creating dashboards
 nav_order: 5
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/dashboards/dashboard/dash-tutorial/
 ---
 
 # 教學：建立儀表板

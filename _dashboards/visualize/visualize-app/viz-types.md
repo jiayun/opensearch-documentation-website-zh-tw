@@ -10,6 +10,7 @@ has_toc: false
 description: "在 OpenSearch Dashboards 中使用 Visualize 應用程式建立資料視覺化時建議使用的視覺化類型，包括圖表、表格和地圖。"
 redirect_from:
   - /dashboards/visualize/viz-types/
+canonical_url: https://docs.opensearch.org/latest/dashboards/visualize/visualize-app/viz-types/
 ---
 
 # 視覺化類型

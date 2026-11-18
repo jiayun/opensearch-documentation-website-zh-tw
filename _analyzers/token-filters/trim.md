@@ -4,6 +4,7 @@ layout: default
 title: Trim
 parent: Token filters
 nav_order: 430
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/trim/
 ---
 
 # Trim 詞元篩選器

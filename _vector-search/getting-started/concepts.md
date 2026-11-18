@@ -4,6 +4,7 @@ layout: default
 title: "概念"
 parent: Getting started
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/vector-search/getting-started/concepts/
 ---
 
 # 向量搜尋概念

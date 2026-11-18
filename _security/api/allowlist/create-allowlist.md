@@ -5,6 +5,7 @@ title: "建立或更新允許清單"
 parent: Allow list APIs
 grand_parent: Security APIs
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/security/api/allowlist/create-allowlist/
 ---
 
 # 建立或更新允許清單 API

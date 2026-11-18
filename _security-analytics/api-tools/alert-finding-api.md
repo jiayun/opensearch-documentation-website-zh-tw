@@ -4,6 +4,7 @@ layout: default
 title: "警示與結果 API"
 parent: Security Analytics APIs
 nav_order: 50
+canonical_url: https://docs.opensearch.org/latest/security-analytics/api-tools/alert-finding-api/
 ---
 
 

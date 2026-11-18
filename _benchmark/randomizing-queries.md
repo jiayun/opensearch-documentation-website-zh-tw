@@ -6,6 +6,8 @@ nav_order: 65
 has_math: true
 redirect_from:
   - /benchmark/user-guide/optimizing-benchmarks/randomizing-queries/
+canonical_url: https://docs.opensearch.org/latest/benchmark/randomizing-queries/
+redirect_to: https://docs.opensearch.org/latest/benchmark/randomizing-queries/
 ---
 
 # 將查詢隨機化

@@ -7,6 +7,7 @@ has_children: false
 redirect_from:
   - /opensearch/cluster/
   - /tuning-your-cluster/cluster/
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/creating-a-cluster/
 ---
 
 # 建立叢集

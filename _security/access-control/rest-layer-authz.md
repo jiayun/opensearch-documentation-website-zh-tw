@@ -4,6 +4,7 @@ layout: default
 title: "REST 層授權"
 parent: Access control
 nav_order: 85
+canonical_url: https://docs.opensearch.org/latest/security/access-control/rest-layer-authz/
 ---
 
 

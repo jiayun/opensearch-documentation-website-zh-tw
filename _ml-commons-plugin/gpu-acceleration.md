@@ -5,6 +5,7 @@ title: "GPU 加速"
 parent: Using ML models within OpenSearch
 grand_parent: Integrating ML models
 nav_order: 150
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/gpu-acceleration/
 ---
 
 

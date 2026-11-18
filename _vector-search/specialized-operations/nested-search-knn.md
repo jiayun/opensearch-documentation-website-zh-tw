@@ -8,6 +8,7 @@ has_children: false
 has_math: true
 redirect_from:
   - /search-plugins/knn/nested-search-knn/ 
+canonical_url: https://docs.opensearch.org/latest/vector-search/specialized-operations/nested-search-knn/
 ---
 
 # 巢狀欄位搜尋

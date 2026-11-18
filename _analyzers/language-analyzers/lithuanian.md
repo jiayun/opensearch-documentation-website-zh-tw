@@ -5,6 +5,7 @@ title: "立陶宛語"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 230
+canonical_url: https://docs.opensearch.org/latest/analyzers/language-analyzers/lithuanian/
 ---
 
 # 立陶宛語分析器

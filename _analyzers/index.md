@@ -12,6 +12,7 @@ redirect_from:
   - /query-dsl/analyzers/text-analyzers/
   - /analyzers/text-analyzers/
   - /analyzers/index/
+canonical_url: https://docs.opensearch.org/latest/analyzers/
 ---
 
 # 文字分析

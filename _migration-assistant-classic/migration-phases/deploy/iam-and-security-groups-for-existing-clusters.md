@@ -6,6 +6,8 @@ nav_order: 2
 grand_parent: Migration phases
 parent: Deploy
 permalink: /classic/migration-assistant/migration-phases/deploy/iam-and-security-groups-for-existing-clusters/
+canonical_url: https://docs.opensearch.org/latest/classic/migration-assistant/migration-phases/deploy/iam-and-security-groups-for-existing-clusters/
+redirect_to: https://docs.opensearch.org/latest/classic/migration-assistant/migration-phases/deploy/iam-and-security-groups-for-existing-clusters/
 ---
 
 # 現有叢集的 IAM 與安全性群組

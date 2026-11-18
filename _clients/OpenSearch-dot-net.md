@@ -5,6 +5,8 @@ title: "低階 .NET 用戶端"
 nav_order: 30
 has_children: false
 parent: .NET clients
+canonical_url: https://docs.opensearch.org/latest/clients/OpenSearch-dot-net/
+redirect_to: https://docs.opensearch.org/latest/clients/OpenSearch-dot-net/
 ---
 
 # 低階 .NET 用戶端 (OpenSearch.Net)

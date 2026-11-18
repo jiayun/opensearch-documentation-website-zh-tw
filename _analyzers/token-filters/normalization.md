@@ -4,6 +4,7 @@ layout: default
 title: "正規化"
 parent: Token filters
 nav_order: 300
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/normalization/
 ---
 
 # 正規化詞元篩選器

@@ -3,6 +3,7 @@
 layout: default
 title: "指令碼安全性"
 nav_order: 50
+canonical_url: https://docs.opensearch.org/latest/scripting/script-security/
 ---
 
 # 指令碼安全性

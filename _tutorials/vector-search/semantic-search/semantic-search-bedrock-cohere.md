@@ -7,6 +7,7 @@ grand_parent: Vector search
 nav_order: 35
 redirect_from:
   - /vector-search/tutorials/semantic-search/semantic-search-bedrock-cohere/
+canonical_url: https://docs.opensearch.org/latest/tutorials/vector-search/semantic-search/semantic-search-bedrock-cohere/
 ---
 
 # 使用 Amazon Bedrock 上的 Cohere Embed 進行語意搜尋

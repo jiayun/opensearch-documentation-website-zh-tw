@@ -6,6 +6,7 @@ parent: Bucket aggregations
 nav_order: 20
 redirect_from:
   - /query-dsl/aggregations/bucket/date-histogram/
+canonical_url: https://docs.opensearch.org/latest/aggregations/bucket/date-histogram/
 ---
 
 # 日期直方圖彙總

@@ -4,6 +4,7 @@ layout: default
 title: Hunspell
 parent: Token filters
 nav_order: 160
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/hunspell/
 ---
 
 # Hunspell 詞元篩選器

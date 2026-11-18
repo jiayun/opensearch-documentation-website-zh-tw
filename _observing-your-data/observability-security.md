@@ -6,6 +6,7 @@ nav_order: 160
 has_children: false
 redirect_from:
   - /observing-your-data/security/
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/observability-security/
 ---
 
 # 可觀測性安全性

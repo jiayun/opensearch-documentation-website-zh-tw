@@ -5,6 +5,7 @@ title: "重新載入 HTTP 憑證"
 parent: Certificate APIs
 grand_parent: Security APIs
 nav_order: 50
+canonical_url: https://docs.opensearch.org/latest/security/api/certificates/reload-http-certificates/
 ---
 
 # 重新載入 HTTP 憑證 API

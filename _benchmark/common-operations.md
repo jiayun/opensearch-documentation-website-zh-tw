@@ -5,6 +5,8 @@ title: "常見操作"
 nav_order: 25
 redirect_from:
   - /benchmark/user-guide/understanding-workloads/common-operations/
+canonical_url: https://docs.opensearch.org/latest/benchmark/common-operations/
+redirect_to: https://docs.opensearch.org/latest/benchmark/common-operations/
 ---
 
 # 常見操作

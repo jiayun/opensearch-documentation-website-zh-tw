@@ -4,6 +4,8 @@ layout: default
 title: "安裝與設定 Data Prepper"
 parent: Getting started
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/data-prepper/getting-started/installing/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/
 ---
 
 # 安裝與設定 Data Prepper

@@ -8,6 +8,7 @@ has_toc: false
 nav_order: 41
 redirect_from:
   - /ml-commons-plugin/api/mcp-client-apis/
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/mcp-client-apis/index/
 ---
 
 # MCP 用戶端 API

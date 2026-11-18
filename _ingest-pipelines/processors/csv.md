@@ -6,6 +6,7 @@ parent: Ingest processors
 nav_order: 40
 redirect_from:
    - /api-reference/ingest-apis/processors/csv/
+canonical_url: https://docs.opensearch.org/latest/ingest-pipelines/processors/csv/
 ---
 
 本文件說明如何在 OpenSearch 資料匯入管線中使用 `csv` 處理器。如果您的使用情境涉及大型或複雜的資料集，建議考慮使用在 OpenSearch 叢集外部執行的 [Data Prepper `csv` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/csv/)。

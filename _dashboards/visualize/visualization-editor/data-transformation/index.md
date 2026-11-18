@@ -7,6 +7,7 @@ grand_parent: Building data visualizations
 nav_order: 95
 redirect_from:
   - /dashboards/visualize/visualization-editor/data-transformation/
+canonical_url: https://docs.opensearch.org/latest/dashboards/visualize/visualization-editor/data-transformation/index/
 ---
 
 # 資料轉換

@@ -6,6 +6,7 @@ parent: Reranking search results
 grand_parent: Optimizing search quality
 has_children: false
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/search-plugins/search-relevance/rerank-by-field-cross-encoder/
 ---
 
 # 使用交叉編碼器模型依欄位重新排名

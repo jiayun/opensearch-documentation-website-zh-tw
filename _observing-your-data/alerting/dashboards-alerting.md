@@ -5,6 +5,7 @@ title: "警示儀表板與視覺化"
 parent: Alerting
 nav_order: 20
 has_children: true
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/alerting/dashboards-alerting/
 ---
 
 # 警示儀表板與視覺化

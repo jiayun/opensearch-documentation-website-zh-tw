@@ -9,6 +9,7 @@ redirect_from:
   - /tuning-your-cluster/monitoring/
   - /monitoring-your-cluster/
   - /monitoring-your-cluster/index/
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/monitoring/index/
 ---
 
 # 監控您的叢集

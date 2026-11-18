@@ -5,6 +5,7 @@ title: "丹麥文"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 100
+canonical_url: https://docs.opensearch.org/latest/analyzers/language-analyzers/danish/
 ---
 
 # 丹麥文分析器

@@ -4,6 +4,7 @@ layout: default
 title: "同義詞圖"
 parent: Token filters
 nav_order: 420
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/synonym-graph/
 ---
 
 # 同義詞圖詞元篩選器

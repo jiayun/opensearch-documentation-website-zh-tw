@@ -5,6 +5,7 @@ title: "原則"
 nav_order: 10
 parent: Index State Management
 has_children: true
+canonical_url: https://docs.opensearch.org/latest/im-plugin/ism/policies/
 ---
 
 # ISM 原則

@@ -6,6 +6,7 @@ parent: Bucket aggregations
 nav_order: 180
 redirect_from:
   - /query-dsl/aggregations/bucket/significant-terms/
+canonical_url: https://docs.opensearch.org/latest/aggregations/bucket/significant-terms/
 ---
 
 # 顯著詞彙彙總

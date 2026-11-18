@@ -7,6 +7,7 @@ grand_parent: Building data visualizations
 nav_order: 50
 has_children: true
 has_toc: false
+canonical_url: https://docs.opensearch.org/latest/dashboards/visualize/visualization-editor/viz-types/
 ---
 
 # 以查詢為基礎的視覺化類型

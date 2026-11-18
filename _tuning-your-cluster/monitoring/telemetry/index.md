@@ -8,6 +8,7 @@ has_children: true
 has_toc: false
 redirect_from:
   - /tuning-your-cluster/monitoring/telemetry/
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/monitoring/telemetry/index/
 ---
 
 # 遙測

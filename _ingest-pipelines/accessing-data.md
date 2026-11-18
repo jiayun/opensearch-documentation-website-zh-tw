@@ -3,6 +3,7 @@
 layout: default
 title: "在管線中存取資料"
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/ingest-pipelines/accessing-data/
 ---
 
 # 在管線中存取資料

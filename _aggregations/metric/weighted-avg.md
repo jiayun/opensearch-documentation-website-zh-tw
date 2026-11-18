@@ -5,6 +5,7 @@ title: "加權平均"
 parent: Metric aggregations
 nav_order: 150
 has_math: true
+canonical_url: https://docs.opensearch.org/latest/aggregations/metric/weighted-avg/
 ---
 
 # 加權平均彙總

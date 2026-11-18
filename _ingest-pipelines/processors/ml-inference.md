@@ -6,6 +6,7 @@ parent: Ingest processors
 nav_order: 215
 redirect_from:
 - /api-reference/ingest-apis/processors/ml-inference/
+canonical_url: https://docs.opensearch.org/latest/ingest-pipelines/processors/ml-inference/
 ---
 
 # ML 推論處理器

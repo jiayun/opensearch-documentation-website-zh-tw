@@ -6,6 +6,7 @@ parent: Workload management
 nav_order: 60
 redirect_from:
   - /tuning-your-cluster/availability-and-recovery/workload-management/workload-management-dashboard/
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/workload-management/workload-management-dashboard/
 ---
 
 # 在 OpenSearch Dashboards 中管理工作負載

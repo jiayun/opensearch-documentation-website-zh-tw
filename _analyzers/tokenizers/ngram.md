@@ -4,6 +4,7 @@ layout: default
 title: N-gram
 parent: Tokenizers
 nav_order: 80
+canonical_url: https://docs.opensearch.org/latest/analyzers/tokenizers/ngram/
 ---
 
 # N-gram 斷詞器

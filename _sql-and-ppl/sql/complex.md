@@ -7,6 +7,7 @@ nav_order: 6
 redirect_from:
   - /search-plugins/sql/complex/
   - /search-plugins/sql/sql/complex/
+canonical_url: https://docs.opensearch.org/latest/sql-and-ppl/sql/complex/
 ---
 
 # 複雜 SQL 查詢

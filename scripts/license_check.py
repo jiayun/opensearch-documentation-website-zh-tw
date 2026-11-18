@@ -12,7 +12,7 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-BASELINE = "8809a8aa43fb839bd4f258ea4d2534cb51ab6df3"
+BASELINE = "9cb6dcdcf0a962671e397d17837901f9a89e3961"
 MARKER = "Modified by the jiayun zh-TW fork: Taiwan Traditional Chinese translation and website adaptations."
 UPSTREAM_NOTICES = ("LICENSE", "NOTICE", "THIRD-PARTY")
 INVENTORY = ROOT / "licenses/inventory.json"

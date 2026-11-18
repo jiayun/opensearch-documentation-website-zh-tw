@@ -8,6 +8,7 @@ great_grand_parent: AI search
 nav_order: 10
 redirect_from:
   - /vector-search/ai-search/building-flows/
+canonical_url: https://docs.opensearch.org/latest/vector-search/ai-search/workflows/building-flows/
 ---
 
 # 設定 AI 搜尋類型

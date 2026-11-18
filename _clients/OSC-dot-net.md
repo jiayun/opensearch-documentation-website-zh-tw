@@ -5,6 +5,8 @@ title: "高階 .NET 用戶端入門"
 nav_order: 10
 has_children: false
 parent: .NET clients
+canonical_url: https://docs.opensearch.org/latest/clients/OSC-dot-net/
+redirect_to: https://docs.opensearch.org/latest/clients/OSC-dot-net/
 ---
 
 # 高階 .NET 用戶端（OpenSearch.Client）入門

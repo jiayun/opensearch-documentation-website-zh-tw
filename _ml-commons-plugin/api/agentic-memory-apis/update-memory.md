@@ -5,6 +5,7 @@ title: "更新代理記憶"
 parent: Agentic memory APIs
 grand_parent: ML APIs
 nav_order: 52
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/agentic-memory-apis/update-memory/
 ---
 
 # 更新代理記憶 API

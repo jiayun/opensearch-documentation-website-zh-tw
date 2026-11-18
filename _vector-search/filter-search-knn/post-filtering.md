@@ -4,6 +4,7 @@ layout: default
 title: "後置篩選"
 parent: Filtering data
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/vector-search/filter-search-knn/post-filtering/
 ---
 
 # 對向量搜尋結果進行後置篩選

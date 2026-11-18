@@ -4,6 +4,7 @@ layout: default
 title: "重大變更"
 nav_order: 5
 permalink: /breaking-changes/
+canonical_url: https://docs.opensearch.org/latest/breaking-changes/
 ---
 
 # 重大變更

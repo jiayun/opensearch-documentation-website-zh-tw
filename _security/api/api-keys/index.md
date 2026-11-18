@@ -10,6 +10,7 @@ redirect_from:
   - /api-reference/security/api-keys/
   - /api-reference/security/api-keys/index/
   - /security/api/api-keys/
+canonical_url: https://docs.opensearch.org/latest/security/api/api-keys/index/
 ---
 
 # API 金鑰 API

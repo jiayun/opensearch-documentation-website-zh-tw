@@ -3,6 +3,8 @@
 layout: default
 title: "Java 用戶端"
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/clients/java/
+redirect_to: https://docs.opensearch.org/latest/clients/java/
 ---
 
 # Java 用戶端

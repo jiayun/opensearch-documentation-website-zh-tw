@@ -10,6 +10,7 @@ redirect_from:
   - /opensearch/supported-field-types/autocomplete/
   - /field-types/autocomplete/
   - /field-types/supported-field-types/autocomplete/
+canonical_url: https://docs.opensearch.org/latest/mappings/supported-field-types/autocomplete/
 ---
 
 # 自動完成欄位類型

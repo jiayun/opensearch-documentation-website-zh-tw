@@ -5,6 +5,7 @@ title: "比較搜尋結果"
 nav_order: 11
 parent: Search Relevance Workbench
 grand_parent: Optimizing search quality
+canonical_url: https://docs.opensearch.org/latest/search-plugins/search-relevance/comparing-search-results/
 ---
 
 # 比較搜尋結果

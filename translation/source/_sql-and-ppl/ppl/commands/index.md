@@ -4,12 +4,12 @@ title: Commands
 parent: PPL
 nav_order: 1
 has_children: true
+canonical_url: https://docs.opensearch.org/latest/sql-and-ppl/ppl/commands/index/
 redirect_from:
   - /search-plugins/sql/ppl/functions/
   - /observability-plugin/ppl/commands/
   - /search-plugins/ppl/commands/
   - /search-plugins/ppl/functions/
-  - /sql-and-ppl/ppl/functions/
   - /sql-and-ppl/ppl/commands/
 ---
 

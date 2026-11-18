@@ -4,6 +4,7 @@ layout: default
 title: "執行演算法"
 parent: ML APIs
 nav_order: 90
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/execute-algorithm/
 ---
 
 # 執行演算法 API

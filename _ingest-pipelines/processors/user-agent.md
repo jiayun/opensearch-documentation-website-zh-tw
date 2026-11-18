@@ -4,6 +4,7 @@ layout: default
 title: "使用者代理程式"
 parent: Ingest processors
 nav_order: 330
+canonical_url: https://docs.opensearch.org/latest/ingest-pipelines/processors/user-agent/
 ---
 
 # 使用者代理程式處理器

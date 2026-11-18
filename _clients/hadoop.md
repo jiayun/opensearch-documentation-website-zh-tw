@@ -3,6 +3,8 @@
 layout: default
 title: "Hadoop 連接器"
 nav_order: 110
+canonical_url: https://docs.opensearch.org/latest/clients/hadoop/
+redirect_to: https://docs.opensearch.org/latest/clients/hadoop/
 ---
 
 # Hadoop 連接器

@@ -6,6 +6,8 @@ nav_order: 60
 redirect_from:
   - /benchmark/user-guide/target-throughput/
   - /benchmark/user-guide/optimizing-benchmarks/target-throughput/
+canonical_url: https://docs.opensearch.org/latest/benchmark/target-throughput/
+redirect_to: https://docs.opensearch.org/latest/benchmark/target-throughput/
 ---
 
 # 目標輸送量

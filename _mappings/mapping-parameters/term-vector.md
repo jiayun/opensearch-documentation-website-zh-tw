@@ -8,6 +8,7 @@ redirect_from:
 nav_order: 270
 has_children: false
 has_toc: false
+canonical_url: https://docs.opensearch.org/latest/mappings/mapping-parameters/term-vector/
 ---
 
 # 詞彙向量對應參數

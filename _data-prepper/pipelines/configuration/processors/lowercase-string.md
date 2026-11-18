@@ -5,6 +5,8 @@ title: "小寫字串"
 parent: Processors
 grand_parent: Pipelines
 nav_order: 190
+canonical_url: https://docs.opensearch.org/latest/data-prepper/pipelines/configuration/processors/lowercase-string/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/pipelines/configuration/processors/lowercase-string/
 ---
 
 # 小寫字串處理器

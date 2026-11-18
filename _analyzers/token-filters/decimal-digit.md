@@ -4,6 +4,7 @@ layout: default
 title: "十進位數字"
 parent: Token filters
 nav_order: 80
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/decimal-digit/
 ---
 
 # 十進位數字詞元篩選器

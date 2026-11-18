@@ -5,6 +5,7 @@ title: "搭配 Strands Agents 使用代理記憶"
 parent: Agentic AI
 grand_parent: Generative AI
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/tutorials/gen-ai/agents/agentic-memory-strands/
 ---
 
 # 搭配 Strands Agents 使用代理記憶

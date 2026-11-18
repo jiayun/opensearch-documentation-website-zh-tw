@@ -9,6 +9,8 @@ permalink: /migration-assistant/migration-phases/migrate-metadata/handling-field
 redirect_from:
   - /migration-assistant/migration-phases/assessment/handling-field-type-breaking-changes/
   - /migration-assistant/migration-phases/planning-your-migration/handling-field-type-breaking-changes/
+canonical_url: https://docs.opensearch.org/latest/migration-assistant/migration-phases/migrate-metadata/handling-field-type-breaking-changes/
+redirect_to: https://docs.opensearch.org/latest/migration-assistant/migration-phases/migrate-metadata/handling-field-type-breaking-changes/
 ---
 
 # 轉換欄位類型

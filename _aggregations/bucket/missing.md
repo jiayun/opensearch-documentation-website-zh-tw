@@ -6,6 +6,7 @@ parent: Bucket aggregations
 nav_order: 120
 redirect_from:
   - /query-dsl/aggregations/bucket/missing/
+canonical_url: https://docs.opensearch.org/latest/aggregations/bucket/missing/
 ---
 
 # Missing 彙總

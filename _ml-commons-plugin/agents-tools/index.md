@@ -7,6 +7,7 @@ has_toc: false
 nav_order: 20
 redirect_from:
   - /ml-commons-plugin/agents-tools/
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/agents-tools/index/
 ---
 
 # 代理程式與工具

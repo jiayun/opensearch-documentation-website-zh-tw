@@ -5,6 +5,7 @@ title: "芬蘭文"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 140
+canonical_url: https://docs.opensearch.org/latest/analyzers/language-analyzers/finnish/
 ---
 
 # 芬蘭文分析器

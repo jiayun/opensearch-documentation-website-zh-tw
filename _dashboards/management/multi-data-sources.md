@@ -6,6 +6,7 @@ parent: Connecting data sources
 nav_order: 20
 redirect_from:
   - /dashboards/discover/multi-data-sources/
+canonical_url: https://docs.opensearch.org/latest/dashboards/management/multi-data-sources/
 ---
 
 # 在 OpenSearch Dashboards 中設定和使用多個資料來源

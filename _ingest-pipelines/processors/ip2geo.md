@@ -6,6 +6,7 @@ parent: Ingest processors
 nav_order: 150
 redirect_from:
    - /api-reference/ingest-apis/processors/ip2geo/
+canonical_url: https://docs.opensearch.org/latest/ingest-pipelines/processors/ip2geo/
 ---
 
 # IP2Geo 處理器

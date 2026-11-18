@@ -4,6 +4,7 @@ layout: default
 title: DNS
 parent: Supported log types
 nav_order: 35
+canonical_url: https://docs.opensearch.org/latest/security-analytics/log-types-reference/dns/
 ---
 
 # DNS 記錄類型

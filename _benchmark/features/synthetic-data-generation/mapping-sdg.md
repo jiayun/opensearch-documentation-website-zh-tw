@@ -5,6 +5,8 @@ title: "使用索引對應產生資料"
 nav_order: 15
 parent: Synthetic data generation
 grand_parent: Additional features
+canonical_url: https://docs.opensearch.org/latest/benchmark/features/synthetic-data-generation/mapping-sdg/
+redirect_to: https://docs.opensearch.org/latest/benchmark/features/synthetic-data-generation/mapping-sdg/
 ---
 
 # 使用索引對應產生資料

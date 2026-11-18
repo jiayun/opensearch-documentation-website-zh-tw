@@ -4,6 +4,7 @@ layout: default
 title: "OpenSearch FIPS 組態"
 parent: Configuration
 nav_order: 55
+canonical_url: https://docs.opensearch.org/latest/security/configuration/fips/
 ---
 
 # OpenSearch FIPS 組態

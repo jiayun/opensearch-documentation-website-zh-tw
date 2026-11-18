@@ -6,6 +6,7 @@ parent: PPL
 nav_order: 3
 redirect_from:
   - /search-plugins/sql/ppl/subsearch/
+canonical_url: https://docs.opensearch.org/latest/sql-and-ppl/ppl/subsearch/
 ---
 
 # PPL 查詢中的子搜尋

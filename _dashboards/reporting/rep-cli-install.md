@@ -8,6 +8,7 @@ grand_parent: Reporting
 redirect_from:
   - /reporting/rep-cli-install/
   - /dashboards/reporting-cli/rep-cli-install/
+canonical_url: https://docs.opensearch.org/latest/dashboards/reporting/rep-cli-install/
 ---
 
 # 下載並安裝 Reporting CLI 工具

@@ -7,6 +7,7 @@ grand_parent: Security APIs
 nav_order: 30
 redirect_from:
   - /api-reference/security/configuration/get-configuration/
+canonical_url: https://docs.opensearch.org/latest/security/api/configuration/get-configuration/
 ---
 
 # 取得安全性組態 API

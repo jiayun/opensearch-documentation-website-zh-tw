@@ -30,6 +30,7 @@ flows:
   - <b>平台：</b> OpenSearch、Strands Agents
   - <b>模型：</b> Anthropic Claude Sonnet 4.6、Amazon Titan Text Embeddings V2
   - <b>部署：</b> Amazon Bedrock
+canonical_url: https://docs.opensearch.org/latest/tutorials/gen-ai/agents/index/
 ---
 
 # 代理式 AI 教學

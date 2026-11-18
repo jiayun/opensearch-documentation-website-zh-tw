@@ -7,6 +7,7 @@ grand_parent: Monitoring your cluster
 nav_order: 60
 redirect_from:
   - /observing-your-data/query-insights/settings-api/
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/monitoring/query-insights/settings-api/
 ---
 
 # Query Insights Settings API

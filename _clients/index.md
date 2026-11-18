@@ -8,6 +8,8 @@ nav_exclude: true
 permalink: /clients/
 redirect_from:
   - /clients/index/
+canonical_url: https://docs.opensearch.org/latest/clients/
+redirect_to: https://docs.opensearch.org/latest/clients/
 ---
 
 # ![用戶端圖示]({{site.url}}{{site.baseurl}}/images/icons/OpenSearch-Clients-Icon.avif){: .heading-icon} OpenSearch 語言用戶端

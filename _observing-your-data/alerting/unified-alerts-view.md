@@ -5,6 +5,7 @@ title: "統一的警示檢視"
 parent: Alerting dashboards and visualizations
 grand_parent: Alerting
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/alerting/unified-alerts-view/
 ---
 
 # 統一的警示檢視

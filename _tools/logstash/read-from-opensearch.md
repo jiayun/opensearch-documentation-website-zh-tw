@@ -6,6 +6,7 @@ parent: Logstash
 nav_order: 220
 redirect_from:
   - /clients/logstash/read-from-opensearch/
+canonical_url: https://docs.opensearch.org/latest/tools/logstash/read-from-opensearch/
 ---
 
 # 從 OpenSearch 讀取資料

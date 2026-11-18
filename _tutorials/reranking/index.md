@@ -45,6 +45,7 @@ reranking:
   - <b>平台：</b> OpenSearch、Amazon OpenSearch Service
   - <b>模型：</b> Cohere Rerank
   - <b>部署：</b> Provider API
+canonical_url: https://docs.opensearch.org/latest/tutorials/reranking/index/
 ---
 
 # 重新排序搜尋結果教學

@@ -5,6 +5,7 @@ title: "註冊模型"
 parent: Model APIs
 grand_parent: ML APIs
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/model-apis/register-model/
 ---
 
 # Register Model API

@@ -4,6 +4,7 @@ layout: default
 title: "語音"
 parent: Token filters
 nav_order: 330
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/phonetic/
 ---
 
 # 語音詞元篩選器

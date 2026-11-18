@@ -4,6 +4,7 @@ layout: default
 title: "地理距離"
 parent: Geographic and xy queries
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/query-dsl/geo-and-xy/geodistance/
 ---
 
 # 地理距離查詢

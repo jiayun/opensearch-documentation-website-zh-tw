@@ -41,6 +41,7 @@ other:
 - heading: 使用語意醒目提示
   description: 了解如何在結果中醒目提示語意最相關的句子
   link: /tutorials/vector-search/semantic-highlighting-tutorial/
+canonical_url: https://docs.opensearch.org/latest/tutorials/vector-search/index/
 ---
 
 # 向量搜尋教學

@@ -5,6 +5,7 @@ title: "將 Amazon S3 連接至 OpenSearch"
 parent: Connecting data sources
 nav_order: 30
 has_children: true
+canonical_url: https://docs.opensearch.org/latest/dashboards/management/S3-data-source/
 ---
 
 # 將 Amazon S3 連接至 OpenSearch

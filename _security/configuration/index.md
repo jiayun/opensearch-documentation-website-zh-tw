@@ -9,6 +9,7 @@ redirect_from:
   - /security-plugin/configuration/
   - /security-plugin/configuration/index/
   - /security/configuration/
+canonical_url: https://docs.opensearch.org/latest/security/configuration/index/
 ---
 
 # 安全性組態

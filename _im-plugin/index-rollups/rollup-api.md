@@ -4,6 +4,7 @@ layout: default
 title: "索引彙總 API"
 parent: Index rollups
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/im-plugin/index-rollups/rollup-api/
 ---
 
 # 索引彙總 API

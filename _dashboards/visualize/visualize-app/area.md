@@ -8,6 +8,7 @@ great_grand_parent: Building data visualizations
 nav_order: 30
 redirect_from:
   - /dashboards/visualize/area/
+canonical_url: https://docs.opensearch.org/latest/dashboards/visualize/visualize-app/area/
 ---
 
 # 區域圖

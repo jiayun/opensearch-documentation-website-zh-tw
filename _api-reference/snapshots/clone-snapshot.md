@@ -4,6 +4,7 @@ layout: default
 title: "複製快照"
 parent: Snapshot APIs
 nav_order: 100
+canonical_url: https://docs.opensearch.org/latest/api-reference/snapshots/clone-snapshot/
 ---
 
 # 複製快照 API

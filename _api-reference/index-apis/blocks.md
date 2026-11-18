@@ -5,6 +5,7 @@ title: "封鎖"
 parent: Index blocks and allocation
 grand_parent: Index APIs
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/api-reference/index-apis/blocks/
 ---
 
 # Blocks API

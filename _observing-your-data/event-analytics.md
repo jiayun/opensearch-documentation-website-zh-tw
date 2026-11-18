@@ -6,6 +6,7 @@ parent: Classic observability apps
 nav_order: 10
 redirect_from:
   - /observability-plugin/event-analytics/
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/event-analytics/
 ---
 
 # 事件分析

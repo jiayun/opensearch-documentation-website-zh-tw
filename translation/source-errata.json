@@ -2,7 +2,7 @@
  "schema_version": 1,
  "description": "Markdown syntax repairs for malformed upstream baseline sources. Each entry is keyed by the SHA-256 of the entire original baseline file in translation/source/ and applies only to that exact text. Every 'before' string must occur exactly once. The files in translation/source/ are never modified; the repairs are applied in memory to the baseline used for translation, checks and English heading IDs.",
  "errata": {
-  "ef8b3403bf208f0949b90b96e8500fcfaf6ea9566b508cc55e3a588d7d198766": {
+  "74d37de6993fd6e1f54d979e7da65077a654ed5477930ee659ab82c312d52444": {
    "page": "_security/authentication-backends/ldap.md",
    "reason": "The ```yml example under 'LDAP referrals' has no closing fence, so the following prose and the 'Timeouts' heading render as code until the next bare fence. Add the missing closing fence after the YAML example.",
    "replacements": [
@@ -12,7 +12,7 @@
     }
    ]
   },
-  "4e909a9665319205f67da660c53f54c9a0c234e032fe37e63b696df4f6c16399": {
+  "5aa6fb65f4e9bf9158a1cecbb3fb902c7228cb778144ed301f8b2e9e2c2dfd05": {
    "page": "_sql-and-ppl/ppl/commands/replace.md",
    "reason": "Example 3 contains leftover query lines followed by a closing fence without an opening fence. That fence opens a code block that swallows 'The query returns the following results:' up to the end of the results block. Add the missing opening ```sql fence; the leftover query lines are kept unchanged.",
    "replacements": [
@@ -22,7 +22,7 @@
     }
    ]
   },
-  "4434a8bed9b02fd98e79f6213441fb792fc1a02d5b008cde106c23aa8cfbc8e0": {
+  "558a2cf70961c4e617f325c0cd5eaa3cb91bc885ad76469322ca073fb822ed14": {
    "page": "_data-prepper/pipelines/configuration/processors/key-value.md",
    "reason": "The `[...]` delimiter in the value_grouping description ends with a straight quote instead of a backtick, so the inline code spans pair up wrongly and swallow prose. Replace the quote with the closing backtick.",
    "replacements": [

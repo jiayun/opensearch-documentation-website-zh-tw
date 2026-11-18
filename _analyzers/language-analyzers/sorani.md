@@ -5,6 +5,7 @@ title: "索拉尼語"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 290
+canonical_url: https://docs.opensearch.org/latest/analyzers/language-analyzers/sorani/
 ---
 
 # 索拉尼語分析器

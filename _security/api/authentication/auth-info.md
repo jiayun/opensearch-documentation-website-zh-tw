@@ -7,6 +7,7 @@ grand_parent: Security APIs
 nav_order: 10
 redirect_from:
   - /api-reference/security/authentication/auth-info/
+canonical_url: https://docs.opensearch.org/latest/security/api/authentication/auth-info/
 ---
 
 # 驗證資訊 API

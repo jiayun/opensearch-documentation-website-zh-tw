@@ -24,6 +24,7 @@ redirect_from:
   - /monitoring-plugins/pa/rca/reference/
   - /monitoring-your-cluster/pa/rca/reference/
   - /monitoring-your-cluster/pa/rca/shard-hotspot/
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/monitoring/telemetry/performance-analyzer/
 ---
 
 # Performance Analyzer

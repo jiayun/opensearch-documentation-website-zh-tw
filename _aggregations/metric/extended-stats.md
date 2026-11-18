@@ -6,6 +6,7 @@ parent: Metric aggregations
 nav_order: 30
 redirect_from:
   - /query-dsl/aggregations/metric/extended-stats/
+canonical_url: https://docs.opensearch.org/latest/aggregations/metric/extended-stats/
 ---
 
 # 延伸統計資料彙總

@@ -6,6 +6,7 @@ parent: Additional plugins
 grand_parent: Managing OpenSearch plugins
 nav_order: 25
 
+canonical_url: https://docs.opensearch.org/latest/install-and-configure/additional-plugins/mapper-size-plugin/
 ---
 
 # Mapper-size 外掛程式

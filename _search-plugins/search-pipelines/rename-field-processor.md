@@ -6,6 +6,7 @@ nav_order: 100
 has_children: false
 parent: User-defined search processors
 grand_parent: Search pipelines
+canonical_url: https://docs.opensearch.org/latest/search-plugins/search-pipelines/rename-field-processor/
 ---
 
 # 重新命名欄位處理器

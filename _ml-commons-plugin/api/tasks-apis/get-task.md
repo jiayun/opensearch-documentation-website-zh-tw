@@ -5,6 +5,7 @@ title: "取得 ML 任務"
 parent: ML Tasks APIs
 grand_parent: ML APIs
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/tasks-apis/get-task/
 ---
 
 # 取得 ML 任務 API

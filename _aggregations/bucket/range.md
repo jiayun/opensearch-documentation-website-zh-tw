@@ -6,6 +6,7 @@ parent: Bucket aggregations
 nav_order: 150
 redirect_from:
   - /query-dsl/aggregations/bucket/range/
+canonical_url: https://docs.opensearch.org/latest/aggregations/bucket/range/
 ---
 
 # Range 彙總

@@ -8,6 +8,7 @@ has_children: true
 has_toc: false
 redirect_from:
   - /security/api/distinguished-names/
+canonical_url: https://docs.opensearch.org/latest/security/api/distinguished-names/index/
 ---
 
 # 辨別名稱 API

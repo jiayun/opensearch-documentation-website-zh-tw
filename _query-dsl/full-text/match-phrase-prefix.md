@@ -4,6 +4,7 @@ layout: default
 title: "片語前綴比對"
 parent: Full-text queries
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/query-dsl/full-text/match-phrase-prefix/
 ---
 
 # 片語前綴比對查詢

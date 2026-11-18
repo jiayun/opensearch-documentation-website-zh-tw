@@ -4,6 +4,7 @@ layout: default
 title: "建立或更新快照儲存庫"
 parent: Snapshot APIs
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/api-reference/snapshots/create-repository/
 ---
 
 # 建立或更新快照儲存庫 API

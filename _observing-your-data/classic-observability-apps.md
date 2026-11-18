@@ -5,6 +5,7 @@ title: "傳統可觀測性應用程式"
 nav_order: 40
 has_children: true
 has_toc: false
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/classic-observability-apps/
 ---
 
 # 傳統可觀測性應用程式

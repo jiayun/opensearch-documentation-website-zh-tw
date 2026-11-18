@@ -6,6 +6,7 @@ has_children: false
 parent: User-defined search processors
 grand_parent: Search pipelines
 nav_order: 117
+canonical_url: https://docs.opensearch.org/latest/search-plugins/search-pipelines/score-ranker-processor/
 ---
 
 # 分數排名器處理器

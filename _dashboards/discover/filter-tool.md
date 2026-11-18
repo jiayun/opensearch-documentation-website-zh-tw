@@ -5,6 +5,7 @@ title: "篩選工具"
 parent: Exploring data with Discover
 grand_parent: Exploring data
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/dashboards/discover/filter-tool/
 ---
 
 # 使用篩選工具

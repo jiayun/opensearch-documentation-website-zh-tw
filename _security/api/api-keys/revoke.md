@@ -7,6 +7,7 @@ grand_parent: Security APIs
 nav_order: 30
 redirect_from:
   - /api-reference/security/api-keys/revoke/
+canonical_url: https://docs.opensearch.org/latest/security/api/api-keys/revoke/
 ---
 
 # 撤銷 API 金鑰 API

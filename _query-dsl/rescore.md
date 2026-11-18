@@ -3,6 +3,7 @@
 layout: default
 title: "重新評分"
 nav_order: 90
+canonical_url: https://docs.opensearch.org/latest/query-dsl/rescore/
 ---
 
 # 重新評分參數

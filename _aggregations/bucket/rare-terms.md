@@ -4,6 +4,7 @@ layout: default
 title: "罕見詞彙"
 parent: Bucket aggregations
 nav_order: 155
+canonical_url: https://docs.opensearch.org/latest/aggregations/bucket/rare-terms/
 ---
 
 # 罕見詞彙彙總

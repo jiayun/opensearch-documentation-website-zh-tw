@@ -4,6 +4,7 @@ layout: default
 title: "搜尋遙測"
 parent: Settings and administration
 nav_order: 70
+canonical_url: https://docs.opensearch.org/latest/dashboards/search-telemetry/
 ---
 
 

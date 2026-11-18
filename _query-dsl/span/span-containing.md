@@ -5,6 +5,7 @@ title: "跨度包含查詢"
 parent: Span queries
 grand_parent: Query DSL
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/query-dsl/span/span-containing/
 ---
 
 # 跨度包含查詢

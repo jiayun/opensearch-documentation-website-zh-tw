@@ -3,6 +3,7 @@
 layout: default
 title: "如何使用指令碼"
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/scripting/using-scripts/
 ---
 
 # 如何使用指令碼

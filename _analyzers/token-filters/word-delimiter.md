@@ -4,6 +4,7 @@ layout: default
 title: "字詞分隔"
 parent: Token filters
 nav_order: 470
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/word-delimiter/
 ---
 
 # 字詞分隔詞元篩選器

@@ -6,6 +6,7 @@ nav_order: 80
 parent: Learning to Rank
 grand_parent: Optimizing search quality
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/search-plugins/ltr/advanced-functionality/
 ---
 
 # 進階 LTR 功能

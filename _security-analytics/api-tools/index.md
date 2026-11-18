@@ -7,6 +7,7 @@ has_children: true
 has_toc: false
 redirect_from:
   - /security-analytics/api-tools/
+canonical_url: https://docs.opensearch.org/latest/security-analytics/api-tools/index/
 ---
 
 # Security Analytics API

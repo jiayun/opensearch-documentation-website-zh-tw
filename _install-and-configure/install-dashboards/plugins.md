@@ -5,6 +5,7 @@ title: "管理 OpenSearch Dashboards 外掛程式"
 nav_order: 100
 redirect_from: 
   - /dashboards/install/plugins/
+canonical_url: https://docs.opensearch.org/latest/install-and-configure/install-dashboards/plugins/
 ---
 
 # 管理 OpenSearch Dashboards 外掛程式

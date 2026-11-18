@@ -6,6 +6,7 @@ parent: Configuring OpenSearch
 nav_order: 170
 redirect_from:
   - /im-plugin/index-settings/
+canonical_url: https://docs.opensearch.org/latest/install-and-configure/configuring-opensearch/index-settings/
 ---
 
 # 索引設定

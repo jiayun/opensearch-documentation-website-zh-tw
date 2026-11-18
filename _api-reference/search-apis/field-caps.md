@@ -4,6 +4,7 @@ layout: default
 title: "欄位功能"
 parent: Search APIs
 nav_order: 45
+canonical_url: https://docs.opensearch.org/latest/api-reference/search-apis/field-caps/
 ---
 
 # 欄位功能 API

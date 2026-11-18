@@ -10,6 +10,7 @@ has_toc: false
 redirect_from:
   - /dashboards/visualize/visualize-app/
   - /dashboards/visualize/viz-index/
+canonical_url: https://docs.opensearch.org/latest/dashboards/visualize/visualize-app/index/
 ---
 
 # 在 Visualize 應用程式中建立視覺化

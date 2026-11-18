@@ -4,6 +4,7 @@ layout: default
 title: "在 Dev Tools 主控台中執行查詢"
 parent: Getting started
 nav_order: 50
+canonical_url: https://docs.opensearch.org/latest/dashboards/getting-started/explore-dev-tools/
 ---
 
 # 在 Dev Tools 主控台中執行查詢

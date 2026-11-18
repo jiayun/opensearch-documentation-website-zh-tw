@@ -4,6 +4,7 @@ layout: default
 title: Fingerprint
 parent: Token filters
 nav_order: 140
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/fingerprint/
 ---
 
 # Fingerprint 詞元篩選器

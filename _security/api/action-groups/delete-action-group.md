@@ -5,6 +5,7 @@ title: "刪除動作群組"
 parent: Action group APIs
 grand_parent: Security APIs
 nav_order: 40
+canonical_url: https://docs.opensearch.org/latest/security/api/action-groups/delete-action-group/
 ---
 
 # Delete Action Group API

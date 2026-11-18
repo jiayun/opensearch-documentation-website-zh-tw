@@ -4,6 +4,7 @@ layout: default
 title: "複雜條件式"
 parent: Conditional execution
 nav_order: 50
+canonical_url: https://docs.opensearch.org/latest/ingest-pipelines/complex-conditionals/
 ---
 
 # 複雜條件

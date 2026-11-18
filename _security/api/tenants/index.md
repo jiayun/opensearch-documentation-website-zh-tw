@@ -8,6 +8,7 @@ has_children: true
 has_toc: false
 redirect_from:
   - /security/api/tenants/
+canonical_url: https://docs.opensearch.org/latest/security/api/tenants/index/
 ---
 
 # 租用戶 API

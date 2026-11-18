@@ -6,6 +6,7 @@ parent: Ingest processors
 nav_order: 252
 redirect_from:
    - /api-reference/ingest-apis/processors/sparse-encoding/
+canonical_url: https://docs.opensearch.org/latest/ingest-pipelines/processors/sparse-encoding/
 ---
 
 # 稀疏編碼處理器

@@ -7,6 +7,7 @@ nav_order: 35
 has_children: false
 redirect_from:
 - /opensearch/rest-api/cat/cat-nodeattrs/
+canonical_url: https://docs.opensearch.org/latest/api-reference/cat/cat-nodeattrs/
 ---
 
 # CAT 節點屬性 API

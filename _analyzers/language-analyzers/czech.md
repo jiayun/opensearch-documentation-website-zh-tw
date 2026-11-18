@@ -5,6 +5,7 @@ title: "捷克語"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 90
+canonical_url: https://docs.opensearch.org/latest/analyzers/language-analyzers/czech/
 ---
 
 # 捷克語分析器

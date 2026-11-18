@@ -10,6 +10,7 @@ redirect_from:
   - /query-dsl/aggregations/pipeline-agg/
   - /aggregations/pipeline/
   - /aggregations/pipeline-agg/
+canonical_url: https://docs.opensearch.org/latest/aggregations/pipeline/index/
 ---
 
 # 管線彙總

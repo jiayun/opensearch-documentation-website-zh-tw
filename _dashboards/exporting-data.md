@@ -3,6 +3,7 @@
 layout: default
 title: "匯出資料"
 nav_order: 72
+canonical_url: https://docs.opensearch.org/latest/dashboards/exporting-data/
 ---
 
 # 匯出資料

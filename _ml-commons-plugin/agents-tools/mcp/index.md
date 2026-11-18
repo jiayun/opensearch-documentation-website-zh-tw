@@ -7,6 +7,7 @@ has_children: true
 nav_order: 30
 redirect_from:
   - /ml-commons-plugin/agents-tools/mcp/
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/agents-tools/mcp/index/
 ---
 
 # 使用 MCP 工具

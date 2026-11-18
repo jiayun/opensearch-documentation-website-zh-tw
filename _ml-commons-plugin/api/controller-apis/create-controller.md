@@ -5,6 +5,7 @@ title: "建立控制器"
 parent: Controller APIs
 grand_parent: ML APIs
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/controller-apis/create-controller/
 ---
 
 # 建立或更新控制器 API

@@ -4,6 +4,7 @@ layout: default
 title: "使用相關性圖表"
 parent: Using Security Analytics
 nav_order: 45
+canonical_url: https://docs.opensearch.org/latest/security-analytics/usage/correlation-graph/
 ---
 
 # 使用相關性圖表

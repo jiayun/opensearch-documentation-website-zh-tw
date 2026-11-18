@@ -8,6 +8,8 @@ has_toc: false
 parent: Reference
 redirect_from:
   - /benchmark/reference/commands/
+canonical_url: https://docs.opensearch.org/latest/benchmark/reference/commands/index/
+redirect_to: https://docs.opensearch.org/latest/benchmark/reference/commands/index/
 ---
 
 # OpenSearch Benchmark 命令參考

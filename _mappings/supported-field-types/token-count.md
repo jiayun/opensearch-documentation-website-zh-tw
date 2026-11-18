@@ -10,6 +10,7 @@ redirect_from:
   - /field-types/supported-field-types/token-count/
   - /opensearch/supported-field-types/token-count/
   - /field-types/token-count/
+canonical_url: https://docs.opensearch.org/latest/mappings/supported-field-types/token-count/
 ---
 
 # Token count 欄位類型

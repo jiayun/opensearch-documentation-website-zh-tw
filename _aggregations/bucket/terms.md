@@ -6,6 +6,7 @@ parent: Bucket aggregations
 nav_order: 200
 redirect_from:
   - /query-dsl/aggregations/bucket/terms/
+canonical_url: https://docs.opensearch.org/latest/aggregations/bucket/terms/
 ---
 
 # 詞彙彙總

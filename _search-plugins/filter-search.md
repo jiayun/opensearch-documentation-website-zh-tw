@@ -4,6 +4,7 @@ layout: default
 title: "篩選結果"
 parent: Customizing search results
 nav_order: 36
+canonical_url: https://docs.opensearch.org/latest/search-plugins/filter-search/
 ---
 
 # 篩選搜尋結果

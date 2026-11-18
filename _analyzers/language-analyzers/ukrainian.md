@@ -5,6 +5,7 @@ title: "烏克蘭文"
 nav_order: 340
 parent: Language analyzers
 grand_parent: Analyzers
+canonical_url: https://docs.opensearch.org/latest/analyzers/language-analyzers/ukrainian/
 ---
 
 # 烏克蘭文分析器

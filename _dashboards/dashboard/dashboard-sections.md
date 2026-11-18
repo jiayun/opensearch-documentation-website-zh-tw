@@ -5,6 +5,7 @@ title: "儀表板區段"
 parent: Creating dashboards
 nav_order: 35
 has_children: false
+canonical_url: https://docs.opensearch.org/latest/dashboards/dashboard/dashboard-sections/
 ---
 
 # 儀表板區段

@@ -5,6 +5,7 @@ title: "土耳其語"
 parent: Language analyzers
 grand_parent: Analyzers
 nav_order: 330
+canonical_url: https://docs.opensearch.org/latest/analyzers/language-analyzers/turkish/
 ---
 
 # 土耳其語分析器

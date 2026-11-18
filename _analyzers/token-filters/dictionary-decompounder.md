@@ -4,6 +4,7 @@ layout: default
 title: "字典複合詞拆分"
 parent: Token filters
 nav_order: 110
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/dictionary-decompounder/
 ---
 
 # 字典複合詞拆分詞元篩選器

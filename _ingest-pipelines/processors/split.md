@@ -4,6 +4,7 @@ layout: default
 title: "分割"
 parent: Ingest processors
 nav_order: 255
+canonical_url: https://docs.opensearch.org/latest/ingest-pipelines/processors/split/
 ---
 
 # Split 資料匯入處理器

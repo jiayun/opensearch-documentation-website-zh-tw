@@ -35,6 +35,8 @@ items:
   description: 檢視您的基準測試報告並分析指標
   link: /benchmark/reference/summary-report/
 description: "OpenSearch Benchmark 是 OpenSearch Project 提供的巨觀基準測試公用程式。您可以使用 OpenSearch Benchmark 從 OpenSearch 叢集收集效能指標。"
+canonical_url: https://docs.opensearch.org/latest/benchmark/
+redirect_to: https://docs.opensearch.org/latest/benchmark/
 ---
 
 # ![Benchmark 圖示]({{site.url}}{{site.baseurl}}/images/icons/OpenSearch-PerformanceBenchmarks-Icon-1.png){: .heading-icon} OpenSearch Benchmark

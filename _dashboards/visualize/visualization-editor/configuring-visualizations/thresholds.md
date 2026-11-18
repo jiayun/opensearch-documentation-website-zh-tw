@@ -6,6 +6,7 @@ parent: Configuring visualizations
 grand_parent: Creating visualizations using queries
 great_grand_parent: Building data visualizations
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/dashboards/visualize/visualization-editor/configuring-visualizations/thresholds/
 ---
 
 # 視覺化編輯器中的閾值

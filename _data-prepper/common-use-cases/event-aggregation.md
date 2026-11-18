@@ -4,6 +4,8 @@ layout: default
 title: "事件彙總"
 parent: Common use cases
 nav_order: 25
+canonical_url: https://docs.opensearch.org/latest/data-prepper/common-use-cases/event-aggregation/
+redirect_to: https://docs.opensearch.org/latest/data-prepper/common-use-cases/event-aggregation/
 ---
 
 # 事件彙總

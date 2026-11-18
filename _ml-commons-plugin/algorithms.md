@@ -4,6 +4,7 @@ layout: default
 title: "支援的演算法"
 has_children: false
 nav_order: 100
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/algorithms/
 ---
 
 # 支援的演算法

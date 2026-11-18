@@ -5,6 +5,7 @@ title: "刪除模型群組"
 parent: Model group APIs
 grand_parent: ML APIs
 nav_order: 50
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/model-group-apis/delete-model-group/
 ---
 
 # 刪除模型群組 API

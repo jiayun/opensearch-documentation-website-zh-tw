@@ -5,6 +5,7 @@ title: "記錄分析入門"
 nav_order: 10
 redirect_from:
   - /observability-plugin/log-analytics/
+canonical_url: https://docs.opensearch.org/latest/observing-your-data/log-ingestion/
 ---
 
 # 記錄分析入門

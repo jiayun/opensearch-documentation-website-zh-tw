@@ -4,6 +4,7 @@ layout: default
 title: "排名特徵"
 parent: Specialized queries
 nav_order: 75
+canonical_url: https://docs.opensearch.org/latest/query-dsl/specialized/rank-feature/
 ---
 
 # 排名特徵

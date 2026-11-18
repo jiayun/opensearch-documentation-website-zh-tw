@@ -4,6 +4,7 @@ layout: default
 title: "進階設定"
 parent: Dashboards management
 nav_order: 10
+canonical_url: https://docs.opensearch.org/latest/dashboards/management/advanced-settings/
 ---
 
 # OpenSearch Dashboards 中的進階設定

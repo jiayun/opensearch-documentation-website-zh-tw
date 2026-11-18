@@ -4,6 +4,7 @@ layout: default
 title: "搜尋分片"
 parent: Search APIs
 nav_order: 85
+canonical_url: https://docs.opensearch.org/latest/api-reference/search-apis/search-shards/
 ---
 
 # 搜尋分片 API

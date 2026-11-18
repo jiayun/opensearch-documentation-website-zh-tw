@@ -5,6 +5,7 @@ title: "刪除記憶容器"
 parent: Agentic memory APIs
 grand_parent: ML APIs
 nav_order: 30
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/api/agentic-memory-apis/delete-memory-container/
 ---
 
 # 刪除記憶容器 API

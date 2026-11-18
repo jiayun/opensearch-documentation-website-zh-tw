@@ -4,6 +4,7 @@ layout: default
 title: "節點統計資料"
 parent: Nodes APIs
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/api-reference/nodes-apis/nodes-stats/
 ---
 
 # Nodes Stats API

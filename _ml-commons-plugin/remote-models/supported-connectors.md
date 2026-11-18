@@ -9,6 +9,7 @@ grand_parent: Connecting to externally hosted models
 great_grand_parent: Integrating ML models
 redirect_from:
   - /ml-commons-plugin/extensibility/supported-connectors/
+canonical_url: https://docs.opensearch.org/latest/ml-commons-plugin/remote-models/supported-connectors/
 ---
 
 # OpenSearch 提供的連接器藍圖

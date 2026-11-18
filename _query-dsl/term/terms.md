@@ -4,6 +4,7 @@ layout: default
 title: "詞彙"
 parent: Term-level queries
 nav_order: 20
+canonical_url: https://docs.opensearch.org/latest/query-dsl/term/terms/
 ---
 
 # 詞彙查詢

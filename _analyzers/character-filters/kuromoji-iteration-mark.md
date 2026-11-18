@@ -4,6 +4,7 @@ layout: default
 title: "Kuromoji 疊字記號"
 parent: Character filters
 nav_order: 115
+canonical_url: https://docs.opensearch.org/latest/analyzers/character-filters/kuromoji-iteration-mark/
 ---
 
 # Kuromoji 疊字記號字元篩選器

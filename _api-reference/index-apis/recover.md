@@ -5,6 +5,7 @@ title: "索引復原"
 parent: Index operations
 grand_parent: Index APIs
 nav_order: 50
+canonical_url: https://docs.opensearch.org/latest/api-reference/index-apis/recover/
 ---
 
 # 索引復原 API

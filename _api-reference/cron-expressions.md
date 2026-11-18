@@ -6,6 +6,7 @@ nav_order: 165
 redirect_from:
   - /monitoring-plugins/alerting/cron/
   - /observing-your-data/alerting/cron/
+canonical_url: https://docs.opensearch.org/latest/api-reference/cron-expressions/
 ---
 
 # Cron 運算式

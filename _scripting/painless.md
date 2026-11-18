@@ -5,6 +5,7 @@ title: "Painless 指令碼語言"
 nav_order: 30
 has_children: true
 has_toc: false
+canonical_url: https://docs.opensearch.org/latest/scripting/painless/
 ---
 
 # Painless 指令碼語言

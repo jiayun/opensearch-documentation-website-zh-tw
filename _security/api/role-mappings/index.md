@@ -8,6 +8,7 @@ has_children: true
 has_toc: false
 redirect_from:
   - /security/api/role-mappings/
+canonical_url: https://docs.opensearch.org/latest/security/api/role-mappings/index/
 ---
 
 # 角色對應 API

@@ -4,6 +4,7 @@ layout: default
 title: "Kuromoji 詞幹提取器"
 parent: Token filters
 nav_order: 235
+canonical_url: https://docs.opensearch.org/latest/analyzers/token-filters/kuromoji-stemmer/
 ---
 
 # Kuromoji 詞幹提取詞元篩選器

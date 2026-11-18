@@ -7,6 +7,7 @@ has_children: true
 has_toc: false
 redirect_from:
   - /tuning-your-cluster/scheduled-jobs/
+canonical_url: https://docs.opensearch.org/latest/tuning-your-cluster/scheduled-jobs/index/
 ---
 
 # 排程工作

@@ -6,6 +6,7 @@ parent: Ingest processors
 nav_order: 50
 redirect_from:
    - /api-reference/ingest-apis/processors/date/
+canonical_url: https://docs.opensearch.org/latest/ingest-pipelines/processors/date/
 ---
 
 本文件說明在 OpenSearch 資料匯入管線中使用 `date` 處理器的方法。如果您的使用情境涉及大型或複雜的資料集，請考慮使用在 OpenSearch 叢集外部執行的 [Data Prepper `date` 處理器]({{site.url}}{{site.baseurl}}/data-prepper/pipelines/configuration/processors/date/)。
